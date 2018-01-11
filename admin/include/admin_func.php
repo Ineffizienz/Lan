@@ -92,6 +92,7 @@ function displayTicketStatus($con)
 function displayCategories($con)
 {
 	$ac_categories = getAchievementCategories($con);
+	print_r($ac_categories);
 
 	$categories = buildOption($ac_categories);
 
