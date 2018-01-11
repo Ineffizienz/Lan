@@ -1,0 +1,13 @@
+SUC_REG_NAME: Meine Wenigkeit würde diesen Namen nicht freiwillig tragen, aber für Euch soll er genügen. Lasst nun eure Reise beginnen!				
+SUC_CREATE_TEAM: Ihr habt erfolgreich Euerm Reich eine Armee hinzugefügt.
+SUC_JOIN_TEAM: Ihr seid nun Teil einer Armee. Ich gratuliere euch.
+SUC_REG_IP: Dein IP-Adresse wurde erfolgreich registriert.
+SUC_LEAVE_TEAM: Du hast das Team erfolgreich verlassen.
+SUC_DELETE_TEAM: Team erfolgreich entfernt.
+SUC_CHANGE_USERNAME: Sehr wohl. Ab heute sollt Ihr unter diesem Namen bekannt sein.
+SUC_VAL_APPROVED: Ihr dürft passieren.
+SUC_KEY_ADDED: Key erfolgreich hinzugefügt.
+SUC_NEW_PLAYER: Ein neuer Spieler wurde erfolgreich angelegt.
+SUC_ASSIGN_AC_ADMIN: Achievement erfolgreich zugewiesen.
+SUC_UPLOADED_IMAGE: Ein vortreffliches Porträt eurer selbst!
+SUC_DELETE_USER: Nutzer erfolgreich gelöscht.

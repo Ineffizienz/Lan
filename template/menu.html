@@ -1,0 +1,49 @@
+<ul>
+	<a href="index.php?page=keygen">
+		<li>Key generieren</li>
+	</a>
+	<a href="index.php?page=teams">
+		<li>Teams</li>
+	</a>
+	<a href="index.php?page=c_team">
+		<li>Team erstellen</li>
+	</a>
+	<a href="index.php?page=tschedule">
+		<li>Spielplan</li>
+	</a>
+	<!--<a href="javascript:void(0);" id="link_tournament">
+		<li>Turniere</li>
+	</a>
+		<ul id="tournament" style="display:none;">
+			<a href="index.php?page=teams" id="teams">
+				<li>Teams</li>
+			</a>
+			<ul id="c_teams">
+				<a href="index.php?page=c_team" id="c_team">
+					<li>Team erstellen</li>
+				</a>
+			</ul>
+			<a href="index.php?pages=tm">
+				<li>Turniere erstellen</li>
+			</a>
+		</ul>-->
+	<a href="index.php?page=conf&subpage=own" id="settings">
+		<li>Einstellungen</li>
+	</a>
+</ul>
+
+<div style="margin-top:15%;text-align:center;">
+	<div style="display:inline-block;margin-right:2%;">
+		<label for="status" style="line-height:25px;">Dein Status: </label> 
+	</div>
+	{$status}
+	<p style="margin-top:2%;">
+		<select class="select" id="changeStatus">
+			<option name="1">Süchtig
+			<option name="2">Schlafend
+			<option name="3">Essen
+			<option name="4">Zerstört
+			<option name="5">Disconnected from your Channel
+		</select>
+	</p>
+</div>

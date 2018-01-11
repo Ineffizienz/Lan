@@ -1,0 +1,69 @@
+<div style="padding:3%;">
+	<div style="text-align:center">
+		<h3>Achievements zuweisen</h3>
+		<table cellspacing="0" cellpadding="0" style="margin:0 auto;">
+			{$username}
+		</table>
+		<button id="activate_ac">Achievements aktivieren</button>
+	</div>
+	<div style="text-align:center;">
+		<h3>Achievements erstellen</h3>
+		<form enctype="multipart/form-data">
+			<table cellspacing="0" cellpadding="0" style="margin:0 auto;">
+				<tr>
+					<td>
+						<label for="ac_name">Name</label>
+					</td>
+					<td>
+						<input type="text" name="ac_name" id="ac_name">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ac_cat">Kategorie</label>
+					</td>
+					<td>
+						<select name="ac_cat" id="ac_cat">
+							{$ac_cat}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ac_trigger">Trigger</label>
+					</td>
+					<td>
+						<select name="ac_trigger" id="ac_trigger">
+							{$ac_trigger}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ac_image">Bild</label>
+					</td>
+					<td>
+						<input type="file" name="ac_image" id="ac_image">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ac_visible">Sichtbarkeit</label>
+					</td>
+					<td>
+						<input type="checkbox" name="ac_visible" id="ac_visible">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ac_message">Nachricht</label>
+					</td>
+					<td>
+						<textarea name="ac_message" id="ac_message"></textarea>
+					</td>
+				</tr>
+			</table>
+			<button id="create_ac">Achievement erstellen</button>
+		</form>
+	</div>
+</div>
