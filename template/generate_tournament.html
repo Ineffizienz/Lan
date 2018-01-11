@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title></title>
+</head>
+<body style="background-color:#C0C0C0;">
+	<form method="post" action="generate_tm.php">
+		<table class="c_form">
+			<tr class="label_form">
+				<td>
+					<label for="tm_name">Name des Turniers:</label>
+				</td>
+				<td>
+					<input type="text" id="tm_name" name="tm_name" placeholder="Dein Turniername" onFocus="this.placeholder=''" onBlur="this.placeholder='Dein Turniername'">
+				</td>
+			</tr>
+			<tr class="label_form">
+				<td>
+					<label for="tm_modus">Modus des Turniers</label>
+				</td>
+				<td>
+					<select class="select" name="tm_modus">
+						<option name="default_modus">Wähle einen Modus aus
+						<option name="1v1">1 gegen 1
+						<option name="2v2">2 gegen 2
+						<option name="tvt">Team gegen Team
+					</select>
+				</td>
+			</tr>
+			<tr class="label_form">
+				<td>
+					<label for="tm_duration">Dauer der einzelnen Runden:</label>
+				</td>
+				<td>
+					<select class="select" name="tm_duration">
+						<option name="default_modus">Wähle die Dauer
+						<option name="bo1">Best of 1
+						<option name="bo3">Best of 3
+						<option name="bo5">Best of 5
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input type="submit" name="create_tm" value="Turnier erstellen">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

@@ -1,0 +1,255 @@
+BODY
+{
+	background-color: #202020;
+	margin: 0;
+	padding: 0;
+	color: #000000;
+	font-size: 12pt;
+	font-family: Calibri;
+}
+
+/* ---------------------- TEMPLATE --------------------------- 
+--------------------------------------------------------------*/
+
+#wrap
+{
+	width: 100%;
+}
+#menu
+{
+	float:left;
+	width:20%;
+}
+#content
+{
+	float:left;
+	margin: 0;
+	padding: 0;
+	width: 80%;
+}
+
+/* ---------------------- MENÜ --------------------------- 
+--------------------------------------------------------------*/
+#navigation
+{
+	margin: 0;
+	margin-top: 6%;
+	padding: 0;
+	list-style: none;
+}
+	#navigation li
+	{
+		margin: 1%;
+		margin-left: 0;
+		padding-left: 2%;
+		background-color: #C0C0C0;
+		border-radius: 0 25px 25px 0;
+		font-weight:bold;
+		line-height: 30px;
+		transition: background-color 0.3s;
+	}
+	#navigation li:hover
+	{
+		background-color: #193390;
+	}
+#admin_ac_sub
+{
+	list-style:none;
+}
+
+
+/* ---------------------- BASIC-CONTENT --------------------------- 
+--------------------------------------------------------------*/
+
+h2
+{
+	text-align:center;
+	font-weight:bold;
+}
+h3
+{
+	text-align: left;
+	font-weight: bold;
+}
+h4
+{
+	text-decoration: underline;
+	font-style: italic;
+}
+.text
+{
+	margin: 0 auto;
+	background-color: #C0C0C0;
+	border-radius: 5px 5px;
+	min-height: 400px;
+	width:95%;
+}
+.clear
+{
+	clear:both;
+}
+
+th
+{
+	border: 1px solid #000;
+}
+td
+{
+	border: 1px solid #000000;
+}
+
+/* ---------------------- OVERVIEW --------------------------- 
+--------------------------------------------------------------*/
+
+.ov_container
+{
+	float:left;
+	width: 50%;
+}
+.ov_table
+{
+	font-size: 10pt;
+}
+.ov_extend
+{
+	margin-left: 3%;
+}
+.ov_table td
+{
+	padding-left: 1%;
+	border: 1px solid #000000;
+}
+.numbers_column
+{
+	text-align:center;
+}
+
+/* ---------------------- PLAYER -----------------------------
+--------------------------------------------------------------*/
+
+.p_view
+{
+	margin: 0 auto;
+	width: 50%;
+}
+.p_button_delete
+{
+	background-color:#C0C0C0;
+	border:0;
+}
+
+
+/* ---------------------- RESPONSE -----------------------------
+--------------------------------------------------------------*/
+
+#response
+{
+	margin-top: 2%;
+}
+.sir_brummel
+{
+	margin-left: 10%;
+}
+.message
+{
+	position: relative;
+	left:80px;
+	background-color: #FFFFFF;
+    font-size: 12pt;
+    color: #000000;
+    text-align:center;
+    border-radius: 5px 5px;
+    border:4px solid #000000;
+    width:30%;
+    height:auto;
+}
+.message:before
+{
+	content: ' ';  
+	position: absolute;  
+	width: 0;  
+	height: 0;  
+	left: 10px;  
+	top: 100%;  
+	border: 15px solid;  
+	border-color: #000000 transparent transparent #000000;
+	vertical-align: bottom;
+}
+.message:after
+{
+	content: ' ';  
+	position: absolute;  
+	width: 0;  
+	height: 0;  
+	left: 14px;  
+	top: auto;  
+	border: 10px solid;  
+	border-color: #FFFFFF transparent transparent #FFFFFF;
+}
+.name_container
+{
+	text-align:center;
+	width:120px;
+	height:10px;
+}
+.name
+{
+	font-size:8pt;
+}
+.message_text
+{
+	margin-top: 7px; 
+	font-family: Papyrus;
+	font-size:16px;
+	font-weight:bold;
+}
+
+/* ---------------------- TEAMS --------------------------- 
+--------------------------------------------------------------*/
+
+.team
+{
+	float:left;
+	margin: 2%;
+	background-color: #C0C0C0;
+	box-shadow: 0 5px 5px 0;
+	border-radius: 5px;
+	width: 10%;
+}
+.name
+{
+	font-family: Calibri;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	text-align: center;
+	font-weight:bold;
+	border-bottom:2px solid #000000;
+}
+.operation
+{
+	padding-top:5px;
+	padding-bottom: 5px;
+	text-align:center;
+}
+.clickable
+{
+	cursor: pointer;
+}
+
+/* ---------------------- LINKS --------------------------- 
+--------------------------------------------------------------*/
+A:link
+{
+	text-decoration:none;
+	color: #000000;
+}
+A:visited
+{
+	text-decoration: none;
+	color: #000000;
+}
+A:hover
+{
+	text-decoration: none;
+	color:#C0C0C0;
+}
