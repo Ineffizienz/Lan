@@ -186,6 +186,27 @@
 		return $circle;
 	}
 
+	function getUserStatusOption($con,$ip)
+	{
+		$user_id = getUserId($con,$ip);
+		$status_data = getStatusData($con);
+		$user_status = getStatus($con,$user_id);
+		$status_name = getStatusName($con,$user_status);
+
+		$output = "<option name='" . $user_status . "' selected>" . utf8_encode($status_name);
+
+		foreach ($status_data as $status)
+		{
+			if($status["status_id"] !== $user_status)
+			{
+				$output .= build_option($status["status_id"],utf8_encode($status["status_name"]));
+			}
+		}
+
+		return $output;
+
+	}
+
 	function generateGameKey($con,$raw_name,$player_id)
 	{
 		$key = getPlayerGameKey($con,$player_id,$raw_name);
