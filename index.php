@@ -6,7 +6,7 @@
 */
 
 header("Content-Type: text/html; charset=utf-8");
-error_reporting(0);
+error_reporting(E_ALL);
 
 include ("include/init/constant.php");
 require_once(CL . "template_class.php");
@@ -69,6 +69,7 @@ if($fl == "1")
 	$tpl->assign("games",generate_options($con));
 	$tpl->assign("members",teamMembers($con,IP));
 	$tpl->assign("status",getUserRelatedStatusColor($con,IP));
+	$tpl->assign("status_option",getUserStatusOption($con,IP));
 
 	/***************************** SETTING *****************************/
 	if (getCaptainStatus($con,IP) == 0)

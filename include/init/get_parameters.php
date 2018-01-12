@@ -498,6 +498,26 @@ function getStatusColor($con,$status) // function.php/getUserRelatedStatusColor
 
 	return $s_color;
 }
+function getStatusData($con)
+{
+	$result = mysqli_query($con,"SELECT status_id,status_name FROM status_name");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$status_data[] = $row;
+	}
+
+	return $status_data;
+}
+function getStatusName($con,$status_id)
+{
+	$result = mysqli_query($con,"SELECT status_name FROM status_name WHERE status_id = '$status_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$status_name = $row["status_name"];
+	}
+
+	return $status_name;
+}
 
 
 /*

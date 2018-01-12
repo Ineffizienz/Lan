@@ -1,6 +1,6 @@
 <?php
 	
-	define("ROOT",$_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/");
+	define("ROOT",$_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/");
 
 	define("INC",ROOT . "include/");
 	define("AUTH", INC . "auth/");
