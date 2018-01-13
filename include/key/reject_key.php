@@ -27,14 +27,22 @@
 				echo json_encode(array("message" => $message->displayMessage()));
 			}
 		} else {
-			$sql = "UPDATE $raw_name SET player_id = '$player_id' WHERE game_key = '$new_key'";
+			$sql = "DELETE FROM $raw_name WHERE player_id = '$player_id' AND game_key = '$old_key'";
 			if (mysqli_query($con,$sql))
 			{
-				echo $new_key;
+				$sql = "UPDATE $raw_name SET player_id = '$player_id' WHERE game_key = '$new_key'";
+				if (mysqli_query($con,$sql))
+				{
+					echo json_encode(array("key" => $new_key));
+				} else {
+					$message->getMessageCode("ERR_DB");
+					echo json_encode(array("message" => $message->displayMessage()));
+				}
 			} else {
 				$message->getMessageCode("ERR_DB");
 				echo json_encode(array("message" => $message->displayMessage()));
 			}
+			
 		}
 	} else {
 		$message->getMessageCode("ERR_DB");
