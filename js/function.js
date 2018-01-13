@@ -217,6 +217,8 @@ $(document).ready(function(){
 		$("#achievement").html(response.achievement);
 		$("#achievement").fadeOut(9000);
 
+		$("#displayKey").html(response.key);
+
 		$('#t_name').val("");
 		$('#name').val("");
 
