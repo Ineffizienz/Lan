@@ -28,12 +28,22 @@
 			return ($content);
 		}
 	}
-	function build_option($value,$name)
-	{
-		$part = file_get_contents("template/part/option.html");
-		$output_option = str_replace(array("--VALUE--","--NAME--"),array($value,$name),$part);
 
-		return $output_option;
+	function build_option($optionArr,$selected)
+	{
+		$output_option = "<option name='" . $selected["id"] . "' selected>" . $selected["name"];
+
+		$part = file_get_contents("template/part/option.html");
+
+		foreach ($optionArr as $option)
+		{
+			if($option["id"] !== $selected["id"])
+			{
+				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],utf8_encode($option["name"])),$part);	
+			}
+		}
+		
+		return $output_option;	
 	}
 
 	function initializePlayer($con,$username,$ip)
@@ -120,16 +130,10 @@
 	{
 		$gameinfo = getGameInfo($con);
 
-		foreach ($gameinfo as $info)
-		{
-			if(!isset($option))
-			{
-				$option = build_option($info["raw_name"],$info["name"]);
-			} else {
-				$option .= build_option($info["raw_name"],$info["name"]);
-			}
-		}
+		$selected = array("id"=>"default","name"=>"Bitte wähle ein Spiel aus");
 
+		$option = build_option($gameinfo,$selected);
+		
 		return $option;
 	}
 	function members($con) // gibt die vorhanden Teams aus (Teamname + Spieler)
@@ -193,16 +197,10 @@
 		$user_status = getStatus($con,$user_id);
 		$status_name = getStatusName($con,$user_status);
 
-		$output = "<option name='" . $user_status . "' selected>" . utf8_encode($status_name);
-
-		foreach ($status_data as $status)
-		{
-			if($status["status_id"] !== $user_status)
-			{
-				$output .= build_option($status["status_id"],utf8_encode($status["status_name"]));
-			}
-		}
-
+		
+		$selected = array("id"=>$user_status,"name"=>utf8_encode($status_name));
+		$output = build_option($status_data,$selected);
+		
 		return $output;
 
 	}

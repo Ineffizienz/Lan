@@ -245,7 +245,7 @@ function getSinglePlayerTeam($con,$ip) // index.php
 
 function getGameInfo($con) // function.php/generate_options
 {
-	$result = mysqli_query($con,"SELECT name, raw_name FROM games ORDER BY name");
+	$result = mysqli_query($con,"SELECT name, raw_name AS id FROM games ORDER BY name");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo[] = $row;
@@ -484,9 +484,9 @@ function getCaptainStatus($con,$ip)
 
 function getStatus($con,$id) // function.php/getUserRelatedStatusColor + status.php
 {
-	$result = mysqli_query($con,"SELECT status FROM status WHERE user_id = '$id'");
+	$result = mysqli_query($con,"SELECT status AS id FROM status WHERE user_id = '$id'");
 	$row = mysqli_fetch_array($result);
-	$status = $row["status"];
+	$status = $row["id"];
 
 	return $status;
 }
@@ -500,7 +500,7 @@ function getStatusColor($con,$status) // function.php/getUserRelatedStatusColor
 }
 function getStatusData($con)
 {
-	$result = mysqli_query($con,"SELECT status_id,status_name FROM status_name");
+	$result = mysqli_query($con,"SELECT status_id AS id,status_name AS name FROM status_name");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$status_data[] = $row;
@@ -510,10 +510,10 @@ function getStatusData($con)
 }
 function getStatusName($con,$status_id)
 {
-	$result = mysqli_query($con,"SELECT status_name FROM status_name WHERE status_id = '$status_id'");
+	$result = mysqli_query($con,"SELECT status_name AS name FROM status_name WHERE status_id = '$status_id'");
 	while($row=mysqli_fetch_array($result))
 	{
-		$status_name = $row["status_name"];
+		$status_name = $row["name"];
 	}
 
 	return $status_name;

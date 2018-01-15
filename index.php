@@ -51,7 +51,6 @@ if($fl == "1")
 
 	$tpl->assign("headline","Wer zuletzt lacht, hat den höchsten Ping");
 	$tpl->assign("lantitle","Wer zuletzt lacht, hat den höchsten Ping");
-	$tpl->assign("default","Wähle eine Option.");
 	$tpl->assign("menu",build_content("menu.html"));
 
 	if (isset($content))
@@ -64,7 +63,6 @@ if($fl == "1")
 		$tpl->assign("settings",$settings); // controller.php
 	}
 
-	$tpl->assign("default","Bitte wähle ein Spiel aus");
 	$tpl->assign("teams",members($con));
 	$tpl->assign("games",generate_options($con));
 	$tpl->assign("members",teamMembers($con,IP));
