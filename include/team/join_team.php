@@ -13,7 +13,8 @@
 
 	// vorhandene Team-IDs auslesen
 
-	$team_ids = getTeams($con);
+	
+	$team_ids = getAllTeams($con);
 
 	if(count($team_ids) <= 1)
 	{
@@ -39,7 +40,7 @@
 
 			$max_team = round($n_player / $n_teams);
 
-			$n_teammember = countTeammember($con,$single_team);
+			$n_teammember = countTeammember($con,$single_team["ID"]);
 
 			if ($n_teammember == $max_team)
 			{
@@ -48,17 +49,24 @@
 					$key = array_rand($team_ids);
 					$single_team = $team_ids[$key];
 
-					$n_teammember = countTeammember($con,$single_team);
+					$n_teammember = countTeammember($con,$single_team["ID"]);
 				}
 			}
-
+			
+			$single_id = $single_team["ID"];
 			// Updating players team_id and printing out the team_name
-			mysqli_query($con,"UPDATE player SET team_id = '$single_team' WHERE ip = '$ip'");
+			$sql = "UPDATE player SET team_id = '$single_id' WHERE ip = '$ip'";
 
-			$team_name = getJoinedTeamName($con,$single_team);
+			if(mysqli_query($con,$sql))
+			{
+				$team_name = getJoinedTeamName($con,$single_team["ID"]);
 
-			$message->getMessageCode("SUC_JOIN_TEAM");
-			echo json_encode(array("message" => $message->displayMessage()));
+				$message->getMessageCode("SUC_JOIN_TEAM");
+				echo json_encode(array("message" => $message->displayMessage()));
+			} else {
+				$message->getMessageCode("ERR_DB");
+				echo json_encode(array("message" => $message->displayMessage()));
+			}
 
 		}
 	}

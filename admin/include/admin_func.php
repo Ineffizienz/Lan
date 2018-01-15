@@ -1,5 +1,24 @@
 <?php
 
+function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
+{
+	if (file_exists("template/" . $file))
+	{
+		$data = fopen("template/" . $file, "r");
+		while (!feof($data))
+		{
+			if (!isset($content))
+			{
+				$content = fgets($data);
+			} else {	
+				$content .= fgets($data);
+			}
+		}
+		fclose($data);
+		return ($content);
+	}
+}
+
 function buildOption($optionArr)
 {
 	foreach ($optionArr as $option)
@@ -48,6 +67,28 @@ function displayAchievements($con)
 	return $output;
 }
 
+function displayTeams($con)
+{
+	$all_teams = getAllTeams($con);
+
+	if (empty($all_teams))
+	{
+		$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
+		return $output;
+	} else {
+		$output = "<select class='select' id='del_team'>";
+		foreach ($all_teams as $team)
+		{
+			$single_team = file_get_contents(ROOT . "template/admin/single_team.html");
+			$output .= str_replace(array("--Teamname--", "--ID--"), array($team["name"],$team["ID"]), $single_team);
+		}
+		$output .= "</select>";
+		$output .= "<button id='b_del_team'>Team löschen</button>";
+
+		return $output;
+	}
+}
+
 function addUsername($con)
 {
 	$userlist = getBasicUserData($con);
@@ -69,7 +110,7 @@ function displayTicketStatus($con)
 	
 	foreach ($ticket_status as $status)
 	{
-		if (empty($ticket_status["ticket_active"]))
+		if (empty($status["ticket_active"]))
 		{
 			$param = "Inaktiv";
 		} else {
