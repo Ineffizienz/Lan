@@ -15,7 +15,7 @@ if($ip == "::1" || "192.168.0.89")
 	$tpl = new template();
 	$tpl->load("admin/home.html");
 
-	$tpl->assign("menu",build_content("admin/admin_menu.html"));
+	$tpl->assign("menu",buildContent("admin/admin_menu.html"));
 	$tpl->assign("content",$content);
 	$tpl->assign("key_status",$key_status);
 	$tpl->assign("team_status",$team_status);

@@ -244,31 +244,6 @@
 		}
 		
 	}
-
-	function displayTeams($con)
-	{
-		$all_teams = getTeams($con);
-
-		if (empty($all_teams))
-		{
-			$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
-			return $output;
-		} else {
-			$output .= "<select class='select' id='del_team'>";
-			foreach ($all_teams as $team)
-			{
-				$name = getTeamName($con,$team);
-
-				$single_team = file_get_contents(ROOT . "template/admin/single_team.html");
-				$output .= str_replace(array("--Teamname--", "--ID--"), array($name,$team), $single_team);
-				//$output .= str_replace("--ID--", $team, $single_team);			
-			}
-			$output .= "</select>";
-			$output .= "<button id='b_del_team'>Team löschen</button>";
-
-			return $output;
-		}
-	}
 	
 	function displaySinglePlayerTeam($con,$ip)
 	{

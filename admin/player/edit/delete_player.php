@@ -42,7 +42,7 @@
 	
 						if(!empty($used_key))
 						{
-							if(mysqli_query($con,"UPDATE $game SET player_id = NULL WHERE player_id = '$player_id'"));
+							mysqli_query($con,"UPDATE $game SET player_id = NULL WHERE player_id = '$player_id'");
 						}
 					}
 					

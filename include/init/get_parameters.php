@@ -18,22 +18,6 @@ function getRegIps($con) //bezieht die registrierten IPs
 	return $ip;
 }
 
-function getEmptyIps($con) //bezieht die IPs ohne Spielername (nicht genutzt)
-{
-	$result = mysqli_query($con,"SELECT ip FROM player WHERE name = '' OR name IS NULL");
-	while ($row=mysqli_fetch_array($result))
-	{
-		$empty_ips[] = $row["ip"];
-	}
-
-	if (empty($empty_ips))
-	{
-		$empty_ips = array();
-	}
-
-	return $empty_ips;
-}
-
 function getFirstLoginByIp($con,$ip) // reg_name.php
 {
 	$result = mysqli_query($con,"SELECT first_login FROM player WHERE ip = '$ip'");
@@ -227,14 +211,6 @@ function getSinglePlayerTeam($con,$ip) // index.php
 
 	return $team;
 }
-/*function getSinglePLayerData($con,$id)
-{
-	$result = mysqli_query($con, "SELECT name, ip, team_id, team_captain FROM player WHERE PID = '$id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$single_player[]
-	}
-}*/
 
 
 /*
@@ -351,17 +327,6 @@ function getAllKeys($con,$raw_name) // function.php/verifyKey
 ###########################################################
 */
 
-function getTeams($con) //alle Teams (IDs) --> entfernen (wird ersetzt durch getAllTeams) / function.php/displayTeams + join_team.php + team_status.php >CHANGE<
-{
-	$result = mysqli_query($con,"SELECT ID FROM tm_teamname");
-	while ($row=mysqli_fetch_array($result))
-	{
-		$teams[] = $row["ID"];
-	}
-
-	return $teams;
-}
-
 function getAllTeams($con) // function.php/members
 {
 	$result = mysqli_query($con,"SELECT ID, name FROM tm_teamname");
@@ -373,7 +338,7 @@ function getAllTeams($con) // function.php/members
 	return $teams;
 }
 
-function getTeamNames($con) //bezieht alle Teamnamen --> entfernen (wird ersetzt durch getAllTeams) / create_team.php + admin/team_status.php >CHANGE<
+function getTeamNames($con) //bezieht alle Teamnamen / create_team.php
 {
 	$result = mysqli_query($con,"SELECT name FROM tm_teamname");
 	while ($row=mysqli_fetch_array($result))
