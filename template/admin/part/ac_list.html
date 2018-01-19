@@ -1,18 +1,21 @@
 <tr>
-	<td>--ID--</td>
+	<td class="ac_id">--ID--</td>
 	<td>--NAME--</td>
-	<td><img src="/Project_Ziphon/--IMAGE_URL--"></td>
+	<td><img src="/Lan_Git/images/achievements/--IMAGE_URL--"></td>
 	<td>--MESSAGE--</td>
-	<td>--TRIGGER--</td>
+	<td>
+		<select id="admin_ac_trig">
+			--TRIGGER--
+		</select>
+	</td>
 	<td>
 		<select id="admin_ac_cat">
-			<option name="current" :selected>--CATEGORY--
-			{$ac_cat}
+			--CATEGORY--
 		</select>
 	</td>
 	<td>
 		<select id="admin_ac_visib">
-				<option name="current" :selected>--VISIBILITY--
+			--VISIBILITY--
 		</select>
 	</td>
 </tr>

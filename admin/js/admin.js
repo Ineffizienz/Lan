@@ -6,10 +6,9 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var count = $("#count").val();
 		var c_name = $("#cover_name").val();
 
-		createNewPlayer(count,c_name,displayResult);
+		createNewPlayer(c_name,displayResult);
 	}
 
 	function getId(event)
@@ -34,10 +33,40 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		u_id = $("#user").find('option:selected').attr("name");
-		ac_id = $("#ac").find('option:selected').attr("name");
+		var u_id = $("#user").find('option:selected').attr("name");
+		var ac_id = $("#ac").find('option:selected').attr("name");
 		
 		assignAchievement(ac_id,u_id,displayResult);
+	}
+
+	function getChangedTrigger(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
+		var trigger = $(this).find('option:selected').attr("name");
+
+		changeTrigger(ac_id,trigger,showResult);
+	}
+
+	function getChangedCategory(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
+		var category = $(this).find('option:selected').attr("name");
+
+		changeCategory(ac_id,category,showResult);
+	}
+
+	function getChangedVisibility(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
+		var visib = $(this).find('option:selected').attr("name");
+
+		changeCategory(ac_id,visib,showResult);
 	}
 
 	function getAcData(event)
@@ -87,13 +116,12 @@ $(document).ready(function(){
 		});
 	}
 
-	function createNewPlayer(count, c_name, fn)
+	function createNewPlayer(c_name, fn)
 	{
 		return $.ajax({
 			type: "post",
 			url: "admin/player/edit/create_new_player.php",
 			data: {
-				i:count,
 				cover: c_name
 			},
 			success: fn
@@ -152,9 +180,52 @@ $(document).ready(function(){
 		});
 	}
 
+	function changeTrigger(ac_id,trigger,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/change_trigger.php",
+			data: {
+				ac_id:ac_id,
+				trigger:trigger
+			},
+			success: fn
+		});
+	}
+
+	function changeCategory(ac_id,category,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/change_category.php",
+			data: {
+				ac_id:ac_id,
+				category:category
+			},
+			success: fn
+		});
+	}
+	function changeCategory(ac_id,visib,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/change_visib.php",
+			data: {
+				ac_id:ac_id,
+				visib:visib
+			},
+			success: fn
+		});
+	}
+
 	function displayResult(err)
 	{
 		document.getElementById("result").innerHTML = err;
+	}
+
+	function showResult()
+	{
+		$(this).load(location.href + " #admin_ac_trig");
 	}
 
 
@@ -166,5 +237,8 @@ $(document).ready(function(){
 	$("#b_del_team").on("click", getTeamId);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
+	$(document).on("change","#admin_ac_trig",getChangedTrigger);
+	$(document).on("change","#admin_ac_cat",getChangedCategory);
+	$(document).on("change","#admin_ac_visib",getChangedVisibility);
 
 });

@@ -11,3 +11,6 @@ SUC_NEW_PLAYER: Ein neuer Spieler wurde erfolgreich angelegt.
 SUC_ASSIGN_AC_ADMIN: Achievement erfolgreich zugewiesen.
 SUC_UPLOADED_IMAGE: Ein vortreffliches Porträt eurer selbst!
 SUC_DELETE_USER: Nutzer erfolgreich gelöscht.
+SUC_CHANGE_TRIGGER: Trigger erfolgreich geändert.
+SUC_CHANGE_CATEGORY: Kategorie erfolgreich geändert.
+SUC_CHANGE_VISIB: Sichtbarkeit erfolgreich geändert.

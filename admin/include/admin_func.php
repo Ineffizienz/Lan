@@ -49,12 +49,16 @@ function displayAchievements($con)
 
 	$achievements = getAllAchievements($con);
 
+	$all_categories = getAchievementCategories($con);
+	$all_trigger = getAchievementTrigger($con);
+	$all_visib = buildVisibilityOption($con);
+
 	foreach ($achievements as $achievement)
 	{
 		$ac = new Achievement;
 		
-		$ac->getAdminDetails($achievement);
-		
+		$ac->getAdminDetails($achievement,$all_categories,$all_trigger,$all_visib);
+
 		if(!isset($output))
 		{
 			$output = $ac->displayAchievement();
@@ -67,7 +71,7 @@ function displayAchievements($con)
 	return $output;
 }
 
-function displayTeams($con)
+function displayTeams($con) // Teamverwaltung --> Team löschen
 {
 	$all_teams = getAllTeams($con);
 
@@ -76,20 +80,14 @@ function displayTeams($con)
 		$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
 		return $output;
 	} else {
-		$output = "<select class='select' id='del_team'>";
-		foreach ($all_teams as $team)
-		{
-			$single_team = file_get_contents(ROOT . "template/admin/single_team.html");
-			$output .= str_replace(array("--Teamname--", "--ID--"), array($team["name"],$team["ID"]), $single_team);
-		}
-		$output .= "</select>";
-		$output .= "<button id='b_del_team'>Team löschen</button>";
+
+		$output = buildOption($all_teams);
 
 		return $output;
 	}
 }
 
-function addUsername($con)
+function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
 	$userlist = getBasicUserData($con);
 	$ac_option = getAllAchievementByName($con);
@@ -130,22 +128,31 @@ function displayTicketStatus($con)
 	return $output;
 }
 
-function displayCategories($con)
+function buildVisibilityOption($con)
 {
-	$ac_categories = getAchievementCategories($con);
+	$ac_visib = getAchievementVisibility($con);
 
-	$categories = buildOption($ac_categories);
+	$visib_name = array();
 
-	return $categories;
-}
+	foreach ($ac_visib as $visib_id)
+	{
+		if(!empty($visib_id))
+		{
+			if($visib_id == "1")
+			{
+				$combine = array("ID" => $visib_id, "name" => "Sichtbar");
+			} else {
+				$combine = array("ID" => $visib_id, "name" => "Unsichtbar");
+			}
+		}
 
-function displayTrigger($con)
-{
-	$ac_trigger = getAchievementTrigger($con);
+		if(!in_array($combine,$visib_name))
+		{
+			array_push($visib_name,$combine);
+		}
+	}
 
-	$triggers = buildOption($ac_trigger);
-
-	return $triggers;
+	return $visib_name;
 }
 
 function validateInput($new_game)
@@ -188,6 +195,18 @@ function verifyGame($con,$new_game,$new_raw_name)
 	} else {
 		return false;
 	}
+}
+
+function emptyText($data)
+{
+	if (empty($data) || ($data == "") || ($data == 0))
+	{
+		$text = "-";
+	} else {
+		$text = $data;
+	}
+
+	return $text;
 }
 
 function createGame($con,$new_game,$new_raw_name)
