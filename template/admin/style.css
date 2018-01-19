@@ -96,6 +96,7 @@ th
 td
 {
 	border: 1px solid #000000;
+	padding: 2px;
 }
 
 /* ---------------------- OVERVIEW --------------------------- 
@@ -103,12 +104,14 @@ td
 
 .ov_container
 {
-	float:left;
-	width: 50%;
+	display:inline-block;
+	text-align:center;
+	width: 45%;
 }
 .ov_table
 {
-	font-size: 10pt;
+	margin: 0 auto;
+	font-size: 11pt;
 }
 .ov_extend
 {
@@ -118,10 +121,6 @@ td
 {
 	padding-left: 1%;
 	border: 1px solid #000000;
-}
-.numbers_column
-{
-	text-align:center;
 }
 
 /* ---------------------- PLAYER -----------------------------

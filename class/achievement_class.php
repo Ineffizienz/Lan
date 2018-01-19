@@ -7,6 +7,7 @@ class Achievement {
 	private $image = "";
 	private $trigger = "";
 	private $category = "";
+	private $s_cat = array();
 	private $visib = "";
 	private $ac_template = "";
 	private $ac = "";
@@ -51,7 +52,7 @@ class Achievement {
 		}
 	}
 	
-	public function getAdminDetails($admin_achievements)
+	public function getAdminDetails($admin_achievements,$catArray,$trigArray,$visibArray)
 	{
 		if (empty($admin_achievements))
 		{
@@ -60,21 +61,23 @@ class Achievement {
 			$this->id = $admin_achievements["ID"];
 			$this->title = $admin_achievements["title"];
 			$this->message = $admin_achievements["message"];
-			$this->trigger = $admin_achievements["trigger_title"];
-			$this->category = $admin_achievements["c_name"];
+			$this->trigger = $this->buildOption($trigArray,$admin_achievements["trigID"],$admin_achievements["trigger_title"]);
+			$this->category = $this->buildOption($catArray,$admin_achievements["catID"],$admin_achievements["c_name"]);
 			
 			if (empty($admin_achievements["image_url"]))
 			{
 				$this->image = "NULL";
 			} else {
-				$this->image = "images/achievements/" . $admin_achievements["image_url"];
+				$this->image = $admin_achievements["image_url"];
 			}
-			
+
 			if($admin_achievements["ac_visibility"] == "1")
 			{
-				$this->visib = "Sichtbar";
-			} elseif ($admin_achievements["ac_visibility"] == "0") {
-				$this->visib = "Unsichtbar";
+				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"Sichtbar");
+			} elseif ($admin_achievements["ac_visibility"] == "2") {
+				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"Unsichtbar");
+			} elseif (empty($admin_achievements["ac_visibility"])) {
+				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"0");
 			}
 			
 			$this->buildAdminAchievement();
@@ -88,14 +91,36 @@ class Achievement {
 		
 		$this->buildBasicAchievement();
 	}
-	
+
+	public function buildOption($optArr,$selected_id,$selected_name)
+	{
+		$optGUI = file_get_contents("template/admin/part/option.html");
+
+		if(empty($selected_id))
+		{
+			$output = "<option name'default' selected>Kein Angabe";
+		} else {
+			$output = "<option name='" . $selected_id . "' selected>" . $selected_name;
+		}
+
+		foreach ($optArr as $option)
+		{
+			if($option["ID"] !== $selected_id)
+			{
+				$output .= str_replace(array("--VALUE--","--NAME--"), array($option["ID"],$option["name"]),$optGUI);
+			}
+		}
+
+		return $output;
+	}
+
 	public function buildAchievement()
 	{
 		$this->ac_template = file_get_contents("template/part/single_achievement.html");
 
 		if($this->image == "NULL")
 		{
-			$this->ac = str_replace($this->singleArr, array("images/keinbild.jpg",$this->title,$this->message),$this->ac_template);
+			$this->ac = str_replace($this->singleArr, array("images/achievements/keinbild.jpg",$this->title,$this->message),$this->ac_template);
 		} else {	
 			if(file_exists($this->image))
 			{
@@ -114,7 +139,7 @@ class Achievement {
 
 		if($this->image == "NULL")
 		{
-			$this->ac .= str_replace(array($this->r_title,$this->r_message,$this->r_image), array($this->title,$this->message,"images/keinbild.jpg"),$this->ac_template);
+			$this->ac .= str_replace(array($this->r_title,$this->r_message,$this->r_image), array($this->title,$this->message,"images/achievements/keinbild.jpg"),$this->ac_template);
 		} else {
 			if(file_exists($this->image))
 			{
@@ -128,16 +153,16 @@ class Achievement {
 	public function buildAdminAchievement()
 	{
 		$this->ac_template = file_get_contents("template/admin/part/ac_list.html");
-		
+
 		if($this->image == "NULL")
 		{
-			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
+			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
 		} else {
-			if(file_exists($this->image))
+			if(file_exists("images/achievements/" . $this->image))
 			{
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
+				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
 			} else {
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,"Error",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
+				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,"Error",utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
 			}
 		}
 	}
