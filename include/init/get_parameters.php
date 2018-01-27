@@ -588,4 +588,15 @@ function getAchievementVisibility($con)
 	return $ac_visibility;
 }
 
+function getParamByAcID($con,$ac_id)
+{
+	$result = mysqli_query($con,"SELECT ac_categorie, ac_trigger, ac_visibility FROM ac WHERE ID = '$ac_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$param[] = $row;
+	}
+
+	return $param;
+}
+
 ?>

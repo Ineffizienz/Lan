@@ -39,34 +39,16 @@ $(document).ready(function(){
 		assignAchievement(ac_id,u_id,displayResult);
 	}
 
-	function getChangedTrigger(event)
+	function getChangedParam(event)
 	{
 		event.preventDefault();
 
 		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
-		var trigger = $(this).find('option:selected').attr("name");
+		var trigger = $("#admin_ac_trig").find('option:selected').attr("name");
+		var category = $("#admin_ac_cat").find('option:selected').attr("name");
+		var visib = $("#admin_ac_visib").find('option:selected').attr("name");
 
-		changeTrigger(ac_id,trigger,showResult);
-	}
-
-	function getChangedCategory(event)
-	{
-		event.preventDefault();
-
-		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
-		var category = $(this).find('option:selected').attr("name");
-
-		changeCategory(ac_id,category,showResult);
-	}
-
-	function getChangedVisibility(event)
-	{
-		event.preventDefault();
-
-		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
-		var visib = $(this).find('option:selected').attr("name");
-
-		changeCategory(ac_id,visib,showResult);
+		changeParam(ac_id,trigger,category,visib,showResult);
 	}
 
 	function getAcData(event)
@@ -180,39 +162,16 @@ $(document).ready(function(){
 		});
 	}
 
-	function changeTrigger(ac_id,trigger,fn)
+	function changeParam(ac_id,trigger,category,visib,fn)
 	{
 		return $.ajax({
 			type: "post",
-			url: "admin/achievement/edit/change_trigger.php",
+			url: "admin/achievement/edit/change_param.php",
 			data: {
 				ac_id:ac_id,
-				trigger:trigger
-			},
-			success: fn
-		});
-	}
-
-	function changeCategory(ac_id,category,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/change_category.php",
-			data: {
-				ac_id:ac_id,
-				category:category
-			},
-			success: fn
-		});
-	}
-	function changeCategory(ac_id,visib,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/change_visib.php",
-			data: {
-				ac_id:ac_id,
-				visib:visib
+				trigger:trigger,
+				category: category,
+				visib: visib
 			},
 			success: fn
 		});
@@ -237,8 +196,8 @@ $(document).ready(function(){
 	$("#b_del_team").on("click", getTeamId);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
-	$(document).on("change","#admin_ac_trig",getChangedTrigger);
-	$(document).on("change","#admin_ac_cat",getChangedCategory);
-	$(document).on("change","#admin_ac_visib",getChangedVisibility);
+	$(document).on("change","#admin_ac_trig",getChangedParam);
+	$(document).on("change","#admin_ac_cat",getChangedParam);
+	$(document).on("change","#admin_ac_visib",getChangedParam);
 
 });
