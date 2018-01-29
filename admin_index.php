@@ -25,6 +25,8 @@ if($ip == "::1" || "192.168.0.89")
 	$tpl->assign("achievements",displayAchievements($con));
 	$tpl->assign("username",addUsername($con));
 	$tpl->assign("ticket_status",displayTicketStatus($con));
+	$tpl->assign("ac_cat",displayAcCategories($con));
+	$tpl->assign("ac_trigger",displayAcTrigger($con));
 
 	$tpl->display();
 } else {

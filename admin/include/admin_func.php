@@ -102,6 +102,24 @@ function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 	return $output;
 }
 
+function displayAcCategories($con)
+{
+	$categories  = getAchievementCategories($con);
+
+	$selectable_categories = buildOption($categories);
+
+	return $selectable_categories;
+}
+
+function displayAcTrigger($con)
+{
+	$trigger = getAchievementTrigger($con);
+
+	$selectable_trigger = buildOption($trigger);
+
+	return $selectable_trigger;
+}
+
 function displayTicketStatus($con)
 {
 	$ticket_status = getUserTicketRelation($con);
