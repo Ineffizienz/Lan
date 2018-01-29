@@ -9,4 +9,12 @@
 	} else {
 		echo "Beim aktualisieren der Datensätze ist ein Fehler aufgetreten: " . mysqli_error($con);
 	}
+
+	$sql = "UPDATE player SET team_captain = NULL WHERE team_captain = '0'";
+	if (mysqli_query($con,$sql))
+	{
+		echo "Team-Captain Datensätze erfolgreich aktualisiert.";
+	} else {
+		echo "Beim aktualisieren der Team-Captain Datensätze ist ein Fehler aufgetreten: " . mysqli_error($con);
+	}
 ?>

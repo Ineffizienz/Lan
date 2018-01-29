@@ -70,7 +70,7 @@ if($fl == "1")
 	$tpl->assign("status_option",getUserStatusOption($con,IP));
 
 	/***************************** SETTING *****************************/
-	if (getCaptainStatus($con,IP) == 0)
+	if (empty(getCaptainStatus($con,IP)))
 	{
 		$tpl->assign("captain","Nein");
 	} else {
