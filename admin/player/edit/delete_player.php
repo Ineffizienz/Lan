@@ -48,9 +48,33 @@
 					
 					$username = getUsernameById($con,$player_id);
 					
-					$sql = "ALTER TABLE ac_player DROP COLUMN $username"; // Check if user has ac_player entry!
-					if(mysqli_query($con,$sql))
+					$result = mysqli_query($con,"SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = 'Project_Ziphon' AND TABLE_NAME ='ac_player' AND COLUMN_NAME ='$username'");
+					while ($row=mysqli_fetch_array($result))
 					{
+						$ac_player = $row;
+					}
+
+					if (!empty($ac_player))
+					{
+						$sql = "ALTER TABLE ac_player DROP COLUMN $username"; // Check if user has ac_player entry!
+						if(mysqli_query($con,$sql))
+						{
+							$sql = "DELETE FROM player WHERE ID = '$player_id'";
+							if(mysqli_query($con,$sql))
+							{
+								$message->getMessageCode("SUC_DELETE_USER");
+								echo $message->displayMessage();
+							} else {
+								$message->getMessageCode("ERR_DB");
+								echo $message->displayMessage();
+								echo mysqli_error($con);
+							}
+						} else {
+							$message->getMessageCode("ERR_DB");
+							echo $message->displayMessage();
+							echo mysqli_error($con);
+						}
+					} else {
 						$sql = "DELETE FROM player WHERE ID = '$player_id'";
 						if(mysqli_query($con,$sql))
 						{
@@ -61,11 +85,8 @@
 							echo $message->displayMessage();
 							echo mysqli_error($con);
 						}
-					} else {
-						$message->getMessageCode("ERR_DB");
-						echo $message->displayMessage();
-						echo mysqli_error($con);
 					}
+
 				} else {
 					$message->getMessageCode("ERR_DB");
 					echo $message->displayMessage();
