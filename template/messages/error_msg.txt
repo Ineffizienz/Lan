@@ -3,8 +3,8 @@ ERR_NO_USER_NAME: Keinen Namen zu besitzen ist unehrenhaft! Lasst eure Kameraden
 ERR_USER_NAME: Meine Wenigkeit gestattet keine doppelten Namen, wählt erneut!
 ERR_NO_TEAM_NAME: Meine Wenigkeit versteht diesen Namen nicht!
 ERR_ENTER_GAME: Wählt Eure Abenteuer weise, aber wählt verdammt noch mal!
-ERR_TEAM_NAME_EXISTS: Eure Hand muss verrutscht sein, niemand w�rde sonst freiwillig den Namen einer feindlichen Gruppierung tragen!
-ERR_CAPTAIN: Ihr tragt bereits die Krone einer anderen Gruppierung! Sofern Ihr eine weitere tragen wollt, m�sstet Ihr euch einen weiteren Kopf wachsen lassen!
+ERR_TEAM_NAME_EXISTS: Eure Hand muss verrutscht sein, niemand würde sonst freiwillig den Namen einer feindlichen Gruppierung tragen!
+ERR_CAPTAIN: Ihr tragt bereits die Krone einer anderen Gruppierung! Sofern Ihr eine weitere tragen wollt, müsstet Ihr euch einen weiteren Kopf wachsen lassen!
 ERR_MEMBER: Es betrübt meine Wenigkeit jedesmal zutiefst wenn junge Gruppierungen auseinander gehen, aber setzt eure einstigen Kameraden zumindest zuerst davon in Kenntnis, bevor sich Eure Wege trennen!
 ERR_STILL_MEMBER: Ihr seid bereits Teil einer Armee. Warum wollt Ihr denn zum Feind überlaufen?
 ERR_WRONG_IP: Meine Wenigkeit hat möglicherweise Eure IP verschluckt. Seine Hoheit weiß sicher, was zu tun ist!
@@ -12,7 +12,7 @@ ERR_LEAVE_TEAM: Meine Wenigkeit lässt Euch diese Gruppierung nicht verlassen! W
 ERR_MISSING_TEAM: Was nicht existiert, kann auch nicht vernichtet werden. Dazu ist selbst meine Wenigkeit nicht im Stande.
 ERR_NO_TEAMS: Es betr�bt meine Wenigkeit sagen zu müssen, dass sich noch keine Gruppierungen für die Spiele zusammen gefunden haben.
 ERR_NOT_ENOUGH_TEAMS: Beitrittsgesuche werden erst gewährt, sobald sich mehr Gruppierungen versammelt haben!
-ERR_NO_ADMIN: Dieser Bereich ist gänzlich meiner Wenigkeit und seiner Hoheit zugeteilt. Meine Wenigkeit wüsste davon, wenn Ihr einer der beiden w�ret!
+ERR_NO_ADMIN: Dieser Bereich ist gänzlich meiner Wenigkeit und seiner Hoheit zugeteilt. Meine Wenigkeit wüsste davon, wenn Ihr einer der beiden wäret!
 ERR_EMPTY: Meine Wenigkeit benötigt auch das Wissen über die genaue Anzahl!
 ERR_MISSING_FILE: Ihr habt meiner Wenigkeit noch immer keine Datensammlung zur Verfügung gestellt!
 ERR_FILE_SIZE: Eure Datendarbietung ödet mich an!
@@ -37,3 +37,4 @@ ERR_NO_COVERNAME_ADMIN: Kein Übergangsname eingegeben.
 ERR_INITIAL_PLAYER: Bei der Initialisierung deines Spielerprofils ist ein Fehler aufgetreten. Bitte wende dich an den Admin :)
 ERR_FILE_TO_SMALL: Welch Hexenwerk! Ich kann Euer Antlitz nicht erkennen.
 ERR_USER_DOES_NOT_EXISTS: Der Spieler existiert nicht und kann nicht gelöscht werden!
+ERR_MISSING_AC_NAME: Dem Achievement wurde kein Name gegeben.

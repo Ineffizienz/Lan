@@ -24,7 +24,12 @@ class message {
 				$lines = file(dirname(__FILE__,2) . "/template/messages/error_msg.txt");
 				foreach ($lines as $line)
 				{
-					if(preg_match("/" . $this->messageCode . "/isUe",$line))
+					/*
+						Im vorliegenden Fall sind folgende Modifikatoren verwendet worden:
+						- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
+						- den Rest hab ich nicht verstanden o.O
+					*/
+					if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$line)) // sogenannte PCRE-Modifikatoren
 					{
 						$this->messageText = ltrim($line,$this->messageCode . ":");
 					}

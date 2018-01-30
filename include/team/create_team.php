@@ -1,5 +1,5 @@
 <?php //add to index.php --> include("inlude/create_team.php");
-include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/init/constant.php");
+include($_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/init/constant.php");
 include(CL . "message_class.php");
 include(CL . "progress_class.php");
 include(INC . "connect.php");

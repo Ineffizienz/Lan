@@ -1,5 +1,5 @@
 <?php
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/init/constant.php");
+	include($_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/init/constant.php");
 	include(INC . "connect.php");
 	include(CL . "message_class.php");
 
@@ -7,7 +7,7 @@
 
 	if(empty($_REQUEST["ac_name"]))
 	{
-		$message->getMessageCode("ERR_NO_AC_NAME");
+		$message->getMessageCode("ERR_MISSING_AC_NAME");
 		echo $message->displayMessage();
 	} else {
 		
@@ -18,11 +18,11 @@
 			$visib = "1";
 		}
 
-		if(($_FILES["file"]["size"] != 0))
+		if(isset($_FILES["file"]["size"]) && ($_FILES["file"]["size"] != 0))
 		{
 			if ($_FILES["file"]["size"] > 500000)
 			{
-				$message->getMessageCode("ERR_FILESIZE");
+				$message->getMessageCode("ERR_FILE_SIZE");
 				echo $message->displayMessage();
 			} else {
 				$extension = pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION);
