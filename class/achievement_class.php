@@ -19,7 +19,7 @@ class Achievement {
 	public function getDetails($single_details)
 	{
 		$this->title = $single_details["title"];
-		$this->message = $single_details["message"];
+		$this->message = utf8_encode($single_details["message"]);
 
 		if(empty($single_details["image_url"]))
 		{
@@ -60,7 +60,7 @@ class Achievement {
 		} else {
 			$this->id = $admin_achievements["ID"];
 			$this->title = $admin_achievements["title"];
-			$this->message = $admin_achievements["message"];
+			$this->message = utf8_encode($admin_achievements["message"]);
 			$this->trigger = $this->buildOption($trigArray,$admin_achievements["trigID"],$admin_achievements["trigger_title"]);
 			$this->category = $this->buildOption($catArray,$admin_achievements["catID"],$admin_achievements["c_name"]);
 			
@@ -156,13 +156,13 @@ class Achievement {
 
 		if($this->image == "NULL")
 		{
-			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
+			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 		} else {
 			if(file_exists("images/achievements/" . $this->image))
 			{
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
+				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 			} else {
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,"Error",utf8_encode($this->message),$this->trigger,$this->category,$this->visib), $this->ac_template);
+				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,"Error",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 			}
 		}
 	}
