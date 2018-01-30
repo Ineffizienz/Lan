@@ -14,3 +14,4 @@ SUC_DELETE_USER: Nutzer erfolgreich gelöscht.
 SUC_CHANGE_TRIGGER: Trigger erfolgreich geändert.
 SUC_CHANGE_CATEGORY: Kategorie erfolgreich geändert.
 SUC_CHANGE_VISIB: Sichtbarkeit erfolgreich geändert.
+SUC_CREATE_AC: Das Achievement wurde erfolgreich erstellt.
