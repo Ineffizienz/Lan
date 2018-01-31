@@ -39,10 +39,10 @@ class Progress {
 			$this->acMessage = $row["message"];
 		}
 		
-		$result = mysqli_query($this->DBC,"SELECT name FROM player WHERE ip ='$this->userIP'");
+		$result = mysqli_query($this->DBC,"SELECT ID FROM player WHERE ip ='$this->userIP'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->user = $row["name"];
+			$this->user = $row["ID"];
 		}
 		
 		$result = mysqli_query($this->DBC,"SELECT $this->user FROM ac_player WHERE ac_id = '$this->acID'");
@@ -59,7 +59,7 @@ class Progress {
 		
 		if(empty($this->userAC))
 		{
-			$sql = "UPDATE ac_player SET $this->user = '1' WHERE ac_id = '$this->acID'";
+			$sql = "UPDATE ac_player SET `$this->user` = '1' WHERE ac_id = '$this->acID'";
 			if(mysqli_query($this->DBC,$sql))
 			{
 				$this->createAchievement();	// Funktionsaufruf zum Einbinden des Achievement-Templates

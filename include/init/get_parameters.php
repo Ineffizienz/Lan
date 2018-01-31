@@ -514,9 +514,9 @@ function getAchievementById($con,$ac_id) // function.php/displayUserAchievements
 	return $achievement;
 }
 
-function getUserAchievements($con,$username) // function.php/displayUserAchievements + admin/assign_achievement.php
+function getUserAchievements($con,$user_id) // function.php/displayUserAchievements + admin/assign_achievement.php
 {
-	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE $username = '1'");
+	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE `$user_id` = '1'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$ac_id[] = $row["ac_id"];
@@ -534,7 +534,7 @@ function getAvailableAchievements($con,$ip) // function.php/displayAvailableAchi
 {
 	$username = getSingleUsername($con,$ip);
 
-	$sql = "SELECT ac.ID,ac.title FROM ac LEFT JOIN ac_player ON ac.ID = ac_player.ac_id WHERE ac.ac_visibility = '1' AND ac_player.Ineffizienz IS NULL";
+	$sql = "SELECT ac.ID,ac.title FROM ac LEFT JOIN ac_player ON ac.ID = ac_player.ac_id WHERE ac.ac_visibility = '1' AND ac_player.1 IS NULL";
 	$result = mysqli_query($con,$sql);
 	while($row=mysqli_fetch_assoc($result))
 	{
