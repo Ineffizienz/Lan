@@ -59,7 +59,7 @@
 				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$user_id','1')";
 				if(mysqli_query($con,$sql_status))
 				{
-					$sql_ac = "ALTER TABLE ac_player ADD $username INT(11) NULL";
+					$sql_ac = "ALTER TABLE ac_player ADD `$user_id` INT(11) NULL";
 					if(mysqli_query($con,$sql_ac))
 					{
 						$param = "1";
@@ -267,9 +267,9 @@
 
 function displayPlayerAchievements($con,$ip)
 {
-	$username = getSingleUsername($con,$ip);
+	$user_id = getUserId($con,$ip);
 
-	$achievement_id = getUserAchievements($con,$username);
+	$achievement_id = getUserAchievements($con,$user_id);
 
 	$ac = new Achievement();
 	if (empty($achievement_id))
