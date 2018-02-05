@@ -12,6 +12,7 @@ include(INC . "function.php");
 	if(isset($_REQUEST["team"]))
 	{
 				$t_name = $_REQUEST["team"];
+
 				if ($t_name == "")
 				{
 					$message->getMessageCode("ERR_NO_TEAM_NAME");
@@ -19,6 +20,10 @@ include(INC . "function.php");
 					echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 				} else {
+					if(strstr($t_name,"\\"))
+					{
+						$t_name = addcslashes($t_name, "\\");
+					}
 					$teams = getTeamNames($con);
 
 					if (!empty($teams) && in_array($t_name,$teams))
