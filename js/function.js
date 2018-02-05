@@ -232,11 +232,14 @@ $(document).ready(function(){
 
 	function displayChanges(name)
 	{
-		$("#popup_response").show();
-		document.getElementById("popup_response").innerHTML = name;
-		$("#settings_change_popup").delay(1500).hide(0);
-		$("#content").css("opacity", "1");
-		$("#user").load(location.href + " #user");
+		$("#result").show();
+		$("#result").html(name);
+		$("#result").fadeOut(5000);
+		$("#settings_change_popup").hide(0,function(){
+			$("#content").css("opacity", "1");
+			$("#user").load(location.href + " #user");
+			$("#newuser").val("");
+		});
 	}
 
 	function changePopup(event)
