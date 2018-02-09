@@ -220,7 +220,9 @@ $(document).ready(function(){
 
 	function displayResult(err)
 	{
-		document.getElementById("result").innerHTML = err;
+		$("#result").show();
+		$("#result").html(err);
+		$("#result").fadeOut(2000);
 	}
 
 	function showResult()
