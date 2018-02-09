@@ -287,7 +287,7 @@
 	{
 		$team_id = getTeamId($con,$ip);
 
-		$team_member = getTeamMember($con,$ip);
+		$team_member = getTeamMembers($con,$ip,$team_id);
 
 		if(empty($team_member))
 		{
