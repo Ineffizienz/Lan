@@ -70,16 +70,13 @@ if($fl == "1")
 	$tpl->assign("status_option",getUserStatusOption($con,IP));
 
 	/***************************** SETTING *****************************/
-	if (empty(getCaptainStatus($con,IP)))
-	{
-		$tpl->assign("captain","Nein");
-	} else {
-		$tpl->assign("captain","Ja");
-	}
+
 	$tpl->assign("ip",IP);
 	$tpl->assign("profil_image",displayProfilImage($con,IP));
 	$tpl->assign("nickname",getSingleUsername($con,IP));
 	$tpl->assign("team",displaySinglePlayerTeam($con,IP));
+	$tpl->assign("captain",displayCaptain($con,IP));
+	$tpl->assign("t_members",displayPlayerTeamMember($con,IP));
 	$tpl->assign("player_achievements",displayPlayerAchievements($con,IP));
 	$tpl->assign("ac_small",displayAvailableAchievements($con,IP));
 
