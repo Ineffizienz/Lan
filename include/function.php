@@ -263,6 +263,42 @@
 		}
 	}
 
+	function displayCaptain($con,$ip)
+	{
+		$self_captain = getCaptainStatus($con,$ip);
+
+		if(empty($self_captain))
+		{
+			$team_id = getTeamId($con,$ip);
+			$team_captain = getTeamCaptain($con,$team_id);
+
+			if(empty($team_captain))
+			{
+				$output = "<i>Kein Teamchef bestimmt.</i>";
+			} else {
+				$output = $team_captain;
+			}
+		}
+
+		return $output;
+	}
+
+	function displayPlayerTeamMember($con,$ip)
+	{
+		$team_id = getTeamId($con,$ip);
+
+		$team_member = getTeamMembers($con,$ip,$team_id);
+
+		if(empty($team_member))
+		{
+			$output = "<i>Du hast gegenwärtig keine anderen Teammitglieder.</i>";
+		} else {
+			$output = implode(", ",$team_member);
+		}
+
+		return $output;
+	}
+
 /******************************* ACHIEVEMENTS ************************************/
 
 function displayPlayerAchievements($con,$ip)

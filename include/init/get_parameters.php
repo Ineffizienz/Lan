@@ -417,7 +417,7 @@ function getTeamMembers($con,$ip,$team_id) //bezieht die Teammitglieder eines Sp
 	return $team_members;
 }
 
-function getTeamCapatin($con,$team_id) //bezieht den Team Captain eines spezifischen Teams
+function getTeamCaptain($con,$team_id) //bezieht den Team Captain eines spezifischen Teams
 {
 	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND team_captain != NULL");
 	while ($row=mysqli_fetch_array($result))
@@ -427,7 +427,7 @@ function getTeamCapatin($con,$team_id) //bezieht den Team Captain eines spezifis
 
 	if (empty($captain))
 	{
-		$captain = array();
+		$captain = "";
 	}
 
 	return $captain;
@@ -586,17 +586,6 @@ function getAchievementVisibility($con)
 	}
 
 	return $ac_visibility;
-}
-
-function getParamByAcID($con,$ac_id)
-{
-	$result = mysqli_query($con,"SELECT ac_categorie, ac_trigger, ac_visibility FROM ac WHERE ID = '$ac_id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$param[] = $row;
-	}
-
-	return $param;
 }
 
 ?>
