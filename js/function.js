@@ -25,7 +25,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		joinTeam(displayResponse);
+		joinTeam(displayJoinedTeam);
 	}
 
 	function removeTeam(event)
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		var team = $("#team_id").val();
 		var user = $(".leave_team").attr("id");
 		
-		leaveTeam(team,user,displayResponse);
+		leaveTeam(team,user,reloadTeamName);
 	}
 
 	function getImage(event)
@@ -208,26 +208,47 @@ $(document).ready(function(){
 		$('#reject').show();
 	}
 
+	function displayMessage(message) {
+		$("#result").show();
+		$("#result").html(message);
+		$("#result").fadeOut(7000);
+	}
+
+	function displayAchievement(achievement) {
+		$("#achievement").html(achievement);
+		$("#achievement").fadeOut(9000);
+	}
+
 	function displayResponse(response) {
 
-		$("#result").show();
-		$("#result").html(response.message);
-		$("#result").fadeOut(7000);
+		displayMessage(response.message);
 
-		$("#achievement").html(response.achievement);
-		$("#achievement").fadeOut(9000);
+		displayAchievement(response.achievement);
 
 		$("#displayKey").html(response.key);
 
 		$('#t_name').val("");
 		$('#name').val("");
 
-		$('#teams').get("../index.php?page=teams");
 	}
 
 	function displayStatus(stat)
 	{
 		$("#status_circle").css("background-color",stat);
+	}
+
+	function displayJoinedTeam(response) {
+		displayMessage(response.message);
+
+		$("#teams").load(location.href + " #teams");
+	}
+
+	function reloadTeamName(response) {
+		displayMessage(response.message);
+
+		$("#t_name").load(location.href + " #t_name");
+		$("#t_captain").load(location.href + " #t_captain");
+		$("#t_member").load(location.href + " #t_member");
 	}
 
 	function displayChanges(name)

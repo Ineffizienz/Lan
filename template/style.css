@@ -376,7 +376,7 @@ h3
 	padding: 2px;
 }
 
-/* ---------------------- POPUP ---------------------------
+/* ---------------------- Popup ---------------------------
 --------------------------------------------------------------*/
 
 #popup_response
@@ -412,9 +412,25 @@ h3
 	padding-top:1%;
 }
 
-/* ---------------------- TEAMS ---------------------------
+/* ---------------------- FORMS ---------------------------
 --------------------------------------------------------------*/
 
+.select
+{
+	padding-left:5px;
+	background-color: #FFFFFF;
+	font-weight:bold;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 1px 1px 0 #000000;
+	width:200px;
+	height:25px;
+}
+.select:active
+{
+	border: 0;
+	outline: 0;
+}
 .topic_headline
 {
 	margin-bottom: 3%;
@@ -455,10 +471,6 @@ h3
 	margin:0;
 	font-size:11pt;
 }
-
-/* ---------------------- TOURNAMENT ---------------------------
---------------------------------------------------------------*/
-
 .tournament
 {
 	margin: 0 auto;
@@ -484,10 +496,6 @@ h3
 	text-align:center;
 	width: 50%;
 }
-
-
-/* ---------------------- FORMS ---------------------------
---------------------------------------------------------------*/
 
 .c_form
 {
@@ -532,10 +540,13 @@ h3
 	{
 		box-shadow: 0 0 2px 2px #C0C0C0;
 	}
+
+/***** FORM ELEMENTS *****/
+
 	input[type=text]#ticket_id
-	{
-		background-color: #C0C0C0;
-	}
+ 	{
+ 		background-color: #C0C0C0;
+ 	}
 	input[type=text]
 	{
 		padding-left: 10px;
@@ -551,6 +562,7 @@ h3
 	{
 		box-shadow: 0 0 2px 2px #C0C0C0;
 		font-size: 11pt;
+		font-weight: bold;
 		width:250px;
 	}
 	.button
@@ -574,8 +586,7 @@ h3
 		color: #C0C0C0;
 	}
 
-/* ---------------------- SIR BRUMMEL ---------------------------
---------------------------------------------------------------*/
+/******** Responses ********/ 
 
 #response
 {
@@ -647,8 +658,7 @@ h3
 	font-weight:bold;
 }
 
-/* ---------------------- STATUS ---------------------------
---------------------------------------------------------------*/
+/************ STATUS ****************/
 #status_circle
 {
 	display:inline-block;

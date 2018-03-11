@@ -25,7 +25,7 @@ class Achievement {
 		{
 			$this->image = "NULL";
 		} else {
-			$this->image = "images/achievements/" . $single_details["image_url"];
+			$this->image = dirname(__FILE__,2) . "/images/achievements/" . $single_details["image_url"];
 		}
 
 		$this->buildAchievement();
@@ -45,7 +45,7 @@ class Achievement {
 				{
 					$this->image = "NULL";
 				} else {
-					$this->image = "images/achievements/" . $achievement_details["image_url"];
+					$this->image = dirname(__FILE__,2) . "/images/achievements/" . $achievement_details["image_url"];
 				}
 
 				$this->buildLowAchievement();
@@ -124,11 +124,11 @@ class Achievement {
 		} else {	
 			if(file_exists($this->image))
 			{
-
 				$this->ac = str_replace($this->singleArr, array($this->image,$this->title,$this->message), $this->ac_template);
 
 			} else {
-				$this->ac = str_replace($this->singleArr, array("Kein Bild",$this->title,$this->message), $this->ac_template);
+				echo $this->ac = $this->image;
+				$this->ac = str_replace($this->singleArr, array("Hier oder?",$this->title,$this->message), $this->ac_template);
 			}
 		}
 	}
