@@ -25,7 +25,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		joinTeam(displayResponse);
+		joinTeam(reloadTeams);
 	}
 
 	function removeTeam(event)
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		var team = $("#team_id").val();
 		var user = $(".leave_team").attr("id");
 		
-		leaveTeam(team,user,displayResponse);
+		leaveTeam(team,user,reloadSinglePlayerTeam);
 	}
 
 	function getImage(event)
@@ -208,15 +208,24 @@ $(document).ready(function(){
 		$('#reject').show();
 	}
 
-	function displayResponse(response) {
-
+	function displayMessage(message)
+	{
 		$("#result").show();
-		$("#result").html(response.message);
+		$("#result").html(message);
 		$("#result").fadeOut(7000);
+	}
 
+	function displayAchievement(achievement)
+	{
 		$("#achievement").html(response.achievement);
 		$("#achievement").fadeOut(9000);
+	}
 
+	function displayResponse(response) {
+
+
+		displayMessage(response.message);
+		displayAchievement(response.achievement);
 		$("#displayKey").html(response.key);
 
 		$('#t_name').val("");
@@ -232,14 +241,28 @@ $(document).ready(function(){
 
 	function displayChanges(name)
 	{
-		$("#result").show();
-		$("#result").html(name);
-		$("#result").fadeOut(5000);
+		displayMessage(name);
 		$("#settings_change_popup").hide(0,function(){
 			$("#content").css("opacity", "1");
 			$("#user").load(location.href + " #user");
 			$("#newuser").val("");
 		});
+	}
+
+	function reloadTeams(response)
+	{
+		displayMessage(response);
+
+		$("#teams").load(location.href + " #teams");
+	}
+
+	function reloadSinglePlayerTeam(response)
+	{
+		displayMessage(response);
+
+		$("#t_name").load(location.href + " #t_name");
+		$("#t_captain").load(location.href + " #t_captain");
+		$("#t_member").load(location.href + " #t_member");
 	}
 
 	function changePopup(event)
