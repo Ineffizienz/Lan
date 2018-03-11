@@ -1,5 +1,4 @@
 <?php
-	// Konstanten für Lindas System
 	
 	define("ROOT_INCLUDE", $_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/");
 	define("ROOT_CLASS", $_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/class/");
