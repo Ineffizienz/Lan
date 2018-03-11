@@ -25,7 +25,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		joinTeam(reloadTeams);
+		joinTeam(displayJoinedTeam);
 	}
 
 	function removeTeam(event)
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		var team = $("#team_id").val();
 		var user = $(".leave_team").attr("id");
 		
-		leaveTeam(team,user,reloadSinglePlayerTeam);
+		leaveTeam(team,user,reloadTeamName);
 	}
 
 	function getImage(event)
@@ -208,30 +208,28 @@ $(document).ready(function(){
 		$('#reject').show();
 	}
 
-	function displayMessage(message)
-	{
+	function displayMessage(message) {
 		$("#result").show();
 		$("#result").html(message);
 		$("#result").fadeOut(7000);
 	}
 
-	function displayAchievement(achievement)
-	{
-		$("#achievement").html(response.achievement);
+	function displayAchievement(achievement) {
+		$("#achievement").html(achievement);
 		$("#achievement").fadeOut(9000);
 	}
 
 	function displayResponse(response) {
 
-
 		displayMessage(response.message);
+
 		displayAchievement(response.achievement);
+
 		$("#displayKey").html(response.key);
 
 		$('#t_name').val("");
 		$('#name').val("");
 
-		$('#teams').get("../index.php?page=teams");
 	}
 
 	function displayStatus(stat)
@@ -239,30 +237,30 @@ $(document).ready(function(){
 		$("#status_circle").css("background-color",stat);
 	}
 
+	function displayJoinedTeam(response) {
+		displayMessage(response.message);
+
+		$("#teams").load(location.href + " #teams");
+	}
+
+	function reloadTeamName(response) {
+		displayMessage(response.message);
+
+		$("#t_name").load(location.href + " #t_name");
+		$("#t_captain").load(location.href + " #t_captain");
+		$("#t_member").load(location.href + " #t_member");
+	}
+
 	function displayChanges(name)
 	{
-		displayMessage(name);
+		$("#result").show();
+		$("#result").html(name);
+		$("#result").fadeOut(5000);
 		$("#settings_change_popup").hide(0,function(){
 			$("#content").css("opacity", "1");
 			$("#user").load(location.href + " #user");
 			$("#newuser").val("");
 		});
-	}
-
-	function reloadTeams(response)
-	{
-		displayMessage(response);
-
-		$("#teams").load(location.href + " #teams");
-	}
-
-	function reloadSinglePlayerTeam(response)
-	{
-		displayMessage(response);
-
-		$("#t_name").load(location.href + " #t_name");
-		$("#t_captain").load(location.href + " #t_captain");
-		$("#t_member").load(location.href + " #t_member");
 	}
 
 	function changePopup(event)
