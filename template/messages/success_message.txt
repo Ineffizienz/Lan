@@ -15,3 +15,4 @@ SUC_CHANGE_TRIGGER: Trigger erfolgreich geändert.
 SUC_CHANGE_CATEGORY: Kategorie erfolgreich geändert.
 SUC_CHANGE_VISIB: Sichtbarkeit erfolgreich geändert.
 SUC_CREATE_AC: Das Achievement wurde erfolgreich erstellt.
+SUC_DELETE_TEAM: Das Team wurde erfolgreich gelöscht.
