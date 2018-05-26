@@ -19,7 +19,7 @@ require_once(INC . "function.php");
 $fl = getFirstLoginByIp($con,IP);
 $ticket_status = getTicketStatus($con,IP);
 $message = new message();
-if($fl == "1")
+/*if($fl == "1")
 {
 	//$message->getMessageCode("ERR_NO_USER_NAME");
 
@@ -39,7 +39,7 @@ if($fl == "1")
 
 	$tpl->display();
 
-} else {
+} else {*/
 	include(INC . "controller.php");
 
 	$tpl = new template();
@@ -83,5 +83,5 @@ if($fl == "1")
 
 
 	$tpl->display();
-}
+//}
 ?>
