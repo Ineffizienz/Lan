@@ -7,9 +7,10 @@
         - close file connection missing 
 */
 
-include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/connect.php");
-include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/function.php");
-include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/class/message_class.php");
+include(dirname(__FILE__,4) . "/include/init/constant.php");
+include(dirname(__FILE__,3) . "/include/admin_function.php");
+include(INC . "connect.php");
+include(CL . "message_class.php");
 
 // validate if Game exists allready in DB
 
@@ -23,7 +24,7 @@ if ($response === TRUE)
         $new_game = $_REQUEST["game"];
         if($_FILES["file"]["size"] == 0)
         {
-                $error->getMessageCode("ERR_FILE_SIZE");
+                $error->getMessageCode("ERR_ADMIN_FILE_TO_HUGE");
                 $error->displayMessage();      
         } else {
                 move_uploaded_file($_FILES["file"]["tmp_name"], $_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/key_list/" . $_FILES["file"]["name"]);

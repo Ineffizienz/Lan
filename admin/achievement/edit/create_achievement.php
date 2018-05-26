@@ -1,5 +1,6 @@
 <?php
-	include($_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/init/constant.php");
+	include(dirname(__FILE__,4) . "/include/init/constant.php");
+	include(dirname(__FILE__,3). "/include/admin_func.php");
 	include(INC . "connect.php");
 	include(CL . "message_class.php");
 
@@ -7,7 +8,7 @@
 
 	if(empty($_REQUEST["ac_name"]))
 	{
-		$message->getMessageCode("ERR_MISSING_AC_NAME");
+		$message->getMessageCode("ERR_ADMIN_MISSING_AC_NAME");
 		echo $message->displayMessage();
 	} else {
 		
@@ -17,56 +18,44 @@
 		} else {
 			$visib = "1";
 		}
-
-		if(isset($_FILES["file"]["size"]) && ($_FILES["file"]["size"] != 0))
+		
+		if(isset($_FILES["file"]["size"]) && !empty($_FILES["file"]["size"]))
 		{
-			if ($_FILES["file"]["size"] > 500000)
+			$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
+			if($result_validate == "1")
 			{
-				$message->getMessageCode("ERR_FILE_SIZE");
-				echo $message->displayMessage();
-			} else {
-				$extension = pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION);
-				if (($extension !== "jpg") && ($extension !== "gif") && ($extension !== "png") && ($extension !== "jpeg"))
+				move_uploaded_file($_FILES["file"]["tmp_name"], AC . $_FILES["file"]["name"]);
+				$path = $_FILES["file"]["name"];
+				
+				$title = $_REQUEST["ac_name"];
+				$categorie = $_REQUEST["ac_cat"];
+				$trigger = $_REQUEST["ac_trigger"];
+				$text = $_REQUEST["ac_message"];
+
+				$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title','$path','$text','$trigger','$categorie','$visib')";
+
+				if(mysqli_query($con,$sql))
 				{
-					$message->getMessageCode("ERR_NO_IMAGE");
-					echo $message->displayMessage();
-				} else {
-					move_uploaded_file($_FILES["file"]["tmp_name"], dirname(__FILE__,4) . "/images/achievements/" . $_FILES["file"]["name"]);
-					$path = $_FILES["file"]["name"];
+					$result = mysqli_query($con, "SELECT ID FROM ac WHERE title = '$title'");
+					while($row=mysqli_fetch_array($result))
+					{
+						$new_ac = $row["ID"];
+					}
 
-					$title = $_REQUEST["ac_name"];
-					$categorie = $_REQUEST["ac_cat"];
-					$trigger = $_REQUEST["ac_trigger"];
-					$text = $_REQUEST["ac_message"];
-
-					$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title','$path','$text','$trigger','$categorie','$visib')";
-
+					$sql = "INSERT INTO ac_player (ac_id) VALUES ('$new_ac')";
 					if(mysqli_query($con,$sql))
 					{
-						$result = mysqli_query($con, "SELECT ID FROM ac WHERE title = '$title'");
-						while($row=mysqli_fetch_array($result))
-						{
-							$new_ac = $row["ID"];
-						}
-
-						$sql = "INSERT INTO ac_player (ac_id) VALUES ('$new_ac')";
-						if(mysqli_query($con,$sql))
-						{
-							$message->getMessageCode("SUC_CREATE_AC");
-							echo $message->displayMessage();
-						} else {
-							echo mysqli_error($con);
-							$message->getMessageCode("ERR_DB");
-							echo $message->displayMessage();
-						}
-						
+						$message->getMessageCode("SUC_ADMIN_CREATE_AC");
+						echo $message->displayMessage();
 					} else {
 						echo mysqli_error($con);
-						$message->getMessageCode("ERR_DB");
+						$message->getMessageCode("ERR_ADMIN_DB");
 						echo $message->displayMessage();
 					}
-				}
-			}
+			} else {
+				$message->getMessageCode($result_validate)
+				echo $message->displayMessage();
+			}	
 		} else {
 
 			$title = $_REQUEST["ac_name"];
@@ -87,15 +76,15 @@
 				$sql = "INSERT INTO ac_player (ac_id) VALUES ('$new_ac')";
 				if(mysqli_query($con,$sql))
 				{
-					$message->getMessageCode("SUC_CREATE_AC");
+					$message->getMessageCode("SUC_ADMIN_CREATE_AC");
 					echo $message->displayMessage();
 				} else {
 					echo mysqli_error($con);
-					$message->getMessageCode("ERR_DB");
+					$message->getMessageCode("ERR_ADMIN_DB");
 					echo $message->displayMessage();
 				}
 			} else {
-				$message->getMessageCode("ERR_DB");
+				$message->getMessageCode("ERR_ADMIN_DB");
 				echo mysqli_error($con);
 				echo $message->displayMessage();
 			}				

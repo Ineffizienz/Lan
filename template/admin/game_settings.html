@@ -1,0 +1,57 @@
+<div>
+	<div style="padding-left:5%;padding-top:1%;">
+		<h3>Spiele hinzufügen</h3>
+	</div>
+	<p class="line">&nbsp;</p>
+	<div style="margin:0 auto;text-align:center">
+		<form enctype="multipart/form-data">
+			<table cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<label for="new_game">Name des Spiels:</label>
+					</td>
+					<td>
+						<input type="text" name="new_game" id="new_game">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="new_raw_table">Keylist erforderlich:</label>
+					</td>
+					<td>
+						<input type="checkbox" name="new_raw_table" id="new_raw_table">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<lable for="new_game_icon">Icon des neuen Spiels:</lable>
+					</td>
+					<td>
+						<input type="file" name="new_game_icon" id="new_game_icon">
+					</td>
+				</tr>
+			</table>
+			<button id='b_add_game'>Spiel hinzufügen</button>
+		</form>
+	</div>	
+</div>
+<div>&nbsp;</div>
+<div>
+	<div style="padding-left:5%;padding-top:1%;">
+		<h3>Spiele bearbeiten</h3>
+	</div>
+	<p class="line">&nbsp;</p>
+	<form enctype="multipart/form-data">
+		<table id="admin_game_list" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+			<tr>
+				<th>Game-ID</th>
+				<th>Name</th>
+				<th>Raw-Name</th>
+				<th>Icon</th>
+				<th>Has Table</th>
+			</tr>
+			{$admin_games}
+		</table>
+	</form>
+</div>
+<div>&nbsp;</div>

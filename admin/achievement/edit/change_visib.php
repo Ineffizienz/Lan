@@ -1,5 +1,5 @@
 <?php
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/init/constant.php");
+	include(dirname(__FILE__,4) . "/include/init/constant.php");
 	include(INC . "connect.php");
 	include(INIT . "get_parameters.php");
 	include(CL . "message_class.php");

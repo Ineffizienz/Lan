@@ -146,6 +146,41 @@ function displayTicketStatus($con)
 	return $output;
 }
 
+function displaySingleGame($con)
+{
+	$game_data = getGameData($con);
+
+	foreach ($game_data as $game)
+	{
+		$singleGame_template = file_get_contents("template/admin/part/game_table.html");
+
+		if($game["has_table"] == "1")
+		{
+			$selected_option = array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein"));
+		} else {
+			$selected_option = array(array("ID"=>"0","name"=>"Nein"),array("ID"=>"1","name"=>"Ja"));
+		}
+
+		$has_table = buildOption($selected_option);
+
+		if(empty($game["icon"]))
+		{
+			$icon = "No Icon";
+		} else {
+			$icon = "<img src='images/game_icon/" . $game["icon"] . "' height='64'>";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+		} else {
+			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+		}
+	}
+
+	return $output;
+}
+
 function buildVisibilityOption($con)
 {
 	$ac_visib = getAchievementVisibility($con);
@@ -182,7 +217,7 @@ function validateInput($new_game)
 
 	} else {
 
-		$message_code = "ERR_MISSING_GAME_NAME";
+		$message_code = "ERR_ADMIN_MISSING_GAME_NAME";
 		return $message_code;
 
 	}
@@ -225,6 +260,26 @@ function emptyText($data)
 	}
 
 	return $text;
+}
+
+function validateImageFile($filesize,$filetype)
+{
+	if(isset($filesize) && ($filesize != 0))
+	{
+		if($filesize > 500000)
+		{
+			return "ERR_ADMIN_FILE_TO_HUGE";
+		} else {
+			if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
+			{
+				return "ERR_ADMIN_NO_IMAGE_TYPE";
+			} else {
+				return "1";
+			}
+		}
+	} else {
+		return "ERR_ADMIN_NO_IMAGE";
+	}
 }
 
 function createGame($con,$new_game,$new_raw_name)

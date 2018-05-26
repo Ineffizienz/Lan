@@ -69,7 +69,6 @@
 				} else {
 					$param = "0";
 				}
-				$param = "1";
 			} else {
 				$param = "0";
 			}
@@ -79,8 +78,33 @@
 
 		return $param;
 	}
-
-	function ownTeam($con,$ip) //decapretated?
+	
+	function validateImage($filesize,$filetype)
+	{
+		if (isset($filesize) && ($filesize != 0))
+		{
+			if($filesize < 5242880)
+			{
+				if($filesize < 5)
+				{
+					return "ERR_FILE_TO_SMALL";
+				} else {
+					if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
+					{
+						return "ERR_NO_IMAGE_TYPE";
+					} else {
+						return 1;
+					}	
+				}	
+			} else {
+				return "ERR_FILE_TO_HUGE";
+			}
+		} else {
+			return "ERR_NO_IMAGE";
+		}
+	}
+	
+	function ownTeam($con,$ip)
 	{
 		$team_id = getTeamId($con,$ip);
 
@@ -90,14 +114,6 @@
 		} else {
 			$name = getTeamName($con,$team_id);
 			$team = "<span>Dein akutelles Team ist: " . $name . "</span>";
-		}
-
-		if ($ip == "::1")
-		{
-			$team .= "<form>";
-			$team .= "<input type='text' name='teamname' id='name'>";
-			$team .= "<button class='button' id='delete'>Team löschen</button>";
-			$team .= "</form>";
 		}
 
 		return $team;
@@ -294,6 +310,71 @@
 			$output = "<i>Du hast gegenwärtig keine anderen Teammitglieder.</i>";
 		} else {
 			$output = implode(", ",$team_member);
+		}
+
+		return $output;
+	}
+
+	function displayPlayerPrefs($con,$ip)
+	{
+		$player_pref = getSinglePlayerPref($con,$ip);
+
+		if(empty($player_pref))
+		{
+			$output = "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
+		} else {
+			$part = file_get_contents("template/part/single_pref.html");
+
+			foreach ($player_pref as $pref)
+			{
+				$gameInfo = getGameInfoById($con,$pref);
+				if (!isset($output))
+				{
+					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["name"]), $part);
+				} else {
+					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["name"]), $part);
+				}
+				
+			}
+		}
+
+		return $output;
+	}
+	
+	function createCheckbox($con,$ip)
+	{
+		$games = getGameData($con);
+
+		if(empty($games))
+		{
+			$output = "<i>Keine Spiele vorhanden</i>";
+		} else {
+
+			$userPrefs = getSinglePlayerPref($con,$ip);
+
+			$part = file_get_contents("template/part/checkbox_container.html");
+			$checked_part = file_get_contents("template/part/checkbox_container_checked.html");
+
+			foreach ($games as $game)
+			{
+				if(in_array($game["ID"],$userPrefs))
+				{
+					if(!isset($output))
+					{
+						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
+					} else {
+						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
+					}
+				} else {
+					if(!isset($output))
+					{
+						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
+					} else {
+						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
+					}
+				}
+				
+			}
 		}
 
 		return $output;

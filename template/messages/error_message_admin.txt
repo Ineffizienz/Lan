@@ -1,0 +1,16 @@
+ERR_ADMIN_GAME_EXISTS: Das angegebene Spiel existiert bereits.
+ERR_ADMIN_NO_GAME_NAME: Kein Spielnamen angegeben.
+ERR_ADMIN_DB: Datenbankfehler!
+ERR_ADMIN_NO_GAME: Kein Spiel angegeben.
+ERR_ADMIN_MISSING_AC_NAME: Dem Achievement wurde kein Name gegeben.
+ERR_ADMIN_AC_ALLREADY_GIVEN: Der User besitzt das Achievement bereits.
+ERR_ADMIN_MISSING_PLAYER: Kein User angegeben.
+ERR_ADMIN_MISSING_AC: Kein Achievement angegeben.
+ERR_ADMIN_FILE_TO_HUGE: Datei zu groß.
+ERR_ADMIN_NO_IMAGE_TYPE: Die angegebene Datei ist kein Bild.
+ERR_ADMIN_NO_IMAGE: Es wurde kein Bild hinterlegt.
+ERR_ADMIN_MISSING_GAME_NAME: Es wurde kein Name des Spiels hinterlegt.
+ERR_ADMIN_INTERN_#1: Es ist ein interner Fehler aufgetreten. Fehlercode: 1.
+ERR_ADMIN_NO_COVERNAME: Kein Übergangsname eingegeben.
+ERR_ADMIN_USER_DOES_NOT_EXISTS: Der Spieler existiert nicht und kann nicht gelöscht werden!
+ERR_ADMIN_NO_TEAM_SELECTED: Es wurde kein Team ausgewählt.
