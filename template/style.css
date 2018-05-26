@@ -190,6 +190,25 @@ h3
 				margin-left:5%;
 			}
 
+/* ---------------------- PROFIL_IMAGE ---------------------------
+--------------------------------------------------------------*/
+
+.profil_image_container
+{
+	margin:10px;
+}
+.profil_image
+{
+	margin-left: 5px;
+}
+.profil_image img
+{
+	background-color:e1e1e1;
+	box-shadow: 0 0 5px 0 #333;
+	border-radius:25%;
+	width:100%;
+}
+
 /* ---------------------- SETTINGS ---------------------------
 --------------------------------------------------------------*/
 
@@ -203,7 +222,7 @@ h3
 {
 	background-color:#e1e1e1;
 	border:1px solid #A0A0A0;
-	border-radius:8px;
+	border-radius:8px 8px 0 0;
 }
 .settings_headline
 {
@@ -214,12 +233,12 @@ h3
 }
 .settings_data_container
 {
-	margin:10px;
+	background-color: #d6d6d6;
+	border:1px solid #A0A0A0;
+	border-top:0px;
+	border-radius: 0 0 8px 8px;
 	padding-left:15px;
-}
-.settings_data
-{
-	margin-top:15%;
+	margin-bottom: 5%;
 }
 .settings_nav
 {
@@ -662,6 +681,134 @@ h3
 	width:15px;
 	height:15px;
 }
+
+/* ---------------------- PREFERENCE ---------------------------
+--------------------------------------------------------------*/
+
+.cloud
+{
+	float:left;
+	background-color:#d6d6d6;
+	text-align:justify;
+	max-width:80%;
+}
+.pref_container 
+{
+	float:left;
+	padding:3px;
+	margin:2px;
+	background-color:#e1e1e1;
+	text-align:center;
+	border:1px solid #A0A0A0;
+	border-radius:50px;
+	box-shadow: 0 2px 2px 0;
+	min-width:100px;
+	height: 25px;
+}
+.pref_icon
+{
+	vertical-align: middle;
+}
+.pref_game
+{
+	font-size:9pt;
+	font-weight:bold;
+}
+#controllPref
+{
+	float:left;
+}	
+	.add_pref
+	{
+		float:left;
+		cursor: pointer;
+	}
+	#selBar
+	{
+		display:none;
+		float:left;
+		position:absolute;
+		background-color:#e1e1e1;
+		box-shadow: 0 2px 2px 0;
+		border-radius: 5px;
+		margin-left:20px;
+		font-family:Calibri;
+		width: auto;
+		min-width:150px;
+		z-index:10;
+	}
+	.checkmark_container
+	{
+		display:block;
+		position:relative;
+		float:left;
+		padding-left:35px;
+		margin-bottom: 12px;
+		cursor: pointer;
+		font-size: 22px;
+		user-select: none;
+		-moz-user-select: none;
+	}
+	.checkmark_container input
+	{
+		position:absolute;
+		display:none;
+	}
+	.checkmark
+	{
+		position:absolute;
+		top:0;
+		left:0;
+		height: 20px;
+		width: 20px;
+		background-color:#eee;
+		box-shadow: 0 1px 1px 0;
+		border-radius:20%;
+	}
+	.checkmark_container:hover input ~ .checkmark
+	{
+		background-color:#ccc;
+	}
+	.checkmark_container input:checked ~ .checkmark
+	{
+		background-color:#2196F3;
+	}
+	.checkmark:after
+	{
+		content: "";
+		position: absolute;
+		display:none;
+	}
+	.checkmark_container input:checked ~ .checkmark:after
+	{
+		display:block;
+	}
+	.checkmark_container .checkmark:after
+	{
+		left:6px;
+		top:3px;
+		width:5px;
+		height:10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		transform: rotate(45deg);
+	}
+	.checkbox_container
+	{
+		margin:2%;
+	}
+		.checkmark_name
+		{
+			float:left;
+		}
+		.checkmark_name img
+		{
+			float:left;
+		}
+		.checkmark_name span
+		{
+			float:right;
+		}
 
 A:link
 {

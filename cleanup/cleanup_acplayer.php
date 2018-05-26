@@ -28,6 +28,7 @@
 				echo mysqli_error($con) . "<br>";
 			}
 		} else {
+			$user_id = $user["ID"];
 			$sql = "ALTER TABLE ac_player ADD `$user_id` INT(11) NULL";
 			if (mysqli_query($con,$sql))
 			{

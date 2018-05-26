@@ -7,10 +7,7 @@ error_reporting(E_ALL);
 
 include("admin/files.php");
 
-
-$ip = $_SERVER["REMOTE_ADDR"];
-
-if($ip == "::1" || "192.168.0.89")
+if(IP == "::1" || "192.168.0.89")
 {
 	$tpl = new template();
 	$tpl->load("admin/home.html");
@@ -27,6 +24,7 @@ if($ip == "::1" || "192.168.0.89")
 	$tpl->assign("ticket_status",displayTicketStatus($con));
 	$tpl->assign("ac_cat",displayAcCategories($con));
 	$tpl->assign("ac_trigger",displayAcTrigger($con));
+	$tpl->assign("admin_games",displaySingleGame($con));
 
 	$tpl->display();
 } else {

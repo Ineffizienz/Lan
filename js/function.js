@@ -3,6 +3,16 @@ $(document).ready(function(){
 	var files;
 	// Input-functions after the Event (change/click)
 	// Creating variables and calling generateKey()
+	function getFileData(input_id)
+	{
+		var image = $("#" + input_id + "").prop('files')[0];
+		var image_data = new FormData();
+
+		image_data.append("file",image);
+
+		return image_data;
+	}
+	
 	function showGamekeyOnChange(event)
 	{
 		event.preventDefault();
@@ -74,17 +84,23 @@ $(document).ready(function(){
 		leaveTeam(team,user,reloadTeamName);
 	}
 
+	function getCheckedGame(event)
+	{
+		event.preventDefault();
+
+		var checkedGame = $(this).attr("id");
+		
+		addPref(checkedGame,reactToChange);
+	}
+
 	function getImage(event)
 	{
 		event.preventDefault();
 		event.stopPropagation();
+		
+		var image_id = "profil_image";
 
-		var file_data = $('#profil_image').prop('files')[0];
-		var data = new FormData();
-
-		data.append("file",file_data);
-
-		uploadProfilImage(data,displayResponse);
+		uploadProfilImage(getFileData(image_id),displayResponse);
 	}
 
 	// Retrieving the data from PHP-File and calling showKey, as mentioned in the show-functions
@@ -149,6 +165,18 @@ $(document).ready(function(){
 			success: fn
 		});
 	}
+	function addPref(game_id, fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "include/profil/add_pref.php",
+			data: {
+				checkedGame:game_id
+			},
+			success: fn
+		});
+	}
 
 	function destroyTeam(team, fn)
 	{
@@ -166,6 +194,7 @@ $(document).ready(function(){
 	{
 		return $.ajax({
 			type: "get",
+			dataType: "json",
 			url: "include/player/status.php",
 			data: {
 				status: status
@@ -178,6 +207,7 @@ $(document).ready(function(){
 	{
 		return $.ajax({
 			type: "post",
+			dataType: "json",
 			url: "include/profil/change_user.php",
 			data: {
 				user:user
@@ -201,6 +231,15 @@ $(document).ready(function(){
 	}
 
 	//Output-Funktion
+	function reactToChange(output) 	{
+		
+		displayMessage(output.message);
+
+		console.log(output.message);
+
+		$(".cloud").load("include/ajax_function.php?function=displayPrefs");
+	}
+	
 	function showKey(key) {
 		$("#display_key").slideDown();
 		document.getElementById("displayKey").innerHTML = key;
@@ -234,7 +273,7 @@ $(document).ready(function(){
 
 	function displayStatus(stat)
 	{
-		$("#status_circle").css("background-color",stat);
+		$("#status_circle").css("background-color",stat.color);
 	}
 
 	function displayJoinedTeam(response) {
@@ -251,11 +290,9 @@ $(document).ready(function(){
 		$("#t_member").load(location.href + " #t_member");
 	}
 
-	function displayChanges(name)
+	function displayChanges(response)
 	{
-		$("#result").show();
-		$("#result").html(name);
-		$("#result").fadeOut(5000);
+		displayMessage(response.message);
 		$("#settings_change_popup").hide(0,function(){
 			$("#content").css("opacity", "1");
 			$("#user").load(location.href + " #user");
@@ -297,6 +334,13 @@ $(document).ready(function(){
 		$(this).children().hide();
 	}
 
+	function showPrefs(event)
+	{
+		event.preventDefault();
+
+		$("#selBar").slideToggle();
+	}
+
 
 	$("#create-team").on("click", retrieveTeam);
 	$("#keygen").on("change", showGamekeyOnChange);
@@ -310,5 +354,7 @@ $(document).ready(function(){
 	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
 	$("#profil_image").on("change",getImage);
 	$(".leave_team").on("click",getLeaveData);
+	$(document).on("click",".add_pref",showPrefs);
+	$(document).on("change",".checkmark_container input",getCheckedGame);
 });
 

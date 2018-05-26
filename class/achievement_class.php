@@ -25,7 +25,7 @@ class Achievement {
 		{
 			$this->image = "NULL";
 		} else {
-			$this->image = dirname(__FILE__,2) . "/images/achievements/" . $single_details["image_url"];
+			$this->image = "images/achievements/" . $single_details["image_url"];
 		}
 
 		$this->buildAchievement();
@@ -45,7 +45,7 @@ class Achievement {
 				{
 					$this->image = "NULL";
 				} else {
-					$this->image = dirname(__FILE__,2) . "/images/achievements/" . $achievement_details["image_url"];
+					$this->image = "/images/achievements/" . $achievement_details["image_url"];
 				}
 
 				$this->buildLowAchievement();

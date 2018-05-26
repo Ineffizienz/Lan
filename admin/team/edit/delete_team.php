@@ -7,7 +7,7 @@
 
 	if (empty($_REQUEST["id"]))
 	{
-		$message->getMessageCode("ERR_NO_TEAM_SELECTED");
+		$message->getMessageCode("ERR_ADMIN_NO_TEAM_SELECTED");
 		echo $message->displayMessage();
 	} else {
 		$id = $_REQUEST["id"];
@@ -17,7 +17,7 @@
 			$sql = "DELETE FROM tm_teamname WHERE ID = '$id'";
 			if(mysqli_query($con,$sql))
 			{
-				$message->getMessageCode("SUC_DELETE_TEAM");
+				$message->getMessageCode("SUC_ADMIN_DELETE_TEAM");
 				echo $message->displayMessage();
 			}
 		}

@@ -1,7 +1,8 @@
 <?php
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/connect.php");
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/function.php");
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/class/message_class.php");
+	include(dirname(__FILE__,4) . "/include/init/constant.php");
+	include(dirname(__FILE__,3) . "/include/admin_function.php");
+	include(INC . "connect.php");
+	include(CL . "message_class.php");
 
 	$message = new message();
 	$last_ip = getLastIp($con);
@@ -27,17 +28,17 @@
 			$sql = "INSERT INTO player (name,ip,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,'1')";
 			if(mysqli_query($con,$sql))
 			{
-				$message->getMessageCode("SUC_NEW_PLAYER");
+				$message->getMessageCode("SUC_ADMIN_NEW_PLAYER");
 				echo $message->displayMessage();
 			} else {
 				echo mysqli_error($con);
 			}	
 		} else {
-			$message->getMessageCode("ERR_INTERN_#1");
+			$message->getMessageCode("ERR_ADMIN_INTERN_#1");
 			echo $message->displayMessage();
 		}
 	} else {
-		$message->getMessageCode("ERR_NO_COVERNAME_ADMIN");
+		$message->getMessageCode("ERR_ADMIN_NO_COVERNAME");
 		echo $message->displayMessage();
 	}
 

@@ -1,5 +1,5 @@
 <?php
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/init/constant.php");
+	include(dirname(__FILE__,3) . "/include/init/constant.php");
 	include(INC . "connect.php");
 	include(INC . "function.php");
 
@@ -15,6 +15,6 @@
 
 		$s_color = getStatusColor($con,$status);
 
-		echo $s_color;
+		echo json_encode(array("color" => $s_color));
 	}
 ?>
