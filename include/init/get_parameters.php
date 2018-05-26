@@ -172,6 +172,17 @@ function getUsernameById($con,$id) // admin/assign_achievement.php
 	return $username;
 }
 
+function getUserPref($con,$id)
+{
+	$result = mysqli_query($con,"SELECT preferences FROM pref WHERE user_id = '$id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$user_pref = $row["preferences"];
+	}
+
+	return $user_pref;
+}
+
 
 /*
 ###########################################################
@@ -211,7 +222,26 @@ function getSinglePlayerTeam($con,$ip) // index.php
 
 	return $team;
 }
+function getSinglePlayerPref($con,$ip)
+{
+	$player_id = getUserId($con,$ip);
 
+	$result = mysqli_query($con,"SELECT preferences FROM pref WHERE user_id = '$player_id'");
+	while ($row=mysqli_fetch_array($result))
+	{
+		$prefString = $row["preferences"];
+	}
+
+	$player_pref = array();
+	if(!empty($prefString))
+	{
+		$player_pref = explode(", ",$prefString);
+	}
+
+
+	return $player_pref;
+
+}
 
 /*
 ###########################################################
@@ -219,9 +249,39 @@ function getSinglePlayerTeam($con,$ip) // index.php
 ###########################################################
 */
 
+function getGameData($con)
+{
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gameData[] = $row;
+	}
+
+	return $gameData;
+}
+function getGameID($con,$game)
+{
+	$result = mysqli_query($con,"SELECT ID FROM games WHERE name = '$game'");
+	$row = mysqli_fetch_array($result);
+	$gameID = $row["ID"];
+
+	return $gameID;
+}
+
 function getGameInfo($con) // function.php/generate_options
 {
 	$result = mysqli_query($con,"SELECT name, raw_name AS id FROM games ORDER BY name");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gameinfo[] = $row;
+	}
+
+	return $gameinfo;
+}
+
+function getGameInfoById($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT name, raw_name, icon FROM games WHERE ID = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo[] = $row;
@@ -258,6 +318,36 @@ function getGames($con) //ehemals rebuild_games, bezieht den tatsächlichen Spie
 		$games[] = $row["name"];
 	}
 	return $games;
+}
+
+function getGameIcon($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT game_icon FROM games WHERE ID = '$game_id'");
+	if(!empty($result))
+	{
+		$row = mysqli_fetch_array($result);
+		$game_icon = $row["game_icon"];	
+
+		return $game_icon;
+	}
+}
+
+function getHasTableByGameID($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT has_table FROM games WHERE game_id = '$game_id'");
+	$row = mysqli_fetch_array($result);
+	$has_table = $row["has_table"];
+	
+	return $has_table;
+}
+
+function getRawNameByID($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE game_id = '$game_id'");
+	$row = mysqli_fetch_array($result);
+	$o_rawname = $raw["raw_name"];
+	
+	return $o_rawname;
 }
 
 
@@ -586,6 +676,17 @@ function getAchievementVisibility($con)
 	}
 
 	return $ac_visibility;
+}
+
+function getParamByAcID($con,$ac_id)
+{
+	$result = mysqli_query($con, "SELECT ac_trigger, ac_categorie, ac_visibility FROM ac WHERE ID = '$ac_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$acParam[] = $row;
+	}
+
+	return $acParam;
 }
 
 ?>

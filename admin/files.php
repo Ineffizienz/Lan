@@ -1,7 +1,7 @@
 <?php
 	
-	define("ROOT_INCLUDE", $_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/");
-	define("ROOT_CLASS", $_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/class/");
+	define("ROOT_INCLUDE", dirname(__FILE__,2) . "/include/");
+	define("ROOT_CLASS", dirname(__FILE__,2) . "/class/");
 
 	// GENERAL
 	require_once(ROOT_INCLUDE . "init/constant.php");

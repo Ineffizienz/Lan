@@ -19,37 +19,71 @@ class message {
 	{
 		if (substr($this->messageCode,0,3) == "ERR")
 		{
-			if (file_exists(dirname(__FILE__,2) . "/template/messages/error_msg.txt"))
+			if(substr($this->messageCode,4,5) == "ADMIN")
 			{
-				$lines = file(dirname(__FILE__,2) . "/template/messages/error_msg.txt");
-				foreach ($lines as $line)
+				if(file_exists(dirname(__FILE__,2) . "/template/messages/error_msg_admin.txt"))
 				{
-					/*
-						Im vorliegenden Fall sind folgende Modifikatoren verwendet worden:
-						- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
-						- den Rest hab ich nicht verstanden o.O
-					*/
-					if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$line)) // sogenannte PCRE-Modifikatoren
-					{
-						$this->messageText = ltrim($line,$this->messageCode . ":");
-					}
+					$lines = file(dirname(__FILE__,2) . "/template/messages/error_msg_admin.txt");
+					$this->messageText = $this->searchMessageAdmin($lines);
 				}
+			} else {
+				if (file_exists(dirname(__FILE__,2) . "/template/messages/error_msg.txt"))
+				{
+					$lines = file(dirname(__FILE__,2) . "/template/messages/error_msg.txt");
+					$this->messageText = $this->searchMessageUser($lines);
+				}	
 			}
 		} else {
-			if (file_exists(dirname(__FILE__,2) . "/template/messages/success_message.txt"))
-	        {
-	            $lines = file(dirname(__FILE__,2) . "/template/messages/success_message.txt");
-	            foreach ($lines as $line)
-	            {
-	            	if (strpos($line, $this->messageCode) == $this->messageCode)
-	            	{
-	            		$this->messageText = ltrim($line,$this->messageCode . ":");
-	            	}
-	            }
-	        }
+			if (substr($this->messageCode,4,5) == "ADMIN")
+			{
+				if(file_exists(dirname(__FILE__,2) . "/template/messages/success_message_admin.txt"))
+				{
+					$lines = file(dirname(__FILE__,2) . "/template/messages/success_message_admin.txt");
+					$this->messageText = $this->searchMessageAdmin($lines);
+				}
+				
+			} else {
+				if (file_exists(dirname(__FILE__,2) . "/template/messages/success_message.txt"))
+		        {
+		            $lines = file(dirname(__FILE__,2) . "/template/messages/success_message.txt");
+		            $this->messageText = $this->searchMessageUser($lines);
+		        }	
+			}
 		}
 
 		$this->buildSirBrummel();
+	}
+
+	public function searchMessageAdmin($data)
+	{
+		/*
+			Im vorliegenden Fall sind folgende Modifikatoren verwendet worden:
+			- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
+			- den Rest hab ich nicht verstanden o.O
+		*/
+		
+		foreach ($data as $message)
+		{
+			if(preg_match("/" . substr($this->messageCode,10) . "/isUe",$message)) // sogenannte PCRE-Modifikatoren
+			{
+				$output = ltrim($message,$this->messageCode . ":");
+			}
+		}
+		
+		return $output;
+	}
+	
+	public function searchMessageUser($data)
+	{
+		foreach ($data as $message)
+		{
+			if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$message))
+			{
+				$output = ltrim($message,$this->messageCode . ":");
+			}
+		}
+		
+		return $output;
 	}
 
 	public function buildSirBrummel()

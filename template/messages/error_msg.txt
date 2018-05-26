@@ -10,7 +10,7 @@ ERR_STILL_MEMBER: Ihr seid bereits Teil einer Armee. Warum wollt Ihr denn zum Fe
 ERR_WRONG_IP: Meine Wenigkeit hat möglicherweise Eure IP verschluckt. Seine Hoheit weiß sicher, was zu tun ist!
 ERR_LEAVE_TEAM: Meine Wenigkeit lässt Euch diese Gruppierung nicht verlassen! Warum? Weil meine Wenigkeit dazu im Stande ist!
 ERR_MISSING_TEAM: Was nicht existiert, kann auch nicht vernichtet werden. Dazu ist selbst meine Wenigkeit nicht im Stande.
-ERR_NO_TEAMS: Es betr�bt meine Wenigkeit sagen zu müssen, dass sich noch keine Gruppierungen für die Spiele zusammen gefunden haben.
+ERR_NO_TEAMS: Es betrübt meine Wenigkeit sagen zu müssen, dass sich noch keine Gruppierungen für die Spiele zusammen gefunden haben.
 ERR_NOT_ENOUGH_TEAMS: Beitrittsgesuche werden erst gewährt, sobald sich mehr Gruppierungen versammelt haben!
 ERR_NO_ADMIN: Dieser Bereich ist gänzlich meiner Wenigkeit und seiner Hoheit zugeteilt. Meine Wenigkeit wüsste davon, wenn Ihr einer der beiden wäret!
 ERR_EMPTY: Meine Wenigkeit benötigt auch das Wissen über die genaue Anzahl!
@@ -22,19 +22,13 @@ ERR_MISSING_GAME_NAME: Ihr müsst euer Abenteuer schon auch benennen!
 ERR_CHANGE_USERNAME: Eure Namensänderung bereitet mir Kopfzerbrechen. Bitte wendet euch an seine Hoheit!
 ERR_NO_IP: Ihr seid nicht vorgesehen. Es gibt gerade keinen Platz für Euch an der Tafel. Bittet Seine Hoheit um einen Platz an der Tafel!
 ERR_EMPTY_NAME_INPUT: Nun müsst Ihr mir schon sagen, wie Euer werter Name ist.
-ERR_TICKET_MISSING: Nun seid ihr schon nach einem Passierschein gefragt und ihr wollt ihn noch immer nicht preisgeben?
+ERR_TICKET_MISSING: Nun seid Ihr schon nach einem Passierschein gefragt und Ihr wollt ihn noch immer nicht preisgeben?
 ERR_VAL_FAILED: Euer Passierschein ist ungültig!
 ERR_INTERN_#1: Es ist ein interner Fehler aufgetreten. Fehlercode: 1.
-ERR_MISSING_AC_ADMIN: Kein Achievement angegeben.
-ERR_MISSING_PLAYER_ADMIN: Kein User angegeben.
-ERR_DB_ADMIN: Datenbankfehler.
-ERR_AC_ALLREADY_GIVEN_ADMIN: Der User besitzt das Achievement bereits.
-ERR_NO_IMAGE: Euer Antlitz ist doch ein wenig... mickrig, findet ihr nicht?
+ERR_NO_IMAGE: Euer Antlitz ist doch ein wenig... mickrig, findet Ihr nicht?
 ERR_FILE_TO_HUGE: Nun übertreibt aber nicht. So gewaltig ist euer Antlitz dann doch nicht.
 ERR_NO_IMAGE_TYPE: Was verwendet ihr da für einen Nonsens. Ich fragte euch nach einem Gemälde, nicht nach einem Haufen Pferdedung.
 ERR_DB: Welch Missgeschick. Mein Kettenhemd ist undicht.
-ERR_NO_COVERNAME_ADMIN: Kein Übergangsname eingegeben.
 ERR_INITIAL_PLAYER: Bei der Initialisierung deines Spielerprofils ist ein Fehler aufgetreten. Bitte wende dich an den Admin :)
 ERR_FILE_TO_SMALL: Welch Hexenwerk! Ich kann Euer Antlitz nicht erkennen.
-ERR_USER_DOES_NOT_EXISTS: Der Spieler existiert nicht und kann nicht gelöscht werden!
-ERR_MISSING_AC_NAME: Dem Achievement wurde kein Name gegeben.
+ERR_DUPLICATE_PREF: Ich habe nicht vergessen, dass dies eine Eurer Vorlieben ist, auch wenn ich, mit Verlaub, nicht begeistert davon bin.

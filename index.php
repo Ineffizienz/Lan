@@ -40,7 +40,6 @@ if($fl == "1")
 	$tpl->display();
 
 } else {
-
 	include(INC . "controller.php");
 
 	$tpl = new template();
@@ -74,6 +73,8 @@ if($fl == "1")
 	$tpl->assign("ip",IP);
 	$tpl->assign("profil_image",displayProfilImage($con,IP));
 	$tpl->assign("nickname",getSingleUsername($con,IP));
+	$tpl->assign("pref",displayPlayerPrefs($con,IP));
+	$tpl->assign("checkbox_container",createCheckbox($con,IP));
 	$tpl->assign("team",displaySinglePlayerTeam($con,IP));
 	$tpl->assign("captain",displayCaptain($con,IP));
 	$tpl->assign("t_members",displayPlayerTeamMember($con,IP));

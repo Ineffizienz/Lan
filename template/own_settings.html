@@ -4,7 +4,7 @@
 			<h3 class="settings_headline">Basisdaten</h3>
 		</div>
 		<div class="settings_data_container">
-			<div style="float:left;margin-left:15%;">
+			<div style="float:left;width:70%;">
 				<div class="settings_data">
 					<div>
 						<span class="settings_desc">Nickname: </span> 
@@ -14,11 +14,24 @@
 						<span class="settings_desc">IP:</span> {$ip}
 					</div>
 					<div>
-						<span class="settings_desc">Präferenzen:</span> {$pref}
+						<div>
+							<span class="settings_desc">Präferenzen:</span> 
+						</div>
+						<div class="cloud">
+							{$pref}
+						</div>
+						<div id="controllPref">
+							<i class="fa fa-plus fa-1x add_pref" aria-hidden="true"></i>
+							<div id="selBar">
+								{$checkbox_container}
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
 					</div>
 				</div>
 			</div>
-			<div style="float:right;margin-right:25%;">
+			<div style="float:right;margin-right:10%;width:20%;">
 				{$profil_image}
 			</div>
 			<div class="clear"></div>
@@ -29,7 +42,7 @@
 			<h3 class="settings_headline">Team</h3>
 		</div>
 		<div class="settings_data_container">
-			<div style="margin-left:15%;">
+			<div>
 				<div>
 					<span class="settings_desc">Name: </span> <span id="t_name">{$team}</span>
 				</div>
