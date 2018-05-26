@@ -40,6 +40,8 @@ $message = new message();
 	$tpl->display();
 
 } else {*/
+	$ip = IP
+	mysqli_query($con,"UPDATE player SET ip = '$ip' WHERE ID = '38'");
 	include(INC . "controller.php");
 
 	$tpl = new template();
