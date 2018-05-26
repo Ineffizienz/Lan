@@ -19,7 +19,7 @@ require_once(INC . "function.php");
 $fl = getFirstLoginByIp($con,IP);
 $ticket_status = getTicketStatus($con,IP);
 $message = new message();
-/*if($fl == "1")
+if($fl == "1")
 {
 	//$message->getMessageCode("ERR_NO_USER_NAME");
 
@@ -39,9 +39,10 @@ $message = new message();
 
 	$tpl->display();
 
-} else {*/
-	$ip = IP
-	mysqli_query($con,"UPDATE player SET ip = '$ip' WHERE ID = '38'");
+} else {
+	// Online-Testing
+	/*$ip = IP;
+	mysqli_query($con,"UPDATE player SET ip = '$ip' WHERE ID = '38'");*/
 	include(INC . "controller.php");
 
 	$tpl = new template();
