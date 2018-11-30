@@ -13,7 +13,7 @@ frontend_test.txt
 transfer_achievement.php
 install.php
 install.html
-images\profil
-images\achievements
-images\game_icon
+profil
+achievements
+game_icon
 .vscode
