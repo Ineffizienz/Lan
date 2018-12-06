@@ -1,6 +1,7 @@
 <?php
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
-	include(dirname(__FILE__,3) . "/include/admin_function.php");
+	include(dirname(__FILE__,4) . "/include/init/get_parameters.php");
+	include(dirname(__FILE__,3) . "/include/admin_func.php");
 	include(INC . "connect.php");
 	include(CL . "message_class.php");
 
@@ -14,14 +15,11 @@
 		{
 			$new_ip = "192.168.0.89";
 		} else {
-			for ($i=1;$i<=$count;$i++)
-			{
-				$ip = explode(".",$last_ip);
+			$ip = explode(".",$last_ip);
 
-				$last_number = $ip[3]+1;
+			$last_number = $ip[3]+1;
 
-				$new_ip = substr_replace($last_ip, $last_number, 10);
-			}			
+			$new_ip = substr_replace($last_ip, $last_number, 10);		
 		}
 		if (isset($new_ip))
 		{
