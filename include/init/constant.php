@@ -10,7 +10,7 @@
 	
 	define("IMG",ROOT . "/images/");
 	define("ICON",IMG . "game_icon/");
-	define("AC",IMG . "achievement/");
+	define("AC",IMG . "achievements/");
 
 
 	define("IP",$_SERVER["REMOTE_ADDR"]);
