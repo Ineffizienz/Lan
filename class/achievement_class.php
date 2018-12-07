@@ -125,7 +125,6 @@ class Achievement {
 			if(file_exists($this->image))
 			{
 				$this->ac = str_replace($this->singleArr, array($this->image,$this->title,$this->message), $this->ac_template);
-
 			} else {
 				echo $this->ac = $this->image;
 				$this->ac = str_replace($this->singleArr, array("Hier oder?",$this->title,$this->message), $this->ac_template);

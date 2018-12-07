@@ -52,8 +52,9 @@
 						$message->getMessageCode("ERR_ADMIN_DB");
 						echo $message->displayMessage();
 					}
+				}
 			} else {
-				$message->getMessageCode($result_validate)
+				$message->getMessageCode($result_validate);
 				echo $message->displayMessage();
 			}	
 		} else {
