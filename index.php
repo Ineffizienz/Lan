@@ -51,8 +51,8 @@ if($fl == "1")
 
 
 
-	$tpl->assign("headline","Wer zuletzt lacht, hat den höchsten Ping");
-	$tpl->assign("lantitle","Wer zuletzt lacht, hat den höchsten Ping");
+	$tpl->assign("headline","Du nicht nehmen Kerze!");
+	$tpl->assign("lantitle","Du nicht nehmen Kerze!");
 	$tpl->assign("menu",build_content("menu.html"));
 
 	if (isset($content))
