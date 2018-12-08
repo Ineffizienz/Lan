@@ -39,7 +39,7 @@ class Achievement {
 		} else {
 
 				$this->title = $achievement_details["title"];
-				$this->message = $achievement_details["message"];
+				$this->message = utf8_encode($achievement_details["message"]);
 
 				if (empty($achievement_details["image_url"]))
 				{
