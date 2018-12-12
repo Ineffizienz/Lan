@@ -388,9 +388,9 @@ function displayServerStatus($con_wow)
 
 	if ($realm_flag == 0)
 	{
-		$server_status = "<span style='font-style:italic;color:red;'>Offline</span>";
+		$server_status = "<span style='font-style:italic;color:green;'>Online</span>";
 	} elseif ($realm_flag == 2) {
-		$server_status = "<span style='font-italic;color:green;'>Online</span>";
+		$server_status = "<span style='font-italic;color:red;'>Offline</span>";
 	}
 
 	return $server_status;
