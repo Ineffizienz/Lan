@@ -12,7 +12,7 @@
         $post_password_final = sha1("" . $post_accountname . ":" . $post_password . "");
         $post_email = trim($_POST["email"]);
 
-        $result = mysqli_query($con,"SELECT COUNT(*) FROM account WHERE username = '$post_accountname'");
+        $result = mysqli_query($con_wow,"SELECT COUNT(*) FROM account WHERE username = '$post_accountname'");
         $row = mysqli_fetch_array($result);
         if($row[0] != 0)
         {
@@ -48,10 +48,13 @@
                 $last_ip = $_SERVER["REMOTE_ADDR"];
 
                 $sql = "INSERT INTO account (username, sha_pass_hash, email, last_ip, expansion) VALUES ('$post_accountname', '$post_password_final', '$post_email', '$last_ip', '2')";
-                if(mysqli_query($con,$sql))
+                if(mysqli_query($con_wow,$sql))
                 {
                     $message->getMessageCode("SUC_ACC_CREATE");
                     echo json_encode(array("message" => $message->displayMessage()));
+                    
+                    $sql = "UPDATE player SET wow_account = '$post_accountname' WHERE IP = '$last_ip'";
+                    mysqli_query($con,$sql);
                 }
             }
         }

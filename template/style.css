@@ -564,7 +564,7 @@ h4
 		line-height: 25px;
 		width: 250px;
 	}
-	input[type=text],[type=password]:focus
+	input[type=text]:focus,[type=password]:focus
 	{
 		box-shadow: 0 0 2px 2px #C0C0C0;
 		font-size: 11pt;

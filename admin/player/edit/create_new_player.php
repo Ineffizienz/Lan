@@ -23,7 +23,7 @@
 		}
 		if (isset($new_ip))
 		{
-			$sql = "INSERT INTO player (name,ip,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,'1')";
+			$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode("SUC_ADMIN_NEW_PLAYER");
