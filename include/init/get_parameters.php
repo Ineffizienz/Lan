@@ -689,4 +689,33 @@ function getParamByAcID($con,$ac_id)
 	return $acParam;
 }
 
+
+/*
+###########################################################
+######################## WOW-Server #######################
+###########################################################
+*/
+
+function getRealmName($con)
+{
+	$result = mysqli_query($con,"SELECT name FROM realmlist");
+	while($row=mysqli_fetch_array($result))
+	{
+		$n_realm = $row["name"];
+	}
+
+	return $n_realm;
+}
+
+function getServerStatus($con)
+{
+	$result = mysqli_query($con,"SELECT flag FROM realmlist");
+	while($row=mysqli_fetch_array($result))
+	{
+		$s_status = $row["flag"];
+	}
+
+	return $s_status;
+}
+
 ?>

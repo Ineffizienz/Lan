@@ -71,6 +71,10 @@ if($fl == "1")
 	$tpl->assign("status",getUserRelatedStatusColor($con,IP));
 	$tpl->assign("status_option",getUserStatusOption($con,IP));
 
+	/******************************WOW-Server **************************/
+	$tpl->assign("realm",getRealmName($con_wow));
+	$tpl->assign("server_on",displayServerStatus($con_wow));
+
 	/***************************** SETTING *****************************/
 
 	$tpl->assign("ip",IP);

@@ -380,6 +380,22 @@
 		return $output;
 	}
 
+/******************************* WOW-Server ************************************/
+
+function displayServerStatus($con_wow)
+{
+	$realm_flag = getServerStatus($con_wow);
+
+	if ($realm_flag == 0)
+	{
+		$server_status = "<span style='font-style:italic;color:red;'>Offline</span>";
+	} elseif ($realm_flag == 2) {
+		$server_status = "<span style='font-italic;color:green;'>Online</span>";
+	}
+
+	return $server_status;
+}
+
 /******************************* ACHIEVEMENTS ************************************/
 
 function displayPlayerAchievements($con,$ip)

@@ -59,6 +59,16 @@ h3
 {
 	text-align:center;
 }
+h4
+{
+	color:#C0C0C0;
+}
+.headline
+{
+	color: #484C54;
+	font-weight:bold;
+	text-decoration: underline;
+}
 .clear
 {
 	clear:both;
@@ -542,8 +552,8 @@ h3
 	input[type=text]#ticket_id
  	{
  		background-color: #C0C0C0;
- 	}
-	input[type=text]
+	 }
+	input[type=text],[type=password]
 	{
 		padding-left: 10px;
 		background-color: #fff;
@@ -554,24 +564,7 @@ h3
 		line-height: 25px;
 		width: 250px;
 	}
-	input[type=text]:focus
-	{
-		box-shadow: 0 0 2px 2px #C0C0C0;
-		font-size: 11pt;
-		width:250px;
-	}
-	input[type="password"]
-	{
-		padding-left: 10px;
-		background-color: #fff;
-		font-size: 11pt;
-		color: #000;
-		border-radius: 2px 2px;
-		border: 1px solid #D0D0D0;
-		line-height: 25px;
-		width: 250px;
-	}
-	input[type="password"]:focus
+	input[type=text],[type=password]:focus
 	{
 		box-shadow: 0 0 2px 2px #C0C0C0;
 		font-size: 11pt;
