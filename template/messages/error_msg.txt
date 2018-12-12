@@ -32,3 +32,12 @@ ERR_DB: Welch Missgeschick. Mein Kettenhemd ist undicht.
 ERR_INITIAL_PLAYER: Bei der Initialisierung deines Spielerprofils ist ein Fehler aufgetreten. Bitte wende dich an den Admin :)
 ERR_FILE_TO_SMALL: Welch Hexenwerk! Ich kann Euer Antlitz nicht erkennen.
 ERR_DUPLICATE_PREF: Ich habe nicht vergessen, dass dies eine Eurer Vorlieben ist, auch wenn ich, mit Verlaub, nicht begeistert davon bin.
+ERR_ACC_SHORT: Dein Accountname ist zu kurz.
+ERR_ACC_LONG: Dein Accountname ist zu lang.
+ERR_PWD_SHORT: Dein Passwort ist zu kurz.
+ERR_PWD_LONG: Dein Passwort ist zu lang.
+ERR_EMAIL_SHORT: Deine Email ist zu kurz.
+ERR_EMAIL_LONG: Deine Email ist zu lang.
+ERR_ACC_EXISTS: Der Accountname existiert bereits.
+ERR_ACC_CHR: Dein Accountname kann nur Buchstaben und Zahlen enthalten.
+ERR_PWD_CHR: Dein Passwort kann nur Buchstaben und Zahlen enthalten.

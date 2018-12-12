@@ -12,6 +12,65 @@ $(document).ready(function(){
 
 		return image_data;
 	}
+
+	function checkInput(accountname,password,email)
+	{
+		var validate;
+		if (accountname == "")
+		{
+			validate = "Du hast vergessen einen Accountnamen einzutragen";
+			return validate;
+		} else {
+			if (accountname.length < 3)
+			{
+				return "Dein Accoutname ist zu kurz.";
+			} else {
+				if (password == "")
+				{
+					return "Du hast kein Passwort angegeben.";
+				} else {
+					if(password.length < 6)
+					{
+						return "Dein Passwort ist zu kurz.";
+					} else {
+						if (password == accountname)
+						{
+							return "Dein Passwort und dein Accountname sollten sich schon unterscheiden.";
+						} else {
+							if (email == "")
+							{
+								return "Du hast keine Email angegeben";
+							} else {
+								if (email.length < 8) // @ prüfen wäre besser
+								{
+									return "Das ist keine Mail!";
+								} else {
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function getWowData(event)
+	{
+		event.preventDefault();
+
+		var accountname = $("#accountname").val();
+		var password = $("#password").val();
+		var email = $("#email").val();
+
+		var validate = checkInput(accountname,password,email);
+		if (validate == true)
+		{
+			registerAccount(accountname,password,email,sucRegAcc);
+		} else {
+			throwError(validate);
+		}
+	}
 	
 	function showGamekeyOnChange(event)
 	{
@@ -122,6 +181,21 @@ $(document).ready(function(){
 			dataType: 'json',
 			data: {
 				games:game
+			},
+			success: fn
+		});
+	}
+
+	function registerAccount(accountname,password,email,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "include/wow_server/register.php",
+			dataType: 'json',
+			data: {
+				accountname: accountname,
+				password: password,
+				email: email
 			},
 			success: fn
 		});
@@ -240,6 +314,13 @@ $(document).ready(function(){
 		$(".cloud").load("include/ajax_function.php?function=displayPrefs");
 	}
 	
+	function throwError(error)
+	{
+		$('#error').show();
+		$('#error').html(error);
+		$('#error').fadeOut(7000);
+	}
+
 	function showKey(key) {
 		$("#display_key").slideDown();
 		document.getElementById("displayKey").innerHTML = key;
@@ -258,6 +339,11 @@ $(document).ready(function(){
 		$("#achievement").fadeOut(9000);
 	}
 
+	function sucRegAcc(response)
+	{
+		displayMessage(response.message);
+	}
+	
 	function displayResponse(response) {
 
 		displayMessage(response.message);
@@ -356,5 +442,6 @@ $(document).ready(function(){
 	$(".leave_team").on("click",getLeaveData);
 	$(document).on("click",".add_pref",showPrefs);
 	$(document).on("change",".checkmark_container input",getCheckedGame);
+	$(".sbm").on("click",getWowData);
 });
 

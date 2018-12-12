@@ -5,6 +5,9 @@
 			case 'keygen':
 				$content = build_content("key_generate.html");
 			break;
+			case 'wow_server':
+				$content = build_content("wow_server.html");
+			break;
 			case 'teams':
 				$content = build_content("teams.html");
 			break;
