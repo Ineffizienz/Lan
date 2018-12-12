@@ -558,7 +558,23 @@ h3
 	{
 		box-shadow: 0 0 2px 2px #C0C0C0;
 		font-size: 11pt;
-		font-weight: bold;
+		width:250px;
+	}
+	input[type="password"]
+	{
+		padding-left: 10px;
+		background-color: #fff;
+		font-size: 11pt;
+		color: #000;
+		border-radius: 2px 2px;
+		border: 1px solid #D0D0D0;
+		line-height: 25px;
+		width: 250px;
+	}
+	input[type="password"]:focus
+	{
+		box-shadow: 0 0 2px 2px #C0C0C0;
+		font-size: 11pt;
 		width:250px;
 	}
 	.button
