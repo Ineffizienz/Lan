@@ -382,6 +382,24 @@
 
 /******************************* WOW-Server ************************************/
 
+function selectWowAccount($con,$ip)
+{
+	$wow_account = getWowAccount($con,$ip);
+
+	if(empty($wow_account))
+	{
+		$tpl = new template();
+		$tpl->load("wow_server/create_wow_account.html");
+		$template = $tpl->r_display();
+	} else {
+		$tpl = new template();
+		$tpl->load("wow_server/character_table_empty.html");
+		$template = $tpl->r_display();
+	}
+
+	return $template;
+}
+
 function displayServerStatus($con_wow)
 {
 	$realm_flag = getServerStatus($con_wow);

@@ -1,6 +1,6 @@
 <?php
 
-/* Ein Dank geht an den Autor Corvin Gröning mit seinem Artikel "Ein eigens Template System entwickeln" (Link: http://www.webmasterpro.de/coding/article/php-ein-eigenes-template-system.html). Es war eine wunderbar erklärte Grundlage für dieses System! */
+/* Ein Dank geht an den Autor Corvin Grï¿½ning mit seinem Artikel "Ein eigens Template System entwickeln" (Link: http://www.webmasterpro.de/coding/article/php-ein-eigenes-template-system.html). Es war eine wunderbar erklï¿½rte Grundlage fï¿½r dieses System! */
 
 class template {
          private $templateDir = "template/";
@@ -51,14 +51,18 @@ class template {
                          $this->template = preg_replace("/" .$this->leftDelimiterF ."include file=\"(.*)\.(.*)\"" .$this->rightDelimiterF."/isUe","file_get_contents(\$this->templateDir.'\\1'.'.'.'\\2')",$this->template);
                  }
 
-                 /* Diese Zeile macht es möglich innerhalb des HTML-Templates Kommentare zu verfassen. Da die Funktion preg_replace mit PHP 7 deaktiviert wurde, ist
-                    preg_replace_callback die einzige Alternative. Da ich aber keine brauchbare Callback-Funktion habe, ist sie vorläufig deaktiviert. */
+                 /* Diese Zeile macht es mï¿½glich innerhalb des HTML-Templates Kommentare zu verfassen. Da die Funktion preg_replace mit PHP 7 deaktiviert wurde, ist
+                    preg_replace_callback die einzige Alternative. Da ich aber keine brauchbare Callback-Funktion habe, ist sie vorlï¿½ufig deaktiviert. */
 
                  //$this->template = preg_replace_callback("/" .$this->leftDelimiterC . "(.*)" . $this->rightDelimiterC ."/isUe","",$this->template);
          }
 
          public function display() {
                  echo $this->template;
+         }
+
+         public function r_display() {
+                 return $this->template;
          }
 }
 ?>
