@@ -382,7 +382,7 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$ip)
+function selectWowAccount($con,$con_wow,$con_char,$ip)
 {
 	$wow_account = getWowAccount($con,$ip);
 
@@ -391,13 +391,63 @@ function selectWowAccount($con,$ip)
 		$tpl = new template();
 		$tpl->load("wow_server/create_wow_account.html");
 		$template = $tpl->r_display();
+
+		return $template;
 	} else {
-		$tpl = new template();
-		$tpl->load("wow_server/character_table_empty.html");
-		$template = $tpl->r_display();
+		$wow_id = getWowId($con_wow,$wow_account);
+		$wow_account_chars = getChars($con_char,$wow_id);
+
+		if(empty($wow_account_chars))
+		{
+			$tpl = new template();
+			$tpl->load("wow_server/character_table_empty.html");
+			$template = $tpl->r_display();
+			return $template;
+		} else {
+			$tpl = new template();
+			$tpl->load("wow_server/characters_table.html");
+
+			foreach($wow_account_chars as $chars)
+			{
+				$race = defineRace($chars["race"]);
+				$part = file_get_contents("template/part/characters_row.html");
+				$output .= str_replace(array("--NAME--","--RACE--","--LEVEL--"),array($chars["name"],$race,$chars["level"]),$part);
+			}
+			$tpl->assign("characters",$output);
+			$template = $tpl->r_display();
+			return $template;
+		}
+	}
+}
+
+function defineRace($race_id)
+{
+	if($race_id == "1")
+	{
+		$race = "Mensch";
+	} elseif($race_id == "2") {
+		$race = "Ork";
+	} elseif($race_id == "3") {
+		$race = "Zwerg";
+	} elseif($race_id == "4") {
+		$race = "Nachtelf";
+	} elseif($race_id == "5") {
+		$race = "Undead";
+	} elseif($race_id == "6") {
+		$race = "Tauren";
+	} elseif($race_id == "7") {
+		$race = "Gnom";
+	} elseif($race_id == "8") {
+		$race = "Troll";
+	} elseif($race_id = "9") {
+		$race = "Goblin";
+	} elseif($race_id == "10") {
+		$race = "Blutelf";
+	} else {
+		$race = "Draenei";
 	}
 
-	return $template;
+	return $race;
 }
 
 function displayServerStatus($con_wow)

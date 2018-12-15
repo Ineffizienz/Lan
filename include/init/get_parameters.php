@@ -707,6 +707,28 @@ function getWowAccount($con,$ip)
 	return $account_name;
 }
 
+function getWowId($con_wow,$wow_account)
+{
+	$result = mysqli_query($con_wow,"SELECT id FROM account WHERE username = '$wow_account'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["id"];
+	}
+
+	return $account_id;
+}
+
+function getChars($con_char,$wow_id)
+{
+	$result = mysqli_query($con_char,"SELECT name, race, level FROM characters.characters WHERE account = '$wow_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$chars[] = $row;
+	}
+
+	return $chars;
+}
+
 function getRealmName($con)
 {
 	$result = mysqli_query($con,"SELECT name FROM realmlist");
