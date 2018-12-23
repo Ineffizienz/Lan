@@ -823,6 +823,45 @@ h4
 			float:right;
 		}
 
+/* ---------------------- WOW-Server ---------------------------
+--------------------------------------------------------------*/
+
+.table_container
+{
+	overflow-x:auto;
+}
+#wow_characters
+{
+	font-family: Calibri;
+	background-color:lightgrey;
+	border-collapse: collapse;
+	box-shadow: 0 2px 2px 0 #000;
+	width:100%;
+}
+#wow_characters tr:nth-child(even)
+{
+	background-color:ddd;
+}
+#wow_characters td, #wow_characters th
+{
+	border:1px solid #ddd;
+	padding:8px;
+}
+#wow_characters th
+{
+	background-color:#333;
+	padding-top:10px;
+	padding-bottom: 10px;
+	text-align:left;
+	color:#fff;
+}
+#wow_single_clm
+{
+	text-align:center;
+	font-weight:bold;
+}
+
+
 A:link
 {
 	color: #000000;
@@ -842,4 +881,19 @@ A.settings_link:hover
 {
 	color: #fff;
 	text-decoration: none;
+}
+A.download:link
+{
+	color: #000000;
+	text-decoration: underline;
+}
+A.download:visited
+{
+	color: #000000;
+	text-decoration: underline;
+}
+A.download:hover
+{
+	color: #000000;
+	text-decoration: underline;
 }

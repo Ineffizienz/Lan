@@ -382,6 +382,120 @@
 
 /******************************* WOW-Server ************************************/
 
+function selectWowAccount($con,$con_wow,$con_char,$ip)
+{
+	$wow_account = getWowAccount($con,$ip);
+
+	if(empty($wow_account))
+	{
+		$tpl = new template();
+		$tpl->load("wow_server/create_wow_account.html");
+		$template = $tpl->r_display();
+
+		return $template;
+	} else {
+		$wow_id = getWowId($con_wow,$wow_account);
+		$wow_account_chars = getChars($con_char,$wow_id);
+
+		if(empty($wow_account_chars))
+		{
+			$tpl = new template();
+			$tpl->load("wow_server/character_table_empty.html");
+			$template = $tpl->r_display();
+			return $template;
+		} else {
+			$tpl = new template();
+			$tpl->load("wow_server/characters_table.html");
+
+			foreach($wow_account_chars as $chars)
+			{
+				$race = defineRace($chars["race"]);
+				$class = defineClass($chars["class"]);
+				$loc = defineLocation($chars["map"]);
+				$part = file_get_contents("template/part/characters_row.html");
+				$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+			}
+			$tpl->assign("characters",$output);
+			$template = $tpl->r_display();
+			return $template;
+		}
+	}
+}
+
+function defineRace($race_id)
+{
+	if($race_id == "1")
+	{
+		$race = "Mensch";
+	} elseif($race_id == "2") {
+		$race = "Ork";
+	} elseif($race_id == "3") {
+		$race = "Zwerg";
+	} elseif($race_id == "4") {
+		$race = "Nachtelf";
+	} elseif($race_id == "5") {
+		$race = "Untote";
+	} elseif($race_id == "6") {
+		$race = "Tauren";
+	} elseif($race_id == "7") {
+		$race = "Gnom";
+	} elseif($race_id == "8") {
+		$race = "Troll";
+	} elseif($race_id = "9") {
+		$race = "Goblin";
+	} elseif($race_id == "10") {
+		$race = "Blutelf";
+	} else {
+		$race = "Draenei";
+	}
+
+	return $race;
+}
+
+function defineClass($class_id)
+{
+	if($class_id == "1") 
+	{
+		$class = "Krieger";
+	} elseif($class_id == "2") {
+		$class = "Paladin";
+	} elseif($class_id == "3") {
+		$class = "Jäger";
+	} elseif($class_id == "4") {
+		$class = "Schurke";
+	} elseif($class_id == "5") {
+		$class = "Priester";
+	} elseif($class_id == "6") {
+		$class = "Todesritter";
+	} elseif($class_id == "7") {
+		$class = "Schamane";
+	} elseif($class_id == "8") {
+		$class = "Magier";
+	} elseif($class_id == "9") {
+		$class = "Hexenmeister";
+	} elseif($class_id == "11") {
+		$class = "Druide";
+	}
+
+	return $class;
+}
+
+function defineLocation($loc_id)
+{
+	switch ($loc_id) {
+		case "0":
+			$loc = "Nicht dem Server beigetreten.";
+		break;
+		case "571":
+			$loc = "Dalaran";
+		break;
+		default:
+			$loc = "Nicht implementiert.";
+	}
+
+	return $loc;
+}
+
 function displayServerStatus($con_wow)
 {
 	$realm_flag = getServerStatus($con_wow);

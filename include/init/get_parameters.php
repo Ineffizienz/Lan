@@ -696,6 +696,39 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
+function getWowAccount($con,$ip)
+{
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ip = '$ip'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_name = $row["wow_account"];
+	}
+
+	return $account_name;
+}
+
+function getWowId($con_wow,$wow_account)
+{
+	$result = mysqli_query($con_wow,"SELECT id FROM account WHERE username = '$wow_account'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["id"];
+	}
+
+	return $account_id;
+}
+
+function getChars($con_char,$wow_id)
+{
+	$result = mysqli_query($con_char,"SELECT name, race, class, level, map FROM characters.characters WHERE account = '$wow_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$chars[] = $row;
+	}
+
+	return $chars;
+}
+
 function getRealmName($con)
 {
 	$result = mysqli_query($con,"SELECT name FROM realmlist");

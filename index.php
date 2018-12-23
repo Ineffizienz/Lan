@@ -72,6 +72,7 @@ if($fl == "1")
 	$tpl->assign("status_option",getUserStatusOption($con,IP));
 
 	/******************************WOW-Server **************************/
+	$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,IP));
 	$tpl->assign("realm",getRealmName($con_wow));
 	$tpl->assign("server_on",displayServerStatus($con_wow));
 
