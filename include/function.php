@@ -410,8 +410,10 @@ function selectWowAccount($con,$con_wow,$con_char,$ip)
 			foreach($wow_account_chars as $chars)
 			{
 				$race = defineRace($chars["race"]);
+				$class = defineClass($chars["class"]);
+				$loc = defineLocation($chars["map"]);
 				$part = file_get_contents("template/part/characters_row.html");
-				$output .= str_replace(array("--NAME--","--RACE--","--LEVEL--"),array($chars["name"],$race,$chars["level"]),$part);
+				$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
 			}
 			$tpl->assign("characters",$output);
 			$template = $tpl->r_display();
@@ -432,7 +434,7 @@ function defineRace($race_id)
 	} elseif($race_id == "4") {
 		$race = "Nachtelf";
 	} elseif($race_id == "5") {
-		$race = "Undead";
+		$race = "Untote";
 	} elseif($race_id == "6") {
 		$race = "Tauren";
 	} elseif($race_id == "7") {
@@ -448,6 +450,50 @@ function defineRace($race_id)
 	}
 
 	return $race;
+}
+
+function defineClass($class_id)
+{
+	if($class_id == "1") 
+	{
+		$class = "Krieger";
+	} elseif($class_id == "2") {
+		$class = "Paladin";
+	} elseif($class_id == "3") {
+		$class = "Jäger";
+	} elseif($class_id == "4") {
+		$class = "Schurke";
+	} elseif($class_id == "5") {
+		$class = "Priester";
+	} elseif($class_id == "6") {
+		$class = "Todesritter";
+	} elseif($class_id == "7") {
+		$class = "Schamane";
+	} elseif($class_id == "8") {
+		$class = "Magier";
+	} elseif($class_id == "9") {
+		$class = "Hexenmeister";
+	} elseif($class_id == "11") {
+		$class = "Druide";
+	}
+
+	return $class;
+}
+
+function defineLocation($loc_id)
+{
+	switch ($loc_id) {
+		case "0":
+			$loc = "Nicht dem Server beigetreten.";
+		break;
+		case "571":
+			$loc = "Dalaran";
+		break;
+		default:
+			$loc = "Nicht implementiert.";
+	}
+
+	return $loc;
 }
 
 function displayServerStatus($con_wow)

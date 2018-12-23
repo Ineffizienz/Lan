@@ -720,7 +720,7 @@ function getWowId($con_wow,$wow_account)
 
 function getChars($con_char,$wow_id)
 {
-	$result = mysqli_query($con_char,"SELECT name, race, level FROM characters.characters WHERE account = '$wow_id'");
+	$result = mysqli_query($con_char,"SELECT name, race, class, level, map FROM characters.characters WHERE account = '$wow_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$chars[] = $row;

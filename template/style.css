@@ -882,3 +882,18 @@ A.settings_link:hover
 	color: #fff;
 	text-decoration: none;
 }
+A.download:link
+{
+	color: #000000;
+	text-decoration: underline;
+}
+A.download:visited
+{
+	color: #000000;
+	text-decoration: underline;
+}
+A.download:hover
+{
+	color: #000000;
+	text-decoration: underline;
+}
