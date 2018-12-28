@@ -454,27 +454,39 @@ function defineRace($race_id)
 
 function defineClass($class_id)
 {
-	if($class_id == "1") 
-	{
-		$class = "Krieger";
-	} elseif($class_id == "2") {
-		$class = "Paladin";
-	} elseif($class_id == "3") {
-		$class = "Jäger";
-	} elseif($class_id == "4") {
-		$class = "Schurke";
-	} elseif($class_id == "5") {
-		$class = "Priester";
-	} elseif($class_id == "6") {
-		$class = "Todesritter";
-	} elseif($class_id == "7") {
-		$class = "Schamane";
-	} elseif($class_id == "8") {
-		$class = "Magier";
-	} elseif($class_id == "9") {
-		$class = "Hexenmeister";
-	} elseif($class_id == "11") {
-		$class = "Druide";
+	switch ($class_id) {
+		case "1":
+			$class = "Krieger";
+		break;
+		case "2":
+			$class = "Paladin";
+		break;
+		case "3":
+			$class = "Jäger";
+		break;
+		case "4":
+			$class = "Schurke";
+		break;
+		case "5":
+			$class = "Priester";
+		break;
+		case "6":
+			$class = "Todesritter";
+		break;
+		case "7":
+			$class = "Schamane";
+		break;
+		case "8":
+			$class = "Magier";
+		break;
+		case "9":
+			$class = "Hexenmeister";
+		break;
+		case "11":
+			$class = "Druide";
+		break;
+		default:
+			$class = "Nicht implementiert.";
 	}
 
 	return $class;
