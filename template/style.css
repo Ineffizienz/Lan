@@ -881,6 +881,13 @@ h4
 {
 	background-color:ddd;
 }
+#time_schedule th
+{
+	background-color:#333;
+	padding-top:10px;
+	padding-bottom: 10px;
+	color:#fff;
+}
 .schedule_row
 {
 	border:1px solid #000;
