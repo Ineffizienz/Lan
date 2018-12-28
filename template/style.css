@@ -862,6 +862,34 @@ h4
 }
 
 
+/* ---------------------- Time-Schedule ---------------------------
+--------------------------------------------------------------*/
+#schedule_container
+{
+	text-align:center;
+	overflow:auto;
+}
+#time_schedule
+{
+	margin:0 auto;
+	font-family: Calibri;
+	border-collapse: collapse;
+	box-shadow: 0 2px 2px 0 #000;
+	width:70%;
+}
+#time_schedule tr:nth-child(even)
+{
+	background-color:ddd;
+}
+.schedule_row
+{
+	border:1px solid #000;
+}
+.schedule_time_clm
+{
+	padding-left:3%;
+}
+
 A:link
 {
 	color: #000000;
