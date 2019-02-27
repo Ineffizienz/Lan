@@ -6,7 +6,7 @@
 */
 
 header("Content-Type: text/html; charset=utf-8");
-error_reporting(0);
+error_reporting(E_ALL);
 
 include ("include/init/constant.php");
 require_once(CL . "template_class.php");

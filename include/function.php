@@ -441,7 +441,7 @@ function defineRace($race_id)
 		$race = "Gnom";
 	} elseif($race_id == "8") {
 		$race = "Troll";
-	} elseif($race_id = "9") {
+	} elseif($race_id == "9") {
 		$race = "Goblin";
 	} elseif($race_id == "10") {
 		$race = "Blutelf";
