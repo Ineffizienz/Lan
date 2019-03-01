@@ -16,6 +16,7 @@ require_once(CL . "achievement_class.php");
 require_once(INC . "connect.php");
 require_once(INC . "function.php");
 
+
 $fl = getFirstLoginByIp($con,IP);
 $ticket_status = getTicketStatus($con,IP);
 $message = new message();

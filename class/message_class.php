@@ -67,6 +67,8 @@ class message {
 			if(preg_match("/" . substr($this->messageCode,10) . "/isUe",$message)) // sogenannte PCRE-Modifikatoren
 			{
 				$output = ltrim($message,$this->messageCode . ":");
+			} else {
+				$output = "Den Fehlercode habe ich nicht gefunden " . $message;
 			}
 		}
 		
@@ -80,6 +82,8 @@ class message {
 			if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$message))
 			{
 				$output = ltrim($message,$this->messageCode . ":");
+			} else {
+				$output = "Den Fehlercode hab ich nicht gefunden " . $message;
 			}
 		}
 		

@@ -290,4 +290,18 @@ function createGame($con,$new_game,$new_raw_name)
 
 }
 
+function displayTmGames($con)
+{
+	$games = getGameData($con);
+
+	if (empty($games))
+	{
+		$output = "<option>Keine Spiele vorhanden";
+	} else {
+		$output = buildOption($games);
+	}
+
+	return $output;
+}
+
 ?>

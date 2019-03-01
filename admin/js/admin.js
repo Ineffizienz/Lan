@@ -37,7 +37,7 @@ $(document).ready(function(){
 
 		var teamId = $("#del_team").find('option:selected').attr("name");
 
-		deleteTeam(teamId,displayResult);
+		deleteTeam(teamId,showResult);
 	}
 	
 	function getNewGame(event)
@@ -155,10 +155,20 @@ $(document).ready(function(){
 
 	}
 
+	function getTmGame(event)
+	{
+		event.preventDefault();
+
+		var tm_game = $("#tm_game").find("option:selected").attr("name");
+
+		createTm(tm_game,showResult);
+	}
+
 	function deleteTeam(teamId,fn)
 	{
 		return $.ajax({
 			type: "get",
+			dataType: "json",
 			url: "admin/team/edit/delete_team.php",
 			data: {
 				id:teamId
@@ -312,11 +322,24 @@ $(document).ready(function(){
 		});
 	}
 
+	function createTm(tm_game,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/create/create_tm.php",
+			data: {
+				game: tm_game
+			},
+			success: fn
+		});
+	}
+
 	function displayResult(err)
 	{
 		$("#result").show();
 		$("#result").html(err);
-		$("#result").fadeOut(2000);
+		$("#result").fadeOut(3000);
 	}
 
 	function showResult(result,reloadID)
@@ -356,5 +379,6 @@ $(document).ready(function(){
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField);
+	$(document).on("click","#create_tm",getTmGame);
 
 });

@@ -26,6 +26,9 @@ if(IP == "::1" || "192.168.0.89")
 	$tpl->assign("ac_trigger",displayAcTrigger($con));
 	$tpl->assign("admin_games",displaySingleGame($con));
 
+	// Turniere
+	$tpl->assign("games",displayTmGames($con));
+
 	$tpl->display();
 } else {
 

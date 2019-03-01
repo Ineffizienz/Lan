@@ -17,6 +17,9 @@
 			case "team":
 				$content = buildContent("../template/admin/team.html");
 			break;
+			case "turnier":
+				$content = buildContent("../template/admin/tm.html");
+			break;
 			case "achieve":
 				$content = buildContent("../template/admin/achievement_settings.html");
 			break;
