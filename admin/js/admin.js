@@ -157,11 +157,14 @@ $(document).ready(function(){
 
 	function getTmGame(event)
 	{
+		event.stopPropagation();
 		event.preventDefault();
 
 		var tm_game = $("#tm_game").find("option:selected").attr("name");
+		var tm_mode = $("#tm_mode").find("option:selected").attr("name");
+		var input_id = "#tm_banner";
 
-		createTm(tm_game,showResult);
+		createTm(tm_game,tm_mode,getFileData(input_id),showMessage);
 	}
 
 	function deleteTeam(teamId,fn)
@@ -322,15 +325,16 @@ $(document).ready(function(){
 		});
 	}
 
-	function createTm(tm_game,fn)
+	function createTm(tm_game,tm_mode,image_data,fn)
 	{
 		return $.ajax({
 			type: "post",
 			dataType: "json",
-			url: "admin/tm/create/create_tm.php",
-			data: {
-				game: tm_game
-			},
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: image_data,
 			success: fn
 		});
 	}
@@ -342,10 +346,15 @@ $(document).ready(function(){
 		$("#result").fadeOut(3000);
 	}
 
+	function showMessage(result)
+	{
+		displayResult(result.message);
+	}
+	
 	function showResult(result,reloadID)
 	{
 		displayResult(result.message);
-		console.log(result.new_value);
+		console.log(result.message);
 		$("" + reloadID + "").html(result.new_value);
 	}
 

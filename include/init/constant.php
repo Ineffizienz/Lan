@@ -11,6 +11,7 @@
 	define("IMG",ROOT . "/images/");
 	define("ICON",IMG . "game_icon/");
 	define("AC",IMG . "achievements/");
+	define("BANNER",IMG . "tm_banner/");
 
 
 	define("IP",$_SERVER["REMOTE_ADDR"]);

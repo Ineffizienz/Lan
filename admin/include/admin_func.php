@@ -266,7 +266,7 @@ function validateImageFile($filesize,$filetype)
 {
 	if(isset($filesize) && ($filesize != 0))
 	{
-		if($filesize > 500000)
+		if($filesize > 5000000)
 		{
 			return "ERR_ADMIN_FILE_TO_HUGE";
 		} else {

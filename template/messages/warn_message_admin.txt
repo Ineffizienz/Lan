@@ -1,0 +1,1 @@
+WARN_ADMIN_GAME_HAS_TM: Das Spiel hat bereits ein Turnier.

@@ -77,6 +77,9 @@ if($fl == "1")
 	$tpl->assign("realm",getRealmName($con_wow));
 	$tpl->assign("server_on",displayServerStatus($con_wow));
 
+
+	/***************************** TUNRIERE *****************************/
+
 	/***************************** SETTING *****************************/
 
 	$tpl->assign("ip",IP);

@@ -11,11 +11,11 @@
 			case 'teams':
 				$content = build_content("teams.html");
 			break;
-			case 'tm':
-				$content = build_content("generate_tournament.html");
-			break;
 			case 'c_team':
 				$content = build_content("create_team.html");
+			break;
+			case 'tm':
+				$content = build_content("turnier.html");
 			break;
 			case 'conf':
 				$content = build_content("settings.html");

@@ -16,4 +16,6 @@ ERR_ADMIN_USER_DOES_NOT_EXISTS: Der Spieler existiert nicht und kann nicht gelö
 ERR_ADMIN_NO_TEAM_SELECTED: Es wurde kein Team ausgewählt.
 ERR_ADMIN_NO_GAME_SELECTED: Es wurde kein Spiel für das Turnier ausgewählt.
 ERR_ADMIN_CREATE_TM: Es ist ein Fehler beim Erstellen des Turniers aufgetreten:
-ERR_ADMIN_INTERN_#2: Es wurden leere Parameter übergeben.
+ERR_ADMIN_INTERN_#2: Es wurden leere Game-Parameter übergeben.
+ERR_ADMIN_INTERN_#3: Es wurden leere Modus-Parameter übergeben.
+ERR_ADMIN_TM_EXISTS: Es existiert bereits ein Turnier für dieses Spiel.

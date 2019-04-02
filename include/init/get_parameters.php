@@ -751,4 +751,26 @@ function getServerStatus($con)
 	return $s_status;
 }
 
+function getTournamentGames($con)
+{
+	$result = mysqli_query($con,"SELECT game FROM tm");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_game[] = $row["game"];
+	}
+
+	return $tm_game;
+}
+
+function getTournamentModes($con,$game)
+{
+	$result = mysqli_query($con,"SELECT mode FROM tm WHERE game = '$game'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_mode = $row["mode"];
+	}
+
+	return $tm_mode;
+}
+
 ?>

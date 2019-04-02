@@ -897,6 +897,51 @@ h4
 	padding-left:3%;
 }
 
+/* ---------------------- Turniere ---------------------------
+--------------------------------------------------------------*/
+
+#tm_container
+{
+	display:grid;
+	grid-template-columns:auto auto auto;
+	grid-column-gap:30px;
+	grid-row-gap:30px;
+	align-content: center;
+}
+.tm_mode
+{
+	background-color:grey;
+	margin:0;
+	line-height:25px;
+	text-align:center;
+	font-weight:bold;
+	color:#fff;
+}
+.tm_game_banner
+{
+	background-size:cover;
+	background-repeat:no-repeat;
+	border: 2px solid #000;
+	border-radius: 0 0 5% 5%;
+	box-shadow:0 5px 5px 0;
+	padding:0;
+	margin:0;
+}
+.tm_div_box
+{
+	line-height:120px;
+	border-radius: 0 0 5% 5%;
+	text-align:center;
+	font-weight:bold;
+}
+.tm_span_box
+{
+	text-align:center;
+	width:250px;
+	max-width:250px;
+}
+
+
 A:link
 {
 	color: #000000;
