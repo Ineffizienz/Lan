@@ -8,5 +8,5 @@ SUC_ADMIN_CREATE_NEW_GAME: Spiel erfolgreich erstellt.
 SUC_ADMIN_DELETE_USER: Nutzer erfolgreich gelöscht.
 SUC_ADMIN_NEW_PLAYER: Ein neuer Spieler wurde erfolgreich angelegt.
 SUC_ADMIN_DELETE_TEAM: Das Team wurde erfolgreich gelöscht.
-SUC_ADMIN_CREATE_TM: Turnier erfolgreich erstellt.
 SUC_ADMIN_INTERN_#1: SQL-Parameter gültig. Query würde ausgeführt.
+SUC_ADMIN_CREATE_TM: Turnier erfolgreich erstellt.

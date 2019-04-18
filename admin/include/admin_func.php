@@ -44,6 +44,18 @@ function buildOption($optionArr)
 	return $output_option;
 }
 
+function buildJSONOutput($elements)
+{
+	if(is_array($elements))
+	{
+		$jsonOutput = json_encode(array("message" => $elements[0], "new_value" => $elements[1]));
+	} else {
+		$jsonOutput = json_encode(array("message" => $elements));
+	}
+
+	return $jsonOutput;
+}
+
 function displayAchievements($con)
 {
 

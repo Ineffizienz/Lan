@@ -5,7 +5,11 @@ $(document).ready(function(){
 	function getFileData(input_id)
 	{
 		//var image = $("#" + input_id + "").prop('files')[0];
-		var image = $(input_id).prop('files')[0];
+		if ($(input_id).is(":empty")) {
+			var image = 0;
+		} else {
+			var image = $(input_id).prop('files')[0];
+		}
 		var image_data = new FormData();
 
 		image_data.append("file",image);

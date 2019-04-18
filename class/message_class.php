@@ -61,7 +61,7 @@ class message {
 					$this->messageText = $this->searchMessageUser($lines);
 				}	
 			}
-		} elseif (substr($this->messagecode,0,4) == "WARN") {
+		} elseif (substr($this->messageCode,0,4) == "WARN") {
 			if(file_exists($this->messageFile() . "warn_msg_admin.txt"))
 			{
 				$lines = file($this->messageFile() . "warn_msg_admin.txt");
@@ -102,7 +102,7 @@ class message {
 			{
 				$output = ltrim($message_line,$this->messageCode . ":");
 			} else {
-				$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode;
+				$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode . substr($this->messageCode,10);
 			}
 		}
 		

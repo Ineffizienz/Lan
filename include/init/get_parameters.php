@@ -759,6 +759,11 @@ function getTournamentGames($con)
 		$tm_game[] = $row["game"];
 	}
 
+	if(empty($tm_game))
+	{
+		$tm_game = array();
+	}
+
 	return $tm_game;
 }
 
@@ -768,6 +773,11 @@ function getTournamentModes($con,$game)
 	while($row=mysqli_fetch_array($result))
 	{
 		$tm_mode = $row["mode"];
+	}
+
+	if(empty($tm_mode))
+	{
+		$tm_mode = array();
 	}
 
 	return $tm_mode;
