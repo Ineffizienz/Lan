@@ -166,9 +166,10 @@ $(document).ready(function(){
 
 		var tm_game = $("#tm_game").find("option:selected").attr("name");
 		var tm_mode = $("#tm_mode").find("option:selected").attr("name");
+		var tm_min_player = $("#tm_min_player").find("option:selected").attr("name");
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,getFileData(input_id),showMessage);
+		createTm(tm_game,tm_mode,tm_min_player,getFileData(input_id),showMessage);
 	}
 
 	function deleteTeam(teamId,fn)
@@ -329,12 +330,12 @@ $(document).ready(function(){
 		});
 	}
 
-	function createTm(tm_game,tm_mode,image_data,fn)
+	function createTm(tm_game,tm_mode,tm_min_player,image_data,fn)
 	{
 		return $.ajax({
 			type: "post",
 			dataType: "json",
-			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode,
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player,
 			cache: false,
 			contentType: false,
 			processData: false,

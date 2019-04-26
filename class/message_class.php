@@ -52,13 +52,15 @@ class message {
 					$lines = file($this->messageFile() . "error_message_admin.txt");
 					$this->messageText = $this->searchMessageAdmin($lines);
 				} else {
-					$this->messageText = "<i>error_msg</i> nicht gefunden. " . $this->messageFile();
+					$this->messageText = "<i>error_msg_admin</i> nicht gefunden. " . $this->messageFile();
 				}
 			} else {
 				if (file_exists($this->messageFile() . "error_msg.txt"))
 				{
 					$lines = file($this->messageFile() . "error_msg.txt");
 					$this->messageText = $this->searchMessageUser($lines);
+				} else {
+					$this->messageText = "<i>error_msg</i> nicht gefunden. " . $this->messageFile();
 				}	
 			}
 		} elseif (substr($this->messageCode,0,4) == "WARN") {
@@ -66,22 +68,27 @@ class message {
 			{
 				$lines = file($this->messageFile() . "warn_msg_admin.txt");
 				$this->messageText = $this->searchMessageAdmin($lines);
+			} else {
+				$this->messageText = "<i>warn_msg_admin</i> nicht gefunden. " . $this->messageFile();
 			}
-		} else {
+		} elseif (substr($this->messageCode,0,3) == "SUC") {
 			if (substr($this->messageCode,4,5) == "ADMIN")
 			{
 				if(file_exists($this->messageFile() . "success_message_admin.txt"))
 				{
 					$lines = file($this->messageFile() . "success_message_admin.txt");
 					$this->messageText = $this->searchMessageAdmin($lines);
+				} else {
+					$this->messageText = "<i>success_message_admin</i> nicht gefunden. " . $this->messageFile();
 				}
-				
 			} else {
 				if (file_exists($this->messageFile() . "success_message.txt"))
 		        {
 		            $lines = file($this->messageFile() . "success_message.txt");
 		            $this->messageText = $this->searchMessageUser($lines);
-		        }	
+		        } else {
+					$this->messageText = "<i>succes_message</i> nicht gefunden. " . $this->messageFile();
+				}	
 			}
 		}
 
