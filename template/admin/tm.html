@@ -1,24 +1,49 @@
 <div>
     <h2>Turnier anlegen</h2>
-    <div style="text-align:center">
         <form method="post" enctype="multipart/form-data" accept-charset="utf-8">
-            <select name="tm_game" id="tm_game">
-                {$games}
-            </select>
-            <select name="tm_mode" id="tm_mode">
-                <option name="1">1 gegen 1
-                <option name="2">2 gegen 2
-                <option name="3">Teams
-            </select>
-            <input type="file" name="tm_banner" id="tm_banner">
-            <select name="tm_min_player" id="tm_min_player">
-                <option name="2">2
-                <option name="4">4
-                <option name="6">6
-                <option name="8">8
-                <option name="10">10
-            </select>
-            <input type="submit" name="create_tm" id="create_tm" value="Turnier erstellen">
+            <div id="admin_tm_container">
+                <div>
+                    <label for="tm_game">Spiele:</label>
+                </div>
+                <div>
+                    <select name="tm_game" id="tm_game">
+                            {$games}
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_mode">Modus:</label>
+                </div>
+                <div>
+                    <select name="tm_mode" id="tm_mode">
+                            <option name="1">1 gegen 1
+                            <option name="2">2 gegen 2
+                            <option name="3">Teams
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_banner">Banner:</label>
+                </div>
+                <div>
+                    <input type="file" name="tm_banner" id="tm_banner">
+                </div>
+                <div>
+                    <label for="tm_min_player">Mindestanzahl an Spielern:</label>
+                </div>
+                <div>
+                    <select name="tm_min_player" id="tm_min_player">
+                        <option name="0">0
+                        <option name="2">2
+                        <option name="4">4
+                        <option name="6">6
+                        <option name="8">8
+                        <option name="10">10
+                    </select>
+                </div>
+                <div>&nbsp;</div>
+                <div>
+                    <input type="submit" name="create_tm" id="create_tm" value="Turnier erstellen">
+                </div>
+            </div>
         </form>
-    </div>
+    
 </div>

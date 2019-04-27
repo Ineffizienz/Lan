@@ -107,7 +107,7 @@ if(mysqli_query($con,$sql))
 }*/
 
 // Update 1.4.2 /Post-Lan 2019
-/*$sql = "CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game VARCHAR(255) NOT NULL, mode INT(11) NOT NULL)";
+$sql = "CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game VARCHAR(255) NOT NULL, mode INT(11) NOT NULL)";
 if(mysqli_query($con,$sql))
 {
 	echo "Tabelle <i>tm</i> erfolgreich erstellt.<br>";
@@ -127,13 +127,20 @@ if(mysqli_query($con,$sql))
 	echo "Die Spalte <i>banner</i> wurde erfolgreich hinzugefügt.<br>";
 } else {
 	echo "Beim Hinzufügen der Spalte <i>banner</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
-}*/
+}
 $sql = "ALTER TABLE tm ADD min_player INT(11) NOT NULL AFTER banner";
 if(mysqli_query($con,$sql))
 {
 	echo "Die Spalte <i>min_player</i> wurde erfolgreich hinzugefügt.<br>";
 } else {
 	echo "Beim Hinzufügen der Spalte <i>min_player</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
+}
+$sql = "ALTER TABLE tm ADD starttime DATETIME NOT NULL AFTER min_player";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>starttime</i> wurde erfolgreich hinzugefügt.<br>";
+} else {
+	echo "Beim Hinzufügen der Spalte <i>starttime</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
 }
 
 ?>
