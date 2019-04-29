@@ -167,9 +167,14 @@ $(document).ready(function(){
 		var tm_game = $("#tm_game").find("option:selected").attr("name");
 		var tm_mode = $("#tm_mode").find("option:selected").attr("name");
 		var tm_min_player = $("#tm_min_player").find("option:selected").attr("name");
+		var tm_date = $("#tm_date").val();
+		var tm_time_hour = $("#tm_time_hour").val();
+		var tm_time_minute = $("#tm_time_minute").val();
+		var tm_datetime = tm_date + tm_time_hour + tm_time_minute;
+
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,tm_min_player,getFileData(input_id),showMessage);
+		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),showMessage);
 	}
 
 	function deleteTeam(teamId,fn)
@@ -330,12 +335,12 @@ $(document).ready(function(){
 		});
 	}
 
-	function createTm(tm_game,tm_mode,tm_min_player,image_data,fn)
+	function createTm(tm_game,tm_mode,tm_min_player,tm_datetime,image_data,fn)
 	{
 		return $.ajax({
 			type: "post",
 			dataType: "json",
-			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player,
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
 			cache: false,
 			contentType: false,
 			processData: false,

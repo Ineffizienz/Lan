@@ -46,11 +46,13 @@ if (isset($_REQUEST["game"]))
             $tm_game = $_REQUEST["game"];
             $tm_mode = $_REQUEST["mode"];
             $tm_min_player = $_REQUEST["min_player"];
+            $datetime = strtotime($_REQUEST["datetime"]);
+            $tm_starttime = date("Y-m-d H:i:s", $datetime);
 
             // Checks if image_data is 0 or contains an image
             if($_REQUEST["file"] == 0)
             {
-                $sql = "INSERT INTO tm (game, mode, banner, min_player) VALUES ('$tm_game','$tm_mode',NULL,'$tm_min_player')";
+                $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode',NULL,'$tm_min_player','$tm_starttime')";
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_CREATE_TM");
@@ -66,7 +68,7 @@ if (isset($_REQUEST["game"]))
                     move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
                     
                     $tm_banner = $_FILES["file"]["name"];
-                    $sql = "INSERT INTO tm (game, mode, banner, min_player) VALUES ('$tm_game','$tm_mode','$tm_banner','$tm_min_player')";
+                    $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_banner','$tm_min_player','$tm_starttime')";
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");

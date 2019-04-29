@@ -261,7 +261,7 @@ line
 {
 	display:none;
 }
-input[type=text],[type=password]
+input[type=text],[type=password],[type=date]
 	{
 		padding-left: 10px;
 		background-color: #fff;

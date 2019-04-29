@@ -112,7 +112,7 @@ if(mysqli_query($con,$sql))
 {
 	echo "Tabelle <i>tm</i> erfolgreich erstellt.<br>";
 } else {
-	echo mysqli_error($con);
+	echo "Beim erstellen der Tabelle ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
 }
 $sql = "ALTER table tm ADD mode INT(11) NOT NULL AFTER game";
 if(mysqli_query($con,$sql))
