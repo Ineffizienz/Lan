@@ -316,4 +316,39 @@ function displayTmGames($con)
 	return $output;
 }
 
+function displayTournaments($con)
+{
+	$tournaments = getTournaments($con);
+
+	foreach ($tournaments as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game"]);
+
+		$part = file_get_contents(TMP . "admin/part/tm_table.html");
+
+		if(empty($tournament["player_count"]))
+		{
+			$player_count = 0;
+		} else {
+			$player_count = $tournament["player_count"];
+		}
+
+		if(strtotime($tournament["starttime"]) < time())
+		{
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
+		} else {
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "'>Turnier starten</button>";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$tournament["mode"],$tournament["starttime"],$player_count,$startbutton),$part);
+		} else {
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$tournament["mode"],$tournament["starttime"],$player_count,$startbutton),$part);
+		}
+	}
+
+	return $output;
+}
+
 ?>

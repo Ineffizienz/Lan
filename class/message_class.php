@@ -102,16 +102,46 @@ class message {
 			- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
 			- den Rest hab ich nicht verstanden o.O
 		*/
+		$i = 0;
+		$check = false;
+		while ($check == false){
+			$array = explode(":", $data[$i]);
+
+			if (strcmp($array[0], $this->messageCode) == 0) //array[0] ist der MessageCode --> Bsp: ERR_ADMIN_...
+			{
+				$check = true;
+				$message_line = $array[1];
+			}
+			$i++;
+		}
 		
-		foreach ($data as $message_line)
+		if ($check == true)
 		{
+			$output = ltrim($message_line,$this->messageCode . ":");
+		} else {
+			$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode;
+		}
+		
+		/*foreach ($data as $message_line)
+		{	
+			$array = explode(":", $message_line);
+			$ergebnis = $array[0];
+			if (strcmp($ergebnis, $this->messageCode) == 0)
+			{
+				echo "Ja-Fall.";
+				$output = ltrim($message_line,$this->messageCode . ":");
+			} else {
+				echo "Nein-Fall.";
+				$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode;
+			}
+			/*
 			if(preg_match("/" . substr($this->messageCode,10) . "/isUe",$message_line)) // sogenannte PCRE-Modifikatoren
 			{
 				$output = ltrim($message_line,$this->messageCode . ":");
 			} else {
 				$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode . substr($this->messageCode,10);
 			}
-		}
+		}*/	
 		
 		return $output;
 	}

@@ -177,6 +177,26 @@ $(document).ready(function(){
 		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),showMessage);
 	}
 
+	function getDelTmData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("id");
+		
+		deleteTm(tm_id,setResult);
+	}
+
+	function getStartingTmData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("name");
+
+		$(this).prop('disabled', true);
+		
+		startTm(tm_id,showMessage);
+	}
+
 	function deleteTeam(teamId,fn)
 	{
 		return $.ajax({
@@ -349,6 +369,32 @@ $(document).ready(function(){
 		});
 	}
 
+	function deleteTm(tm_id,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/delete/delete_tm.php",
+			data: {
+				tm_id:tm_id
+			},
+			success: fn
+		});
+	}
+
+	function startTm(tm_id,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/edit/start_tm.php",
+			data: {
+				tm_id:tm_id
+			},
+			success: fn
+		});
+	}
+
 	function displayResult(err)
 	{
 		$("#result").show();
@@ -359,6 +405,18 @@ $(document).ready(function(){
 	function showMessage(result)
 	{
 		displayResult(result.message);
+	}
+
+	function setResult(result)
+	{
+		displayResult(result.message);
+
+		getNewTable();
+	}
+
+	function getNewTable()
+	{
+		$("#tm_work").load("admin_index.php?aa=turnier" + ' #tm_list');
 	}
 	
 	function showResult(result,reloadID)
@@ -399,5 +457,7 @@ $(document).ready(function(){
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField);
 	$(document).on("click","#create_tm",getTmGame);
+	$(document).on("click",".delete_tm",getDelTmData);
+	$(document).on("click",".start_tm",getStartingTmData);
 
 });

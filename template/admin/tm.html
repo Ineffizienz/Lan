@@ -1,7 +1,7 @@
 <div>
     <h2>Turnier anlegen</h2>
         <form method="post" enctype="multipart/form-data" accept-charset="utf-8">
-            <div id="admin_tm_container">
+            <div class="admin_tm_container">
                 <div>
                     <label for="tm_game">Spiele:</label>
                 </div>
@@ -53,5 +53,33 @@
                 </div>
             </div>
         </form>
-    
+</div>
+<div style="padding-left:5%;padding-top:1%;">
+    <h3>Turniere bearbeiten</h3>
+</div>
+<p style="border-bottom:2px solid #000000;width:100%;">&nbsp;</p>
+<div class="admin_tm_container" id="tm_work">
+    <table cellspacing="0" cellpadding="0" style="padding-bottom:8px;" id="tm_list">
+        <tr id="tm_table_headlines">
+            <th>
+                Spiel
+            </th>
+            <th>
+                Modus
+            </th>
+            <th>
+                Startzeit
+            </th>
+            <th>
+                Teilnehmerzahl
+            </th>
+            <th>
+                Turnier starten
+            </th>
+            <th>
+                Turnier löschen
+            </th>
+        </tr>
+        {$tournaments}
+    </table>
 </div>
