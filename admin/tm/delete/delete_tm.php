@@ -19,7 +19,7 @@
         if(mysqli_query($con,$sql))
         {
             $message->getMessageCode("SUC_ADMIN_DELETE_TM");
-            echo buildJSONOutput($message->displayMessage());
+            echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
         } else {
             $message->getMessageCode("ERR_ADMIN_INTERN_#4");
             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

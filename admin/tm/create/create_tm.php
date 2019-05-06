@@ -13,12 +13,10 @@ if (isset($_REQUEST["game"]))
     if (empty($_REQUEST["game"]))
     {
         $message->getMessageCode("ERR_ADMIN_INTERN_#2");
-        echo buildJSONOutpu($message->displayMessage());
-        //echo json_encode(array("message" => $message->displayMessage()));
+        echo buildJSONOutput($message->displayMessage());
     } else if (empty($_REQUEST["mode"])) {
         $message->getMessageCode("ERR_ADMIN_INTERN_#3");
         echo buildJSONOutput($message->displayMessage());
-        //echo json_encode(array("message" => $message->displayMessage()));
     } else {
 
         $tms_game = getTournamentGames($con);
@@ -32,7 +30,6 @@ if (isset($_REQUEST["game"]))
                 {
                     $message->getMessageCode("ERR_ADMIN_TM_EXISTS");
                     echo buildJSONOutput($message->displayMessage());
-                    //echo json_encode(array("message" => $message->displayMessage()));
                     break;
                 } else {
                     $message->getMessageCode("WARN_ADMIN_GAME_HAS_TM");
@@ -56,7 +53,7 @@ if (isset($_REQUEST["game"]))
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                    echo buildJSONOutput($message->displayMessage());
+                    echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
                 } else {
                     $message->getMessageCode("ERR_ADMIN_CREATE_TM");
                     echo buildJSONOutput($message->displayMessage());
@@ -72,10 +69,10 @@ if (isset($_REQUEST["game"]))
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                        echo json_encode(array("message" => $message->displayMessage()));
+                        echo buildJSONOutput(array("message" => $message->displayMessage(),"#tm_maintain","#tm_list"));
                     } else {
                         $message->getMessageCode("ERR_ADMIN_CREATE_TM");
-                        echo json_encode(array("message" => $message->displayMessage() . mysqli_error($con)));
+                        echo buildJSONOutput("message" => $message->displayMessage() . mysqli_error($con));
                     }
                 } else {
                     $message->getMessageCode($result_validate);
@@ -88,7 +85,7 @@ if (isset($_REQUEST["game"]))
 
 } else {
     $message->getMessageCode("ERR_ADMIN_NO_GAME_SELECTED");
-    echo json_encode(array("message" => $message->displayMessage()));
+    echo buildJSONOutput("message" => $message->displayMessage());
 }
 
 ?>

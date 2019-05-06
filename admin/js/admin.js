@@ -147,7 +147,7 @@ $(document).ready(function(){
 		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),displayResult);
 	}
 
-	function getFile(event)
+	function getFile(event) //Upload for new Keys
 	{
 		event.stopPropagation();
 		event.preventDefault();
@@ -174,7 +174,7 @@ $(document).ready(function(){
 
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),showMessage);
+		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),setResult);
 	}
 
 	function getDelTmData(event)
@@ -182,6 +182,10 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var tm_id = $(this).attr("id");
+		
+		// Define Elements for immediate reaction of the web-page
+		var reload_element = $(this).parents("table").attr("id");
+		var parent_reload = $(this).parents("div").attr("id");
 		
 		deleteTm(tm_id,setResult);
 	}
@@ -194,7 +198,7 @@ $(document).ready(function(){
 
 		$(this).prop('disabled', true);
 		
-		startTm(tm_id,showMessage);
+		startTm(tm_id,setResult);
 	}
 
 	function deleteTeam(teamId,fn)
@@ -265,6 +269,7 @@ $(document).ready(function(){
 	{
 		return $.ajax({
 			type: "post",
+			dataType: "json",
 			url: "admin/key/create_keylist.php?game=" + game,
 			cache: false,
 			contentType: false,
@@ -411,12 +416,12 @@ $(document).ready(function(){
 	{
 		displayResult(result.message);
 
-		getNewTable();
+		reloadContent(result.parent_element,result.child_element);
 	}
 
-	function getNewTable()
+	function reloadContent(parent_element,child_element)
 	{
-		$("#tm_work").load("admin_index.php?aa=turnier" + ' #tm_list');
+		$(parent_element).load(window.location.href + ' ' + child_element);
 	}
 	
 	function showResult(result,reloadID)

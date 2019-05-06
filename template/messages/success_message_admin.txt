@@ -11,3 +11,5 @@ SUC_ADMIN_DELETE_TEAM: Das Team wurde erfolgreich gelöscht.
 SUC_ADMIN_INTERN_#1: SQL-Parameter gültig. Query würde ausgeführt.
 SUC_ADMIN_CREATE_TM: Turnier erfolgreich erstellt.
 SUC_ADMIN_DELETE_TM: Das Turnier wurde erfolgreich gelöscht.
+SUC_ADMIN_START_TM: Das Turnier wurde erfolgreich gestartet.
+SUC_ADMIN_ADDED_GAMEKEY: Key erfolgreich hinzugefügt.
