@@ -69,10 +69,10 @@ if (isset($_REQUEST["game"]))
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                        echo buildJSONOutput(array("message" => $message->displayMessage(),"#tm_maintain","#tm_list"));
+                        echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
                     } else {
                         $message->getMessageCode("ERR_ADMIN_CREATE_TM");
-                        echo buildJSONOutput("message" => $message->displayMessage() . mysqli_error($con));
+                        echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                     }
                 } else {
                     $message->getMessageCode($result_validate);
@@ -85,7 +85,7 @@ if (isset($_REQUEST["game"]))
 
 } else {
     $message->getMessageCode("ERR_ADMIN_NO_GAME_SELECTED");
-    echo buildJSONOutput("message" => $message->displayMessage());
+    echo buildJSONOutput($message->displayMessage());
 }
 
 ?>
