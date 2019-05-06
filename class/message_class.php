@@ -113,15 +113,12 @@ class message {
 	{
 		foreach ($data as $message_line)
 		{
-			if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$message_line))
-			{
-				$output = ltrim($message_line,$this->messageCode . ":");
-			} else {
-				$output = "Den Fehlercode hab ich nicht gefunden: " . $this->messageCode;
-			}
+			$len = strlen($this->messageCode);
+			if(substr($message_line, 0, $len) === $this->messageCode)
+				return ltrim(substr($message_line, $len+1));
 		}
 		
-		return $output;
+		return "Den Fehlercode hab ich nicht gefunden: " . $this->messageCode;
 	}
 
 	public function buildSirBrummel()

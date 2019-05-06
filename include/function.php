@@ -261,32 +261,31 @@
 		
 	}
 	
-	function displaySinglePlayerTeam($con,$ip)
+	function displaySinglePlayerTeam($con, $player_id)
 	{
-		$team_id = getTeamId($con,$ip);
+		$team_id = getTeamId($con, $player_id);
 		
 		if(empty($team_id))
 		{
-			$teamname = getSinglePlayerTeam($con,$ip);
+			$teamname = getSinglePlayerTeam($con, $player_id);
 			return $teamname;
 		} else {
-			$user_id = getUserId($con,$ip);
-			$teamname = getSinglePlayerTeam($con,$ip);
+			$teamname = getSinglePlayerTeam($con, $player_id);
 			$player_team = file_get_contents("template/part/player_team.html");
-			$output = str_replace(array("--TEAM--","--TEAMID--","--ID--"), array($teamname,$team_id,$user_id), $player_team);
+			$output = str_replace(array("--TEAM--","--TEAMID--","--ID--"), array($teamname,$team_id, $player_id), $player_team);
 			
 			return $output;
 		}
 	}
 
-	function displayCaptain($con,$ip)
+	function displayCaptain($con, $player_id)
 	{
-		$self_captain = getCaptainStatus($con,$ip);
+		$self_captain = getCaptainStatus($con, $player_id);
 
 		if(empty($self_captain))
 		{
-			$team_id = getTeamId($con,$ip);
-			$team_captain = getTeamCaptain($con,$team_id);
+			$team_id = getTeamId($con, $player_id);
+			$team_captain = getTeamCaptain($con, $team_id);
 
 			if(empty($team_captain))
 			{
@@ -299,11 +298,11 @@
 		return $output;
 	}
 
-	function displayPlayerTeamMember($con,$ip)
+	function displayPlayerTeamMember($con, $player_id)
 	{
-		$team_id = getTeamId($con,$ip);
+		$team_id = getTeamId($con, $player_id);
 
-		$team_member = getTeamMembers($con,$ip,$team_id);
+		$team_member = getTeamMembers($con, $player_id, $team_id);
 
 		if(empty($team_member))
 		{
@@ -315,9 +314,9 @@
 		return $output;
 	}
 
-	function displayPlayerPrefs($con,$ip)
+	function displayPlayerPrefs($con, $player_id)
 	{
-		$player_pref = getSinglePlayerPref($con,$ip);
+		$player_pref = getSinglePlayerPref($con, $player_id);
 
 		if(empty($player_pref))
 		{
@@ -341,7 +340,7 @@
 		return $output;
 	}
 	
-	function createCheckbox($con,$ip)
+	function createCheckbox($con, $player_id)
 	{
 		$games = getGameData($con);
 
@@ -350,7 +349,7 @@
 			$output = "<i>Keine Spiele vorhanden</i>";
 		} else {
 
-			$userPrefs = getSinglePlayerPref($con,$ip);
+			$userPrefs = getSinglePlayerPref($con, $player_id);
 
 			$part = file_get_contents("template/part/checkbox_container.html");
 			$checked_part = file_get_contents("template/part/checkbox_container_checked.html");
@@ -406,6 +405,7 @@ function selectWowAccount($con,$con_wow,$con_char,$ip)
 		} else {
 			$tpl = new template();
 			$tpl->load("wow_server/characters_table.html");
+			$output = "";
 
 			foreach($wow_account_chars as $chars)
 			{
@@ -524,11 +524,9 @@ function displayServerStatus($con_wow)
 
 /******************************* ACHIEVEMENTS ************************************/
 
-function displayPlayerAchievements($con,$ip)
+function displayPlayerAchievements($con, $player_id)
 {
-	$user_id = getUserId($con,$ip);
-
-	$achievement_id = getUserAchievements($con,$user_id);
+	$achievement_id = getUserAchievements($con, $player_id);
 
 	$ac = new Achievement();
 	if (empty($achievement_id))
@@ -537,7 +535,7 @@ function displayPlayerAchievements($con,$ip)
 	} else {
 		foreach ($achievement_id as $id)
 		{
-			$achievement_details = getAchievementById($con,$id);
+			$achievement_details = getAchievementById($con, $id);
 
 			foreach ($achievement_details as $achievement)
 			{
@@ -556,9 +554,9 @@ function displayPlayerAchievements($con,$ip)
 
 }
 
-function displayAvailableAchievements($con,$ip)
+function displayAvailableAchievements($con, $player_id)
 {
-	$basic_ac = getAvailableAchievements($con,$ip);
+	$basic_ac = getAvailableAchievements($con, $player_id);
 	
 	$ac = new Achievement();
 	if(!empty($basic_ac))
