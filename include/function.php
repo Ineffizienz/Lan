@@ -413,7 +413,12 @@ function selectWowAccount($con,$con_wow,$con_char,$ip)
 				$class = defineClass($chars["class"]);
 				$loc = defineLocation($chars["map"]);
 				$part = file_get_contents("template/part/characters_row.html");
-				$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				if (!isset($output))
+				{
+					$output = str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				} else {
+					$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				}
 			}
 			$tpl->assign("characters",$output);
 			$template = $tpl->r_display();

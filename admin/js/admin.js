@@ -4,15 +4,15 @@ $(document).ready(function(){
 
 	function getFileData(input_id)
 	{
-		//var image = $("#" + input_id + "").prop('files')[0];
-		if ($(input_id).is(":empty")) {
-			var image = 0;
-		} else {
-			var image = $(input_id).prop('files')[0];
-		}
+		var image = $(input_id).prop('files')[0];
 		var image_data = new FormData();
 
-		image_data.append("file",image);
+		if($(input_id).get(0).files.length == 0)
+		{
+			image_data.append("file","0");
+		} else {
+			image_data.append("file",image);
+		}
 
 		return image_data;
 	}
@@ -421,7 +421,14 @@ $(document).ready(function(){
 
 	function reloadContent(parent_element,child_element)
 	{
-		$(parent_element).load(window.location.href + ' ' + child_element);
+		if($.isArray(parent_element))
+		{
+			$.each(parent_element, function(key, value) {
+				$(value).load(window.location.href + ' ' + child_element[key]);
+			});
+		} else {
+			$(parent_element).load(window.location.href + ' ' + child_element);
+		}
 	}
 	
 	function showResult(result,reloadID)

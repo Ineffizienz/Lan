@@ -47,13 +47,13 @@ if (isset($_REQUEST["game"]))
             $tm_starttime = date("Y-m-d H:i:s", $datetime);
 
             // Checks if image_data is 0 or contains an image
-            if($_REQUEST["file"] == 0)
+            if(!isset($_FILES["file"]))
             {
                 $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode',NULL,'$tm_min_player','$tm_starttime')";
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                    echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                    echo buildJSONOutput(array($message->displayMessage(),array("#tm_maintain","#create_tm_form"),array("#tm_list","#create_form")));
                 } else {
                     $message->getMessageCode("ERR_ADMIN_CREATE_TM");
                     echo buildJSONOutput($message->displayMessage());
@@ -62,14 +62,17 @@ if (isset($_REQUEST["game"]))
                 $result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION));
                 if ($result_validate == "1")
                 {
-                    move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
-                    
                     $tm_banner = $_FILES["file"]["name"];
+                    if (!file_exists($_FILES["file"]["name"]))
+                    {
+                        move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
+                    }
+                    
                     $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_banner','$tm_min_player','$tm_starttime')";
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                        echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                        echo buildJSONOutput(array($message->displayMessage(),array("#tm_maintain","#create_tm_form"),array("#tm_list","#create_form")));
                     } else {
                         $message->getMessageCode("ERR_ADMIN_CREATE_TM");
                         echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

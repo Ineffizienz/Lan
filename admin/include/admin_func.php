@@ -56,6 +56,23 @@ function buildJSONOutput($elements)
 	return $jsonOutput;
 }
 
+function translateGameMode($mode)
+{
+	switch ($mode) {
+		case "1":
+			$gameMode = "Mann gegen Mann";
+			break;
+		case "2":
+			$gameMode = "2 gegen 2";
+			break;
+		case "3":
+			$gameMode = "Teams";
+			break;
+	}
+
+	return $gameMode;
+}
+
 function displayAchievements($con)
 {
 
@@ -333,6 +350,8 @@ function displayTournaments($con)
 			$player_count = $tournament["player_count"];
 		}
 
+		$game_mode = translateGameMode($tournament["mode"]);
+
 		if(strtotime($tournament["starttime"]) < time())
 		{
 			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
@@ -342,9 +361,9 @@ function displayTournaments($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$tournament["mode"],$tournament["starttime"],$player_count,$startbutton),$part);
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
 		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$tournament["mode"],$tournament["starttime"],$player_count,$startbutton),$part);
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
 		}
 	}
 
