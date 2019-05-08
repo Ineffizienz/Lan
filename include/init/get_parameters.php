@@ -751,4 +751,71 @@ function getServerStatus($con)
 	return $s_status;
 }
 
+//###################### Tournaments ################################
+
+function getTournamentGames($con)
+{
+	$result = mysqli_query($con,"SELECT game FROM tm");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_game[] = $row["game"];
+	}
+
+	if(empty($tm_game))
+	{
+		$tm_game = array();
+	}
+
+	return $tm_game;
+}
+
+function getTournamentModes($con,$game)
+{
+	$result = mysqli_query($con,"SELECT mode FROM tm WHERE game = '$game'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_mode = $row["mode"];
+	}
+
+	if(empty($tm_mode))
+	{
+		$tm_mode = array();
+	}
+
+	return $tm_mode;
+}
+
+function getTournaments($con)
+{
+	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, player_count FROM tm");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tms[] = $row;
+	}
+
+	return $tms;
+}
+
+function getTmById($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$existing_tm = $row["ID"];
+	}
+
+	return $existing_tm;
+}
+
+function getTmStartById($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT starttime FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_starttime = $row["starttime"];
+	}
+
+	return $tm_starttime;
+}
+
 ?>

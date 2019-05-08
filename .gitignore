@@ -5,7 +5,6 @@ design_templates
 font_awesome
 key_list
 sql
-update
 user
 lan.sql
 test.php
@@ -16,4 +15,5 @@ install.html
 profil
 achievements
 game_icon
+tm_banner
 .vscode

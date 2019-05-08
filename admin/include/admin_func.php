@@ -44,6 +44,35 @@ function buildOption($optionArr)
 	return $output_option;
 }
 
+function buildJSONOutput($elements)
+{
+	if(is_array($elements))
+	{
+		$jsonOutput = json_encode(array("message" => $elements[0], "parent_element" => $elements[1], "child_element" => $elements[2]));
+	} else {
+		$jsonOutput = json_encode(array("message" => $elements));
+	}
+
+	return $jsonOutput;
+}
+
+function translateGameMode($mode)
+{
+	switch ($mode) {
+		case "1":
+			$gameMode = "Mann gegen Mann";
+			break;
+		case "2":
+			$gameMode = "2 gegen 2";
+			break;
+		case "3":
+			$gameMode = "Teams";
+			break;
+	}
+
+	return $gameMode;
+}
+
 function displayAchievements($con)
 {
 
@@ -266,7 +295,7 @@ function validateImageFile($filesize,$filetype)
 {
 	if(isset($filesize) && ($filesize != 0))
 	{
-		if($filesize > 500000)
+		if($filesize > 5000000)
 		{
 			return "ERR_ADMIN_FILE_TO_HUGE";
 		} else {
@@ -288,6 +317,57 @@ function createGame($con,$new_game,$new_raw_name)
 	mysqli_query($con,"CREATE TABLE $new_raw_name (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_key VARCHAR(255) NULL, player_id INT(11) NULL)");
     mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name')");
 
+}
+
+function displayTmGames($con)
+{
+	$games = getGameData($con);
+
+	if (empty($games))
+	{
+		$output = "<option>Keine Spiele vorhanden";
+	} else {
+		$output = buildOption($games);
+	}
+
+	return $output;
+}
+
+function displayTournaments($con)
+{
+	$tournaments = getTournaments($con);
+
+	foreach ($tournaments as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game"]);
+
+		$part = file_get_contents(TMP . "admin/part/tm_table.html");
+
+		if(empty($tournament["player_count"]))
+		{
+			$player_count = 0;
+		} else {
+			$player_count = $tournament["player_count"];
+		}
+
+		$game_mode = translateGameMode($tournament["mode"]);
+
+		if(strtotime($tournament["starttime"]) < time())
+		{
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
+		} else {
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "'>Turnier starten</button>";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+		} else {
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+		}
+	}
+
+	return $output;
 }
 
 ?>

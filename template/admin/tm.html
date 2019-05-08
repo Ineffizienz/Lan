@@ -1,0 +1,86 @@
+<div>
+    <h2>Turnier anlegen</h2>
+        <form method="post" enctype="multipart/form-data" accept-charset="utf-8" id="create_tm_form">
+            <div class="admin_tm_container" id="create_form">
+                <div>
+                    <label for="tm_game">Spiele:</label>
+                </div>
+                <div>
+                    <select name="tm_game" id="tm_game">
+                            {$games}
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_mode">Modus:</label>
+                </div>
+                <div>
+                    <select name="tm_mode" id="tm_mode">
+                            <option name="1">1 gegen 1
+                            <option name="2">2 gegen 2
+                            <option name="3">Teams
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_banner">Banner:</label>
+                </div>
+                <div>
+                    <input type="file" name="tm_banner" id="tm_banner">
+                </div>
+                <div>
+                    <label for="tm_min_player">Mindestanzahl an Spielern:</label>
+                </div>
+                <div>
+                    <select name="tm_min_player" id="tm_min_player">
+                        <option name="0">0
+                        <option name="2">2
+                        <option name="4">4
+                        <option name="6">6
+                        <option name="8">8
+                        <option name="10">10
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_date">Datum:</label>
+                </div>
+                <div>
+                    <input type="date" name="tm_date" id="tm_date">
+                    <input type="text" name="tm_time_hour" maxlength="2" id="tm_time_hour" placeholder="H" style="padding-right:10px;width:40px;"> : 
+                    <input type="text" name="tm_time_minute" maxlength="2" id="tm_time_minute" placeholder="i" style="padding-right:10px;width:40px;">
+                    <!-- TODO: Change the type to number, add this type to the design and limit the input to 0-24-->
+                </div>
+                <div>&nbsp;</div>
+                <div>
+                    <input type="submit" name="create_tm" id="create_tm" value="Turnier erstellen">
+                </div>
+            </div>
+        </form>
+</div>
+<div style="padding-left:5%;padding-top:1%;">
+    <h3>Turniere bearbeiten</h3>
+</div>
+<p style="border-bottom:2px solid #000000;width:100%;">&nbsp;</p>
+<div class="admin_tm_container" id="tm_maintain">
+    <table cellspacing="0" cellpadding="0" style="padding-bottom:8px;" id="tm_list">
+        <tr id="tm_table_headlines">
+            <th>
+                Spiel
+            </th>
+            <th>
+                Modus
+            </th>
+            <th>
+                Startzeit
+            </th>
+            <th>
+                Teilnehmerzahl
+            </th>
+            <th>
+                Turnier starten
+            </th>
+            <th>
+                Turnier löschen
+            </th>
+        </tr>
+        {$tournaments}
+    </table>
+</div>

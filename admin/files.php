@@ -19,5 +19,4 @@
 
 	// PLAYER
 	require_once("admin/player/view/player_settings_view.php");
-
 ?>

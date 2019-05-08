@@ -6,7 +6,7 @@
 */
 
 header("Content-Type: text/html; charset=utf-8");
-error_reporting(0);
+error_reporting(E_ALL);
 
 include ("include/init/constant.php");
 require_once(CL . "template_class.php");
@@ -15,6 +15,7 @@ require_once(CL . "achievement_class.php");
 
 require_once(INC . "connect.php");
 require_once(INC . "function.php");
+
 
 $fl = getFirstLoginByIp($con,IP);
 $ticket_status = getTicketStatus($con,IP);
@@ -75,6 +76,9 @@ if($fl == "1")
 	$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,IP));
 	$tpl->assign("realm",getRealmName($con_wow));
 	$tpl->assign("server_on",displayServerStatus($con_wow));
+
+
+	/***************************** TUNRIERE *****************************/
 
 	/***************************** SETTING *****************************/
 

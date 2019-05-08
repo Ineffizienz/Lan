@@ -4,11 +4,15 @@ $(document).ready(function(){
 
 	function getFileData(input_id)
 	{
-		//var image = $("#" + input_id + "").prop('files')[0];
 		var image = $(input_id).prop('files')[0];
 		var image_data = new FormData();
 
-		image_data.append("file",image);
+		if($(input_id).get(0).files.length == 0)
+		{
+			image_data.append("file","0");
+		} else {
+			image_data.append("file",image);
+		}
 
 		return image_data;
 	}
@@ -37,7 +41,7 @@ $(document).ready(function(){
 
 		var teamId = $("#del_team").find('option:selected').attr("name");
 
-		deleteTeam(teamId,displayResult);
+		deleteTeam(teamId,showResult);
 	}
 	
 	function getNewGame(event)
@@ -143,7 +147,7 @@ $(document).ready(function(){
 		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),displayResult);
 	}
 
-	function getFile(event)
+	function getFile(event) //Upload for new Keys
 	{
 		event.stopPropagation();
 		event.preventDefault();
@@ -155,10 +159,53 @@ $(document).ready(function(){
 
 	}
 
+	function getTmGame(event)
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var tm_game = $("#tm_game").find("option:selected").attr("name");
+		var tm_mode = $("#tm_mode").find("option:selected").attr("name");
+		var tm_min_player = $("#tm_min_player").find("option:selected").attr("name");
+		var tm_date = $("#tm_date").val();
+		var tm_time_hour = $("#tm_time_hour").val();
+		var tm_time_minute = $("#tm_time_minute").val();
+		var tm_datetime = tm_date + tm_time_hour + tm_time_minute;
+
+		var input_id = "#tm_banner";
+
+		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),setResult);
+	}
+
+	function getDelTmData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("id");
+		
+		// Define Elements for immediate reaction of the web-page
+		var reload_element = $(this).parents("table").attr("id");
+		var parent_reload = $(this).parents("div").attr("id");
+		
+		deleteTm(tm_id,setResult);
+	}
+
+	function getStartingTmData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("name");
+
+		$(this).prop('disabled', true);
+		
+		startTm(tm_id,setResult);
+	}
+
 	function deleteTeam(teamId,fn)
 	{
 		return $.ajax({
 			type: "get",
+			dataType: "json",
 			url: "admin/team/edit/delete_team.php",
 			data: {
 				id:teamId
@@ -222,6 +269,7 @@ $(document).ready(function(){
 	{
 		return $.ajax({
 			type: "post",
+			dataType: "json",
 			url: "admin/key/create_keylist.php?game=" + game,
 			cache: false,
 			contentType: false,
@@ -312,17 +360,81 @@ $(document).ready(function(){
 		});
 	}
 
+	function createTm(tm_game,tm_mode,tm_min_player,tm_datetime,image_data,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: image_data,
+			success: fn
+		});
+	}
+
+	function deleteTm(tm_id,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/delete/delete_tm.php",
+			data: {
+				tm_id:tm_id
+			},
+			success: fn
+		});
+	}
+
+	function startTm(tm_id,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/tm/edit/start_tm.php",
+			data: {
+				tm_id:tm_id
+			},
+			success: fn
+		});
+	}
+
 	function displayResult(err)
 	{
 		$("#result").show();
 		$("#result").html(err);
-		$("#result").fadeOut(2000);
+		$("#result").fadeOut(3000);
 	}
 
+	function showMessage(result)
+	{
+		displayResult(result.message);
+	}
+
+	function setResult(result)
+	{
+		displayResult(result.message);
+
+		reloadContent(result.parent_element,result.child_element);
+	}
+
+	function reloadContent(parent_element,child_element)
+	{
+		if($.isArray(parent_element))
+		{
+			$.each(parent_element, function(key, value) {
+				$(value).load(window.location.href + ' ' + child_element[key]);
+			});
+		} else {
+			$(parent_element).load(window.location.href + ' ' + child_element);
+		}
+	}
+	
 	function showResult(result,reloadID)
 	{
 		displayResult(result.message);
-		console.log(result.new_value);
+		console.log(result.message);
 		$("" + reloadID + "").html(result.new_value);
 	}
 
@@ -356,5 +468,8 @@ $(document).ready(function(){
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField);
+	$(document).on("click","#create_tm",getTmGame);
+	$(document).on("click",".delete_tm",getDelTmData);
+	$(document).on("click",".start_tm",getStartingTmData);
 
 });
