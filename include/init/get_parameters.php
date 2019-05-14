@@ -107,9 +107,9 @@ function getBasicUserData($con) // admin/admin_func.php/addUsername
 	return $basic_user;
 }
 
-function getSingleUsername($con,$ip) //bezieht den Username, der zur angegebenen IP gehört - index.php + function.php/displayPlayerAchievements + reg_name.php + profil_image.php
+function getSingleUsername($con, $player_id) //bezieht den Username, der zur angegebenen ID gehört - index.php + function.php/displayPlayerAchievements + reg_name.php + profil_image.php
 {
-	$result = mysqli_query($con,"SELECT name FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT name FROM player WHERE ID = '$player_id'");
 	while ($row = mysqli_fetch_array($result))
 	{
 		$username = $row["name"];
@@ -141,9 +141,9 @@ function getLastIp($con) // bezieht die zuletzt angelegte IP / admin/create_new_
 	return $last_ip;
 }
 
-function getUserImage($con,$ip) // function.php/displayProfilImage
+function getUserImage($con, $player_id) // function.php/displayProfilImage
 {
-	$result = mysqli_query($con,"SELECT profil_image FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT profil_image FROM player WHERE ID = '$player_id'");
 	$row = mysqli_fetch_array($result);
 	$profil_image = $row["profil_image"];
 
@@ -212,9 +212,9 @@ function getPlayerID($con,$ip) // generate.php + reject_key.php
 
 	return $player_id;
 }
-function getSinglePlayerTeam($con,$ip) // index.php
+function getSinglePlayerTeam($con, $player_id) // index.php
 {
-	$result = mysqli_query($con,"SELECT team_id FROM player WHERE ip='$ip'");
+	$result = mysqli_query($con,"SELECT team_id FROM player WHERE ID='$player_id'");
 	$row = mysqli_fetch_array($result);
 	$team_id = $row["team_id"];
 
@@ -222,10 +222,8 @@ function getSinglePlayerTeam($con,$ip) // index.php
 
 	return $team;
 }
-function getSinglePlayerPref($con,$ip)
+function getSinglePlayerPref($con, $player_id)
 {
-	$player_id = getUserId($con,$ip);
-
 	$result = mysqli_query($con,"SELECT preferences FROM pref WHERE user_id = '$player_id'");
 	while ($row=mysqli_fetch_array($result))
 	{
@@ -439,9 +437,9 @@ function getTeamNames($con) //bezieht alle Teamnamen / create_team.php
 	return $team_names;
 }
 
-function getTeamId($con,$ip) //spielerspezifische Team ID / function.php/ownTeam + teamMembers + join_team.php + leave_team.php
+function getTeamId($con, $player_id) //spielerspezifische Team ID / function.php/ownTeam + teamMembers + join_team.php + leave_team.php
 {
-	$result = mysqli_query($con,"SELECT team_id FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT team_id FROM player WHERE ID = '$player_id'");
 	$row = mysqli_fetch_array($result);
 	$team_id = $row["team_id"];
 
@@ -491,9 +489,9 @@ function getTeamMember($con,$team_id) //bezieht alle Mitglieder von allen Teams 
 	return $member;
 }
 
-function getTeamMembers($con,$ip,$team_id) //bezieht die Teammitglieder eines Spielers /function.php/teamMembers
+function getTeamMembers($con, $player_id, $team_id) //bezieht die Teammitglieder eines Spielers /function.php/teamMembers
 {
-	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND ip != '$ip'");
+	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND ID != '$player_id'");
 	while ($row=mysqli_fetch_array($result))
 	{
 		$team_members[] = $row["name"];
@@ -507,7 +505,7 @@ function getTeamMembers($con,$ip,$team_id) //bezieht die Teammitglieder eines Sp
 	return $team_members;
 }
 
-function getTeamCaptain($con,$team_id) //bezieht den Team Captain eines spezifischen Teams
+function getTeamCaptain($con, $team_id) //bezieht den Team Captain eines spezifischen Teams
 {
 	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND team_captain != NULL");
 	while ($row=mysqli_fetch_array($result))
@@ -522,9 +520,9 @@ function getTeamCaptain($con,$team_id) //bezieht den Team Captain eines spezifis
 
 	return $captain;
 }
-function getCaptainStatus($con,$ip)
+function getCaptainStatus($con, $player_id)
 {
-	$result = mysqli_query($con,"SELECT team_captain FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT team_captain FROM player WHERE ID = '$player_id'");
 	$row = mysqli_fetch_array($result);
 	$team_captain = $row["team_captain"];
 
@@ -620,9 +618,9 @@ function getUserAchievements($con,$user_id) // function.php/displayUserAchieveme
 	return $ac_id;
 }
 
-function getAvailableAchievements($con,$ip) // function.php/displayAvailableAchievements
+function getAvailableAchievements($con, $player_id) // function.php/displayAvailableAchievements
 {
-	$username = getSingleUsername($con,$ip);
+	$username = getSingleUsername($con, $player_id);
 
 	$sql = "SELECT ac.ID,ac.title FROM ac LEFT JOIN ac_player ON ac.ID = ac_player.ac_id WHERE ac.ac_visibility = '1' AND ac_player.1 IS NULL";
 	$result = mysqli_query($con,$sql);
