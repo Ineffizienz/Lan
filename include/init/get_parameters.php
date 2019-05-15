@@ -694,9 +694,9 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
-function getWowAccount($con,$ip)
+function getWowAccount($con,$player_id)
 {
-	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ID = '$player_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$account_name = $row["wow_account"];
@@ -749,6 +749,8 @@ function getServerStatus($con)
 	return $s_status;
 }
 
+//###################### Tournaments ################################
+
 function getTournamentGames($con)
 {
 	$result = mysqli_query($con,"SELECT game FROM tm");
@@ -779,6 +781,39 @@ function getTournamentModes($con,$game)
 	}
 
 	return $tm_mode;
+}
+
+function getTournaments($con)
+{
+	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, player_count FROM tm");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tms[] = $row;
+	}
+
+	return $tms;
+}
+
+function getTmById($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$existing_tm = $row["ID"];
+	}
+
+	return $existing_tm;
+}
+
+function getTmStartById($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT starttime FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_starttime = $row["starttime"];
+	}
+
+	return $tm_starttime;
 }
 
 ?>

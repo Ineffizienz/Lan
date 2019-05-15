@@ -104,7 +104,7 @@
 		}
 	}
 	
-	function ownTeam($con,$ip)
+	function ownTeam($con,$ip) //maybe not used anymore
 	{
 		$team_id = getTeamId($con,$ip);
 
@@ -176,10 +176,10 @@
 
 		return $team_list;
 	}
-	function teamMembers($con,$ip) //Gibt die eigenen Teammitglieder aus
+	function teamMembers($con,$player_id) //Gibt die eigenen Teammitglieder aus
 	{
-		$team_id = getTeamId($con,$ip);  // beziehen der eigenen Team-ID
-		$team_members = getTeamMembers($con,$ip,$team_id);
+		$team_id = getTeamId($con,$player_id);  // beziehen der eigenen Team-ID
+		$team_members = getTeamMembers($con,$player_id,$team_id);
 
 		if (!empty($team_members))
 		{
@@ -195,10 +195,10 @@
 			return $members;
 		}
 	}
-	function getUserRelatedStatusColor($con,$ip)
+	function getUserRelatedStatusColor($con,$player_id)
 	{
-		$user_id = getUserId($con,$ip);
-		$status = getStatus($con,$user_id);
+		//$user_id = getUserId($con,$ip); --> remove
+		$status = getStatus($con,$player_id);
 		$status_color = getStatusColor($con,$status);
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
@@ -206,11 +206,11 @@
 		return $circle;
 	}
 
-	function getUserStatusOption($con,$ip)
+	function getUserStatusOption($con,$player_id)
 	{
-		$user_id = getUserId($con,$ip);
+		//$user_id = getUserId($con,$ip); --> remove
 		$status_data = getStatusData($con);
-		$user_status = getStatus($con,$user_id);
+		$user_status = getStatus($con,$player_id);
 		$status_name = getStatusName($con,$user_status);
 
 		
@@ -243,10 +243,10 @@
 		} 
 	}
 
-	function displayProfilImage($con,$ip)
+	function displayProfilImage($con,$player_id)
 	{
 
-		$profil_image = getUserImage($con,$ip);
+		$profil_image = getUserImage($con,$player_id);
 
 		if (empty($profil_image))
 		{
@@ -381,9 +381,9 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$con_wow,$con_char,$ip)
+function selectWowAccount($con,$con_wow,$con_char,$player_id)
 {
-	$wow_account = getWowAccount($con,$ip);
+	$wow_account = getWowAccount($con,$player_id);
 
 	if(empty($wow_account))
 	{
@@ -413,7 +413,12 @@ function selectWowAccount($con,$con_wow,$con_char,$ip)
 				$class = defineClass($chars["class"]);
 				$loc = defineLocation($chars["map"]);
 				$part = file_get_contents("template/part/characters_row.html");
-				$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				if (!isset($output))
+				{
+					$output = str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				} else {
+					$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+				}
 			}
 			$tpl->assign("characters",$output);
 			$template = $tpl->r_display();

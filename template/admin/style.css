@@ -240,6 +240,20 @@ line
 	cursor: pointer;
 }
 
+/* ---------------------- TOURNAMENTS -----------------------
+--------------------------------------------------------------*/
+
+.admin_tm_container
+{
+	display:grid;
+	margin:0 auto;
+	grid-template-columns:auto auto;
+	grid-column-gap:30px;
+	grid-row-gap:15px;
+	align-content: center;
+	width:50%;
+}
+
 /* ---------------------- FORM ELEMENTS -----------------------
 --------------------------------------------------------------*/
 
@@ -247,6 +261,62 @@ line
 {
 	display:none;
 }
+input[type=text],[type=password],[type=date]
+	{
+		padding-left: 10px;
+		background-color: #fff;
+		font-size: 11pt;
+		color: #000;
+		border-radius: 2px 2px;
+		border: 1px solid #D0D0D0;
+		line-height: 25px;
+		width: 250px;
+	}
+	input[type=text]:focus,[type=password]:focus
+	{
+		box-shadow: 0 0 2px 2px #C0C0C0;
+		font-size: 11pt;
+		width:250px;
+	}
+.button
+{
+	cursor: pointer;
+	margin: 0.5%;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #063B9E;
+	border-radius: 8px 8px;
+	box-shadow: 0 2px 5px 0 #646464;
+	border: 1px solid #000000;
+	color: #FFFFFF;
+	font-size: 12pt;
+	font-weight: bold;
+	font-family: Calibri;
+}
+	.button:hover
+	{
+		color: #C0C0C0;
+	}
+select
+	{
+		background-color:white;
+		background-image:url("../../images/parts/expand-button.png");
+		background-position: 98% 50%;
+		background-repeat: no-repeat;
+		-webkit-appearance: none;
+	  	-moz-appearance: none;
+	  	appearance: none;
+	  	padding: 2px;
+	  	font-size: 10pt;
+	  	border: 1px solid #bbb;
+	  	border-radius: 3px;
+	  	width:180px;
+	}
+	select:focus
+	{
+		box-shadow: 0 0 2px 2px #C0C0C0;
+	}
 
 /* ---------------------- GAME ELEMENTS -----------------------
 --------------------------------------------------------------*/

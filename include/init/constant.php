@@ -13,6 +13,8 @@
 	define("AC",IMG . "achievements/");
 	define("BANNER",IMG . "tm_banner/");
 
+	define("TMP",ROOT . "/template/");
+	define("KEY_FOLDER",ROOT . "/key_list/");
 
 	define("IP",$_SERVER["REMOTE_ADDR"]);
 ?>

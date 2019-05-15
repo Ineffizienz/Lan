@@ -48,12 +48,29 @@ function buildJSONOutput($elements)
 {
 	if(is_array($elements))
 	{
-		$jsonOutput = json_encode(array("message" => $elements[0], "new_value" => $elements[1]));
+		$jsonOutput = json_encode(array("message" => $elements[0], "parent_element" => $elements[1], "child_element" => $elements[2]));
 	} else {
 		$jsonOutput = json_encode(array("message" => $elements));
 	}
 
 	return $jsonOutput;
+}
+
+function translateGameMode($mode)
+{
+	switch ($mode) {
+		case "1":
+			$gameMode = "Mann gegen Mann";
+			break;
+		case "2":
+			$gameMode = "2 gegen 2";
+			break;
+		case "3":
+			$gameMode = "Teams";
+			break;
+	}
+
+	return $gameMode;
 }
 
 function displayAchievements($con)
@@ -311,6 +328,43 @@ function displayTmGames($con)
 		$output = "<option>Keine Spiele vorhanden";
 	} else {
 		$output = buildOption($games);
+	}
+
+	return $output;
+}
+
+function displayTournaments($con)
+{
+	$tournaments = getTournaments($con);
+
+	foreach ($tournaments as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game"]);
+
+		$part = file_get_contents(TMP . "admin/part/tm_table.html");
+
+		if(empty($tournament["player_count"]))
+		{
+			$player_count = 0;
+		} else {
+			$player_count = $tournament["player_count"];
+		}
+
+		$game_mode = translateGameMode($tournament["mode"]);
+
+		if(strtotime($tournament["starttime"]) < time())
+		{
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
+		} else {
+			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "'>Turnier starten</button>";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+		} else {
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+		}
 	}
 
 	return $output;

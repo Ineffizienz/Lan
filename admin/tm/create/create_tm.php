@@ -13,12 +13,10 @@ if (isset($_REQUEST["game"]))
     if (empty($_REQUEST["game"]))
     {
         $message->getMessageCode("ERR_ADMIN_INTERN_#2");
-        echo buildJSONOutpu($message->displayMessage());
-        //echo json_encode(array("message" => $message->displayMessage()));
+        echo buildJSONOutput($message->displayMessage());
     } else if (empty($_REQUEST["mode"])) {
         $message->getMessageCode("ERR_ADMIN_INTERN_#3");
         echo buildJSONOutput($message->displayMessage());
-        //echo json_encode(array("message" => $message->displayMessage()));
     } else {
 
         $tms_game = getTournamentGames($con);
@@ -32,7 +30,6 @@ if (isset($_REQUEST["game"]))
                 {
                     $message->getMessageCode("ERR_ADMIN_TM_EXISTS");
                     echo buildJSONOutput($message->displayMessage());
-                    //echo json_encode(array("message" => $message->displayMessage()));
                     break;
                 } else {
                     $message->getMessageCode("WARN_ADMIN_GAME_HAS_TM");
@@ -45,15 +42,18 @@ if (isset($_REQUEST["game"]))
             // Requests parameters game and mode from URL
             $tm_game = $_REQUEST["game"];
             $tm_mode = $_REQUEST["mode"];
+            $tm_min_player = $_REQUEST["min_player"];
+            $datetime = strtotime($_REQUEST["datetime"]);
+            $tm_starttime = date("Y-m-d H:i:s", $datetime);
 
             // Checks if image_data is 0 or contains an image
-            if($_REQUEST["file"] == 0)
+            if(!isset($_FILES["file"]))
             {
-                $sql = "INSERT INTO tm (game, mode, banner) VALUES ('$tm_game','$tm_mode',NULL)";
+                $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode',NULL,'$tm_min_player','$tm_starttime')";
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                    echo buildJSONOutput($message->displayMessage());
+                    echo buildJSONOutput(array($message->displayMessage(),array("#tm_maintain","#create_tm_form"),array("#tm_list","#create_form")));
                 } else {
                     $message->getMessageCode("ERR_ADMIN_CREATE_TM");
                     echo buildJSONOutput($message->displayMessage());
@@ -62,17 +62,20 @@ if (isset($_REQUEST["game"]))
                 $result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION));
                 if ($result_validate == "1")
                 {
-                    move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
-                    
                     $tm_banner = $_FILES["file"]["name"];
-                    $sql = "INSERT INTO tm (game, mode, banner) VALUES ('$tm_game','$tm_mode','$tm_banner')";
+                    if (!file_exists($_FILES["file"]["name"]))
+                    {
+                        move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
+                    }
+                    
+                    $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_banner','$tm_min_player','$tm_starttime')";
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");
-                        echo json_encode(array("message" => $message->displayMessage()));
+                        echo buildJSONOutput(array($message->displayMessage(),array("#tm_maintain","#create_tm_form"),array("#tm_list","#create_form")));
                     } else {
                         $message->getMessageCode("ERR_ADMIN_CREATE_TM");
-                        echo json_encode(array("message" => $message->displayMessage() . mysqli_error($con)));
+                        echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                     }
                 } else {
                     $message->getMessageCode($result_validate);
@@ -85,7 +88,7 @@ if (isset($_REQUEST["game"]))
 
 } else {
     $message->getMessageCode("ERR_ADMIN_NO_GAME_SELECTED");
-    echo json_encode(array("message" => $message->displayMessage()));
+    echo buildJSONOutput($message->displayMessage());
 }
 
 ?>

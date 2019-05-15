@@ -52,13 +52,15 @@ class message {
 					$lines = file($this->messageFile() . "error_message_admin.txt");
 					$this->messageText = $this->searchMessageAdmin($lines);
 				} else {
-					$this->messageText = "<i>error_msg</i> nicht gefunden. " . $this->messageFile();
+					$this->messageText = "<i>error_msg_admin</i> nicht gefunden. " . $this->messageFile();
 				}
 			} else {
 				if (file_exists($this->messageFile() . "error_msg.txt"))
 				{
 					$lines = file($this->messageFile() . "error_msg.txt");
 					$this->messageText = $this->searchMessageUser($lines);
+				} else {
+					$this->messageText = "<i>error_msg</i> nicht gefunden. " . $this->messageFile();
 				}	
 			}
 		} elseif (substr($this->messageCode,0,4) == "WARN") {
@@ -66,22 +68,27 @@ class message {
 			{
 				$lines = file($this->messageFile() . "warn_msg_admin.txt");
 				$this->messageText = $this->searchMessageAdmin($lines);
+			} else {
+				$this->messageText = "<i>warn_msg_admin</i> nicht gefunden. " . $this->messageFile();
 			}
-		} else {
+		} elseif (substr($this->messageCode,0,3) == "SUC") {
 			if (substr($this->messageCode,4,5) == "ADMIN")
 			{
 				if(file_exists($this->messageFile() . "success_message_admin.txt"))
 				{
 					$lines = file($this->messageFile() . "success_message_admin.txt");
 					$this->messageText = $this->searchMessageAdmin($lines);
+				} else {
+					$this->messageText = "<i>success_message_admin</i> nicht gefunden. " . $this->messageFile();
 				}
-				
 			} else {
 				if (file_exists($this->messageFile() . "success_message.txt"))
 		        {
 		            $lines = file($this->messageFile() . "success_message.txt");
 		            $this->messageText = $this->searchMessageUser($lines);
-		        }	
+		        } else {
+					$this->messageText = "<i>succes_message</i> nicht gefunden. " . $this->messageFile();
+				}	
 			}
 		}
 
@@ -95,16 +102,39 @@ class message {
 			- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
 			- den Rest hab ich nicht verstanden o.O
 		*/
+		$i = 0;
+		$check = false;
 		
-		foreach ($data as $message_line)
-		{
-			if(preg_match("/" . substr($this->messageCode,10) . "/isUe",$message_line)) // sogenannte PCRE-Modifikatoren
+		foreach ($data as $elem){
+			$elem_parts = explode(":", $elem);
+			if (strcmp($elem_parts[0], $this->messageCode) == 0) //array[0] ist der MessageCode --> Bsp: ERR_ADMIN_...
 			{
-				$output = ltrim($message_line,$this->messageCode . ":");
-			} else {
-				$output = "Den Fehlercode habe ich nicht gefunden: " . $this->messageCode . substr($this->messageCode,10);
+				$message_line = $elem_parts[1];
+				$check = true;
+				break;
 			}
+		} 
+		
+		/*while ($check == false || ($i < count($data) )){
+			$array = explode(":", $data[$i]);
+			
+			if (strcmp($array[0], $this->messageCode) == 0) //array[0] ist der MessageCode --> Bsp: ERR_ADMIN_...
+			{
+				$check = true;
+				$message_line = $array[1];
+			}
+
+						$i++;
+		}*/
+		
+		if ($check == true)
+		{
+			$output = ltrim($message_line,$this->messageCode . ":");
 		}
+		else{
+			$output = "Der Fehlercode existiert nicht: " . $this->messageCode;
+		}
+
 		
 		return $output;
 	}
@@ -113,12 +143,15 @@ class message {
 	{
 		foreach ($data as $message_line)
 		{
-			$len = strlen($this->messageCode);
-			if(substr($message_line, 0, $len) === $this->messageCode)
-				return ltrim(substr($message_line, $len+1));
+			if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$message_line))
+			{
+				$output = ltrim($message_line,$this->messageCode . ":");
+			} else {
+				$output = "Den Fehlercode hab ich nicht gefunden: " . $this->messageCode;
+			}
 		}
 		
-		return "Den Fehlercode hab ich nicht gefunden: " . $this->messageCode;
+		return $output;
 	}
 
 	public function buildSirBrummel()

@@ -70,12 +70,12 @@ if(!isset($_SESSION["player_id"]))
 
 	$tpl->assign("teams",members($con));
 	$tpl->assign("games",generate_options($con));
-	$tpl->assign("members",teamMembers($con,IP));
-	$tpl->assign("status",getUserRelatedStatusColor($con,IP));
-	$tpl->assign("status_option",getUserStatusOption($con,IP));
+	$tpl->assign("members",teamMembers($con,$player_id));
+	$tpl->assign("status",getUserRelatedStatusColor($con,$player_id));
+	$tpl->assign("status_option",getUserStatusOption($con,$player_id));
 
 	/******************************WOW-Server **************************/
-	$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,IP));
+	$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player_id));
 	$tpl->assign("realm",getRealmName($con_wow));
 	$tpl->assign("server_on",displayServerStatus($con_wow));
 
