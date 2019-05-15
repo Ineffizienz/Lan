@@ -1,9 +1,11 @@
 <?php
+    session_start();
     include(dirname(__FILE__,3) . "/include/init/constant.php");
     include(INC . "connect.php");
     include(CL . "message_class.php");
 
     $message = new message();
+    $player_id = $_SESSION["player_id"];
     
     if(!empty($_POST["accountname"]) && !empty($_POST["password"]) && !empty($_POST["email"]))
     {
@@ -46,14 +48,14 @@
                 echo json_encode(array("message" => $message->displayMessage()));
             } else {
                 $last_ip = $_SERVER["REMOTE_ADDR"];
-
+                
                 $sql = "INSERT INTO account (username, sha_pass_hash, email, last_ip, expansion) VALUES ('$post_accountname', '$post_password_final', '$post_email', '$last_ip', '2')";
                 if(mysqli_query($con_wow,$sql))
                 {
                     $message->getMessageCode("SUC_ACC_CREATE");
                     echo json_encode(array("message" => $message->displayMessage()));
                     
-                    $sql = "UPDATE player SET wow_account = '$post_accountname' WHERE IP = '$last_ip'";
+                    $sql = "UPDATE player SET wow_account = '$post_accountname' WHERE ID = '$player_id'";
                     mysqli_query($con,$sql);
                 }
             }

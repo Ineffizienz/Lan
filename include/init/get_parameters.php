@@ -694,9 +694,9 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
-function getWowAccount($con,$ip)
+function getWowAccount($con,$player_id)
 {
-	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ID = '$player_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$account_name = $row["wow_account"];

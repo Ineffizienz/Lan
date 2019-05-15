@@ -1,14 +1,16 @@
 <?php
 	
 	// NOTES: rebuild reject-Function
-	include($_SERVER["DOCUMENT_ROOT"] . "/Project_Ziphon/include/init/constant.php");
+	session_start();
+	include(dirname(__FILE__,2) . "/init/constant.php");
 	include(INC . "connect.php");
 	include(INC . "function.php");
 	include(CL . "message_class.php");
 
 	$message = new message();
 
-	$player_id = getPlayerID($con,IP);
+	$player_id = $_SESSION["player_id"];
+	//$player_id = getPlayerID($con,$_SESSION["player_id"]); --> remove
 
 	$raw_name = getSingleRawName($con,$_REQUEST["games"]);
 

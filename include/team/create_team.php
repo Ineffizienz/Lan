@@ -1,5 +1,6 @@
 <?php //add to index.php --> include("inlude/create_team.php");
-include($_SERVER["DOCUMENT_ROOT"] . "/Lan_Git/include/init/constant.php");
+session_start();
+include(dirname(__FILE__,2) . "/init/constant.php");
 include(CL . "message_class.php");
 include(CL . "progress_class.php");
 include(INC . "connect.php");
@@ -8,6 +9,7 @@ include(INC . "function.php");
 
 	$message = new message();
 	$achievement = new Progress();
+	$player_id = $_SESSION["player_id"];
 
 	if(isset($_REQUEST["team"]))
 	{
@@ -16,7 +18,7 @@ include(INC . "function.php");
 				if ($t_name == "")
 				{
 					$message->getMessageCode("ERR_NO_TEAM_NAME");
-					$achievement->getTrigger($con,IP,"Sir Brummel");
+					$achievement->getTrigger($con,$player_id,"Sir Brummel"); //missing in achievement-class o.O
 					echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 				} else {
@@ -30,7 +32,7 @@ include(INC . "function.php");
 					{
 						
 						$message->getMessageCode("ERR_TEAM_NAME_EXISTS");
-						$achievement->getTrigger($con,IP,"Sir Brummel");
+						$achievement->getTrigger($con,$player_id,"Sir Brummel");
 						echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 					} else {
