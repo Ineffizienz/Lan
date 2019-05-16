@@ -8,13 +8,12 @@
 
 	$player_id = $_SESSION["player_id"];
 	$team_id = $_REQUEST["team"];
-	$user = $_REQUEST["user"]; // ?
 	$message = new message();
 	$achievement = new Progress();
 
 	if(!empty($team_id))
 	{
-		$sql = "UPDATE player SET team_id = NULL WHERE ID = '$user'";
+		$sql = "UPDATE player SET team_id = NULL WHERE ID = '$player_id'";
 
 		if (mysqli_query($con,$sql) === TRUE)
 		{
