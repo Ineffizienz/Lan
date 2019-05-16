@@ -196,8 +196,7 @@ h4
 			}
 			#container
 			{
-				margin-top:2%;
-				margin-left:5%;
+				margin: 1%;
 			}
 
 /* ---------------------- PROFIL_IMAGE ---------------------------
@@ -332,48 +331,47 @@ h4
 	border-radius: 0 20px 20px 0;
 	width: 100%;
 }
+#displayed_achievements
+{
+	display:grid;
+	grid-template-columns: auto auto;
+	grid-column-gap: 5%;
+	width: 100%;
+}
 .achievement
 {
-	float:left;
-	display: inline-block;
-	position: relative;
-	margin-right: 2%;
+	display:grid;
+	grid-template-columns: 25% auto;
 	margin-top: 1%;
 	background-color: #DAD8D8;
 	box-shadow: 0 5px 5px 0;
 	border-radius: 0 20px 20px 0;
-	width: 45%;
+	width: auto;
 	height: 100px;
 }
-#ac_headline
+.ac_headline
 {
 	background-color: #A0A0A0;
 	border-radius: 0 20px 0 5px;
 	width: 100%;
 }
-#ac_headline h3
+.ac_headline h3
 {
 	padding: 5px;
 	margin: 0;
 	font-family: Calibri;
 	text-decoration: none;
 }
-#ac_content
-{
-	background-color: #C0C0C0;
-	border-radius: 0 20px 20px 0;
-}
 .ac_image
 {
-	float:left;
+	grid-row: 1 / 2;
 	text-align: center;
-	width: 26.75%;
+	width: auto;
 }
 .ac_image img
 {
-	margin-top: 5%;
+	margin-top: 3%;
 	border-radius: 15%;
-	vertical-align:middle;
 	box-shadow: 2px 2px 0 0 #C0C0C0;
 	max-width: 120px;
 	height: auto;
@@ -383,7 +381,7 @@ h4
 {
 	float:left;
 	margin-left:-4px;
-	width: 73.9%;
+	width: auto;
 	vertical-align: top;
 }
 .ac_text p
@@ -404,6 +402,14 @@ h4
 {
 	top:0;
 	left:0;
+}
+.ac_small
+{
+	float:left;
+	margin-top:0.5%;
+	text-align:center;
+	width:5%;
+	height:auto;
 }
 .ac_name
 {
