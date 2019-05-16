@@ -39,7 +39,7 @@
 		{
 			if($option["id"] !== $selected["id"])
 			{
-				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],utf8_encode($option["name"])),$part);	
+				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
 			}
 		}
 		
@@ -167,9 +167,9 @@
 
 				if(!isset($team_list))
 				{
-					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],utf8_encode($team["name"]),$member),$part);
+					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
 				} else {
-					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],utf8_encode($team["name"]),$member),$part);
+					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
 				}
 			}
 		}
@@ -214,7 +214,7 @@
 		$status_name = getStatusName($con,$user_status);
 
 		
-		$selected = array("id"=>$user_status,"name"=>utf8_encode($status_name));
+		$selected = array("id"=>$user_status,"name"=>$status_name);
 		$output = build_option($status_data,$selected);
 		
 		return $output;

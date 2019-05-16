@@ -42,8 +42,8 @@ class Achievement {
 	
 	public function getDetails($single_details)
 	{
-		$this->title = utf8_encode($single_details["title"]);
-		$this->message = utf8_encode($single_details["message"]);
+		$this->title = $single_details["title"];
+		$this->message = $single_details["message"];
 
 		if(empty($single_details["image_url"]))
 		{
@@ -101,9 +101,9 @@ class Achievement {
 
 		if(empty($selected_id))
 		{
-			$output = "<option name'default' selected>Kein Angabe";
+			$output = "<option value='default' selected>Kein Angabe";
 		} else {
-			$output = "<option name='" . $selected_id . "' selected>" . $selected_name;
+			$output = "<option value='" . $selected_id . "' selected>" . $selected_name;
 		}
 
 		foreach ($optArr as $option)
