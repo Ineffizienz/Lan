@@ -167,9 +167,9 @@
 
 				if(!isset($team_list))
 				{
-					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
+					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],utf8_encode($team["name"]),$member),$part);
 				} else {
-					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
+					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],utf8_encode($team["name"]),$member),$part);
 				}
 			}
 		}
