@@ -1,27 +1,27 @@
 <!DOCTYPE html>
+<html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="template/style.css">
 		<link rel="stylesheet" href="font_awesome/css/font-awesome.min.css">
-		<script src="js/jquery-3.2.0.js"></script>
-		<script src="include/auth/js/auth.js"></script>
-		<title></title>
+		<title>{$headline}</title>
 	</head>
 	<body>
-		<div id="basic_wrap">
-			<div id="content" >
-				<div id="result">
-						{$sir_brummel}
-				</div>
-				<div id="container" class="reg_container">
-					<div style="text-align:center;">
-						<div id="result">{$sir_brummel}</div>
-						<h2>Bitte gib deine Ticket-ID ein!</h2>
-						<label for="ticket_id">Deine Ticket-ID</label>
-						<input type="text" name="ticket_id" id="ticket_id">
-						<button id="validate_id">Ticket-ID überprüfen</button>
+		<form method="post">
+			<div id="basic_wrap">
+				<div id="content" >
+					<div id="result">
+							{$sir_brummel}
+					</div>
+					<div id="container" class="reg_container">
+						<div style="text-align:center;">
+							<h2>Bitte gib deine Ticket-ID ein!</h2>
+							<label for="ticket_id">Deine Ticket-ID</label>
+								<input type="text" name="ticket_id" id="ticket_id">
+								<button id="validate_id" type="submit">Ticket-ID überprüfen</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</form>
 	</body>
 </html>

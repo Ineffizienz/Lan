@@ -46,37 +46,33 @@
 		return $output_option;	
 	}
 
-	function initializePlayer($con,$username,$ip)
+	/**
+	 * 
+	 * @param mysqli $con
+	 * @param string $username
+	 * @param int $player_id
+	 * @return boolean true on success
+	 */
+	function initializePlayer(mysqli $con, string $username, int $player_id)
 	{
-		$user_id = getUserId($con,$ip);
-
-		$sql_user = "UPDATE player SET name='$username' WHERE ip='$ip'";
+		$sql_user = "UPDATE player SET name='$username' WHERE ID='$player_id'";
 		if (mysqli_query($con,$sql_user))
 		{
-			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$user_id'";
+			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
 			if(mysqli_query($con,$sql_fl))
 			{
-				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$user_id','1')";
+				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
 				if(mysqli_query($con,$sql_status))
 				{
-					$sql_ac = "ALTER TABLE ac_player ADD `$user_id` INT(11) NULL";
+					$sql_ac = "ALTER TABLE ac_player ADD `$player_id` INT(11) NULL";
 					if(mysqli_query($con,$sql_ac))
 					{
-						$param = "1";
-					} else {
-						$param = "0";
+						return true;
 					}
-				} else {
-					$param = "0";
 				}
-			} else {
-				$param = "0";
 			}
-		} else {
-			$param = "0";
 		}
-
-		return $param;
+		return false;
 	}
 	
 	function validateImage($filesize,$filetype)
