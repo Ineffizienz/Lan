@@ -11,47 +11,50 @@ class Achievement {
 	private $visib = "";
 	private $ac_template = "";
 	private $ac = "";
+	private $imagePath = "";
+	private $templatePath = "";
+	private $templateAdminPath = "";
 	private $adminArr = array("--ID--","--NAME--","--IMAGE_URL--","--MESSAGE--","--TRIGGER--","--CATEGORY--","--VISIBILITY--");
 	private $singleArr = array("--IMAGE--","--HEADLINE--","--TEXT--");
 	private $basicArr = array("--ID--","--HEADLINE--");
 
 
+	public function templateFolder()
+	{
+		$this->templatePath = "template/part/";
+
+		return $this->templatePath;
+	}
+
+	public function templateAdminFolder()
+	{
+		$this->templateAdminPath = "template/admin/part/";
+
+		return $this->templateAdminPath;
+	}
+
+	public function imageFolder()
+	{
+		$this->imagePath = "images/achievements/";
+
+		return $this->imagePath;
+	}
+	
 	public function getDetails($single_details)
 	{
-		$this->title = $single_details["title"];
+		$this->title = utf8_encode($single_details["title"]);
 		$this->message = utf8_encode($single_details["message"]);
 
 		if(empty($single_details["image_url"]))
 		{
 			$this->image = "NULL";
 		} else {
-			$this->image = "images/achievements/" . $single_details["image_url"];
+			$this->image = $this->imageFolder() . $single_details["image_url"];
 		}
 
 		$this->buildAchievement();
 	}
 
-	public function getDetailsLowAc($achievement_details)
-	{
-		if (empty($achievement_details))
-		{
-			$this->ac = "File not Found.";
-		} else {
-
-				$this->title = $achievement_details["title"];
-				$this->message = utf8_encode($achievement_details["message"]);
-
-				if (empty($achievement_details["image_url"]))
-				{
-					$this->image = "NULL";
-				} else {
-					$this->image = "/images/achievements/" . $achievement_details["image_url"];
-				}
-
-				$this->buildLowAchievement();
-		}
-	}
-	
 	public function getAdminDetails($admin_achievements,$catArray,$trigArray,$visibArray)
 	{
 		if (empty($admin_achievements))
@@ -59,7 +62,7 @@ class Achievement {
 			$this->ac = "File not Found.";
 		} else {
 			$this->id = $admin_achievements["ID"];
-			$this->title = $admin_achievements["title"];
+			$this->title = utf8_encode($admin_achievements["title"]);
 			$this->message = utf8_encode($admin_achievements["message"]);
 			$this->trigger = $this->buildOption($trigArray,$admin_achievements["trigID"],$admin_achievements["trigger_title"]);
 			$this->category = $this->buildOption($catArray,$admin_achievements["catID"],$admin_achievements["c_name"]);
@@ -94,7 +97,7 @@ class Achievement {
 
 	public function buildOption($optArr,$selected_id,$selected_name)
 	{
-		$optGUI = file_get_contents("template/admin/part/option.html");
+		$optGUI = file_get_contents($this->templateAdminFolder() . "option.html");
 
 		if(empty($selected_id))
 		{
@@ -116,11 +119,11 @@ class Achievement {
 
 	public function buildAchievement()
 	{
-		$this->ac_template = file_get_contents("template/part/single_achievement.html");
+		$this->ac_template = file_get_contents($this->templateFolder() . "single_achievement.html");
 
 		if($this->image == "NULL")
 		{
-			$this->ac = str_replace($this->singleArr, array("images/achievements/keinbild.jpg",$this->title,$this->message),$this->ac_template);
+			$this->ac = str_replace($this->singleArr, array($this->imageFolder() . "keinbild.jpg",$this->title,$this->message),$this->ac_template);
 		} else {	
 			if(file_exists($this->image))
 			{
@@ -132,32 +135,15 @@ class Achievement {
 		}
 	}
 
-	public function buildLowAchievement()
-	{
-		$this->ac_template = file_get_contents("template/part/low_achievement.html");
-
-		if($this->image == "NULL")
-		{
-			$this->ac .= str_replace(array($this->r_title,$this->r_message,$this->r_image), array($this->title,$this->message,"images/achievements/keinbild.jpg"),$this->ac_template);
-		} else {
-			if(file_exists($this->image))
-			{
-				$this->ac = str_replace(array($this->r_title,$this->r_message,$this->r_image), array($this->title,$this->message,$this->image), $this->ac_template);
-			} else {
-				$this->ac = str_replace(array($this->r_title,$this->r_message,$this->r_image), array($this->title,$this->message,"Kein Bild"), $this->ac_template);
-			}
-		}
-	}
-	
 	public function buildAdminAchievement()
 	{
-		$this->ac_template = file_get_contents("template/admin/part/ac_list.html");
+		$this->ac_template = file_get_contents($this->templateAdminFolder() . "ac_list.html");
 
 		if($this->image == "NULL")
 		{
 			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 		} else {
-			if(file_exists("images/achievements/" . $this->image))
+			if(file_exists($this->imageFolder() . $this->image))
 			{
 				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 			} else {
@@ -168,7 +154,7 @@ class Achievement {
 	
 	public function buildBasicAchievement()
 	{
-		$this->ac_template = file_get_contents("template/part/ac_small.html");
+		$this->ac_template = file_get_contents($this->templateFolder() . "ac_small.html");
 		
 		$this->ac = str_replace($this->basicArr,array($this->id,$this->title),$this->ac_template);
 	}

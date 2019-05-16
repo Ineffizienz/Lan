@@ -24,7 +24,6 @@
 		} else {
 
 			$message->getMessageCode("ERR_LEAVE_TEAM");
-			$achievement->getTrigger($con,$player_id,"Sir Brummel"); // missing in achievement_class
 			echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 
 		}

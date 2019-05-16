@@ -15,7 +15,6 @@
 	if (empty($team_id))
 	{
 		$message->getMessageCode("ERR_MISSING_TEAM");
-		$achievement->getTrigger($con,$player_id,"Sir Brummel");
 		echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 
 	} else {
