@@ -50,7 +50,7 @@ class message {
 				if(file_exists($this->messageFile() . "error_message_admin.txt"))
 				{
 					$lines = file($this->messageFile() . "error_message_admin.txt");
-					$this->messageText = $this->searchMessageAdmin($lines);
+					$this->messageText = $this->searchMessage($lines);
 				} else {
 					$this->messageText = "<i>error_msg_admin</i> nicht gefunden. " . $this->messageFile();
 				}
@@ -58,7 +58,7 @@ class message {
 				if (file_exists($this->messageFile() . "error_msg.txt"))
 				{
 					$lines = file($this->messageFile() . "error_msg.txt");
-					$this->messageText = $this->searchMessageUser($lines);
+					$this->messageText = $this->searchMessage($lines);
 				} else {
 					$this->messageText = "<i>error_msg</i> nicht gefunden. " . $this->messageFile();
 				}	
@@ -67,7 +67,7 @@ class message {
 			if(file_exists($this->messageFile() . "warn_msg_admin.txt"))
 			{
 				$lines = file($this->messageFile() . "warn_msg_admin.txt");
-				$this->messageText = $this->searchMessageAdmin($lines);
+				$this->messageText = $this->searchMessage($lines);
 			} else {
 				$this->messageText = "<i>warn_msg_admin</i> nicht gefunden. " . $this->messageFile();
 			}
@@ -77,7 +77,7 @@ class message {
 				if(file_exists($this->messageFile() . "success_message_admin.txt"))
 				{
 					$lines = file($this->messageFile() . "success_message_admin.txt");
-					$this->messageText = $this->searchMessageAdmin($lines);
+					$this->messageText = $this->searchMessage($lines);
 				} else {
 					$this->messageText = "<i>success_message_admin</i> nicht gefunden. " . $this->messageFile();
 				}
@@ -85,7 +85,7 @@ class message {
 				if (file_exists($this->messageFile() . "success_message.txt"))
 		        {
 		            $lines = file($this->messageFile() . "success_message.txt");
-		            $this->messageText = $this->searchMessageUser($lines);
+		            $this->messageText = $this->searchMessage($lines);
 		        } else {
 					$this->messageText = "<i>succes_message</i> nicht gefunden. " . $this->messageFile();
 				}	
@@ -95,13 +95,8 @@ class message {
 		$this->buildSirBrummel();
 	}
 
-	public function searchMessageAdmin($data)
+	public function searchMessage($data)
 	{
-		/*
-			Im vorliegenden Fall sind folgende Modifikatoren verwendet worden:
-			- i = Buchstaben im vorgebenen Suchmuster können sowohl groß- als auch kleingeschrieben sein
-			- den Rest hab ich nicht verstanden o.O
-		*/
 		$i = 0;
 		$check = false;
 		
@@ -115,18 +110,6 @@ class message {
 			}
 		} 
 		
-		/*while ($check == false || ($i < count($data) )){
-			$array = explode(":", $data[$i]);
-			
-			if (strcmp($array[0], $this->messageCode) == 0) //array[0] ist der MessageCode --> Bsp: ERR_ADMIN_...
-			{
-				$check = true;
-				$message_line = $array[1];
-			}
-
-						$i++;
-		}*/
-		
 		if ($check == true)
 		{
 			$output = ltrim($message_line,$this->messageCode . ":");
@@ -139,21 +122,6 @@ class message {
 		return $output;
 	}
 	
-	public function searchMessageUser($data)
-	{
-		foreach ($data as $message_line)
-		{
-			if(preg_match("/" . substr($this->messageCode,3) . "/isUe",$message_line))
-			{
-				$output = ltrim($message_line,$this->messageCode . ":");
-			} else {
-				$output = "Den Fehlercode hab ich nicht gefunden: " . $this->messageCode;
-			}
-		}
-		
-		return $output;
-	}
-
 	public function buildSirBrummel()
 	{
 

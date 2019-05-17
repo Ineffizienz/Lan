@@ -33,7 +33,7 @@
 				$has_table = "1";
 			}
 			
-			if(isset($_FILES["file"]["size"] && !empty($_FILES["file"]["size"])))
+			if(isset($_FILES["file"]["size"]) && !empty($_FILES["file"]["size"]))
 			{
 				$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
 				if($result_validate == "1")
@@ -52,7 +52,7 @@
 					}
 					
 				} else {
-					$message->getMessageCode($result_validate)
+					$message->getMessageCode($result_validate);
 					echo $message->displayMessage();
 				}	
 			} else {

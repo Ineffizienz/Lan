@@ -86,7 +86,7 @@ function getUserId($con,$ip) //ehemals retrieveUserId, bezieht die User_ID - fun
 	return $user_id;
 }
 
-function getAllUsername($con) //bezieht alle Username / auth.php + reg_name.php + change_user.php
+function getAllUsername($con) //bezieht alle Username / change_user.php
 {
 	$result = mysqli_query($con,"SELECT name FROM player");
 	while ($row = mysqli_fetch_array($result))
@@ -96,6 +96,18 @@ function getAllUsername($con) //bezieht alle Username / auth.php + reg_name.php 
 
 	return $users;
 }
+
+/**
+ * 
+ * @param mysqli $con
+ * @param string $name
+ * @return boolean true when name already exists
+ */
+function checkPlayernameExists(mysqli $con, string $name)
+{
+	return mysqli_num_rows(mysqli_query($con, "SELECT ID FROM player WHERE name = '$name';")) > 0;
+}
+
 function getBasicUserData($con) // admin/admin_func.php/addUsername
 {
 	$result = mysqli_query($con, "SELECT ID,name FROM player");
@@ -694,9 +706,9 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
-function getWowAccount($con,$ip)
+function getWowAccount($con,$player_id)
 {
-	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ip = '$ip'");
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE ID = '$player_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$account_name = $row["wow_account"];

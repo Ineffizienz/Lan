@@ -1,13 +1,16 @@
 <?php
+    session_start();
     include("init/constant.php");
     include("connect.php");
     include("init/get_parameters.php");
+
+    $player_id = $_SESSION["player_id"];
 
     if(isset($_REQUEST["function"]))
     {
         if($_REQUEST["function"] == "displayPrefs")
         {
-            $player_pref = getSinglePlayerPref($con,IP);
+            $player_pref = getSinglePlayerPref($con,$player_id);
 
             if(empty($player_pref))
             {

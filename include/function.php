@@ -39,44 +39,40 @@
 		{
 			if($option["id"] !== $selected["id"])
 			{
-				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],utf8_encode($option["name"])),$part);	
+				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
 			}
 		}
 		
 		return $output_option;	
 	}
 
-	function initializePlayer($con,$username,$ip)
+	/**
+	 * 
+	 * @param mysqli $con
+	 * @param string $username
+	 * @param int $player_id
+	 * @return boolean true on success
+	 */
+	function initializePlayer(mysqli $con, string $username, int $player_id)
 	{
-		$user_id = getUserId($con,$ip);
-
-		$sql_user = "UPDATE player SET name='$username' WHERE ip='$ip'";
+		$sql_user = "UPDATE player SET name='$username' WHERE ID='$player_id'";
 		if (mysqli_query($con,$sql_user))
 		{
-			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$user_id'";
+			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
 			if(mysqli_query($con,$sql_fl))
 			{
-				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$user_id','1')";
+				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
 				if(mysqli_query($con,$sql_status))
 				{
-					$sql_ac = "ALTER TABLE ac_player ADD `$user_id` INT(11) NULL";
+					$sql_ac = "ALTER TABLE ac_player ADD `$player_id` INT(11) NULL";
 					if(mysqli_query($con,$sql_ac))
 					{
-						$param = "1";
-					} else {
-						$param = "0";
+						return true;
 					}
-				} else {
-					$param = "0";
 				}
-			} else {
-				$param = "0";
 			}
-		} else {
-			$param = "0";
 		}
-
-		return $param;
+		return false;
 	}
 	
 	function validateImage($filesize,$filetype)
@@ -104,7 +100,7 @@
 		}
 	}
 	
-	function ownTeam($con,$ip)
+	function ownTeam($con,$ip) //maybe not used anymore
 	{
 		$team_id = getTeamId($con,$ip);
 
@@ -176,10 +172,10 @@
 
 		return $team_list;
 	}
-	function teamMembers($con,$ip) //Gibt die eigenen Teammitglieder aus
+	function teamMembers($con,$player_id) //Gibt die eigenen Teammitglieder aus
 	{
-		$team_id = getTeamId($con,$ip);  // beziehen der eigenen Team-ID
-		$team_members = getTeamMembers($con,$ip,$team_id);
+		$team_id = getTeamId($con,$player_id);  // beziehen der eigenen Team-ID
+		$team_members = getTeamMembers($con,$player_id,$team_id);
 
 		if (!empty($team_members))
 		{
@@ -195,10 +191,10 @@
 			return $members;
 		}
 	}
-	function getUserRelatedStatusColor($con,$ip)
+	function getUserRelatedStatusColor($con,$player_id)
 	{
-		$user_id = getUserId($con,$ip);
-		$status = getStatus($con,$user_id);
+		//$user_id = getUserId($con,$ip); --> remove
+		$status = getStatus($con,$player_id);
 		$status_color = getStatusColor($con,$status);
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
@@ -206,15 +202,15 @@
 		return $circle;
 	}
 
-	function getUserStatusOption($con,$ip)
+	function getUserStatusOption($con,$player_id)
 	{
-		$user_id = getUserId($con,$ip);
+		//$user_id = getUserId($con,$ip); --> remove
 		$status_data = getStatusData($con);
-		$user_status = getStatus($con,$user_id);
+		$user_status = getStatus($con,$player_id);
 		$status_name = getStatusName($con,$user_status);
 
 		
-		$selected = array("id"=>$user_status,"name"=>utf8_encode($status_name));
+		$selected = array("id"=>$user_status,"name"=>$status_name);
 		$output = build_option($status_data,$selected);
 		
 		return $output;
@@ -243,10 +239,10 @@
 		} 
 	}
 
-	function displayProfilImage($con,$ip)
+	function displayProfilImage($con,$player_id)
 	{
 
-		$profil_image = getUserImage($con,$ip);
+		$profil_image = getUserImage($con,$player_id);
 
 		if (empty($profil_image))
 		{
@@ -381,9 +377,9 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$con_wow,$con_char,$ip)
+function selectWowAccount($con,$con_wow,$con_char,$player_id)
 {
-	$wow_account = getWowAccount($con,$ip);
+	$wow_account = getWowAccount($con,$player_id);
 
 	if(empty($wow_account))
 	{
@@ -429,31 +425,41 @@ function selectWowAccount($con,$con_wow,$con_char,$ip)
 
 function defineRace($race_id)
 {
-	if($race_id == "1")
-	{
-		$race = "Mensch";
-	} elseif($race_id == "2") {
-		$race = "Ork";
-	} elseif($race_id == "3") {
-		$race = "Zwerg";
-	} elseif($race_id == "4") {
-		$race = "Nachtelf";
-	} elseif($race_id == "5") {
-		$race = "Untote";
-	} elseif($race_id == "6") {
-		$race = "Tauren";
-	} elseif($race_id == "7") {
-		$race = "Gnom";
-	} elseif($race_id == "8") {
-		$race = "Troll";
-	} elseif($race_id == "9") {
-		$race = "Goblin";
-	} elseif($race_id == "10") {
-		$race = "Blutelf";
-	} else {
-		$race = "Draenei";
+	switch ($race_id) {
+		case "1":
+			$race = "Mensch";
+		break;
+		case "2":
+			$race = "Ork";
+		break;
+		case "3":
+			$race = "Zwerg";
+		break;
+		case "4":
+			$race = "Nachtelf";
+		break;
+		case "5":
+			$race = "Untote";
+		break;
+		case "6":
+			$race = "Tauren";
+		break;
+		case "7":
+			$race = "Gnom";
+		break;
+		case "8":
+			$race = "Troll";
+		break;
+		case "9":
+			$race = "Goblin";
+		break;
+		case "10":
+			$race = "Blutelf";
+		break;
+		default:
+			$race = "Draenei";
 	}
-
+	
 	return $race;
 }
 

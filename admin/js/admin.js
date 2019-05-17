@@ -138,9 +138,9 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var ac_name = $("#ac_name").val();
-		var ac_cat = $("#ac_cat").find("option:selected").attr("name");
-		var ac_trigger = $("#ac_trigger").find("option:selected").attr("name");
-		var ac_visible = $("input[name='ac_visible']:checked").serialize();
+		var ac_cat = $("#ac_cat").find("option:selected").attr("value");
+		var ac_trigger = $("#ac_trigger").find("option:selected").attr("value");
+		var ac_visible = $("input[name='ac_visible']:checked").serialize(); // möglicherweise fehlerhaft
 		var ac_message = $("#ac_message").val();
 		var image_id = "#ac_image";
 
@@ -459,9 +459,9 @@ $(document).ready(function(){
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
-	$(document).on("change","#admin_ac_trig",getChangedParam);
-	$(document).on("change","#admin_ac_cat",getChangedParam);
-	$(document).on("change","#admin_ac_visib",getChangedParam);
+	$(document).on("change",".admin_ac_trig",getChangedParam);
+	$(document).on("change",".admin_ac_cat",getChangedParam);
+	$(document).on("change",".admin_ac_visib",getChangedParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("click",".send_grn",getNewRawName);
