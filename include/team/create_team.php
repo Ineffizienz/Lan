@@ -18,7 +18,6 @@ include(INC . "function.php");
 				if ($t_name == "")
 				{
 					$message->getMessageCode("ERR_NO_TEAM_NAME");
-					$achievement->getTrigger($con,$player_id,"Sir Brummel"); //missing in achievement-class o.O
 					echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 				} else {
@@ -32,7 +31,6 @@ include(INC . "function.php");
 					{
 						
 						$message->getMessageCode("ERR_TEAM_NAME_EXISTS");
-						$achievement->getTrigger($con,$player_id,"Sir Brummel");
 						echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 					} else {

@@ -64,7 +64,6 @@
 		
 	} else {
 		$message->getMessageCode($resultValidateImage);
-		$achievement->getTrigger($con,IP,"Sir Brummel");
 		echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 	}
 ?>

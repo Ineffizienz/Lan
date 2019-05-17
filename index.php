@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-session_set_cookie_params(3600*24*7); //set session cookie lifetime to 7 days. Don't forget to change the server config, too!
+session_set_cookie_params(3600*24*7); //set session cookie lifetime to 7 days. Don't forget to change the server config, too! - change session.gc_maxlifetime to 259200 secs
 session_start();
 
 /*************** NOTES ********************/

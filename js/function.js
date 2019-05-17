@@ -138,9 +138,8 @@ $(document).ready(function(){
 		event.preventDefault();
 		
 		var team = $("#team_id").val();
-		var user = $(".leave_team").attr("id");
 		
-		leaveTeam(team,user,reloadTeamName);
+		leaveTeam(team,reloadTeamName);
 	}
 
 	function getCheckedGame(event)
@@ -233,8 +232,7 @@ $(document).ready(function(){
 			dataType: "json",
 			url: "include/team/leave_team.php",
 			data: {
-				team:team,
-				user:user
+				team:team
 			},
 			success: fn
 		});

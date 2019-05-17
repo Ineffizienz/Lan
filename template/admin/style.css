@@ -37,8 +37,9 @@ BODY
 	padding: 0;
 	list-style: none;
 }
-	#navigation li
+	#navigation li a
 	{
+		display: block;
 		margin: 1%;
 		margin-left: 0;
 		padding-left: 2%;
@@ -48,7 +49,7 @@ BODY
 		line-height: 30px;
 		transition: background-color 0.3s;
 	}
-	#navigation li:hover
+	#navigation li a:hover
 	{
 		background-color: #193390;
 	}
