@@ -156,8 +156,15 @@ if(mysqli_query($con,$sql))
 } else {
 	echo "Beim Hinzufügen der Spalte <i>player_count</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con). "</b><br>";
 }
+$sql = "ALTER TABLE games ADD addon INT(11) NULL AFTER short_title";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>addon</i> wurde erfolgreich hinzugefügt.<br>";
+} else {
+	echo "Beim Hinzufügen der Spalte <i>addon</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con). "</b><br>";
+}
 
-// Charset-Änderungen einpflegen.
+// Charset-Änderungen
 $sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
 if(mysqli_query($con,$sql))
 {
