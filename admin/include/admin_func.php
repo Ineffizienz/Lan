@@ -199,11 +199,18 @@ function displaySingleGame($con)
 			$icon = "<img src='images/game_icon/" . $game["icon"] . "' height='64'>";
 		}
 
+		if(empty($game["addon"]))
+		{
+			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+		} else {
+			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+		}
+
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
 		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
 		}
 	}
 
