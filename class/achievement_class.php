@@ -62,8 +62,8 @@ class Achievement {
 			$this->ac = "File not Found.";
 		} else {
 			$this->id = $admin_achievements["ID"];
-			$this->title = utf8_encode($admin_achievements["title"]);
-			$this->message = utf8_encode($admin_achievements["message"]);
+			$this->title = $admin_achievements["title"];
+			$this->message = $admin_achievements["message"];
 			$this->trigger = $this->buildOption($trigArray,$admin_achievements["trigID"],$admin_achievements["trigger_title"]);
 			$this->category = $this->buildOption($catArray,$admin_achievements["catID"],$admin_achievements["c_name"]);
 			
@@ -141,7 +141,7 @@ class Achievement {
 
 		if($this->image == "NULL")
 		{
-			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"keinbild.jpg",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
+			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"KeinBild",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
 		} else {
 			if(file_exists($this->imageFolder() . $this->image))
 			{
