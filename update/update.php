@@ -157,4 +157,41 @@ if(mysqli_query($con,$sql))
 	echo "Beim Hinzufügen der Spalte <i>player_count</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con). "</b><br>";
 }
 
+// Charset-Änderungen einpflegen.
+$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>name</i> in der Tabelle <i>player</i> ist jetzt in <b>utf8mb4_bin</b><br>";
+} else {
+	echo "Beim Ändern des charsets in <i>player->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac MODIFY title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>title</i> in der Tabelle <i>ac</i> ist jetzt in <b>utf8mb4_bin</b><br>";
+} else {
+	echo "Beim Ändern des charsets in <i>ac->title</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac MODIFY message VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>message</i> in der Tabelle <i>ac</i> ist jetzt in <b>utf8mb4_bin</b><br>";
+} else {
+	echo "Beim Ändern des charsets in <i>ac->message</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE status_name MODIFY status_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>status_name</i> in der Tabelle <i>status_name</i> ist jetzt in <b>utf8mb4_bin</b><br>";
+} else {
+	echo "Beim Ändern des charsets in <i>status_name->status_name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE tm_teamname MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>name</i> in der Tabelle <i>tm_teamname</i> ist jetzt in <b>utf8mb4_bin</b><br>";
+} else {
+	echo "Beim Ändern des charsets in <i>tm_teamname->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+
 ?>
