@@ -39,7 +39,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var teamId = $("#del_team").find('option:selected').attr("name");
+		var teamId = $("#del_team").find('option:selected').attr("value");
 
 		deleteTeam(teamId,showResult);
 	}
@@ -60,8 +60,8 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var u_id = $("#user").find('option:selected').attr("name");
-		var ac_id = $("#ac").find('option:selected').attr("name");
+		var u_id = $("#user").find('option:selected').attr("value");
+		var ac_id = $("#ac").find('option:selected').attr("value");
 		
 		assignAchievement(ac_id,u_id,displayResult);
 	}
@@ -71,9 +71,9 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
-		var trigger = $("#admin_ac_trig").find('option:selected').attr("name");
-		var category = $("#admin_ac_cat").find('option:selected').attr("name");
-		var visib = $("#admin_ac_visib").find('option:selected').attr("name");
+		var trigger = $("#admin_ac_trig").find('option:selected').attr("value");
+		var category = $("#admin_ac_cat").find('option:selected').attr("value");
+		var visib = $("#admin_ac_visib").find('option:selected').attr("value");
 
 		changeParam(ac_id,trigger,category,visib,displayResult);
 	}
@@ -87,13 +87,23 @@ $(document).ready(function(){
 		return game_id;
 	}
 
+	function getAddonParam(event)
+	{
+		event.preventDefault();
+
+		var addon = $(this).find('option:selected').attr("value");
+
+		updateAddon(retrieveGameID(this),addon,displayResult);
+	}
+	
+
 	function getHasTable(event)
 	{
 		event.preventDefault();
 
-		var has_table = $(this).find('option:selected').attr("name");
+		var has_table = $(this).find('option:selected').attr("value");
 
-		updateHasTable(retrieveGameID(this),has_table,displayResult)
+		updateHasTable(retrieveGameID(this),has_table,displayResult);
 	}
 	
 	function getIconData(event)
@@ -164,9 +174,9 @@ $(document).ready(function(){
 		event.stopPropagation();
 		event.preventDefault();
 
-		var tm_game = $("#tm_game").find("option:selected").attr("name");
-		var tm_mode = $("#tm_mode").find("option:selected").attr("name");
-		var tm_min_player = $("#tm_min_player").find("option:selected").attr("name");
+		var tm_game = $("#tm_game").find("option:selected").attr("value");
+		var tm_mode = $("#tm_mode").find("option:selected").attr("value");
+		var tm_min_player = $("#tm_min_player").find("option:selected").attr("value");
 		var tm_date = $("#tm_date").val();
 		var tm_time_hour = $("#tm_time_hour").val();
 		var tm_time_minute = $("#tm_time_minute").val();
@@ -307,6 +317,20 @@ $(document).ready(function(){
 		});
 	}
 
+	function updateAddon(game_id,addon,fn)
+	{
+		return $.ajax({
+			type: "post",
+			dataType: "json",
+			url: "admin/game/edit/change_addon.php",
+			data: {
+				game_id:game_id,
+				addon:addon
+			},
+			success: fn
+		});
+	}
+	
 	function updateHasTable(game_id,has_table,fn)
 	{
 		return $.ajax({
@@ -462,6 +486,7 @@ $(document).ready(function(){
 	$(document).on("change",".admin_ac_trig",getChangedParam);
 	$(document).on("change",".admin_ac_cat",getChangedParam);
 	$(document).on("change",".admin_ac_visib",getChangedParam);
+	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("click",".send_grn",getNewRawName);
