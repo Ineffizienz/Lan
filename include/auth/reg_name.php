@@ -18,7 +18,7 @@ function reg_name(mysqli $con, $message)
 		return array(false, $message);
 	}
 	
-	if(mysqli_num_rows(mysqli_query($con, "SELECT ID FROM player WHERE name = '$name';")))
+	if(checkPlayernameExists($con, $name))
 	{
 		//user with this name already exists
 		$message->getMessageCode("ERR_USER_NAME");
