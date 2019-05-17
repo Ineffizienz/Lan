@@ -425,31 +425,41 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 
 function defineRace($race_id)
 {
-	if($race_id == "1")
-	{
-		$race = "Mensch";
-	} elseif($race_id == "2") {
-		$race = "Ork";
-	} elseif($race_id == "3") {
-		$race = "Zwerg";
-	} elseif($race_id == "4") {
-		$race = "Nachtelf";
-	} elseif($race_id == "5") {
-		$race = "Untote";
-	} elseif($race_id == "6") {
-		$race = "Tauren";
-	} elseif($race_id == "7") {
-		$race = "Gnom";
-	} elseif($race_id == "8") {
-		$race = "Troll";
-	} elseif($race_id == "9") {
-		$race = "Goblin";
-	} elseif($race_id == "10") {
-		$race = "Blutelf";
-	} else {
-		$race = "Draenei";
+	switch ($race_id) {
+		case "1":
+			$race = "Mensch";
+		break;
+		case "2":
+			$race = "Ork";
+		break;
+		case "3":
+			$race = "Zwerg";
+		break;
+		case "4":
+			$race = "Nachtelf";
+		break;
+		case "5":
+			$race = "Untote";
+		break;
+		case "6":
+			$race = "Tauren";
+		break;
+		case "7":
+			$race = "Gnom";
+		break;
+		case "8":
+			$race = "Troll";
+		break;
+		case "9":
+			$race = "Goblin";
+		break;
+		case "10":
+			$race = "Blutelf";
+		break;
+		default:
+			$race = "Draenei";
 	}
-
+	
 	return $race;
 }
 
