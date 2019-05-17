@@ -199,6 +199,35 @@ h4
 				margin: 1%;
 			}
 
+
+/* ---------------------- VALIDATION ---------------------------
+--------------------------------------------------------------*/
+
+#validate_content
+{
+	margin: 0 auto;
+	margin-top: 4%;
+	background-color: #e5e5e5;
+	border: 2px solid #FFFFFF;
+	border-radius: 5px 5px;
+	box-shadow: 0 5px 5px 0;
+	opacity: 1;
+	min-height: 35%;
+	height: auto;
+	width:50%;
+}
+
+.reg_container
+{
+	width:100%;
+}
+.reg_label
+{
+	margin-right:2%;
+	padding-top:1%;
+}
+
+
 /* ---------------------- PROFIL_IMAGE ---------------------------
 --------------------------------------------------------------*/
 
@@ -440,23 +469,6 @@ h4
 	right:8;
 }
 
-
-/* ---------------------- REGISTER ---------------------------
---------------------------------------------------------------*/
-
-.reg_container
-{
-	position: relative;
-	margin: 0 auto;
-	margin-top:2%;
-	margin-left:17%;
-	width:50%;
-}
-.reg_label
-{
-	margin-right:2%;
-	padding-top:1%;
-}
 
 /* ---------------------- TEAMS ---------------------------
 --------------------------------------------------------------*/
