@@ -200,5 +200,51 @@ if(mysqli_query($con,$sql))
 } else {
 	echo "Beim Ändern des charsets in <i>tm_teamname->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
 }
+$sql = "ALTER TABLE ac_trigger ADD ac_id INT(11) NOT NULL AFTER ID";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_id</i> wurde erfolgreich hinzugefügt<br>";
+	$sql = "UPDATE ac_trigger SET ac_id = '9' WHERE ID = '4'";
+	if(mysqli_query($con,$sql))
+	{
+		$sql = "UPDATE ac_trigger SET ac_id = '5' WHERE ID = '1'";
+		if(mysqli_query($con,$sql))
+		{
+			$sql = "UPDATE ac_trigger SET ac_id = '8' WHERE ID = '3'";
+			if(mysqli_query($con,$sql))
+			{
+				$sql = "UPDATE ac_trigger SET ac_id = '0' WHERE ID ='5'"; //Für vom Admin vergebene Achievements. Achievement 0 existiert nicht.
+				if(mysqli_query($con,$sql))
+				{
+					echo "Alle Updates erfolgreich.<br>";
+				} else {
+					echo "Das Update ist fehgeschlagen: <b>ID=5</b>";
+				}
+			} else {
+				echo "Das Update ist fehlgeschlagen: <b>ID=3</b>";
+			}
+		} else {
+			echo "Das Update ist fehlgeschlagen: <b>ID=1</b><br>";
+		}
+	} else {
+		echo "Das Update ist fehlgeschlagen: <b>ID=4</b><br>";
+	}
+	$sql = "DELETE FROM ac_trigger WHERE ID = '2'";
+	if(mysqli_query($con,$sql))
+	{
+		echo "Zeile mit dem Trigger <i>Baal</i> erfolgreich gelöscht.<br>";
+	} else {
+		echo "Beim Löschen ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+	}
+} else {
+	echo "Beim Hinzufügen der Spalte <i>ac_id</i> ist ein Fehler aufgetreten:<b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac DROP COLUMN ac_trigger";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_trigger</i> wurde erfolgreich gelöscht.<br>";
+} else {
+	echo "Beim Löschen der Spalte <i>ac_trigger</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
 
 ?>
