@@ -333,9 +333,14 @@ $(document).ready(function(){
 	}
 
 	function displayAchievement(achievement) {
-		$("#popup_container").html(achievement).slideDown("slow", function() {
-			$("#popup_container").delay(3000).slideUp("slow");
-		});
+		
+		console.log(achievement);
+		if(!achievement == "")
+		{
+			$("#popup_container").html(achievement).slideDown("slow", function() {
+				$("#popup_container").delay(3000).slideUp("slow");
+			});
+		}
 	}
 
 	function sucRegAcc(response)
