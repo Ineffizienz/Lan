@@ -333,8 +333,9 @@ $(document).ready(function(){
 	}
 
 	function displayAchievement(achievement) {
-		$("#achievement").html(achievement);
-		$("#achievement").fadeOut(9000);
+		$("#popup_container").html(achievement).slideDown("slow", function() {
+			$("#popup_container").delay(3000).slideUp("slow");
+		});
 	}
 
 	function sucRegAcc(response)
