@@ -5,8 +5,10 @@
 	include(INC . "connect.php");
 	include(INC . "function.php");
 	include(CL . "message_class.php");
+	include(CL . "progress_class.php");
 
 	$message = new message();
+	$achievement = new Progress();
 	$player_id = $_SESSION["player_id"];
 
 	if (isset($_REQUEST["user"]) && !empty($_REQUEST["user"]))
@@ -17,7 +19,8 @@
 			if(in_array($new_username,$ex_username))
 			{
 				$message->getMessageCode("ERR_USER_NAME");
-				echo json_encode(array("message"=>$message->displayMessage()));
+				$achievement->getTrigger($con,$player_id,"Sir Brummel");
+				echo json_encode(array("message"=>$message->displayMessage(), "achievement"=>$achievement->showAchievement()));
 			} else {
 				$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$player_id'";
 				if(mysqli_query($con,$sql))
@@ -31,9 +34,9 @@
 			}
 
 	} else {
-
+		$achievement->getTrigger($con,$player_id,"Sir Brummel");
 		$message->getMessageCode("ERR_NO_USER_NAME");
-		echo json_encode(array("message"=>$message->displayMessage()));
+		echo json_encode(array("message"=>$message->displayMessage(), "achievement"=>$achievement->showAchievement()));
 
 	}
 ?>
