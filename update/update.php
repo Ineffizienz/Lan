@@ -165,7 +165,7 @@ if(mysqli_query($con,$sql))
 }
 
 // Charset-Änderungen
-$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+/*$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
 if(mysqli_query($con,$sql))
 {
 	echo "Die Spalte <i>name</i> in der Tabelle <i>player</i> ist jetzt in <b>utf8mb4_bin</b><br>";
@@ -245,6 +245,13 @@ if(mysqli_query($con,$sql))
 	echo "Die Spalte <i>ac_trigger</i> wurde erfolgreich gelöscht.<br>";
 } else {
 	echo "Beim Löschen der Spalte <i>ac_trigger</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}*/
+$sql = "ALTER TABLE ac MODIFY ac_visibility ENUM('Sichtbar','Unsichtbar')";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_visibility</i> wurde erfolgreich auf ENUM gesetzt.<br>";
+} else {
+	echo "Beim ENUM-setzen der Spalte <i>ac_visibility</i> ist ein Fehler aufgreteten: <b>" . mysqli_error($con) . "</b><br>";
 }
 
 ?>
