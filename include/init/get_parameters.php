@@ -632,7 +632,7 @@ function getUserAchievements($con,$player_id) // function.php/displayUserAchieve
 
 function getAvailableAchievements($con, $player_id) // function.php/displayAvailableAchievements
 {
-	$sql = "SELECT ac.ID, ac.title FROM ac WHERE ac.ac_visibility = '1' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
+	$sql = "SELECT ac.ID, ac.title FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
 	$result = mysqli_query($con,$sql);
 	while($row=mysqli_fetch_assoc($result))
 	{
