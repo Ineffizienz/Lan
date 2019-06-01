@@ -14,9 +14,9 @@
 		
 		if(empty($_REQUEST["ac_visible"]))
 		{
-			$visib = "0";
+			$visib = "Unsichtbar";
 		} else {
-			$visib = "1";
+			$visib = "Sichtbar";
 		}
 		
 		if(isset($_FILES["file"]["size"]) && !empty($_FILES["file"]["size"]))
