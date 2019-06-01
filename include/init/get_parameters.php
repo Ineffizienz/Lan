@@ -688,7 +688,7 @@ function getAchievementVisibility($con)
 
 function getParamByAcID($con,$ac_id)
 {
-	$result = mysqli_query($con, "SELECT ac_trigger, ac_categorie, ac_visibility FROM ac WHERE ID = '$ac_id'");
+	$result = mysqli_query($con, "SELECT ac.ac_categorie, ac.ac_visibility, ac_trigger.ID AS ac_trigger FROM ac LEFT JOIN ac_trigger ON ac_trigger.ac_id = ac.ID WHERE ac.ID = '$ac_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$acParam[] = $row;
