@@ -76,6 +76,16 @@ $(document).ready(function(){
 
 		changeParam(ac_id,param,param_val,setResult);
 	}
+
+	function getChangedAcImage(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).attr("data-ac-id");
+		var image_id = "#ac_image_" + ac_id;
+
+		changeAcImage(ac_id,getFileData(image_id),setResult);
+	}
 	
 //############################ Game-Data ###################################
 	
@@ -317,6 +327,20 @@ $(document).ready(function(){
 		});
 	}
 
+	function changeAcImage(ac_id,ac_image,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/change_acimage.php?ac_id=" + ac_id,
+			dataType: "json",
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: ac_image,
+			success: fn
+		});
+	}
+
 	function updateAddon(game_id,addon,fn)
 	{
 		return $.ajax({
@@ -489,6 +513,7 @@ $(document).ready(function(){
 	$(document).on("change",".admin_ac_trig",getChangedParam);
 	$(document).on("change",".admin_ac_cat",getChangedParam);
 	$(document).on("change",".admin_ac_visib",getChangedParam);
+	$(document).on("change",".ac_image",getChangedAcImage);
 	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);

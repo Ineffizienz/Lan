@@ -1,7 +1,12 @@
 <tr>
 	<td class="ac_id">--ID--</td>
 	<td>--NAME--</td>
-	<td><img src="/Project_Ziphon/images/achievements/--IMAGE_URL--" style="max-width:120px;"></td>
+	<td>
+		<label for="ac_image_--ID--">
+			<img src="/Lan_Git/images/achievements/--IMAGE_URL--" class="ac_image_disp" style="cursor:pointer;max-width:120px;">
+		</label>
+		<input type="file" class="ac_image" id="ac_image_--ID--" data-ac-id="--ID--" style="display:none;">
+	</td>
 	<td>--MESSAGE--</td>
 	<td>
 		<select class="admin_ac_trig" name="ac_trigger" data-ac-id="--ID--">

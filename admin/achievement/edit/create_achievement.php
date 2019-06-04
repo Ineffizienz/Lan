@@ -30,7 +30,7 @@
 				$title = $_REQUEST["ac_name"];
 				$categorie = $_REQUEST["ac_cat"];
 				$trigger = $_REQUEST["ac_trigger"];
-				$text = utf8_encode($_REQUEST["ac_message"]);
+				$text = $_REQUEST["ac_message"];
 
 				$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title','$path','$text','$trigger','$categorie','$visib')";
 
