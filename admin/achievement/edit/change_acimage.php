@@ -19,8 +19,8 @@
             $sql = "UPDATE ac SET image_url = '$path' WHERE ID = '$acid'";
             if(mysqli_query($con,$sql))
             {
-                $message->getMessageCode("SUC_CHANGE_AC_IMAGE");
-                echo buildJSONOutput(array($message->displayMessage(),"#ac_image_" . $acid,".ac_image_disp"));
+                $message->getMessageCode("SUC_ADMIN_CHANGE_AC_IMAGE");
+                echo buildJSONOutput(array($message->displayMessage(),".ac_img_label",".ac_image_disp"));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
