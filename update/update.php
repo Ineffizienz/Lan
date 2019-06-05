@@ -253,5 +253,26 @@ if(mysqli_query($con,$sql))
 } else {
 	echo "Beim ENUM-setzen der Spalte <i>ac_visibility</i> ist ein Fehler aufgreteten: <b>" . mysqli_error($con) . "</b><br>";
 }
+$sql = "ALTER TABLE ac_trigger DROP COLUMN ac_id";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_id</i> wurde erfolgreich gelöscht.<br>";
+} else {
+	echo "Beim Löschen der Spalte <i>ac_id</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_categorie</i> wurde erfolgreich in <i>ac_category</i> umbenannt.<br>";
+} else {
+	echo "Beim Umbenennen der Spalte <i>ac_categorie</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac ADD ac_trigger INT(11) NULL AFTER ac_category";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_trigger</i> wurde erfolgreich der Tabelle <i>ac</i> hinzugefügt.<br>";
+} else {
+	echo "Beim Hinzufügen der Spalte <i>ac_trigger</i> zur Tabelle <i>ac</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
 
 ?>

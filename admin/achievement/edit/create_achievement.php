@@ -32,46 +32,8 @@
 				$trigger = $_REQUEST["ac_trigger"];
 				$text = $_REQUEST["ac_message"];
 
-				$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title','$path','$text','$trigger','$categorie','$visib')";
+				$sql = "INSERT INTO ac (title,image_url,message,ac_category,ac_trigger,ac_visibility) VALUES ('$title','$path','$text','$categorie','$trigger','$visib')";
 
-				if (mysqli_set_charset($con,"utf8"))
-				{
-					if(mysqli_query($con,$sql))
-					{
-						$result = mysqli_query($con, "SELECT ID FROM ac WHERE title = '$title'");
-						while($row=mysqli_fetch_array($result))
-						{
-							$new_ac = $row["ID"];
-						}
-
-						$sql = "INSERT INTO ac_player (ac_id) VALUES ('$new_ac')";
-						if(mysqli_query($con,$sql))
-						{
-							$message->getMessageCode("SUC_ADMIN_CREATE_AC");
-							echo $message->displayMessage();
-						} else {
-							echo mysqli_error($con);
-							$message->getMessageCode("ERR_ADMIN_DB");
-							echo $message->displayMessage();
-						}
-					}
-				}
-				
-			} else {
-				$message->getMessageCode($result_validate);
-				echo $message->displayMessage();
-			}	
-		} else {
-
-			$title = $_REQUEST["ac_name"];
-			$categorie = $_REQUEST["ac_cat"];
-			$trigger = $_REQUEST["ac_trigger"];
-			$text = $_REQUEST["ac_message"];
-			
-			$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title',NULL,'$text','$trigger','$categorie','$visib')";
-
-			if(mysqli_set_charset($con,"utf8"))
-			{
 				if(mysqli_query($con,$sql))
 				{
 					$result = mysqli_query($con, "SELECT ID FROM ac WHERE title = '$title'");
@@ -92,14 +54,45 @@
 					}
 				} else {
 					$message->getMessageCode("ERR_ADMIN_DB");
+					echo $message->displayMessage() . mysqli_error($con);
+				}
+				
+			} else {
+				$message->getMessageCode($result_validate);
+				echo $message->displayMessage();
+			}	
+		} else {
+
+			$title = $_REQUEST["ac_name"];
+			$categorie = $_REQUEST["ac_cat"];
+			$trigger = $_REQUEST["ac_trigger"];
+			$text = $_REQUEST["ac_message"];
+			
+			$sql = "INSERT INTO ac (title,image_url,message,ac_trigger,ac_categorie,ac_visibility) VALUES ('$title',NULL,'$text','$trigger','$categorie','$visib')";
+
+			if(mysqli_query($con,$sql))
+			{
+				$result = mysqli_query($con, "SELECT ID FROM ac WHERE title = '$title'");
+				while($row=mysqli_fetch_array($result))
+				{
+					$new_ac = $row["ID"];
+				}
+
+				$sql = "INSERT INTO ac_player (ac_id) VALUES ('$new_ac')";
+				if(mysqli_query($con,$sql))
+				{
+					$message->getMessageCode("SUC_ADMIN_CREATE_AC");
+					echo $message->displayMessage();
+				} else {
 					echo mysqli_error($con);
+					$message->getMessageCode("ERR_ADMIN_DB");
 					echo $message->displayMessage();
 				}
 			} else {
+				$message->getMessageCode("ERR_ADMIN_DB");
 				echo mysqli_error($con);
-			}
-				
-			
+				echo $message->displayMessage();
+			}			
 		}		
 
 	}
