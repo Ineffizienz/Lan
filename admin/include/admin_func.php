@@ -80,13 +80,13 @@ function displayAchievements($con)
 
 	$all_categories = getAchievementCategories($con);
 	$all_trigger = getAchievementTrigger($con);
-	$all_visib = buildVisibilityOption($con);
+	//$all_visib = buildVisibilityOption($con);
 
 	foreach ($achievements as $achievement)
 	{
 		$ac = new Achievement;
 		
-		$ac->getAdminDetails($achievement,$all_categories,$all_trigger,$all_visib);
+		$ac->getAdminDetails($con,$achievement,$all_categories,$all_trigger);
 
 		if(!isset($output))
 		{
@@ -217,7 +217,7 @@ function displaySingleGame($con)
 	return $output;
 }
 
-function buildVisibilityOption($con)
+/*function buildVisibilityOption($con)
 {
 	$ac_visib = getAchievementVisibility($con);
 
@@ -242,7 +242,7 @@ function buildVisibilityOption($con)
 	}
 
 	return $visib_name;
-}
+}*/
 
 function validateInput($new_game)
 {

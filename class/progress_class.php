@@ -2,10 +2,8 @@
 class Progress {
 	
 	private $DBC = "";
-	private $userIP = "";
 	private $user = "";
 	private $userAC = "";
-	private $acTriggerID = "";
 	private $acID = "";
 	private $acName = "";
 	private $acImage = "";
@@ -13,10 +11,10 @@ class Progress {
 	private $acTemplate = "";
 	private $ac = "";
 	
-	public function getTrigger($con,$ip,$ac_trigger)
+	public function getTrigger($con,$player_id,$ac_trigger)
 	{
 		$this->DBC = $con;
-		$this->userIP = $ip;
+		$this->user = $player_id;
 		$this->acTrigger = $ac_trigger;
 		
 		$this->getRequiredData(); //Daten aus der Datenbank beziehen
@@ -24,31 +22,18 @@ class Progress {
 	
 	public function getRequiredData()
 	{
-		$result = mysqli_query($this->DBC,"SELECT ID FROM ac_trigger WHERE trigger_title = '$this->acTrigger'");
+		$result = mysqli_query($this->DBC,"SELECT ac_id FROM ac_trigger WHERE trigger_title = '$this->acTrigger'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->acTriggerID = $row["ID"];
+			$this->acID = $row["ac_id"];
 		}
 		
-		$result = mysqli_query($this->DBC,"SELECT ID, title, image_url, message FROM ac WHERE ac_trigger = '$this->acTriggerID'");
+		$result = mysqli_query($this->DBC,"SELECT title, image_url, message FROM ac WHERE ID = '$this->acID'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->acID = $row["ID"];
 			$this->acName = $row["title"];
 			$this->acImage = "images/achievements/" . $row["image_url"];
 			$this->acMessage = $row["message"];
-		}
-		
-		$result = mysqli_query($this->DBC,"SELECT ID FROM player WHERE ip ='$this->userIP'");
-		while($row=mysqli_fetch_array($result))
-		{
-			$this->user = $row["ID"];
-		}
-		
-		$result = mysqli_query($this->DBC,"SELECT $this->user FROM ac_player WHERE ac_id = '$this->acID'");
-		while($row=mysqli_fetch_array($result))
-		{
-			$this->userAC = $row[$this->user];
 		}
 		
 		$this->fetchData(); // Arbeit mit den Daten
@@ -56,25 +41,20 @@ class Progress {
 	
 	public function fetchData()
 	{
-		
-		if(empty($this->userAC))
+		$sql = "INSERT INTO ac_player (player_id, ac_id) VALUES ('$this->user','$this->acID')";
+		if(mysqli_query($this->DBC,$sql))
 		{
-			$sql = "UPDATE ac_player SET `$this->user` = '1' WHERE ac_id = '$this->acID'";
-			if(mysqli_query($this->DBC,$sql))
-			{
-				$this->createAchievement();	// Funktionsaufruf zum Einbinden des Achievement-Templates
-			}
+			$this->createAchievement();	// Funktionsaufruf zum Einbinden des Achievement-Templates
 		} else {
-			return null;	
-		}
-		
+			return null;
+		}		
 	}
 	
 	public function createAchievement()
 	{
 		$this->acTemplate = file_get_contents(dirname(__FILE__,2) . "/template/part/progress.html");
 		
-		$this->ac = str_replace(array("--IMAGE--","--HEADLINE--","--TEXT--"),array($this->acImage,$this->acName,$this->acMessage),$this->acTemplate);
+		$this->ac = str_replace(array("--IMAGE--","--TITLE--","--TEXT--"),array($this->acImage,$this->acName,$this->acMessage),$this->acTemplate);
 		
 		$this->showAchievement(); //Achievement Ausgabe
 	}

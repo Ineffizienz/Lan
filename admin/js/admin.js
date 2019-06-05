@@ -63,19 +63,28 @@ $(document).ready(function(){
 		var u_id = $("#user").find('option:selected').attr("value");
 		var ac_id = $("#ac").find('option:selected').attr("value");
 		
-		assignAchievement(ac_id,u_id,displayResult);
+		assignAchievement(ac_id,u_id,setResult);
 	}
 
 	function getChangedParam(event)
 	{
 		event.preventDefault();
 
-		var ac_id = $(this).parents("#admin_ac_list").find(".ac_id").html();
-		var trigger = $("#admin_ac_trig").find('option:selected').attr("value");
-		var category = $("#admin_ac_cat").find('option:selected').attr("value");
-		var visib = $("#admin_ac_visib").find('option:selected').attr("value");
+		var ac_id = $(this).attr("data-ac-id");
+		var param = $(this).attr("name");
+		var param_val = $(this).find("option:selected").attr("value");
 
-		changeParam(ac_id,trigger,category,visib,displayResult);
+		changeParam(ac_id,param,param_val,setResult);
+	}
+
+	function getChangedAcImage(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).attr("data-ac-id");
+		var image_id = "#ac_image_" + ac_id;
+
+		changeAcImage(ac_id,getFileData(image_id),setResult);
 	}
 	
 //############################ Game-Data ###################################
@@ -154,7 +163,7 @@ $(document).ready(function(){
 		var ac_message = $("#ac_message").val();
 		var image_id = "#ac_image";
 
-		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),displayResult);
+		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult);
 	}
 
 	function getFile(event) //Upload for new Keys
@@ -267,6 +276,7 @@ $(document).ready(function(){
 		return $.ajax({
 			type: "post",
 			url: "admin/achievement/edit/create_achievement.php?ac_name=" + ac_name + "&ac_cat=" + ac_cat + "&ac_trigger=" + ac_trigger + "&ac_visible=" + ac_visible + "&ac_message=" + ac_message,
+			dataType: "json",
 			cache: false,
 			contentType: false,
 			processData: false,
@@ -294,6 +304,7 @@ $(document).ready(function(){
 		return $.ajax({
 			type: "post",
 			url: "admin/achievement/edit/assign_achievement.php",
+			dataType: "json",
 			data: {
 				ac_id:item,
 				u_name:name
@@ -302,17 +313,31 @@ $(document).ready(function(){
 		});
 	}
 
-	function changeParam(ac_id,trigger,category,visib,fn)
+	function changeParam(ac_id,param,param_val,fn)
 	{
 		return $.ajax({
 			type: "post",
 			url: "admin/achievement/edit/change_param.php",
+			dataType: "json",
 			data: {
 				ac_id:ac_id,
-				trigger:trigger,
-				category: category,
-				visib: visib
+				param:param,
+				param_val: param_val
 			},
+			success: fn
+		});
+	}
+
+	function changeAcImage(ac_id,ac_image,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/change_acimage.php?ac_id=" + ac_id,
+			dataType: "json",
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: ac_image,
 			success: fn
 		});
 	}
@@ -440,7 +465,10 @@ $(document).ready(function(){
 	{
 		displayResult(result.message);
 
-		reloadContent(result.parent_element,result.child_element);
+		if(result.parent_element in result)
+		{
+			reloadContent(result.parent_element,result.child_element);
+		}
 	}
 
 	function reloadContent(parent_element,child_element)
@@ -486,6 +514,7 @@ $(document).ready(function(){
 	$(document).on("change",".admin_ac_trig",getChangedParam);
 	$(document).on("change",".admin_ac_cat",getChangedParam);
 	$(document).on("change",".admin_ac_visib",getChangedParam);
+	$(document).on("change",".ac_image",getChangedAcImage);
 	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);

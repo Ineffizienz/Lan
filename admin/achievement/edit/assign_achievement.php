@@ -1,5 +1,6 @@
 <?php
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
+	include(dirname(__FILE__,3) . "/include/admin_func.php");
 	include(CL . "message_class.php");
 	include(INC . "connect.php");
 	include(INIT . "get_parameters.php");
@@ -18,27 +19,25 @@
 			if (in_array($ac_id,$user_ac))
 			{
 				$message->getMessageCode("ERR_ADMIN_AC_ALLREADY_GIVEN");
-				echo $message->displayMessage();
-				echo $user_id;
+				echo buildJSONOutput($message->displayMessage());
 			} else {
-				$sql = "UPDATE ac_player SET `$user_id` = '1' WHERE ac_id = '$ac_id'";
+				$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$user_id','$ac_id')";
 				if(mysqli_query($con,$sql))
 				{
 					$message->getMessageCode("SUC_ADMIN_ASSIGN_AC");
-					echo $message->displayMessage();
+					echo buildJSONOutput($message->displayMessage());
 				} else {
 					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage();
-					echo mysqli_error($con);
+					echo buildJSONOutput($message->displayMessage());
 				}
 			}
 
 		} else {
 			$message->getMessageCode("ERR_ADMIN_MISSING_PLAYER");
-			echo $message->displayMessage();
+			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
 		$message->getMessageCode("ERR_ADMIN_MISSING_AC");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	}
 ?>

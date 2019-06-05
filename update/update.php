@@ -165,7 +165,7 @@ if(mysqli_query($con,$sql))
 }
 
 // Charset-Änderungen
-$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
+/*$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
 if(mysqli_query($con,$sql))
 {
 	echo "Die Spalte <i>name</i> in der Tabelle <i>player</i> ist jetzt in <b>utf8mb4_bin</b><br>";
@@ -199,6 +199,80 @@ if(mysqli_query($con,$sql))
 	echo "Die Spalte <i>name</i> in der Tabelle <i>tm_teamname</i> ist jetzt in <b>utf8mb4_bin</b><br>";
 } else {
 	echo "Beim Ändern des charsets in <i>tm_teamname->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac_trigger ADD ac_id INT(11) NOT NULL AFTER ID";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_id</i> wurde erfolgreich hinzugefügt<br>";
+	$sql = "UPDATE ac_trigger SET ac_id = '9' WHERE ID = '4'";
+	if(mysqli_query($con,$sql))
+	{
+		$sql = "UPDATE ac_trigger SET ac_id = '5' WHERE ID = '1'";
+		if(mysqli_query($con,$sql))
+		{
+			$sql = "UPDATE ac_trigger SET ac_id = '8' WHERE ID = '3'";
+			if(mysqli_query($con,$sql))
+			{
+				$sql = "UPDATE ac_trigger SET ac_id = '0' WHERE ID ='5'"; //Für vom Admin vergebene Achievements. Achievement 0 existiert nicht.
+				if(mysqli_query($con,$sql))
+				{
+					echo "Alle Updates erfolgreich.<br>";
+				} else {
+					echo "Das Update ist fehgeschlagen: <b>ID=5</b>";
+				}
+			} else {
+				echo "Das Update ist fehlgeschlagen: <b>ID=3</b>";
+			}
+		} else {
+			echo "Das Update ist fehlgeschlagen: <b>ID=1</b><br>";
+		}
+	} else {
+		echo "Das Update ist fehlgeschlagen: <b>ID=4</b><br>";
+	}
+	$sql = "DELETE FROM ac_trigger WHERE ID = '2'";
+	if(mysqli_query($con,$sql))
+	{
+		echo "Zeile mit dem Trigger <i>Baal</i> erfolgreich gelöscht.<br>";
+	} else {
+		echo "Beim Löschen ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+	}
+} else {
+	echo "Beim Hinzufügen der Spalte <i>ac_id</i> ist ein Fehler aufgetreten:<b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac DROP COLUMN ac_trigger";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_trigger</i> wurde erfolgreich gelöscht.<br>";
+} else {
+	echo "Beim Löschen der Spalte <i>ac_trigger</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}*/
+$sql = "ALTER TABLE ac MODIFY ac_visibility ENUM('Sichtbar','Unsichtbar')";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_visibility</i> wurde erfolgreich auf ENUM gesetzt.<br>";
+} else {
+	echo "Beim ENUM-setzen der Spalte <i>ac_visibility</i> ist ein Fehler aufgreteten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac_trigger DROP COLUMN ac_id";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_id</i> wurde erfolgreich gelöscht.<br>";
+} else {
+	echo "Beim Löschen der Spalte <i>ac_id</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_categorie</i> wurde erfolgreich in <i>ac_category</i> umbenannt.<br>";
+} else {
+	echo "Beim Umbenennen der Spalte <i>ac_categorie</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
+$sql = "ALTER TABLE ac ADD ac_trigger INT(11) NULL AFTER ac_category";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>ac_trigger</i> wurde erfolgreich der Tabelle <i>ac</i> hinzugefügt.<br>";
+} else {
+	echo "Beim Hinzufügen der Spalte <i>ac_trigger</i> zur Tabelle <i>ac</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
 }
 
 ?>
