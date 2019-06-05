@@ -9,7 +9,7 @@
 	if(empty($_REQUEST["ac_name"]))
 	{
 		$message->getMessageCode("ERR_ADMIN_MISSING_AC_NAME");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	} else {
 		
 		if(empty($_REQUEST["ac_visible"]))
