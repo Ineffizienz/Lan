@@ -163,7 +163,7 @@ $(document).ready(function(){
 		var ac_message = $("#ac_message").val();
 		var image_id = "#ac_image";
 
-		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),displayResult);
+		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult);
 	}
 
 	function getFile(event) //Upload for new Keys
@@ -276,6 +276,7 @@ $(document).ready(function(){
 		return $.ajax({
 			type: "post",
 			url: "admin/achievement/edit/create_achievement.php?ac_name=" + ac_name + "&ac_cat=" + ac_cat + "&ac_trigger=" + ac_trigger + "&ac_visible=" + ac_visible + "&ac_message=" + ac_message,
+			dataType: "json",
 			cache: false,
 			contentType: false,
 			processData: false,

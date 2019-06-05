@@ -46,20 +46,19 @@
 					if(mysqli_query($con,$sql))
 					{
 						$message->getMessageCode("SUC_ADMIN_CREATE_AC");
-						echo $message->displayMessage();
+						echo buildJSONOutput($message->displayMessage());
 					} else {
-						echo mysqli_error($con);
 						$message->getMessageCode("ERR_ADMIN_DB");
-						echo $message->displayMessage();
+						echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
 					}
 				} else {
 					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage() . mysqli_error($con);
+					echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
 				}
 				
 			} else {
 				$message->getMessageCode($result_validate);
-				echo $message->displayMessage();
+				echo buildJSONOutput($message->displayMessage());
 			}	
 		} else {
 
@@ -82,16 +81,14 @@
 				if(mysqli_query($con,$sql))
 				{
 					$message->getMessageCode("SUC_ADMIN_CREATE_AC");
-					echo $message->displayMessage();
+					echo buildJSONOutput($message->displayMessage());
 				} else {
-					echo mysqli_error($con);
 					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage();
+					echo buildJSONOutput($message->displayMessage());
 				}
 			} else {
 				$message->getMessageCode("ERR_ADMIN_DB");
-				echo mysqli_error($con);
-				echo $message->displayMessage();
+				echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
 			}			
 		}		
 
