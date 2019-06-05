@@ -20,6 +20,7 @@
 	if(count($team_ids) <= 1)
 	{
 		$message->getMessageCode("ERR_NO_TEAMS");
+		$achievement->getTrigger($con,$player_id,"Sir Brummel");
 		echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 
 	} else {
@@ -30,6 +31,7 @@
 		if (!($my_team == NULL))
 		{
 			$message->getMessageCode("ERR_STILL_MEMBER");
+			$achievement->-getTrigger($con,$player_id,"Sir Brummel");
 			echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 
 		} else {

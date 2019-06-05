@@ -593,7 +593,7 @@ function getStatusName($con,$status_id)
 
 function getAllAchievements($con) //used in Admin-Area / admin/admin_func.php/displayAchievements
 {
-	$sql = "SELECT ac.ID, ac.title, ac.image_url, ac.message, ac_category.ID AS catID, ac_category.c_name, ac_trigger.ID AS trigID, ac_trigger.trigger_title, ac.ac_visibility FROM ac LEFT JOIN ac_category ON ac.ac_categorie = ac_category.ID LEFT JOIN ac_trigger ON ac.ac_trigger = ac_trigger.ID";
+	$sql = "SELECT ac.ID, ac.title, ac.image_url, ac.message, ac_category.ID AS catID, ac_category.c_name, ac_trigger.ID AS trigID, ac_trigger.trigger_title, ac.ac_visibility FROM ac LEFT JOIN ac_category ON ac.ac_category = ac_category.ID LEFT JOIN ac_trigger ON ac.ac_trigger = ac_trigger.ID";
 
 	$result = mysqli_query($con,$sql);
 	while ($row=mysqli_fetch_assoc($result))
@@ -614,9 +614,9 @@ function getAchievementById($con,$ac_id) // function.php/displayUserAchievements
 	return $achievement;
 }
 
-function getUserAchievements($con,$user_id) // function.php/displayUserAchievements + admin/assign_achievement.php
+function getUserAchievements($con,$player_id) // function.php/displayUserAchievements + admin/assign_achievement.php
 {
-	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE `$user_id` = '1'");
+	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE player_id = '$player_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$ac_id[] = $row["ac_id"];
@@ -632,9 +632,7 @@ function getUserAchievements($con,$user_id) // function.php/displayUserAchieveme
 
 function getAvailableAchievements($con, $player_id) // function.php/displayAvailableAchievements
 {
-	$username = getSingleUsername($con, $player_id);
-
-	$sql = "SELECT ac.ID,ac.title FROM ac LEFT JOIN ac_player ON ac.ID = ac_player.ac_id WHERE ac.ac_visibility = '1' AND ac_player.1 IS NULL";
+	$sql = "SELECT ac.ID, ac.title FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
 	$result = mysqli_query($con,$sql);
 	while($row=mysqli_fetch_assoc($result))
 	{
@@ -690,7 +688,7 @@ function getAchievementVisibility($con)
 
 function getParamByAcID($con,$ac_id)
 {
-	$result = mysqli_query($con, "SELECT ac_trigger, ac_categorie, ac_visibility FROM ac WHERE ID = '$ac_id'");
+	$result = mysqli_query($con, "SELECT ac.ac_category, ac.ac_visibility, ac.ac_trigger FROM ac WHERE ac.ID = '$ac_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$acParam[] = $row;

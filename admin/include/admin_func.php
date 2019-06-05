@@ -80,13 +80,13 @@ function displayAchievements($con)
 
 	$all_categories = getAchievementCategories($con);
 	$all_trigger = getAchievementTrigger($con);
-	$all_visib = buildVisibilityOption($con);
+	//$all_visib = buildVisibilityOption($con);
 
 	foreach ($achievements as $achievement)
 	{
 		$ac = new Achievement;
 		
-		$ac->getAdminDetails($achievement,$all_categories,$all_trigger,$all_visib);
+		$ac->getAdminDetails($con,$achievement,$all_categories,$all_trigger);
 
 		if(!isset($output))
 		{
@@ -199,18 +199,25 @@ function displaySingleGame($con)
 			$icon = "<img src='images/game_icon/" . $game["icon"] . "' height='64'>";
 		}
 
+		if(empty($game["addon"]))
+		{
+			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+		} else {
+			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+		}
+
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
 		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$icon,$has_table),$singleGame_template);
+			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
 		}
 	}
 
 	return $output;
 }
 
-function buildVisibilityOption($con)
+/*function buildVisibilityOption($con)
 {
 	$ac_visib = getAchievementVisibility($con);
 
@@ -235,7 +242,7 @@ function buildVisibilityOption($con)
 	}
 
 	return $visib_name;
-}
+}*/
 
 function validateInput($new_game)
 {

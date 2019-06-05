@@ -1,6 +1,7 @@
 <?php
 class Achievement {
 	
+	private $DBC = "";
 	private $id = "";
 	private $title = "";
 	private $message = "";
@@ -55,12 +56,13 @@ class Achievement {
 		$this->buildAchievement();
 	}
 
-	public function getAdminDetails($admin_achievements,$catArray,$trigArray,$visibArray)
+	public function getAdminDetails($con,$admin_achievements,$catArray,$trigArray)
 	{
 		if (empty($admin_achievements))
 		{
 			$this->ac = "File not Found.";
 		} else {
+			$this->DBC = $con;
 			$this->id = $admin_achievements["ID"];
 			$this->title = $admin_achievements["title"];
 			$this->message = $admin_achievements["message"];
@@ -74,13 +76,15 @@ class Achievement {
 				$this->image = $admin_achievements["image_url"];
 			}
 
-			if($admin_achievements["ac_visibility"] == "1")
+			$this->opt_visib = array(array("ID"=>"Unsichtbar","name"=>"Unsichtbar"),array("ID"=>"Sichtbar","name"=>"Sichtbar"));
+
+			if($admin_achievements["ac_visibility"] == "Sichtbar")
 			{
-				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"Sichtbar");
-			} elseif ($admin_achievements["ac_visibility"] == "2") {
-				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"Unsichtbar");
-			} elseif (empty($admin_achievements["ac_visibility"])) {
-				$this->visib = $this->buildOption($visibArray,$admin_achievements["ac_visibility"],"0");
+				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Sichtbar");
+			} elseif ($admin_achievements["ac_visibility"] == "Unsichtbar") {
+				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Unsichtbar");
+			} else {
+				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Wird gelöscht");
 			}
 			
 			$this->buildAdminAchievement();
