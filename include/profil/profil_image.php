@@ -54,8 +54,8 @@
 
 			if(mysqli_query($con,$sql))
 			{
-				$message->getMessageCode("SUC_UPLOADED_IMAGE");
-				echo json_encode(array("message" => $message->displayMessage()));
+				$message->getMessageCode("SUC_FINALLY_UPLOADED_IMAGE");
+				echo json_encode(array("message" => $message->displayMessage(), "image" => $path));
 			} else {
 				$message->getMessageCode("ERR_DB");
 				echo json_encode(array("message" => $message->displayMessage()));

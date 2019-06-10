@@ -8,6 +8,7 @@ SUC_CHANGE_USERNAME: Sehr wohl. Ab heute sollt Ihr unter diesem Namen bekannt se
 SUC_VAL_APPROVED: Ihr dürft passieren.
 SUC_KEY_ADDED: Key erfolgreich hinzugefügt.
 SUC_UPLOADED_IMAGE: Ein vortreffliches Porträt eurer selbst!
+SUC_FINALLY_UPLOADED_IMAGE: Endlich. Ich bekomme euch zu... oh!
 SUC_CHANGE_TRIGGER: Trigger erfolgreich geändert.
 SUC_CHANGE_CATEGORY: Kategorie erfolgreich geändert.
 SUC_CHANGE_VISIB: Sichtbarkeit erfolgreich geändert.
