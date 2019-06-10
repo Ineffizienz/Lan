@@ -22,10 +22,10 @@ class Progress {
 	
 	public function getRequiredData()
 	{
-		$result = mysqli_query($this->DBC,"SELECT ac_id FROM ac_trigger WHERE trigger_title = '$this->acTrigger'");
+		$result = mysqli_query($this->DBC,"SELECT ID FROM ac_trigger WHERE trigger_title = '$this->acTrigger'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->acID = $row["ac_id"];
+			$this->acID = $row["ID"];
 		}
 		
 		$result = mysqli_query($this->DBC,"SELECT title, image_url, message FROM ac WHERE ID = '$this->acID'");
