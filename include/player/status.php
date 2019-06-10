@@ -10,8 +10,6 @@
 	{
 		$status = $_REQUEST["status"];
 
-		//$user_id = getUserId($con,$ip); --> remove
-
 		mysqli_query($con,"UPDATE status SET status = '$status' WHERE user_id = '$player_id'");
 
 		$s_color = getStatusColor($con,$status);
