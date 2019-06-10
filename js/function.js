@@ -361,9 +361,12 @@ $(document).ready(function(){
 		
 		displayMessage(response.message);
 
-		if(response.achievement);
+		if(response.achievement)
 		{
 			displayAchievement(response.achievement);
+			console.log("jep");
+		} else {
+			console.log("nope");
 		}
 
 		$("#displayKey").html(response.key);
@@ -395,6 +398,11 @@ $(document).ready(function(){
 	function displayChanges(response)
 	{
 		displayMessage(response.message);
+		if(response.achievement)
+		{
+			displayAchievement(response.achievement);
+		}
+		
 		$("#settings_change_popup").hide(0,function(){
 			$("#content").css("opacity", "1");
 			$("#user").load(location.href + " #user");

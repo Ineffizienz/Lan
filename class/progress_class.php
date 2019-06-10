@@ -25,12 +25,13 @@ class Progress {
 		$result = mysqli_query($this->DBC,"SELECT ID FROM ac_trigger WHERE trigger_title = '$this->acTrigger'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->acID = $row["ID"];
+			$this->triggerID = $row["ID"];
 		}
 		
-		$result = mysqli_query($this->DBC,"SELECT title, image_url, message FROM ac WHERE ID = '$this->acID'");
+		$result = mysqli_query($this->DBC,"SELECT ID, title, image_url, message FROM ac WHERE ac_trigger = '$this->triggerID'");
 		while($row=mysqli_fetch_array($result))
 		{
+			$this->acID = $row["ID"];
 			$this->acName = $row["title"];
 			$this->acImage = "images/achievements/" . $row["image_url"];
 			$this->acMessage = $row["message"];
