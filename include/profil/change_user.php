@@ -20,7 +20,7 @@
 			{
 				$message->getMessageCode("ERR_USER_NAME");
 				$achievement->getTrigger($con,$player_id,"Sir Brummel");
-				echo json_encode(array("message"=>$message->displayMessage(), "achievement"=>$achievement->showAchievement()));
+				echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 			} else {
 				$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$player_id'";
 				if(mysqli_query($con,$sql))
@@ -36,7 +36,7 @@
 	} else {
 		$achievement->getTrigger($con,$player_id,"Sir Brummel");
 		$message->getMessageCode("ERR_NO_USER_NAME");
-		echo json_encode(array("message"=>$message->displayMessage(), "achievement"=>$achievement->showAchievement()));
+		echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 
 	}
 ?>
