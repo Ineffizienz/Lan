@@ -31,7 +31,7 @@
 
 	function build_option($optionArr,$selected)
 	{
-		$output_option = "<option name='" . $selected["id"] . "' selected>" . $selected["name"];
+		$output_option = "<option value='" . $selected["id"] . "' selected>" . $selected["name"];
 
 		$part = file_get_contents("template/part/option.html");
 

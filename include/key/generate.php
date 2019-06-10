@@ -10,9 +10,8 @@
 	$message = new message();
 
 	$player_id = $_SESSION["player_id"];
-	//$player_id = getPlayerID($con,$_SESSION["player_id"]); --> remove
-
-	$raw_name = getSingleRawName($con,$_REQUEST["games"]);
+	
+	$raw_name = $_REQUEST["games"];
 
 	if (empty($raw_name))
 	{
@@ -25,9 +24,9 @@
 			if(substr($game_key,0,3) == "ERR")
 			{
 				$message->getMessageCode($game_key);
-				echo $message->displayMessage();
+				echo json_encode(array("message" => $message->displayMessage()));
 			} else {
-				echo $game_key;
+				echo json_encode(array("key" => $game_key));
 			}
 	}
 ?>
