@@ -76,7 +76,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var game = $("#keygen").val();
+		var game = $(this).find('option:selected').attr("value");
 
 		generateKey(game, showKey);
 	}
@@ -119,7 +119,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var status = $('#changeStatus option:selected').attr("name");
+		var status = $(this).find('option:selected').attr("value");
 
 		buildStatus(status,displayStatus);
 	}
@@ -166,6 +166,7 @@ $(document).ready(function(){
 		return $.ajax({
 			type: "get",
 			url: "include/key/generate.php",
+			dataType: "json",
 			data: {
 				games:game
 			},
@@ -319,9 +320,9 @@ $(document).ready(function(){
 		$('#error').fadeOut(7000);
 	}
 
-	function showKey(key) {
+	function showKey(response) {
 		$("#display_key").slideDown();
-		document.getElementById("displayKey").innerHTML = key;
+		$("#displayKey").html(response.key);
 
 		$('#reject').show();
 	}
@@ -334,13 +335,16 @@ $(document).ready(function(){
 
 	function displayAchievement(achievement) {
 		
-		console.log(achievement);
 		if(!achievement == "")
 		{
 			$("#popup_container").html(achievement).slideDown("slow", function() {
 				$("#popup_container").delay(3000).slideUp("slow");
 			});
 		}
+	}
+
+	function displayProfilImage(img) {
+		$(".profil_image_container").load(window.location.href + ' ' + ".profil_image");
 	}
 
 	function sucRegAcc(response)
@@ -350,9 +354,17 @@ $(document).ready(function(){
 	
 	function displayResponse(response) {
 
+		if(response.image)
+		{
+			displayProfilImage(response.image);
+		}
+		
 		displayMessage(response.message);
 
-		displayAchievement(response.achievement);
+		if(response.achievement);
+		{
+			displayAchievement(response.achievement);
+		}
 
 		$("#displayKey").html(response.key);
 
@@ -433,16 +445,17 @@ $(document).ready(function(){
 
 
 	$("#create-team").on("click", retrieveTeam);
-	$("#keygen").on("change", showGamekeyOnChange);
+	$(document).on("change","#keygen", showGamekeyOnChange);
 	$("#reject").on("click", showGamekeyOnClick);
 	$("#join").on("click", chooseTeam);
-	$("#changeStatus").on("change",changeStatus);
+	$(document).on("change","#changeStatus",changeStatus);
+	$(document).on("change",changeStatus);
 	$("#delete").on("click",removeTeam);
 	$("#edit_settings").on("click",changePopup);
 	$("#change_username").on("click",getNewUser);
 	$("#close_popup").on("click",closePopup);
 	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
-	$("#profil_image").on("change",getImage);
+	$(this).on("change","#profil_image",getImage);
 	$(".leave_team").on("click",getLeaveData);
 	$(document).on("click",".add_pref",showPrefs);
 	$(document).on("change",".checkmark_container input",getCheckedGame);

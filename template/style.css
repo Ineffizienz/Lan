@@ -241,6 +241,7 @@ h4
 }
 .profil_image img
 {
+	cursor: pointer;
 	background-color:e1e1e1;
 	box-shadow: 0 0 5px 0 #333;
 	border-radius:25%;
@@ -330,10 +331,28 @@ h4
 }
 .settings_cp_container
 {
+	display:grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto auto;
 	padding:2%;
 	background-color: #e5e5e5;
 	border: 3px solid #C0C0C0;
 	border-radius: 5px;
+}
+#settings_popup_close
+{
+	grid-column:1 / span 2;
+	text-align:right;
+}
+#settings_popup_headline
+{
+	grid-column:1 / span 2;
+	align-content:center;
+}
+#settings_popup_form
+{
+	grid-column:1/ span 2;
+	text-align:center;
 }
 
 
@@ -493,13 +512,13 @@ h4
 	color: #000000;
 	width:100%;
 }
-.popup_close
+/*.popup_close
 {
 	position:absolute;
 	cursor: pointer;
 	top:5;
 	right:8;
-}
+}*/
 
 
 /* ---------------------- TEAMS ---------------------------

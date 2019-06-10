@@ -8,7 +8,6 @@
 
 	$message = new message();
 
-	//$player_id = getPlayerID($con,IP);
 	$player_id = $_SESSION["player_id"];
 	$raw_name = getSingleRawName($con,$_REQUEST["games"]);
 	$old_key = getOldGameKey($con,$player_id,$raw_name);
