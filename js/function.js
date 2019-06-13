@@ -451,7 +451,7 @@ $(document).ready(function(){
 	$(document).on("change","#keygen", showGamekeyOnChange);
 	$("#reject").on("click", showGamekeyOnClick);
 	$("#join").on("click", chooseTeam);
-	$(document).on("change","#changeStatus",changeStatus);
+	$("#changeStatus").on("change",changeStatus);
 	$(document).on("change",changeStatus);
 	$("#delete").on("click",removeTeam);
 	$("#edit_settings").on("click",changePopup);
