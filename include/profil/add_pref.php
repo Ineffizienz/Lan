@@ -1,6 +1,6 @@
 <?php
     session_start();
-    nclude(dirname(__FILE__,2) . "/init/constant.php");
+    include(dirname(__FILE__,2) . "/init/constant.php");
     include(INC . "connect.php");
     include(INIT . "get_parameters.php");
     include(CL . "message_class.php");
@@ -11,7 +11,7 @@
     $game_id = $_REQUEST["checkedGame"];
 
     //$user_id = getUserId($con,IP); --> remove
-    $player_id = $_SESSION["id"];
+    $player_id = $_SESSION["player_id"];
     $user_pref = getUserPref($con,$player_id);
 
     if(empty($user_pref))

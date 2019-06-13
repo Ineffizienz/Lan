@@ -291,7 +291,7 @@ function getGameInfo($con) // function.php/generate_options
 
 function getGameInfoById($con,$game_id)
 {
-	$result = mysqli_query($con,"SELECT name, raw_name, icon FROM games WHERE ID = '$game_id'");
+	$result = mysqli_query($con,"SELECT name, raw_name, short_title, icon FROM games WHERE ID = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo[] = $row;
