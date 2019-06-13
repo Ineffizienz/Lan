@@ -364,9 +364,6 @@ $(document).ready(function(){
 		if(response.achievement)
 		{
 			displayAchievement(response.achievement);
-			console.log("jep");
-		} else {
-			console.log("nope");
 		}
 
 		$("#displayKey").html(response.key);
