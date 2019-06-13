@@ -308,9 +308,7 @@ $(document).ready(function(){
 		
 		displayMessage(output.message);
 
-		console.log(output.message);
-
-		$(".cloud").load("include/ajax_function.php?function=displayPrefs");
+		$(".cloud").load(window.location.href + ' .pref_container');
 	}
 	
 	function throwError(error)
