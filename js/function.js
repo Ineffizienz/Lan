@@ -446,8 +446,15 @@ $(document).ready(function(){
 		$("#selBar").slideToggle();
 	}
 
-
+	//Create new team
 	$("#create-team").on("click", retrieveTeam);
+	$("#t_name").keypress(function(e) {
+		if(e.which == 13)
+		{
+			event.preventDefault();
+			retrieveTeam(event);
+		}
+	});
 	$(document).on("change","#keygen", showGamekeyOnChange);
 	$("#reject").on("click", showGamekeyOnClick);
 	$("#join").on("click", chooseTeam);
@@ -455,7 +462,18 @@ $(document).ready(function(){
 	$(document).on("change",changeStatus);
 	$("#delete").on("click",removeTeam);
 	$("#edit_settings").on("click",changePopup);
+	
+	//Change username in settings
 	$("#change_username").on("click",getNewUser);
+	$("#newuser").keypress(function (e) {
+		if(e.which == 13)
+		{	
+			event.preventDefault();
+			getNewUser(event);
+		}
+	});
+	//
+
 	$("#close_popup").on("click",closePopup);
 	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
 	$(this).on("change","#profil_image",getImage);
