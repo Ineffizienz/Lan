@@ -1,13 +1,34 @@
 <div style="padding:3%;">
 	<div style="text-align:center">
-		<h3>Achievements zuweisen</h3>
+		<div>
+			<h3>Achievements zuweisen</h3>
+		</div>
+		<p class="line">&nbsp;</p>
 		<table cellspacing="0" cellpadding="0" style="margin:0 auto;">
 			{$username}
 		</table>
 		<button id="activate_ac">Achievements aktivieren</button>
 	</div>
+	<div>
+		<h3>Achievement-Trigger erstellen</h3>
+	</div>
+	<p class="line">&nbsp;</p>
+	<div id="admin_ac_c_trigger_container">
+		<div>
+			<label for="new_ac_trigger">Trigger-Titel:</label>
+		</div>
+		<div>
+			<input type="text" name="new_ac_trigger" id="new_ac_trigger">
+		</div>
+		<div class="admin_ac_c_trigger_button">
+			<button id="create_new_trigger">Trigger erstellen</button>
+		</div>		
+	</div>
 	<div style="text-align:center;">
-		<h3>Achievements erstellen</h3>
+		<div>
+			<h3>Achievements erstellen</h3>
+		</div>
+		<p class="line">&nbsp;</p>
 		<form enctype="multipart/form-data" accept-charset="utf-8">
 			<table cellspacing="0" cellpadding="0" style="margin:0 auto;">
 				<tr>
