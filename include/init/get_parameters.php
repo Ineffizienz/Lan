@@ -236,18 +236,11 @@ function getSinglePlayerTeam($con, $player_id) // index.php
 }
 function getSinglePlayerPref($con, $player_id)
 {
-	$result = mysqli_query($con,"SELECT preferences FROM pref WHERE user_id = '$player_id'");
+	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
 	while ($row=mysqli_fetch_array($result))
 	{
-		$prefString = $row["preferences"];
+		$player_pref[] = $row["game_id"];
 	}
-
-	$player_pref = array();
-	if(!empty($prefString))
-	{
-		$player_pref = explode(", ",$prefString);
-	}
-
 
 	return $player_pref;
 
