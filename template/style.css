@@ -512,13 +512,6 @@ h4
 	color: #000000;
 	width:100%;
 }
-/*.popup_close
-{
-	position:absolute;
-	cursor: pointer;
-	top:5;
-	right:8;
-}*/
 
 
 /* ---------------------- TEAMS ---------------------------
@@ -770,6 +763,7 @@ h4
 .cloud
 {
 	float:left;
+	margin-bottom:2%;
 	background-color:#d6d6d6;
 	text-align:justify;
 	width:95%;

@@ -308,7 +308,7 @@ $(document).ready(function(){
 		
 		displayMessage(output.message);
 
-		$(".cloud").load(window.location.href + ' .pref_container');
+		$("#cloud_container").load(window.location.href + ' .cloud');
 	}
 	
 	function throwError(error)
@@ -429,7 +429,6 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		$(this).children().show();
-		//$(".ac_name").show();
 	}
 
 	function hideName(event)
@@ -446,15 +445,27 @@ $(document).ready(function(){
 		$("#selBar").slideToggle();
 	}
 
-	//Create new team
-	$("#create-team").on("click", retrieveTeam);
-	$("#t_name").keypress(function(e) {
+	function keyEnter(e,control)
+	{
 		if(e.which == 13)
 		{
 			event.preventDefault();
-			retrieveTeam(event);
+			console.log($(this).text);
+			if(control == "new_user") 
+			{
+				getNewUser(event);
+			} else {
+				retrieveTeam(event);
+			}
 		}
+	}
+
+	//Create new team
+	$("#create-team").on("click", retrieveTeam);
+	$("#t_name").keypress(function(e) {
+		keyEnter(e,"team_name");
 	});
+	//
 	$(document).on("change","#keygen", showGamekeyOnChange);
 	$("#reject").on("click", showGamekeyOnClick);
 	$("#join").on("click", chooseTeam);
@@ -465,14 +476,10 @@ $(document).ready(function(){
 	
 	//Change username in settings
 	$("#change_username").on("click",getNewUser);
-	$("#newuser").keypress(function (e) {
-		if(e.which == 13)
-		{	
-			event.preventDefault();
-			getNewUser(event);
-		}
+	$("#newuser").keypress(function(e) {
+		keyEnter(e,"new_user");
 	});
-	//
+
 
 	$("#close_popup").on("click",closePopup);
 	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
