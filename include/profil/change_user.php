@@ -11,9 +11,9 @@
 	$achievement = new Progress();
 	$player_id = $_SESSION["player_id"];
 
-	if (isset($_REQUEST["user"]) && !empty($_REQUEST["user"]))
+	if (isset($_REQUEST["new_username"]) && !empty($_REQUEST["new_username"]))
 	{
-			$new_username = $_REQUEST["user"];
+			$new_username = $_REQUEST["new_username"];
 			$ex_username = getAllUsername($con);
 
 			if(in_array($new_username,$ex_username))
