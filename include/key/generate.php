@@ -11,7 +11,7 @@
 
 	$player_id = $_SESSION["player_id"];
 	
-	$raw_name = $_REQUEST["games"];
+	$raw_name = $_REQUEST["game"];
 
 	if (empty($raw_name))
 	{

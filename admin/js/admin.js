@@ -166,6 +166,15 @@ $(document).ready(function(){
 		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult);
 	}
 
+	function getNewTrigger(event)
+	{
+		event.preventDefault();
+
+		var trigger_name = $("#new_ac_trigger").val();
+
+		createNewTrigger(trigger_name,setResult);
+	}
+
 	function getFile(event) //Upload for new Keys
 	{
 		event.stopPropagation();
@@ -308,6 +317,19 @@ $(document).ready(function(){
 			data: {
 				ac_id:item,
 				u_name:name
+			},
+			success: fn
+		});
+	}
+
+	function createNewTrigger(trigger_name,fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: "admin/achievement/edit/create_trigger.php",
+			dataType: "json",
+			data: {
+				n_trigger:trigger_name
 			},
 			success: fn
 		});
@@ -525,5 +547,6 @@ $(document).ready(function(){
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
+	$(document).on("click","#create_new_trigger",getNewTrigger);
 
 });

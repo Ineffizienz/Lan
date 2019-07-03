@@ -325,9 +325,9 @@
 				$gameInfo = getGameInfoById($con,$pref);
 				if (!isset($output))
 				{
-					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["name"]), $part);
+					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
 				} else {
-					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["name"]), $part);
+					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
 				}
 				
 			}
