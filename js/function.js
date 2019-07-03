@@ -231,7 +231,7 @@ $(document).ready(function(){
 				cache: false,
 				contentType: false,
 				processData: false,
-				data: FileList,
+				data: file,
 				success: fn
 			});
 		}
