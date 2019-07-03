@@ -181,7 +181,7 @@ $(document).ready(function(){
 
 			image_data.append("file",image);
 
-			postAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
+			postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
 		}
 
 /*#############################################################################################
@@ -217,10 +217,21 @@ $(document).ready(function(){
 				type: "post",
 				url: endpoint,
 				dataType: 'json',
+				data: obj,
+				success: fn
+			});
+		}
+
+		function postFileAjax(file, endpoint, fn)
+		{
+			return $.ajax({
+				type: "post",
+				url: endpoint,
+				dataType: 'json',
 				cache: false,
 				contentType: false,
 				processData: false,
-				data: obj,
+				data: file,
 				success: fn
 			});
 		}
