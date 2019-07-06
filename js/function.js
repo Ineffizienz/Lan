@@ -401,7 +401,6 @@ $(document).ready(function(){
 	$("#reject").on("click", showGamekeyOnClick);
 	$("#join").on("click", chooseTeam);
 	$("#changeStatus").on("change",changeStatus);
-	$(document).on("change",changeStatus);
 	$("#delete").on("click",removeTeam);
 	$("#edit_settings").on("click",changePopup);
 	
