@@ -194,6 +194,7 @@ $(document).ready(function(){
 
 		var tm_game = $("#tm_game").find("option:selected").attr("value");
 		var tm_mode = $("#tm_mode").find("option:selected").attr("value");
+		var tm_mode_details = $("#tm_mode_details").find("option:selected").attr("value");
 		var tm_min_player = $("#tm_min_player").find("option:selected").attr("value");
 		var tm_date = $("#tm_date").val();
 		var tm_time_hour = $("#tm_time_hour").val();
@@ -202,7 +203,7 @@ $(document).ready(function(){
 
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),setResult);
+		createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,getFileData(input_id),setResult);
 	}
 
 	function getDelTmData(event)
@@ -431,12 +432,12 @@ $(document).ready(function(){
 		});
 	}
 
-	function createTm(tm_game,tm_mode,tm_min_player,tm_datetime,image_data,fn)
+	function createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,image_data,fn)
 	{
 		return $.ajax({
 			type: "post",
 			dataType: "json",
-			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&mode_details=" + tm_mode_details + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
 			cache: false,
 			contentType: false,
 			processData: false,

@@ -214,5 +214,12 @@ if(mysqli_query($con,$sql))
 } else {
 	echo "Beim Umbenennen der Spalte <i>ac_categorie</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
 }
+$sql = "ALTER TABLE tm ADD mode_details INT(11) NULL AFTER mode";
+if(mysqli_query($con,$sql))
+{
+	echo "Die Spalte <i>mode_details</i> wurde erfolgreich hinzugefügt.<br>";
+} else {
+	echo "Beim Hinzufügen der Spalte <i>mode_details</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+}
 
 ?>

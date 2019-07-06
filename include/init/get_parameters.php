@@ -788,7 +788,7 @@ function getTournamentModes($con,$game)
 
 function getTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, player_count FROM tm");
+	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, mode_details, player_count FROM tm");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$tms[] = $row;
