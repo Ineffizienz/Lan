@@ -262,6 +262,16 @@ function getGameData($con)
 
 	return $gameData;
 }
+function getFullGameData($con)
+{
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gameData[] = $row;
+	}
+	
+	return $gameData;
+}
 function getGameID($con,$game)
 {
 	$result = mysqli_query($con,"SELECT ID FROM games WHERE name = '$game'");

@@ -342,7 +342,7 @@ function createGame($con,$new_game,$new_raw_name)
 
 function displayTmGames($con)
 {
-	$games = getGameData($con);
+	$games = getFullGameData($con);
 
 	if (empty($games))
 	{
