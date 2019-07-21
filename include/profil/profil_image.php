@@ -10,8 +10,6 @@
 	$achievement = new Progress();
 	$player_id = $_SESSION["player_id"];
 
-	print_r($_FILES);
-
 	$resultValidateImage = validateImage($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION));
 	if($resultValidateImage == "1")
 	{

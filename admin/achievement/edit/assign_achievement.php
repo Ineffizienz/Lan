@@ -9,10 +9,10 @@
 
 	if(isset($_REQUEST["ac_id"]))
 	{
-		if(isset($_REQUEST["u_name"]))
+		if(isset($_REQUEST["u_id"]))
 		{
 			$ac_id = $_REQUEST["ac_id"];
-			$user_id = $_REQUEST["u_name"];
+			$user_id = $_REQUEST["u_id"];
 
 			$user_ac = getUserAchievements($con,$user_id);
 

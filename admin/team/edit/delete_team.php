@@ -6,12 +6,12 @@ include(INC . "connect.php");
 
 $message = new message();
 
-if (empty($_REQUEST["id"]))
+if (empty($_REQUEST["teamId"]))
 {
 	$message->getMessageCode("ERR_ADMIN_NO_TEAM_SELECTED");
 	echo json_encode(array("message" => $message->displayMessage()));
 } else {
-	$id = $_REQUEST["id"];
+	$id = $_REQUEST["teamId"];
 	$sql = "UPDATE player SET team_id = NULL WHERE team_id = '$id'";
 	if(mysqli_query($con,$sql))
 	{
