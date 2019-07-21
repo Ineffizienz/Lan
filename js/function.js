@@ -1,43 +1,40 @@
 $(document).ready(function(){
 
-	$.getScript("js/controller.js", function() {
-	
-		var obj = {};
+	var obj = {};
 
-		function checkInput(accountname,password,email)
+	function checkInput(accountname,password,email)
+	{
+		var validate;
+		if (accountname == "")
 		{
-			var validate;
-			if (accountname == "")
+			validate = "Du hast vergessen einen Accountnamen einzutragen";
+			return validate;
+		} else {
+			if (accountname.length < 3)
 			{
-				validate = "Du hast vergessen einen Accountnamen einzutragen";
-				return validate;
+				return "Dein Accoutname ist zu kurz.";
 			} else {
-				if (accountname.length < 3)
+				if (password == "")
 				{
-					return "Dein Accoutname ist zu kurz.";
+					return "Du hast kein Passwort angegeben.";
 				} else {
-					if (password == "")
+					if(password.length < 6)
 					{
-						return "Du hast kein Passwort angegeben.";
+						return "Dein Passwort ist zu kurz.";
 					} else {
-						if(password.length < 6)
+						if (password == accountname)
 						{
-							return "Dein Passwort ist zu kurz.";
+							return "Dein Passwort und dein Accountname sollten sich schon unterscheiden.";
 						} else {
-							if (password == accountname)
+							if (email == "")
 							{
-								return "Dein Passwort und dein Accountname sollten sich schon unterscheiden.";
+								return "Du hast keine Email angegeben";
 							} else {
-								if (email == "")
+								if (email.length < 8) // @ prüfen wäre besser
 								{
-									return "Du hast keine Email angegeben";
+									return "Das ist keine Mail!";
 								} else {
-									if (email.length < 8) // @ prüfen wäre besser
-									{
-										return "Das ist keine Mail!";
-									} else {
-										return true;
-									}
+									return true;
 								}
 							}
 						}
@@ -45,382 +42,381 @@ $(document).ready(function(){
 				}
 			}
 		}
+	}
 
 
 /*#############################################################################################
 #################################### World of Warcraft ######################################## 
 ###############################################################################################*/
-		
-		function getWowData(event)
+	
+	function getWowData(event)
+	{
+		event.preventDefault();
+
+		var accountname = $("#accountname").val();
+		var password = $("#password").val();
+		var email = $("#email").val();
+
+		var validate = checkInput(accountname,password,email);
+		if (validate == true)
 		{
-			event.preventDefault();
-
-			var accountname = $("#accountname").val();
-			var password = $("#password").val();
-			var email = $("#email").val();
-
-			var validate = checkInput(accountname,password,email);
-			if (validate == true)
-			{
-				obj = {accountname,password,email};
-				postAjax(obj,getEndpoint("reg_wow_account"),sucRegAcc);
-			} else {
-				throwError(validate);
-			}
+			obj = {accountname,password,email};
+			postAjax(obj,getEndpoint("reg_wow_account"),sucRegAcc);
+		} else {
+			throwError(validate);
 		}
+	}
 
 /*#############################################################################################
 #################################### Game-Key ################################################# 
 ###############################################################################################*/
-		
-		function showGamekeyOnChange(event)
-		{
-			event.preventDefault();
+	
+	function showGamekeyOnChange(event)
+	{
+		event.preventDefault();
 
-			var game = $(this).find('option:selected').attr("value");
+		var game = $(this).find('option:selected').attr("value");
 
-			obj = {game};
+		obj = {game};
 
-			getAjax(obj, getEndpoint("get_gamekey"), showKey);
-		}
+		getAjax(obj, getEndpoint("get_gamekey"), showKey);
+	}
 
-		function showGamekeyOnClick(event)
-		{
-			event.preventDefault();
+	function showGamekeyOnClick(event)
+	{
+		event.preventDefault();
 
-			var game = $("#keygen").val();
+		var game = $("#keygen").val();
 
-			obj = {game};
+		obj = {game};
 
-			getAjax(obj, getEndpoint("reject_key"), displayResponse);
-		}
+		getAjax(obj, getEndpoint("reject_key"), displayResponse);
+	}
 
 /*#############################################################################################
 #################################### Teams #################################################### 
 ###############################################################################################*/
 
-		function chooseTeam(event)
-		{
-			event.preventDefault();
+	function chooseTeam(event)
+	{
+		event.preventDefault();
 
-			getAjax(obj,getEndpoint("join_team"),displayJoinedTeam);
-		}
+		getAjax(obj,getEndpoint("join_team"),displayJoinedTeam);
+	}
 
-		function getLeaveData(event)
-		{
-			event.preventDefault();
-			
-			var team = $("#team_id").val();
+	function getLeaveData(event)
+	{
+		event.preventDefault();
+		
+		var team = $("#team_id").val();
 
-			obj = {team};
-			
-			getAjax(obj,getEndpoint("leave_team"),reloadTeamName);
-		}
+		obj = {team};
+		
+		getAjax(obj,getEndpoint("leave_team"),reloadTeamName);
+	}
 
-		function removeTeam(event)
-		{
-			event.preventDefault();
+	function removeTeam(event)
+	{
+		event.preventDefault();
 
-			var team = $('#name').val();
+		var team = $('#name').val();
 
-			obj = {team};
+		obj = {team};
 
-			getAjax(obj, getEndpoint("delete_team"), displayResponse);
-		}
+		getAjax(obj, getEndpoint("delete_team"), displayResponse);
+	}
 
-		function retrieveTeam(event) //Testcase
-		{
-			event.preventDefault();
+	function retrieveTeam(event) //Testcase
+	{
+		event.preventDefault();
 
-			var newTeam = {};
+		var newTeam = {};
 
-			var team = $('#t_name').val();
+		var team = $('#t_name').val();
 
-			newTeam = {team};
+		newTeam = {team};
 
-			postAjax(newTeam, getEndpoint("create_team"), displayResponse);
-		}
+		postAjax(newTeam, getEndpoint("create_team"), displayResponse);
+	}
 
 /*#############################################################################################
 #################################### Status ################################################### 
 ###############################################################################################*/
 
-		function changeStatus(event)
-		{
-			event.preventDefault();
+	function changeStatus(event)
+	{
+		event.preventDefault();
 
-			var status = $(this).find('option:selected').attr("value");
+		var status = $(this).find('option:selected').attr("value");
 
-			obj = {status};
+		obj = {status};
 
-			getAjax(obj, getEndpoint("get_p_status"),displayStatus);
-		}
+		getAjax(obj, getEndpoint("get_p_status"),displayStatus);
+	}
 
 /*#############################################################################################
 #################################### User ##################################################### 
 ###############################################################################################*/
 
-		function getNewUser(event)
-		{
-			event.preventDefault();
+	function getNewUser(event)
+	{
+		event.preventDefault();
 
-			var new_username = $('#newuser').val();
+		var new_username = $('#newuser').val();
 
-			obj = {new_username};
+		obj = {new_username};
 
-			postAjax(obj,getEndpoint("change_username"),displayChanges);
-		}
+		postAjax(obj,getEndpoint("change_username"),displayChanges);
+	}
 
-		function getImage(event)
-		{
-			event.preventDefault();
-			event.stopPropagation();
-			
-			var image = $(this).prop('files')[0];
-			var image_data = new FormData();
+	function getImage(event)
+	{
+		event.preventDefault();
+		event.stopPropagation();
+		
+		var image = $(this).prop('files')[0];
+		var image_data = new FormData();
 
-			image_data.append("file",image);
+		image_data.append("file",image);
 
-			postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
-		}
+		postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
+	}
 
 /*#############################################################################################
 #################################### Preferences ############################################## 
 ###############################################################################################*/
+	
+	function getCheckedGame(event)
+	{
+		event.preventDefault();
+
+		var checkedGame = $(this).attr("id");
+
+		obj = {checkedGame};
 		
-		function getCheckedGame(event)
+		addPref(obj,getEndpoint("add_pref"),reactToChange);
+	}
+
+
+	
+	function getAjax(obj, endpoint, fn){
+		return $.ajax({
+			type: "get",
+			url: endpoint,
+			dataType: "json",
+			data: obj,
+			success: fn
+		});
+	}
+
+	function postAjax(obj, endpoint, fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: endpoint,
+			dataType: 'json',
+			data: obj,
+			success: fn
+		});
+	}
+
+	function postFileAjax(file, endpoint, fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: endpoint,
+			dataType: 'json',
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: file,
+			success: fn
+		});
+	}
+
+	//Output-Funktion
+	function reactToChange(output) 	{
+		
+		displayMessage(output.message);
+
+		$("#cloud_container").load(window.location.href + ' .cloud');
+	}
+	
+	function throwError(error)
+	{
+		$('#error').show();
+		$('#error').html(error);
+		$('#error').fadeOut(7000);
+	}
+
+	function showKey(response) {
+		$("#display_key").slideDown();
+		$("#displayKey").html(response.key);
+
+		$('#reject').show();
+	}
+
+	function displayMessage(message) {
+		$("#result").show();
+		$("#result").html(message);
+		$("#result").fadeOut(7000);
+	}
+
+	function displayAchievement(achievement) {
+		
+		if(!achievement == "")
 		{
-			event.preventDefault();
-
-			var checkedGame = $(this).attr("id");
-
-			obj = {checkedGame};
-			
-			addPref(obj,getEndpoint("add_pref"),reactToChange);
-		}
-
-
-		
-		function getAjax(obj, endpoint, fn){
-			return $.ajax({
-				type: "get",
-				url: endpoint,
-				dataType: "json",
-				data: obj,
-				success: fn
+			$("#popup_container").html(achievement).slideDown("slow", function() {
+				$("#popup_container").delay(3000).slideUp("slow");
 			});
 		}
+	}
 
-		function postAjax(obj, endpoint, fn)
+	function displayProfilImage() {
+		$(".profil_image_container").load(window.location.href + ' ' + ".profil_image");
+	}
+
+	function sucRegAcc(response)
+	{
+		displayMessage(response.message);
+	}
+	
+	function displayResponse(response) {
+
+		if(response.image)
 		{
-			return $.ajax({
-				type: "post",
-				url: endpoint,
-				dataType: 'json',
-				data: obj,
-				success: fn
-			});
-		}
-
-		function postFileAjax(file, endpoint, fn)
-		{
-			return $.ajax({
-				type: "post",
-				url: endpoint,
-				dataType: 'json',
-				cache: false,
-				contentType: false,
-				processData: false,
-				data: file,
-				success: fn
-			});
-		}
-
-		//Output-Funktion
-		function reactToChange(output) 	{
-			
-			displayMessage(output.message);
-
-			$("#cloud_container").load(window.location.href + ' .cloud');
+			displayProfilImage();
 		}
 		
-		function throwError(error)
+		displayMessage(response.message);
+
+		if(response.achievement)
 		{
-			$('#error').show();
-			$('#error').html(error);
-			$('#error').fadeOut(7000);
+			displayAchievement(response.achievement);
 		}
 
-		function showKey(response) {
-			$("#display_key").slideDown();
-			$("#displayKey").html(response.key);
+		$("#displayKey").html(response.key);
 
-			$('#reject').show();
-		}
+		$('#t_name').val("");
+		$('#name').val("");
 
-		function displayMessage(message) {
-			$("#result").show();
-			$("#result").html(message);
-			$("#result").fadeOut(7000);
-		}
+	}
 
-		function displayAchievement(achievement) {
-			
-			if(!achievement == "")
-			{
-				$("#popup_container").html(achievement).slideDown("slow", function() {
-					$("#popup_container").delay(3000).slideUp("slow");
-				});
-			}
-		}
+	function displayStatus(stat)
+	{
+		$("#status_circle").css("background-color",stat.color);
+	}
 
-		function displayProfilImage() {
-			$(".profil_image_container").load(window.location.href + ' ' + ".profil_image");
-		}
+	function displayJoinedTeam(response) {
+		displayMessage(response.message);
 
-		function sucRegAcc(response)
+		$("#teams").load(location.href + " #teams");
+	}
+
+	function reloadTeamName(response) {
+		displayMessage(response.message);
+
+		$("#t_name").load(location.href + " #t_name");
+		$("#t_captain").load(location.href + " #t_captain");
+		$("#t_member").load(location.href + " #t_member");
+	}
+
+	function displayChanges(response)
+	{
+		displayMessage(response.message);
+		if(response.achievement)
 		{
-			displayMessage(response.message);
+			displayAchievement(response.achievement);
 		}
 		
-		function displayResponse(response) {
-
-			if(response.image)
-			{
-				displayProfilImage();
-			}
-			
-			displayMessage(response.message);
-
-			if(response.achievement)
-			{
-				displayAchievement(response.achievement);
-			}
-
-			$("#displayKey").html(response.key);
-
-			$('#t_name').val("");
-			$('#name').val("");
-
-		}
-
-		function displayStatus(stat)
-		{
-			$("#status_circle").css("background-color",stat.color);
-		}
-
-		function displayJoinedTeam(response) {
-			displayMessage(response.message);
-
-			$("#teams").load(location.href + " #teams");
-		}
-
-		function reloadTeamName(response) {
-			displayMessage(response.message);
-
-			$("#t_name").load(location.href + " #t_name");
-			$("#t_captain").load(location.href + " #t_captain");
-			$("#t_member").load(location.href + " #t_member");
-		}
-
-		function displayChanges(response)
-		{
-			displayMessage(response.message);
-			if(response.achievement)
-			{
-				displayAchievement(response.achievement);
-			}
-			
-			$("#settings_change_popup").hide(0,function(){
-				$("#content").css("opacity", "1");
-				$("#user").load(location.href + " #user");
-				$("#newuser").val("");
-			});
-		}
-
-		function changePopup(event)
-		{
-			event.preventDefault();
-
-			$("#settings_change_popup").show();
-			$("#settings_change_popup").css("opacity","1");
-			$("#content").css("opacity", "0.5");
-		}
-
-		function closePopup(event)
-		{
-			event.preventDefault();
-
-			$("#settings_change_popup").hide();
-			$("#popup_response").load(location.href + " #popup_response");
+		$("#settings_change_popup").hide(0,function(){
 			$("#content").css("opacity", "1");
 			$("#user").load(location.href + " #user");
-		}
+			$("#newuser").val("");
+		});
+	}
 
-		function showName(event)
+	function changePopup(event)
+	{
+		event.preventDefault();
+
+		$("#settings_change_popup").show();
+		$("#settings_change_popup").css("opacity","1");
+		$("#content").css("opacity", "0.5");
+	}
+
+	function closePopup(event)
+	{
+		event.preventDefault();
+
+		$("#settings_change_popup").hide();
+		$("#popup_response").load(location.href + " #popup_response");
+		$("#content").css("opacity", "1");
+		$("#user").load(location.href + " #user");
+	}
+
+	function showName(event)
+	{
+		event.preventDefault();
+
+		$(this).children().show();
+	}
+
+	function hideName(event)
+	{
+		event.preventDefault();
+
+		$(this).children().hide();
+	}
+
+	function showPrefs(event)
+	{
+		event.preventDefault();
+
+		$("#selBar").slideToggle();
+	}
+
+	function keyEnter(e,control)
+	{
+		if(e.which == 13)
 		{
 			event.preventDefault();
 
-			$(this).children().show();
-		}
-
-		function hideName(event)
-		{
-			event.preventDefault();
-
-			$(this).children().hide();
-		}
-
-		function showPrefs(event)
-		{
-			event.preventDefault();
-
-			$("#selBar").slideToggle();
-		}
-
-		function keyEnter(e,control)
-		{
-			if(e.which == 13)
+			if(control == "new_user") 
 			{
-				event.preventDefault();
-
-				if(control == "new_user") 
-				{
-					getNewUser(event);
-				} else {
-					retrieveTeam(event);
-				}
+				getNewUser(event);
+			} else {
+				retrieveTeam(event);
 			}
 		}
+	}
 
-		//Create new team
-		$("#create-team").on("click", retrieveTeam);
-		$("#t_name").keypress(function(e) {
-			keyEnter(e,"team_name");
-		});
-		//
-		$(document).on("change","#keygen", showGamekeyOnChange);
-		$("#reject").on("click", showGamekeyOnClick);
-		$("#join").on("click", chooseTeam);
-		$("#changeStatus").on("change",changeStatus);
-		$(document).on("change",changeStatus);
-		$("#delete").on("click",removeTeam);
-		$("#edit_settings").on("click",changePopup);
-		
-		//Change username in settings
-		$("#change_username").on("click",getNewUser);
-		$("#newuser").keypress(function(e) {
-			keyEnter(e,"new_user");
-		});
-
-
-		$("#close_popup").on("click",closePopup);
-		$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
-		$("#profil_image").on("change",getImage);
-		$(".leave_team").on("click",getLeaveData);
-		$(document).on("click",".add_pref",showPrefs);
-		$(document).on("change",".checkmark_container input",getCheckedGame);
-		$(".sbm").on("click",getWowData);
+	//Create new team
+	$("#create-team").on("click", retrieveTeam);
+	$("#t_name").keypress(function(e) {
+		keyEnter(e,"team_name");
 	});
+	//
+	$(document).on("change","#keygen", showGamekeyOnChange);
+	$("#reject").on("click", showGamekeyOnClick);
+	$("#join").on("click", chooseTeam);
+	$("#changeStatus").on("change",changeStatus);
+	$("#delete").on("click",removeTeam);
+	$("#edit_settings").on("click",changePopup);
+	
+	//Change username in settings
+	$("#change_username").on("click",getNewUser);
+	$("#newuser").keypress(function(e) {
+		keyEnter(e,"new_user");
+	});
+
+
+	$("#close_popup").on("click",closePopup);
+	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
+	$("#profil_image").on("change",getImage);
+	$(".leave_team").on("click",getLeaveData);
+	$(document).on("click",".add_pref",showPrefs);
+	$(document).on("change",".checkmark_container input",getCheckedGame);
+	$(".sbm").on("click",getWowData);
 });
 

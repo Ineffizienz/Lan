@@ -42,6 +42,7 @@ if (isset($_REQUEST["game"]))
             // Requests parameters game and mode from URL
             $tm_game = $_REQUEST["game"];
             $tm_mode = $_REQUEST["mode"];
+            $tm_mode_details = $_REQUEST["mode_details"];
             $tm_min_player = $_REQUEST["min_player"];
             $datetime = strtotime($_REQUEST["datetime"]);
             $tm_starttime = date("Y-m-d H:i:s", $datetime);
@@ -49,14 +50,14 @@ if (isset($_REQUEST["game"]))
             // Checks if image_data is 0 or contains an image
             if(!isset($_FILES["file"]))
             {
-                $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode',NULL,'$tm_min_player','$tm_starttime')";
+                $sql = "INSERT INTO tm (game, mode, mode_details, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_mode_details',NULL,'$tm_min_player','$tm_starttime')";
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_CREATE_TM");
                     echo buildJSONOutput(array($message->displayMessage(),array("#tm_maintain","#create_tm_form"),array("#tm_list","#create_form")));
                 } else {
                     $message->getMessageCode("ERR_ADMIN_CREATE_TM");
-                    echo buildJSONOutput($message->displayMessage());
+                    echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                 }
             } else {
                 $result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION));
@@ -68,7 +69,7 @@ if (isset($_REQUEST["game"]))
                         move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
                     }
                     
-                    $sql = "INSERT INTO tm (game, mode, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_banner','$tm_min_player','$tm_starttime')";
+                    $sql = "INSERT INTO tm (game, mode, mode_details, banner, min_player, starttime) VALUES ('$tm_game','$tm_mode','$tm_mode_details','$tm_banner','$tm_min_player','$tm_starttime')";
                     if(mysqli_query($con,$sql))
                     {
                         $message->getMessageCode("SUC_ADMIN_CREATE_TM");

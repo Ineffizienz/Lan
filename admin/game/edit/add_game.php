@@ -41,14 +41,14 @@
 					move_uploaded_file($_FILES["file"]["tmp_name"], ICON . $_FILES["file"]["name"]);
 					$path = $_FILES["file"]["name"];
 					
-					$sql = "INSERT INTO games (name,raw_name,icon,has_table) VALUES ('$new_game','$new_raw_name','$path','$has_table'";
+					$sql = "INSERT INTO games (name,raw_name,icon,has_table) VALUES ('$new_game','$new_raw_name','$path','$has_table')";
 					if(mysqli_query($con,$sql))
 					{
 						$message->getMessageCode("SUC_ADMIN_CREATE_NEW_GAME");
 						echo $message->displayMessage();
 					} else {
 						$message->getMessageCode("ERR_ADMIN_DB");
-						echo $message->displayMessage();
+						echo $message->displayMessage() . mysqli_error($con);
 					}
 					
 				} else {
@@ -63,7 +63,7 @@
 					echo $message->displayMessage();
 				} else {
 					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage();
+					echo $message->displayMessage() . mysqli_error($con);
 				}
 			}
 		}

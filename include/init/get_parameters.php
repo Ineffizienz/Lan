@@ -262,6 +262,16 @@ function getGameData($con)
 
 	return $gameData;
 }
+function getFullGameData($con)
+{
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gameData[] = $row;
+	}
+	
+	return $gameData;
+}
 function getGameID($con,$game)
 {
 	$result = mysqli_query($con,"SELECT ID FROM games WHERE name = '$game'");
@@ -293,7 +303,18 @@ function getGameInfoById($con,$game_id)
 	return $gameinfo;
 }
 
-function getRawName($con) //bezieht die Spaltennamen zu allen Spielen, die im System hinterlegt sind (raw_name = teil1_teil2) / function.php/verifyGame + admin/key_status.php
+function getblankRawName($con) //admin/key_status.php
+{
+	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE has_table = '1'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$raw_name[] = $row["raw_name"];
+	}
+
+	return $raw_name;
+}
+
+function getRawName($con) //bezieht die Spaltennamen zu allen Spielen, die im System hinterlegt sind (raw_name = teil1_teil2) / function.php/verifyGame
 {
 	$result = mysqli_query($con,"SELECT raw_name FROM games ORDER BY name");
 	while($row=mysqli_fetch_array($result))
@@ -788,7 +809,7 @@ function getTournamentModes($con,$game)
 
 function getTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, player_count FROM tm");
+	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, mode_details, player_count FROM tm");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$tms[] = $row;
