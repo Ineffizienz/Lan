@@ -177,8 +177,19 @@ $(document).ready(function(){
 		var input_id = "#list";
 		var game = $("#clear").val();
 
-		uploadFile(getFileData(input_id),game,displayResult); // TO DO
+		var image = $(input_id).prop('files')[0];
+		var form_data = new FormData();
 
+		form_data.append("game",game);
+		
+		if($(input_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("upload_keys"),displayResult);
 	}
 
 /*#############################################################################################
@@ -197,7 +208,23 @@ $(document).ready(function(){
 		var ac_message = $("#ac_message").val();
 		var image_id = "#ac_image";
 
-		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult); // TO DO
+		var image = $(image_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("ac_name",ac_name);
+		form_data.append("ac_cat",ac_cat);
+		form_data.append("ac_trigger",ac_trigger);
+		form_data.append("ac_visible",ac_visible);
+		form_data.append("ac_message",ac_message);
+		
+		if($(image_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
 	}
 
 	function getSelectedItems(event)
@@ -232,7 +259,19 @@ $(document).ready(function(){
 		var ac_id = $(this).attr("data-ac-id");
 		var image_id = "#ac_image_" + ac_id;
 
-		changeAcImage(ac_id,getFileData(image_id),setResult); // TO DO
+		var image = $(image_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("ac_id",ac_id);
+		
+		if($(image_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+	
+		postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
 	}
 
 	function getNewTrigger(event)
@@ -266,7 +305,26 @@ $(document).ready(function(){
 
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,getFileData(input_id),setResult); //TO DO
+		var image = $(input_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("tm_game",tm_game);
+		form_data.append("tm_mode",tm_mode);
+		form_data.append("tm_mode_details",tm_mode_details);
+		form_data.append("tm_min_player",tm_min_player);
+		form_data.append("tm_date",tm_date);
+		form_data.append("tm_time_hour",tm_time_hour);
+		form_data.append("tm_time_minute",tm_time_minute);
+		form_data.append("tm_datetime",tm_datetime);
+		
+		if($(input_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("create_tournament"),setResult);
 	}
 
 	function getDelTmData(event)
@@ -302,62 +360,6 @@ $(document).ready(function(){
 
 //########################### Send Data ##################################################################
 	
-	function createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,data,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/create_achievement.php?ac_name=" + ac_name + "&ac_cat=" + ac_cat + "&ac_trigger=" + ac_trigger + "&ac_visible=" + ac_visible + "&ac_message=" + ac_message,
-			dataType: "json",
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: data,
-			success: fn
-		});
-	}
-
-	function uploadFile(data,game,fn)
-	{
-		return $.ajax({
-			type: "post",
-			dataType: "json",
-			url: "admin/key/create_keylist.php?game=" + game,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: data,
-			success: fn
-		});
-	}
-
-	function changeAcImage(ac_id,ac_image,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/change_acimage.php?ac_id=" + ac_id,
-			dataType: "json",
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: ac_image,
-			success: fn
-		});
-	}
-	
-	function createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,image_data,fn)
-	{
-		return $.ajax({
-			type: "post",
-			dataType: "json",
-			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&mode_details=" + tm_mode_details + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: image_data,
-			success: fn
-		});
-	}
-
 	function getAjax(obj, endpoint, fn){
 		return $.ajax({
 			type: "get",
