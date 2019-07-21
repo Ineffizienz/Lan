@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	var files;
+	var obj = {};
 
 	function getFileData(input_id)
 	{
@@ -14,26 +15,48 @@ $(document).ready(function(){
 			image_data.append("file",image);
 		}
 
+		//console.log(image_data);
+
 		return image_data;
 	}
 
+	function retrieveGameID(start)
+	{
+		var game_id = $(start).parents(".admin_game_data").find(".game_id").html();
+
+		return game_id;
+	}
+
+/*#############################################################################################
+#################################### User ##################################################### 
+###############################################################################################*/
+	
 	function getNumber(event)
 	{
 		event.preventDefault();
 
 		var c_name = $("#cover_name").val();
 
-		createNewPlayer(c_name,displayResult);
+		obj = {c_name};
+
+		postAjax(obj,getEndpoint("create_new_account"),displayResult);
 	}
 
 	function getId(event)
 	{
 		event.preventDefault();
 
-		var id = $(this).children("i").attr("id");
+		var player = $(this).children("i").attr("id");
 
-		deletePlayer(id,displayResult);
+		obj = {player};
+
+		postAjax(obj,getEndpoint("delete_player"),displayResult);
+
 	}
+
+/*#############################################################################################
+#################################### Teams #################################################### 
+###############################################################################################*/
 
 	function getTeamId(event)
 	{
@@ -41,8 +64,14 @@ $(document).ready(function(){
 
 		var teamId = $("#del_team").find('option:selected').attr("value");
 
-		deleteTeam(teamId,showResult);
+		obj = {teamId};
+
+		postAjax(obj,getEndpoint("delete_team"),showResult);
 	}
+	
+/*#############################################################################################
+#################################### Games #################################################### 
+###############################################################################################*/
 	
 	function getNewGame(event)
 	{
@@ -51,49 +80,58 @@ $(document).ready(function(){
 		
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
-		var image_id = "#new_game_icon";
 
-		addNewGame(game,raw_name,getFileData(image_id),displayResult);
+		var image = $("#new_game_icon").prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("game",game);
+		form_data.append("raw_name",raw_name);
+
+		if($("#new_game_icon").get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 	}
-	
-	function getSelectedItems(event)
+
+	function getNewRawName(event)
 	{
 		event.preventDefault();
-
-		var u_id = $("#user").find('option:selected').attr("value");
-		var ac_id = $("#ac").find('option:selected').attr("value");
 		
-		assignAchievement(ac_id,u_id,setResult);
+		var n_raw = $(this).siblings(".game_raw_name").val();
+		var game_id = retrieveGameId(this);
+
+		obj = {game_id,n_raw};
+
+		postAjax(obj,getEndpoint("update_rawname"),showResult);
 	}
 
-	function getChangedParam(event)
+	function getNewGameName(event)
+	{
+		event.preventDefault();
+		
+		var game_name = $(this).siblings(".game_name").val();
+		var reloadID = $(this).closest("td").children("span").attr("id");
+		var game_id = retrieveGameID(this);
+
+		obj = {game_id,game_name};
+
+		postAjax(obj,getEndpoint("update_gamename"),showResult(reloadID));
+	}
+
+	function getHasTable(event)
 	{
 		event.preventDefault();
 
-		var ac_id = $(this).attr("data-ac-id");
-		var param = $(this).attr("name");
-		var param_val = $(this).find("option:selected").attr("value");
+		var has_table = $(this).find('option:selected').attr("value");
+		var game_id = retrieveGameId(this);
 
-		changeParam(ac_id,param,param_val,setResult);
-	}
+		obj = {game_id,has_table};
 
-	function getChangedAcImage(event)
-	{
-		event.preventDefault();
-
-		var ac_id = $(this).attr("data-ac-id");
-		var image_id = "#ac_image_" + ac_id;
-
-		changeAcImage(ac_id,getFileData(image_id),setResult);
-	}
-	
-//############################ Game-Data ###################################
-	
-	function retrieveGameID(start)
-	{
-		var game_id = $(start).parents(".admin_game_data").find(".game_id").html();
-
-		return game_id;
+		postAjax(obj,getEndpoint("update_has_table"),displayResult);
 	}
 
 	function getAddonParam(event)
@@ -102,19 +140,12 @@ $(document).ready(function(){
 
 		var addon = $(this).find('option:selected').attr("value");
 
-		updateAddon(retrieveGameID(this),addon,displayResult);
+		obj = {addon};
+
+		postAjax(obj,getEndpoint("update_addon"),displayResult);
+
 	}
-	
 
-	function getHasTable(event)
-	{
-		event.preventDefault();
-
-		var has_table = $(this).find('option:selected').attr("value");
-
-		updateHasTable(retrieveGameID(this),has_table,displayResult);
-	}
-	
 	function getIconData(event)
 	{
 		event.stopPropagation();
@@ -122,35 +153,38 @@ $(document).ready(function(){
 		
 		var game_id = retrieveGameID(this);
 		var icon_id = "#lbl_" + $(this).siblings().attr("for");
-		
-		updateIcon(game_id,getFileData(this),showResult(icon_id));
+
+		var image = $(icon_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("game_id",game_id);
+
+		if($(icon_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon,id));
 	}
+
+	function getFile(event) //Upload for new Keys
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var input_id = "#list";
+		var game = $("#clear").val();
+
+		uploadFile(getFileData(input_id),game,displayResult); // TO DO
+
+	}
+
+/*#############################################################################################
+#################################### Achievements #############################################
+###############################################################################################*/
 	
-	function getNewRawName(event)
-	{
-		event.preventDefault();
-		
-		var n_raw = $(this).siblings(".game_raw_name").val();
-		
-		updateRawName(retrieveGameID(this),n_raw,showResult);
-	}
-	
-	function getNewGameName(event)
-	{
-		event.preventDefault();
-		
-		var n_gname = $(this).siblings(".game_name").val();
-		var reloadID = $(this).closest("td").children("span").attr("id");
-
-		updateGameName(retrieveGameID(this),n_gname,showResult(reloadID));
-	}
-
-	function getGnData(event)
-	{
-		event.preventDefault();
-		
-	}
-
 	function getAcData(event)
 	{
 		event.stopPropagation();
@@ -163,29 +197,58 @@ $(document).ready(function(){
 		var ac_message = $("#ac_message").val();
 		var image_id = "#ac_image";
 
-		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult);
+		createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,getFileData(image_id),setResult); // TO DO
+	}
+
+	function getSelectedItems(event)
+	{
+		event.preventDefault();
+
+		var u_id = $("#user").find('option:selected').attr("value");
+		var ac_id = $("#ac").find('option:selected').attr("value");
+
+		obj = {u_id,ac_id};
+
+		postAjax(obj,getEndpoint("assign_achievement"),setResult);
+	}
+
+	function getChangedParam(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).attr("data-ac-id");
+		var param = $(this).attr("name");
+		var param_val = $(this).find("option:selected").attr("value");
+
+		obj = {ac_id,param,param_val};
+
+		postAjax(obj,getEndpoint("change_achievement"),setResult);
+	}
+
+	function getChangedAcImage(event)
+	{
+		event.preventDefault();
+
+		var ac_id = $(this).attr("data-ac-id");
+		var image_id = "#ac_image_" + ac_id;
+
+		changeAcImage(ac_id,getFileData(image_id),setResult); // TO DO
 	}
 
 	function getNewTrigger(event)
 	{
 		event.preventDefault();
 
-		var trigger_name = $("#new_ac_trigger").val();
+		var n_trigger = $("#new_ac_trigger").val();
 
-		createNewTrigger(trigger_name,setResult);
+		obj = {n_trigger};
+
+		postAjax(obj,getEndpoint("create_trigger"),setResult);
 	}
-
-	function getFile(event) //Upload for new Keys
-	{
-		event.stopPropagation();
-		event.preventDefault();
-
-		var input_id = "#list";
-		var game = $("#clear").val();
-
-		uploadFile(getFileData(input_id),game,displayResult);
-
-	}
+	
+/*#############################################################################################
+#################################### Tournaments ##############################################
+###############################################################################################*/
 
 	function getTmGame(event)
 	{
@@ -194,6 +257,7 @@ $(document).ready(function(){
 
 		var tm_game = $("#tm_game").find("option:selected").attr("value");
 		var tm_mode = $("#tm_mode").find("option:selected").attr("value");
+		var tm_mode_details = $("#tm_mode_details").find("option:selected").attr("value");
 		var tm_min_player = $("#tm_min_player").find("option:selected").attr("value");
 		var tm_date = $("#tm_date").val();
 		var tm_time_hour = $("#tm_time_hour").val();
@@ -202,7 +266,7 @@ $(document).ready(function(){
 
 		var input_id = "#tm_banner";
 
-		createTm(tm_game,tm_mode,tm_min_player,tm_datetime,getFileData(input_id),setResult);
+		createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,getFileData(input_id),setResult); //TO DO
 	}
 
 	function getDelTmData(event)
@@ -214,8 +278,11 @@ $(document).ready(function(){
 		// Define Elements for immediate reaction of the web-page
 		var reload_element = $(this).parents("table").attr("id");
 		var parent_reload = $(this).parents("div").attr("id");
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("delete_tournament"),setResult);
 		
-		deleteTm(tm_id,setResult);
 	}
 
 	function getStartingTmData(event)
@@ -225,61 +292,16 @@ $(document).ready(function(){
 		var tm_id = $(this).attr("name");
 
 		$(this).prop('disabled', true);
-		
-		startTm(tm_id,setResult);
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("start_tournament"),setResult);
+
 	}
 
-	function deleteTeam(teamId,fn)
-	{
-		return $.ajax({
-			type: "get",
-			dataType: "json",
-			url: "admin/team/edit/delete_team.php",
-			data: {
-				id:teamId
-			},
-			success: fn
-		});
-	}
+
+//########################### Send Data ##################################################################
 	
-	function addNewGame(game,raw_name,data,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/game/edit/add_game.php?game=" + game + "&raw_name=" + raw_name,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: data,
-			success: fn
-		});
-	}
-
-	function createNewPlayer(c_name, fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/player/edit/create_new_player.php",
-			data: {
-				cover: c_name
-			},
-			success: fn
-		});
-	}
-
-	function deletePlayer(id, fn)
-	{
-
-		return $.ajax({
-			type: "post",
-			url: "admin/player/edit/delete_player.php",
-			data: {
-				player:id
-			},
-			success: fn
-		});
-	}
-
 	function createAcData(ac_name,ac_cat,ac_trigger,ac_visible,ac_message,data,fn)
 	{
 		return $.ajax({
@@ -308,48 +330,6 @@ $(document).ready(function(){
 		});
 	}
 
-	function assignAchievement(item,name,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/assign_achievement.php",
-			dataType: "json",
-			data: {
-				ac_id:item,
-				u_name:name
-			},
-			success: fn
-		});
-	}
-
-	function createNewTrigger(trigger_name,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/create_trigger.php",
-			dataType: "json",
-			data: {
-				n_trigger:trigger_name
-			},
-			success: fn
-		});
-	}
-
-	function changeParam(ac_id,param,param_val,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/achievement/edit/change_param.php",
-			dataType: "json",
-			data: {
-				ac_id:ac_id,
-				param:param,
-				param_val: param_val
-			},
-			success: fn
-		});
-	}
-
 	function changeAcImage(ac_id,ac_image,fn)
 	{
 		return $.ajax({
@@ -363,80 +343,13 @@ $(document).ready(function(){
 			success: fn
 		});
 	}
-
-	function updateAddon(game_id,addon,fn)
+	
+	function createTm(tm_game,tm_mode,tm_mode_details,tm_min_player,tm_datetime,image_data,fn)
 	{
 		return $.ajax({
 			type: "post",
 			dataType: "json",
-			url: "admin/game/edit/change_addon.php",
-			data: {
-				game_id:game_id,
-				addon:addon
-			},
-			success: fn
-		});
-	}
-	
-	function updateHasTable(game_id,has_table,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/game/edit/change_hastable.php",
-			data: {
-				game_id:game_id,
-				has_table:has_table
-			},
-			success: fn
-		});
-	}
-	
-	function updateIcon(game_id,image_data,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/game/edit/update_icon.php?game_id=" + game_id,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: image_data,
-			success: fn
-		});
-	}
-	
-	function updateRawName(game_id,n_raw,fn)
-	{
-		return $.ajax({
-			type: "post",
-			url: "admin/game/edit/change_rawname.php",
-			data: {
-				game_id:game_id,
-				n_raw:n_raw
-			},
-			success: fn
-		});
-	}
-	
-	function updateGameName(game_id,n_gname,fn)
-	{
-		return $.ajax({
-			type: "post",
-			dataType: "json",
-			url: "admin/game/edit/change_gamename.php",
-			data: {
-				game_id:game_id,
-				game_name:n_gname
-			},
-			success: fn
-		});
-	}
-
-	function createTm(tm_game,tm_mode,tm_min_player,tm_datetime,image_data,fn)
-	{
-		return $.ajax({
-			type: "post",
-			dataType: "json",
-			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
+			url: "admin/tm/create/create_tm.php?game=" + tm_game + "&mode=" + tm_mode + "&mode_details=" + tm_mode_details + "&min_player=" + tm_min_player + "&datetime=" + tm_datetime,
 			cache: false,
 			contentType: false,
 			processData: false,
@@ -445,28 +358,37 @@ $(document).ready(function(){
 		});
 	}
 
-	function deleteTm(tm_id,fn)
-	{
+	function getAjax(obj, endpoint, fn){
 		return $.ajax({
-			type: "post",
+			type: "get",
+			url: endpoint,
 			dataType: "json",
-			url: "admin/tm/delete/delete_tm.php",
-			data: {
-				tm_id:tm_id
-			},
+			data: obj,
 			success: fn
 		});
 	}
 
-	function startTm(tm_id,fn)
+	function postAjax(obj, endpoint, fn)
 	{
 		return $.ajax({
 			type: "post",
-			dataType: "json",
-			url: "admin/tm/edit/start_tm.php",
-			data: {
-				tm_id:tm_id
-			},
+			url: endpoint,
+			dataType: 'json',
+			data: obj,
+			success: fn
+		});
+	}
+
+	function postFileAjax(file, endpoint, fn)
+	{
+		return $.ajax({
+			type: "post",
+			url: endpoint,
+			dataType: 'json',
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: file,
 			success: fn
 		});
 	}

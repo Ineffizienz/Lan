@@ -73,6 +73,20 @@ function translateGameMode($mode)
 	return $gameMode;
 }
 
+function translateGameModeDetails($mode_details)
+{
+	switch ($mode_details) {
+		case "1":
+			$gameModeDetails = "Keine Details";
+			break;
+		case "2":
+			$gameModeDetails = "zufällige Teams";
+			break;
+	}
+
+	return $gameModeDetails;
+}
+
 function displayAchievements($con)
 {
 
@@ -328,7 +342,7 @@ function createGame($con,$new_game,$new_raw_name)
 
 function displayTmGames($con)
 {
-	$games = getGameData($con);
+	$games = getFullGameData($con);
 
 	if (empty($games))
 	{
@@ -358,6 +372,7 @@ function displayTournaments($con)
 		}
 
 		$game_mode = translateGameMode($tournament["mode"]);
+		$game_mode_details = translateGameModeDetails($tournament["mode_details"]);
 
 		if(strtotime($tournament["starttime"]) < time())
 		{
@@ -368,9 +383,9 @@ function displayTournaments($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
 		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
 		}
 	}
 

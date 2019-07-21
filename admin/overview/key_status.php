@@ -2,7 +2,7 @@
 
 	$games = getGames($con);
 
-	$raw_name = getRawName($con);
+	$raw_name = getBlankRawName($con);
 
 	foreach ($raw_name as $table_head)
 	{

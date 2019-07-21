@@ -15,9 +15,18 @@
                 </div>
                 <div>
                     <select name="tm_mode" id="tm_mode">
-                            <option name="1">1 gegen 1
-                            <option name="2">2 gegen 2
-                            <option name="3">Teams
+                            <option value="1">1 gegen 1
+                            <option value="2">2 gegen 2
+                            <option value="3">Teams
+                    </select>
+                </div>
+                <div>
+                    <label for="tm_mode_details">Modus Details</label>
+                </div>
+                <div>
+                    <select name="tm_mode_details" id="tm_mode_details">
+                        <option value="1">keine Details</option>
+                        <option value="2">zufällige Teams</option>
                     </select>
                 </div>
                 <div>
@@ -31,12 +40,12 @@
                 </div>
                 <div>
                     <select name="tm_min_player" id="tm_min_player">
-                        <option name="0">0
-                        <option name="2">2
-                        <option name="4">4
-                        <option name="6">6
-                        <option name="8">8
-                        <option name="10">10
+                        <option value="0">0
+                        <option value="2">2
+                        <option value="4">4
+                        <option value="6">6
+                        <option value="8">8
+                        <option value="10">10
                     </select>
                 </div>
                 <div>
@@ -67,6 +76,9 @@
             </th>
             <th>
                 Modus
+            </th>
+            <th>
+                Modus Details
             </th>
             <th>
                 Startzeit
