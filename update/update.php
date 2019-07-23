@@ -94,11 +94,14 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
 
+		array("tbl_name"=>"test_table","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE test_table (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL, test_string VARCHAR(255) NOT NULL)"),
+
 	
 	### - ALTER STATEMENTS - ###
 
 		## RENAME TABLE
-		
+
+			array("tbl_name"=>"test_table_2","tbl_old"=>"test_table","clm_name"=>"0","clm_old"="0","statement"=>"RENAME TABLE test_table TO test_table_2"),
 		## ADD COLUMN
 			// Update 1.3
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"icon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD icon VARCHAR(255) CHARSET utf8mb4 NULL"),
@@ -121,7 +124,18 @@ $sql_statements = array(
 			// Update 1.5
 			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
 			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_period_id","clm_old"=>"starttime","statement"=>"ALTER TABLE tm CHANGE `starttime` `tm_period_id` INT(11) NOT NULL"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL")
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL"),
+		
+		## MODIFY COLUMN
+			// clm_old = 2 --> Änderung des Charsets
+			// clm_old = 3 --> Änderung zu ENUM
+			// Update 1.5
+			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_visibility","clm_old"=>"3","statement"=>"ALTER TABLE ac MODIFY ac_visibility ENUM('Sichtbar','Unsichtbar')"),
+			array("tbl_name"=>"tm_teamname","tbl_old"=>"0","clm_name"=>"name","clm_old"=>"2","statement"=>"ALTER TABLE tm_teamname MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"),
+			array("tbl_name"=>"status_name","tbl_old"=>"0","clm_name"=>"status_name","clm_old"=>"2","statement"=>"ALTER TABLE status_name MODIFY status_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"),
+			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"message","clm_old"=>"2","statement"=>"ALTER TABLE ac MODIFY message VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"),
+			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"title","clm_old"=>"2","statement"=>"ALTER TABLE ac MODIFY title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"),
+			array("tbl_name"=>"player","tbl_old"=>"0","clm_name"=>"name","clm_old"=>"2","statement"=>"ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin")
 	
 	### - DELETE STATEMENTS - ###
 );
@@ -132,11 +146,11 @@ function transformArray($con,$sql_statements)
 {
 	foreach ($sql_statements as $statement)
 	{
-		checkExistingTable($con,$statement["tbl_name"],$statement["tbl_old"],$statement["clm_name"],$statement["clm_old"],$statement["statement"]);
+		checkExistingField($con,$statement["tbl_name"],$statement["tbl_old"],$statement["clm_name"],$statement["clm_old"],$statement["statement"]);
 	}
 }
 
-function checkExistingTable($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
+function checkExistingField($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 {
 	if ($clm_name == 0)
 	{
@@ -145,20 +159,35 @@ function checkExistingTable($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 		{
 			if($tbl_old == 0)
 			{
-				execStatementTable($con,"c_tbl",$tbl_name,$sql);
+				execStatementTable($con,"c_tbl",$tbl_name,$tbl_old,$sql);
 			} else {
 				execStatementTable($con,"a_tbl_rename",$tbl_name,$tbl_old,$sql);
 			}
 		}
 	} else {
-		$result = mysqli_query($con,"SHOW CLOUMNS FROM `$tbl_name` LIKE '$clm_name'");
-		if(mysqli_num_rows($result) !== 1)
+		if($clm_old == 2)
 		{
-			if($clm_old == 0)
+			$result = mysqli_query($con,"SELECT character_set_name FROM information_schema.`COLUMNS` WHERE table_schema='project_ziphon' AND table_name ='$tbl_name' AND column_name='$clm_name'");
+			if(mysqli_num_rows($result) !== 1)
 			{
-				execStatementColumn($con,"a_clm_add",$tbl_name,$clm_name,$clm_old,$sql);
-			} else {
-				execStatementColumn($con,"a_clm_rename",$tbl_name,$clm_name,$clm_old,$sql);
+				execStatementColumn($con,"a_clm_charset",$tbl_name,$clm_name,$clm_old,$sql);
+			}
+		} elseif ($clm_old == 3) {
+			$result = mysqli_query($con,"SELECT character_set_name FROM information_schema.`COLUMNS` WHERE table_schema='project_ziphon' AND table_name ='$tbl_name' AND column_name='$clm_name' AND data_type='enum'");
+			if(mysqli_num_rows($result) !== 1)
+			{
+				execStatementColumn($con,"a_clm_enum",$tbl_name,$clm_name,$clm_old,$sql);
+			}
+		} else {
+			$result = mysqli_query($con,"SHOW CLOUMNS FROM `$tbl_name` LIKE '$clm_name'");
+			if(mysqli_num_rows($result) !== 1)
+			{
+				if($clm_old == 0)
+				{
+					execStatementColumn($con,"a_clm_add",$tbl_name,$clm_name,$clm_old,$sql);
+				} else {
+					execStatementColumn($con,"a_clm_rename",$tbl_name,$clm_name,$clm_old,$sql);
+				}
 			}
 		}
 	}
@@ -170,10 +199,10 @@ function execStatementTable($con,$param,$tbl_name,$tbl_name_old,$sql)
 	{
 		switch($param) {
 			case "c_tbl":
-				echo "Die Tabelle " . $tbl_name . " wurde erfolgreich erstellt.<br>";
+				echo "Die Tabelle <b>" . $tbl_name . "</b> wurde erfolgreich erstellt.<br>";
 				break;
 			case "a_tbl_rename":
-				echo "Die Tabelle " . $tbl_name_old . " wurde erfolgreich in " . $tbl_name . "umbenannt.<br>";
+				echo "Die Tabelle <b>" . $tbl_name_old . "</b> wurde erfolgreich in <b>" . $tbl_name . "</b> umbenannt.<br>";
 				break;
 			default:
 				echo "Keine Updates verfügbar.";
@@ -189,59 +218,22 @@ function execStatementColumn($con,$param,$tbl_name,$clm_name,$clm_name_old)
 	{
 		switch($param) {
 			case "a_clm_add":
-				echo "Die Spalte " . $clm_name . " wurde erfolgreich hinzugefügt.<br>";
+				echo "Die Spalte <b>" . $clm_name . "</b> wurde erfolgreich hinzugefügt.<br>";
 				break;
 			case "a_clm_rename":
-				echo "Die Spalte " . $clm_name_old . " wurde erfolgreich in " . $clm_name . " umbenannt.<br>";
+				echo "Die Spalte <b>" . $clm_name_old . "</b> wurde erfolgreich in <b>" . $clm_name . "</b> umbenannt.<br>";
 				break;
+			case "a_clm_charset":
+				echo "Das Charset der Spalte <b>" . $clm_name . "</b> wurde erfolgreich auf uft8mb4 geändert.<br>";
+				break;
+			case "a_clm_enum":
+				echo "Der Spalte <b>". $clm_name . "</b> wurde erfolgreich ein ENUM-Parameter hinzugefügt.<br>";
+				break;
+			default:
+				echo "Keine Updates verfügbar.";
 		}
 	} else {
 		echo mysqli_error($con);
 	}
 }
-
-// Charset-Änderungen
-$sql = "ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>name</i> in der Tabelle <i>player</i> ist jetzt in <b>utf8mb4_bin</b><br>";
-} else {
-	echo "Beim Ändern des charsets in <i>player->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE ac MODIFY title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>title</i> in der Tabelle <i>ac</i> ist jetzt in <b>utf8mb4_bin</b><br>";
-} else {
-	echo "Beim Ändern des charsets in <i>ac->title</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE ac MODIFY message VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>message</i> in der Tabelle <i>ac</i> ist jetzt in <b>utf8mb4_bin</b><br>";
-} else {
-	echo "Beim Ändern des charsets in <i>ac->message</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE status_name MODIFY status_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>status_name</i> in der Tabelle <i>status_name</i> ist jetzt in <b>utf8mb4_bin</b><br>";
-} else {
-	echo "Beim Ändern des charsets in <i>status_name->status_name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE tm_teamname MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>name</i> in der Tabelle <i>tm_teamname</i> ist jetzt in <b>utf8mb4_bin</b><br>";
-} else {
-	echo "Beim Ändern des charsets in <i>tm_teamname->name</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE ac MODIFY ac_visibility ENUM('Sichtbar','Unsichtbar')";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>ac_visibility</i> wurde erfolgreich auf ENUM gesetzt.<br>";
-} else {
-	echo "Beim ENUM-setzen der Spalte <i>ac_visibility</i> ist ein Fehler aufgreteten: <b>" . mysqli_error($con) . "</b><br>";
-}
-
 ?>
