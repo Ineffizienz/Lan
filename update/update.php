@@ -46,24 +46,8 @@ if(mysqli_query($con,$sql))
 	echo "Beim Erstellen der Tabelle <i>status_name</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
 }*/
 
-// Update 1.2
-/*$sql = "CREATE TABLE pref (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, user_id INT(11) NOT NULL, preferences VARCHAR(1024) NULL)";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Tabelle <i>pref</i> wurde erfolgreich erstellt.<br>";
-} else {
-	echo "Beim Erstellen der Tabelle <i>pref</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
-}*/
-
 // Update 1.3
-/*$sql = "ALTER TABLE games ADD icon VARCHAR(255) NULL";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>icon</i> wurde erfolgreich der Tabelle <i>games</i> hinzugefügt.<br>";
-} else {
-	echo "Beim Erstellen der Tabelle <i>pref</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
-}
-
+/*
 $sql = "ALTER TABLE games ADD has_table INT(11) NULL";
 if(mysqli_query($con,$sql))
 {
@@ -88,80 +72,132 @@ if(mysqli_query($con,$sql))
 			echo "Bei den Daten des Spiels " . $game  . " ist ein Fehler aufgetreten: " . $mysqli_error($con);
 		}
 	}*/
-// Update 1.4
-/*$sql = "CREATE TABLE ticket_id (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, ticket_id VARCHAR(255) NOT NULL)";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Tabelle <i>ticket_id</i> wurde erfolgreich erstellt.<br>";
-} else {
-	echo "Beim Erstellen der Tabelle <i>ticket_id</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
-}*/
 
-// Update 1.4.1
-/*$sql = "ALTER TABLE games ADD short_title VARCHAR(255) NULL AFTER raw_name ";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>short_title</i> wurde erfolgreich hinzugefügt.";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>short_title</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
-}*/
+// Update 1.5 /Lan 2020
+// Das array ist aufgebaut nach dem Muster: Tabellenname, alter Tabellenname, Spaltenname, alter Spaltenname, SQL-Statement
+$sql_statements = array(
+	### - CREATE-STATMENTS - ###
+		// Update 1.2
+		array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE pref (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, user_id INT(11) NOT NULL, preferences VARCHAR(1024) CHARSET utf8mb4 NULL)"),
 
-// Update 1.4.2 /Post-Lan 2019
-$sql = "CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game VARCHAR(255) NOT NULL, mode INT(11) NOT NULL)";
-if(mysqli_query($con,$sql))
+		// Update 1.4
+		array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE ticket_id (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, ticket_id VARCHAR(255) CHARSET utf8mb4 NOT NULL)"),
+
+		// Update 1.5
+		array("tbl_name"=>"ticket_id","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game VARCHAR(255) CHARSET utf8mb4 NOT NULL, mode INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm_paarung","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_paarung (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, team_1 INT(11) NOT NULL, team_2 INT(11) NOT NULL, tournament INT(11) NOT NULL, result INT(11) NOT NULL, period INT(11) NOT NULL, successor INT(11) NOT NULL, ressource INT(11) NOT NULL, matches_id INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm_period","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_period (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, time_from DATETIME NOT NULL, time_to DATETIME NOT NULL)"),
+		array("tbl_name"=>"tm_team","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_team (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, gamerslist_id INT(11) NOT NULL, team_name VARCHAR(255) CHARSET utf8mb4 NOT NULL, tournament_id INT(11) NOT NULL, lan_id INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm_game","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_game (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, ressource_id INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm_ressources","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_ressources (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, ressource_name VARCHAR(255) CHARSET utf8mb4 NOT NULL, server_ip VARCHAR(255) CHARSET uft8mb4 NOT NULL)"),
+		array("tbl_name"=>"tm_matches","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_matches (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, match_id INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
+		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
+
+	
+	### - ALTER STATEMENTS - ###
+
+		## RENAME TABLE
+		
+		## ADD COLUMN
+			// Update 1.3
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"icon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD icon VARCHAR(255) CHARSET utf8mb4 NULL"),
+
+			// Update 1.4.1
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"short_title","clm_old"=>"0","statement"=>"ALTER TABLE games ADD short_title VARCHAR(255) CHARSET utf8mb4 NULL AFTER raw_name"),
+
+			// Update 1.5
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"mode_details","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD mode_details INT(11) NULL AFTER mode"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"mode","clm_old"=>"0","statement"=>"ALTER table tm ADD mode INT(11) NOT NULL AFTER game"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"banner","clm_old"=>"0","statement"=>"ALTER table tm ADD banner VARCHAR(255) CHARSET utf8mb4 NULL AFTER mode"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"min_player","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD min_player INT(11) NOT NULL AFTER banner"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"starttime","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD starttime DATETIME NOT NULL AFTER min_player"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"end_date","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD end_date VARCHAR(255) CHARSET utf8mb4 NULL AFTER starttime"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"player_count","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD player_count INT(11) NULL AFTER min_player"),
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"addon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD addon INT(11) NULL AFTER short_title"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"lan_id","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD lan_id INT(11) NOT NULL AFTER tm_winner_team_id"),
+
+		## RENAME COLUMN
+			// Update 1.5
+			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_period_id","clm_old"=>"starttime","statement"=>"ALTER TABLE tm CHANGE `starttime` `tm_period_id` INT(11) NOT NULL"),
+			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL")
+	
+	### - DELETE STATEMENTS - ###
+);
+
+transformArray($con,$sql_statements);
+
+function transformArray($con,$sql_statements)
 {
-	echo "Tabelle <i>tm</i> erfolgreich erstellt.<br>";
-} else {
-	echo "Beim erstellen der Tabelle ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+	foreach ($sql_statements as $statement)
+	{
+		checkExistingTable($con,$statement["tbl_name"],$statement["tbl_old"],$statement["clm_name"],$statement["clm_old"],$statement["statement"]);
+	}
 }
-$sql = "ALTER table tm ADD mode INT(11) NOT NULL AFTER game";
-if(mysqli_query($con,$sql))
+
+function checkExistingTable($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 {
-	echo "Die Spalte <i>mode</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>mode</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+	if ($clm_name == 0)
+	{
+		$result = mysqli_query($con,"SELECT * FROM information_schema.tables WHERE table_schema = 'project_ziphon' AND table_name = '$tbl_name' LIMIT 1");
+		if(mysqli_num_rows($result) !== 1)
+		{
+			if($tbl_old == 0)
+			{
+				execStatementTable($con,"c_tbl",$tbl_name,$sql);
+			} else {
+				execStatementTable($con,"a_tbl_rename",$tbl_name,$tbl_old,$sql);
+			}
+		}
+	} else {
+		$result = mysqli_query($con,"SHOW CLOUMNS FROM `$tbl_name` LIKE '$clm_name'");
+		if(mysqli_num_rows($result) !== 1)
+		{
+			if($clm_old == 0)
+			{
+				execStatementColumn($con,"a_clm_add",$tbl_name,$clm_name,$clm_old,$sql);
+			} else {
+				execStatementColumn($con,"a_clm_rename",$tbl_name,$clm_name,$clm_old,$sql);
+			}
+		}
+	}
 }
-$sql = "ALTER table tm ADD banner VARCHAR(255) NULL AFTER mode";
-if(mysqli_query($con,$sql))
+
+function execStatementTable($con,$param,$tbl_name,$tbl_name_old,$sql)
 {
-	echo "Die Spalte <i>banner</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>banner</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
+	if(mysqli_query($con,$sql))
+	{
+		switch($param) {
+			case "c_tbl":
+				echo "Die Tabelle " . $tbl_name . " wurde erfolgreich erstellt.<br>";
+				break;
+			case "a_tbl_rename":
+				echo "Die Tabelle " . $tbl_name_old . " wurde erfolgreich in " . $tbl_name . "umbenannt.<br>";
+				break;
+			default:
+				echo "Keine Updates verfügbar.";
+		}
+	} else {
+		echo mysqli_error($con);
+	}
 }
-$sql = "ALTER TABLE tm ADD min_player INT(11) NOT NULL AFTER banner";
-if(mysqli_query($con,$sql))
+
+function execStatementColumn($con,$param,$tbl_name,$clm_name,$clm_name_old)
 {
-	echo "Die Spalte <i>min_player</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>min_player</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE tm ADD starttime DATETIME NOT NULL AFTER min_player";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>starttime</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>starttime</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE tm ADD end_date VARCHAR(255) NULL AFTER starttime";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>end_date</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>end_date</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE tm ADD player_count INT(11) NULL AFTER min_player";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>player_count</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>player_count</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con). "</b><br>";
-}
-$sql = "ALTER TABLE games ADD addon INT(11) NULL AFTER short_title";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>addon</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>addon</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con). "</b><br>";
+	if(mysqli_query($con,$sql))
+	{
+		switch($param) {
+			case "a_clm_add":
+				echo "Die Spalte " . $clm_name . " wurde erfolgreich hinzugefügt.<br>";
+				break;
+			case "a_clm_rename":
+				echo "Die Spalte " . $clm_name_old . " wurde erfolgreich in " . $clm_name . " umbenannt.<br>";
+				break;
+		}
+	} else {
+		echo mysqli_error($con);
+	}
 }
 
 // Charset-Änderungen
@@ -206,20 +242,6 @@ if(mysqli_query($con,$sql))
 	echo "Die Spalte <i>ac_visibility</i> wurde erfolgreich auf ENUM gesetzt.<br>";
 } else {
 	echo "Beim ENUM-setzen der Spalte <i>ac_visibility</i> ist ein Fehler aufgreteten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>ac_categorie</i> wurde erfolgreich in <i>ac_category</i> umbenannt.<br>";
-} else {
-	echo "Beim Umbenennen der Spalte <i>ac_categorie</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
-}
-$sql = "ALTER TABLE tm ADD mode_details INT(11) NULL AFTER mode";
-if(mysqli_query($con,$sql))
-{
-	echo "Die Spalte <i>mode_details</i> wurde erfolgreich hinzugefügt.<br>";
-} else {
-	echo "Beim Hinzufügen der Spalte <i>mode_details</i> ist ein Fehler aufgetreten: <b>" . mysqli_error($con) . "</b><br>";
 }
 
 ?>
