@@ -3,7 +3,7 @@
 include(dirname(__FILE__,2) . "/include/connect.php");
 
 // Update 1.1
-/*$sql = "CREATE TABLE status_name (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, status_id INT(11) NOT NULL, status_name VARCHAR(255) NOT NULL)";
+/*
 if(mysqli_query($con,$sql))
 {
 	echo "Die Tabelle <i>status_name</i> wurde erfolgreich erstellt.<br>";
@@ -48,35 +48,29 @@ if(mysqli_query($con,$sql))
 
 // Update 1.3
 /*
-$sql = "ALTER TABLE games ADD has_table INT(11) NULL";
-if(mysqli_query($con,$sql))
+$result = mysqli_query($con,"SELECT raw_name FROM games");
+while($row=mysqli_fetch_array($result))
 {
-	echo "Die Spalte <i>has_table</i> wurde erfolgreich der Tabelle <i>games</i> hinzugefügt.<br>";
-} else {
-	echo "Beim Erstellen der Tabelle <i>pref</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
+	$table_games[] = $row["raw_name"];
 }
-	
-	$result = mysqli_query($con,"SELECT raw_name FROM games");
-	while($row=mysqli_fetch_array($result))
+
+foreach ($table_games as $game)
+{
+	$sql = "UPDATE games SET has_table = '1' WHERE raw_name = '$game'";
+	if(mysqli_query($con,$sql))
 	{
-		$table_games[] = $row["raw_name"];
+		echo "Daten erfolgreich aktualisiert.<br>";
+	} else {
+		echo "Bei den Daten des Spiels " . $game  . " ist ein Fehler aufgetreten: " . $mysqli_error($con);
 	}
-	
-	foreach ($table_games as $game)
-	{
-		$sql = "UPDATE games SET has_table = '1' WHERE raw_name = '$game'";
-		if(mysqli_query($con,$sql))
-		{
-			echo "Daten erfolgreich aktualisiert.<br>";
-		} else {
-			echo "Bei den Daten des Spiels " . $game  . " ist ein Fehler aufgetreten: " . $mysqli_error($con);
-		}
-	}*/
+}*/
 
 // Update 1.5 /Lan 2020
 // Das array ist aufgebaut nach dem Muster: Tabellenname, alter Tabellenname, Spaltenname, alter Spaltenname, SQL-Statement
 $sql_statements = array(
 	### - CREATE-STATMENTS - ###
+		// Update 1.1
+		array("tbl_name"=>"status_name","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE status_name (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, status_id INT(11) NOT NULL, status_name VARCHAR(255) NOT NULL)"),
 		// Update 1.2
 		array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE pref (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, user_id INT(11) NOT NULL, preferences VARCHAR(1024) CHARSET utf8mb4 NULL)"),
 
@@ -93,7 +87,7 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_matches","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_matches (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, match_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
-
+		
 		array("tbl_name"=>"test_table","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE test_table (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL, test_string VARCHAR(255) NOT NULL)"),
 
 	
@@ -101,9 +95,10 @@ $sql_statements = array(
 
 		## RENAME TABLE
 
-			array("tbl_name"=>"test_table_2","tbl_old"=>"test_table","clm_name"=>"0","clm_old"="0","statement"=>"RENAME TABLE test_table TO test_table_2"),
+			array("tbl_name"=>"test_table_3","tbl_old"=>"test_table_2","clm_name"=>"0","clm_old"=>"0","statement"=>"RENAME TABLE test_table_2 TO test_table_3"),
 		## ADD COLUMN
 			// Update 1.3
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"has_table","clm_old"=>"0","statement"=>"ALTER TABLE games ADD has_table INT(11) NULL"),
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"icon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD icon VARCHAR(255) CHARSET utf8mb4 NULL"),
 
 			// Update 1.4.1
@@ -138,6 +133,11 @@ $sql_statements = array(
 			array("tbl_name"=>"player","tbl_old"=>"0","clm_name"=>"name","clm_old"=>"2","statement"=>"ALTER TABLE player MODIFY name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin")
 	
 	### - DELETE STATEMENTS - ###
+		## DELETE TABLE
+		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"table_to_delete","clm_name"=>"0","clm_old"=>"0","statement"=>"DROP TABLE table_to_delete")
+
+		## DELETE COLUMN
+		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"column_to_delete","statement"=>"DELETE column_to_delete FROM table");
 );
 
 transformArray($con,$sql_statements);
@@ -152,27 +152,32 @@ function transformArray($con,$sql_statements)
 
 function checkExistingField($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 {
-	if ($clm_name == 0)
+	if ($clm_name == "0")
 	{
 		$result = mysqli_query($con,"SELECT * FROM information_schema.tables WHERE table_schema = 'project_ziphon' AND table_name = '$tbl_name' LIMIT 1");
 		if(mysqli_num_rows($result) !== 1)
 		{
-			if($tbl_old == 0)
+			if($tbl_old == "0")
 			{
 				execStatementTable($con,"c_tbl",$tbl_name,$tbl_old,$sql);
 			} else {
-				execStatementTable($con,"a_tbl_rename",$tbl_name,$tbl_old,$sql);
+				if($tbl_name == "0")
+				{
+					execStatementTable($con,"d_tbl",$tbl_name,$tbl_old,$sql);
+				} else {
+					execStatementTable($con,"a_tbl_rename",$tbl_name,$tbl_old,$sql);
+				}
 			}
 		}
 	} else {
-		if($clm_old == 2)
+		if($clm_old == "2")
 		{
 			$result = mysqli_query($con,"SELECT character_set_name FROM information_schema.`COLUMNS` WHERE table_schema='project_ziphon' AND table_name ='$tbl_name' AND column_name='$clm_name'");
 			if(mysqli_num_rows($result) !== 1)
 			{
 				execStatementColumn($con,"a_clm_charset",$tbl_name,$clm_name,$clm_old,$sql);
 			}
-		} elseif ($clm_old == 3) {
+		} elseif ($clm_old == "3") {
 			$result = mysqli_query($con,"SELECT character_set_name FROM information_schema.`COLUMNS` WHERE table_schema='project_ziphon' AND table_name ='$tbl_name' AND column_name='$clm_name' AND data_type='enum'");
 			if(mysqli_num_rows($result) !== 1)
 			{
@@ -182,11 +187,16 @@ function checkExistingField($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 			$result = mysqli_query($con,"SHOW CLOUMNS FROM `$tbl_name` LIKE '$clm_name'");
 			if(mysqli_num_rows($result) !== 1)
 			{
-				if($clm_old == 0)
+				if($clm_old == "0")
 				{
 					execStatementColumn($con,"a_clm_add",$tbl_name,$clm_name,$clm_old,$sql);
 				} else {
-					execStatementColumn($con,"a_clm_rename",$tbl_name,$clm_name,$clm_old,$sql);
+					if($clm_name == "0")
+					{
+						execStatementColumn($con,"d_clm",$tbl_name,$clm_name,$clm_old,$sql);
+					} else {
+						execStatementColumn($con,"a_clm_rename",$tbl_name,$clm_name,$clm_old,$sql);	
+					}
 				}
 			}
 		}
@@ -203,6 +213,9 @@ function execStatementTable($con,$param,$tbl_name,$tbl_name_old,$sql)
 				break;
 			case "a_tbl_rename":
 				echo "Die Tabelle <b>" . $tbl_name_old . "</b> wurde erfolgreich in <b>" . $tbl_name . "</b> umbenannt.<br>";
+				break;
+			case "d_tbl":
+				echo "Die Tabelle <b>" . $tbl_name_old . "</b> wurde erfolgreich gelöscht.<br>";
 				break;
 			default:
 				echo "Keine Updates verfügbar.";
@@ -228,6 +241,9 @@ function execStatementColumn($con,$param,$tbl_name,$clm_name,$clm_name_old)
 				break;
 			case "a_clm_enum":
 				echo "Der Spalte <b>". $clm_name . "</b> wurde erfolgreich ein ENUM-Parameter hinzugefügt.<br>";
+				break;
+			case "d_clm":
+				echo "Die Spalte <b>" . $clm_name_old . "</b> wurde erfolgreich gelöscht.<br>";
 				break;
 			default:
 				echo "Keine Updates verfügbar.";
