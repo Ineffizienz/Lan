@@ -194,10 +194,26 @@ $(document).ready(function(){
 
 		obj = {checkedGame};
 		
-		addPref(obj,getEndpoint("add_pref"),reactToChange);
+		postAjax(obj,getEndpoint("add_pref"),reactToChange);
+	}
+
+/*#############################################################################################
+#################################### Tournaments ############################################## 
+###############################################################################################*/
+
+	function getVotedGame(event)
+	{
+		event.preventDefault();
+
+		var game_id = ("#votedGame").find("option:selected").attr("value");
+
+		obj = {game_id};
+
+		postAjax(obj,getEndpoint("vote_tm"),displayResponse);
 	}
 
 
+/*############################################################################################*/
 	
 	function getAjax(obj, endpoint, fn){
 		return $.ajax({
@@ -418,5 +434,6 @@ $(document).ready(function(){
 	$(document).on("click",".add_pref",showPrefs);
 	$(document).on("change",".checkmark_container input",getCheckedGame);
 	$(".sbm").on("click",getWowData);
+	$("#vote_now").on("click",getVotedGame);
 });
 
