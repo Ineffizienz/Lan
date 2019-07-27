@@ -118,6 +118,7 @@ $sql_statements = array(
 			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
 			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_period_id","clm_old"=>"starttime","statement"=>"ALTER TABLE tm CHANGE `starttime` `tm_period_id` INT(11) NOT NULL"),
 			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL"),
+			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"player_id","clm_old"=>"user_id","statement"=>"ALTER TABLE tm_vote CHANGE `user_id` `player_id` INT(11) NULL"),
 		
 		## MODIFY COLUMN
 			// clm_old = 2 --> Änderung des Charsets
@@ -223,7 +224,7 @@ function execStatementTable($con,$param,$tbl_name,$tbl_name_old,$sql)
 	}
 }
 
-function execStatementColumn($con,$param,$tbl_name,$clm_name,$clm_name_old)
+function execStatementColumn($con,$param,$tbl_name,$clm_name,$clm_name_old,$sql)
 {
 	if(mysqli_query($con,$sql))
 	{

@@ -840,4 +840,20 @@ function getTmStartById($con,$tm_id)
 	return $tm_starttime;
 }
 
+function getVotedGamesByPlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT game_id FROM tm_vote WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedGames[] = $row["game_id"];
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
 ?>
