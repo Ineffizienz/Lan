@@ -31,6 +31,7 @@
 
 	function build_option($optionArr,$selected)
 	{
+		
 		$output_option = "<option value='" . $selected["id"] . "' selected>" . $selected["name"];
 
 		$part = file_get_contents("template/part/option.html");
@@ -40,7 +41,7 @@
 			if($option["id"] !== $selected["id"])
 			{
 				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
-			}
+			} 
 		}
 		
 		return $output_option;	
@@ -585,6 +586,29 @@ function displayAvailableAchievements($con, $player_id)
 		}
 		return $output;
 	}
+}
+
+/******************************* TOURNAMENTS ************************************/
+
+function generateVoteOption($con)
+{
+	$games = getFullGameData($con);
+	$selected = array();
+
+	$part = file_get_contents("template/part/option.html");
+
+	foreach ($games as $game)
+	{
+		if(!isset($output))
+		{
+			$output = str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		} else {
+			$output .= str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		}
+	}
+
+	return $output;
+
 }
 
 ?>

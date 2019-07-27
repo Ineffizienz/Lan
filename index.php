@@ -97,6 +97,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 
 
 		/***************************** TUNRIERE *****************************/
+		$tpl->assign("vote_option",generateVoteOption($con));
 
 		/***************************** SETTING *****************************/
 
