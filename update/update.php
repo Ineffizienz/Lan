@@ -87,15 +87,13 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_matches","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_matches (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, match_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
-		
-		array("tbl_name"=>"test_table","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE test_table (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL, test_string VARCHAR(255) NOT NULL)"),
+		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
 
 	
 	### - ALTER STATEMENTS - ###
 
 		## RENAME TABLE
-
-			array("tbl_name"=>"test_table_3","tbl_old"=>"test_table_2","clm_name"=>"0","clm_old"=>"0","statement"=>"RENAME TABLE test_table_2 TO test_table_3"),
+		// Beispiel: array("tbl_name"=>"test_table_3","tbl_old"=>"test_table_2","clm_name"=>"0","clm_old"=>"0","statement"=>"RENAME TABLE test_table_2 TO test_table_3"),
 		## ADD COLUMN
 			// Update 1.3
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"has_table","clm_old"=>"0","statement"=>"ALTER TABLE games ADD has_table INT(11) NULL"),
@@ -184,7 +182,7 @@ function checkExistingField($con,$tbl_name,$tbl_old,$clm_name,$clm_old,$sql)
 				execStatementColumn($con,"a_clm_enum",$tbl_name,$clm_name,$clm_old,$sql);
 			}
 		} else {
-			$result = mysqli_query($con,"SHOW CLOUMNS FROM `$tbl_name` LIKE '$clm_name'");
+			$result = mysqli_query($con,"SHOW COLUMNS FROM `$tbl_name` LIKE '$clm_name'");
 			if(mysqli_num_rows($result) !== 1)
 			{
 				if($clm_old == "0")
