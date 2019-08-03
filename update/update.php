@@ -88,6 +88,7 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
+		array("tbl_name"=>"tm_vote_player","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote_player (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, tm_vote_id INT(11) NOT NULL, player_id INT(11) NOT NULL)"),
 
 	
 	### - ALTER STATEMENTS - ###
@@ -118,7 +119,7 @@ $sql_statements = array(
 			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
 			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_period_id","clm_old"=>"starttime","statement"=>"ALTER TABLE tm CHANGE `starttime` `tm_period_id` INT(11) NOT NULL"),
 			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL"),
-			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"player_id","clm_old"=>"user_id","statement"=>"ALTER TABLE tm_vote CHANGE `user_id` `player_id` INT(11) NULL"),
+			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"vote_count","clm_old"=>"player_id","statement"=>"ALTER TABLE tm_vote CHANGE `player_id` `vote_count` INT(11) NOT NULL"),
 		
 		## MODIFY COLUMN
 			// clm_old = 2 --> Änderung des Charsets

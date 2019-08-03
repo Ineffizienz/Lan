@@ -41,3 +41,5 @@ ERR_EMAIL_LONG: Deine Email ist zu lang.
 ERR_ACC_EXISTS: Der Accountname existiert bereits.
 ERR_ACC_CHR: Dein Accountname kann nur Buchstaben und Zahlen enthalten.
 ERR_PWD_CHR: Dein Passwort kann nur Buchstaben und Zahlen enthalten.
+ERR_ALLREADY_VOTED: Ihr habt euren Hut bereits in den Ring geworfen.
+ERR_NO_GAME_TO_VOTE_FOR: Hört auf mich mit Hüten zu bewerfen.

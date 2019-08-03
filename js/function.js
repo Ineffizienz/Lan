@@ -205,7 +205,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var game_id = ("#votedGame").find("option:selected").attr("value");
+		var game_id = $("#votedGame").find("option:selected").attr("value");
 
 		obj = {game_id};
 

@@ -242,6 +242,11 @@ function getSinglePlayerPref($con, $player_id)
 		$player_pref[] = $row["game_id"];
 	}
 
+	if(empty($player_pref))
+	{
+		$player_pref = array();
+	}
+
 	return $player_pref;
 
 }
@@ -840,12 +845,39 @@ function getTmStartById($con,$tm_id)
 	return $tm_starttime;
 }
 
-function getVotedGamesByPlayerId($con,$player_id)
+function getVotedGames($con,$game_id)
 {
-	$result = mysqli_query($con,"SELECT game_id FROM tm_vote WHERE player_id = '$player_id'");
+	$result = mysqli_query($con,"SELECT ID, vote_count FROM tm_vote WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedGames = $row;
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
+function getTournamentVoteId($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");
 	while($row=mysqli_fetch_array($result))
 	{
-		$votedGames[] = $row["game_id"];
+		$voteID = $row["ID"];
+	}
+	
+	return $voteID;
+}
+
+function getVotedGamesByPlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT tm_vote_id FROM tm_vote_player WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedGames[] = $row["tm_vote_id"];
 	}
 
 	if(empty($votedGames))
