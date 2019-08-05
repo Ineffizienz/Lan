@@ -392,4 +392,27 @@ function displayTournaments($con)
 	return $output;
 }
 
+function displayVotedTournaments($con)
+{
+	$voted_tm = getVotedTournaments($con);
+
+	$part = file_get_contents(TMP . "admin/part/voted_tm_tpl.html");
+
+	foreach ($voted_tm as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game_id"]);
+		$game_name = array_shift($game_name);
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
+		} else {
+			$output .= str_replace(array("--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
+		}
+	}
+
+	return $output;
+
+}
+
 ?>

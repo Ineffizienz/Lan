@@ -861,6 +861,22 @@ function getVotedGames($con,$game_id)
 	return $votedGames;
 }
 
+function getVotedTournaments($con)
+{
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime FROM tm_vote");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedTournaments[] = $row;
+	}
+
+	if(empty($votedTournaments))
+	{
+		$votedTournaments = array();
+	}
+
+	return $votedTournaments;
+}
+
 function getTournamentVoteId($con,$game_id)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");

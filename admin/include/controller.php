@@ -39,6 +39,9 @@
 			case "action":
 				$content = buildContent("../template/admin/ac_action.html");
 			break;
+			case "vote_tm":
+				$content = buildContent("../template/admin/vote_tm.html");
+			break;
 		}
 	}
 ?>

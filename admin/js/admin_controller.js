@@ -57,6 +57,12 @@ function getEndpoint(param)
         case "create_tournament":
             endpoint = "admin/tm/create/create_tm.php";
             break;
+        case "vote_tournament":
+            endpoint = "admin/tm/create/vote_tm.php";
+            break;
+        case "delete_vote":
+            endpoint = "admin/tm/delete/delete_vote.php";
+            break;
 	}
 
 	return endpoint;

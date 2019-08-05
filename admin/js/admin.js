@@ -357,6 +357,29 @@ $(document).ready(function(){
 
 	}
 
+	function getTournamentParam(event)
+	{
+		event.preventDefault();
+
+		var game_id = $(".game").attr("data-tm-game");
+		var vote_id = $(this).attr("data-tm-vote");
+
+		obj = {game_id, vote_id};
+
+		postAjax(obj,getEndpoint("start_tournament"),setResult);
+	}
+
+	function getVoteParam(event)
+	{
+		event.preventDefault();
+
+		var vote_id = $(this).attr("data-tm-vote");
+
+		obj = {vote_id};
+
+		postAjax(obj,getEndpoint("delete_vote"),setResult);
+	}
+
 
 //########################### Send Data ##################################################################
 	
@@ -472,5 +495,7 @@ $(document).ready(function(){
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
+	$("#start_tm").on("click",getTournamentParam);
+	$("#delete_vote").on("click",getVoteParam);
 
 });
