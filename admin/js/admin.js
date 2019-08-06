@@ -471,7 +471,18 @@ $(document).ready(function(){
 		$(this).siblings(".settings_grn").slideToggle();
 	}
 
+/*
+###########################################################
+######################## TIME-EVENT #######################
+###########################################################
+*/
 
+setInterval(refreshVotes,20000);
+
+function refreshVotes()
+{
+	$("#tm_votes").load(location.href + ' #tm_votes');
+}
 
 	$("#create").on("click", getNumber);
 	$("#upload").on("click", getFile);
