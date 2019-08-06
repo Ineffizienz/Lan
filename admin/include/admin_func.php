@@ -414,4 +414,9 @@ function displayVotedTournaments($con)
 
 }
 
+function displayDefineTmPopup($con)
+{
+	$part = file_get_contents(TMP . "admin/part/popup/define_tm_popup.html");
+}
+
 ?>

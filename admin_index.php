@@ -30,6 +30,7 @@ if(IP == "::1" || "192.168.0.89")
 	$tpl->assign("games",displayTmGames($con));
 	//$tpl->assign("tournaments",displayTournaments($con));
 	$tpl->assign("votes",displayVotedTournaments($con));
+	$tpl->assign("define_tm_popup",displayDefineTmPopup($con));
 
 	$tpl->display();
 } else {
