@@ -1,5 +1,7 @@
 <?php
-
+/* Notizen
+        - Vote nach Start des Turniers bereinigen!
+*/
 include(dirname(__FILE__,4) . "/include/init/constant.php");
 include(dirname(__FILE__,3) . "/include/admin_func.php");
 include(INIT . "get_parameters.php");
@@ -8,7 +10,53 @@ include(CL . "message_class.php");
 
 $message = new message();
 
-if (isset($_REQUEST["game"]))
+if(isset($_REQUEST["game_id"]))
+{
+    if(isset($_REQUEST["vote_id"]))
+    {
+        
+        $vote_id = $_REQUEST["vote_id"];
+        $game_id = $_REQUEST["game_id"];
+        $lan_id = $_REQUEST["lan_id"];
+        $tm_from = $_REQUEST["time_from"];
+        $tm_to = $_REQUEST["time_to"];
+        $mode = $_REQUEST["mode"];
+        $mode_details = $_REQUEST["mode_details"];
+        $end_register = $_REQUEST["end_register"];
+
+        $sql = "INSERT INTO tm_period (time_from,time_to) VALUES ('$tm_from','$tm_to')";
+        if(mysqli_query($con,$sql))
+        {
+            $tm_period_id = getTournamentPeriodId($con);
+            $game_name = getGameInfoByID($con,$game_id);
+            $game_name = array_shift($game_name);
+            $game_name = $game_name["name"];
+            
+            $sql = "INSERT INTO tm (game,mode,mode_details,tm_period_id,tm_end_register,lan_id) VALUES ('$game_name','$mode','$mode_details','$tm_period_id','$end_register','$lan_id')";
+            if(mysqli_query($con,$sql))
+            {
+                $message->getMessageCode("SUC_CREATE_TM_FROM_VOTE");
+                echo buildJSONOutput($message->displayMessage());
+            } else {
+                $message->getMessageCode("ERR_ADMIN_DB");
+                echo buildJSONOutput($message->displayMessage());
+            }
+
+        } else {
+            $message->getMessageCode("ERR_ADMIN_DB");
+            echo buildJSONOutput($message->displayMessage());
+        }
+
+    } else {
+        $message->getMessageCode("ERR_ADMIN_EMPTY_PARAM");
+        echo buildJSONOutput($message->displayMessage());
+    }
+} else {
+    $message->getMessageCode("ERR_ADMIN_EMPTY_PARAM");
+    echo buildJSONOutput($message->displayMessage());
+}
+
+/*if (isset($_REQUEST["game"]))
 {
     if (empty($_REQUEST["game"]))
     {
@@ -90,6 +138,6 @@ if (isset($_REQUEST["game"]))
 } else {
     $message->getMessageCode("ERR_ADMIN_NO_GAME_SELECTED");
     echo buildJSONOutput($message->displayMessage());
-}
+}*/
 
 ?>

@@ -75,10 +75,10 @@ $sql_statements = array(
 		array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE pref (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, user_id INT(11) NOT NULL, preferences VARCHAR(1024) CHARSET utf8mb4 NULL)"),
 
 		// Update 1.4
-		array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE ticket_id (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, ticket_id VARCHAR(255) CHARSET utf8mb4 NOT NULL)"),
+		array("tbl_name"=>"ticket_id","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE ticket_id (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, ticket_id VARCHAR(255) CHARSET utf8mb4 NOT NULL)"),
 
 		// Update 1.5
-		array("tbl_name"=>"ticket_id","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game VARCHAR(255) CHARSET utf8mb4 NOT NULL, mode INT(11) NOT NULL)"),
+		array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, mode INT(11) NOT NULL, mode_details INT(11) NULL, player_count INT (11) NULL, tm_period_id INT(11) NOT NULL, tm_end_register DATETIME NOT NULL, tm_winner_team_id INT(11) NOT NULL, lan_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_paarung","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_paarung (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, team_1 INT(11) NOT NULL, team_2 INT(11) NOT NULL, tournament INT(11) NOT NULL, result INT(11) NOT NULL, period INT(11) NOT NULL, successor INT(11) NOT NULL, ressource INT(11) NOT NULL, matches_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_period","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_period (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, time_from DATETIME NOT NULL, time_to DATETIME NOT NULL)"),
 		array("tbl_name"=>"tm_team","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_team (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, gamerslist_id INT(11) NOT NULL, team_name VARCHAR(255) CHARSET utf8mb4 NOT NULL, tournament_id INT(11) NOT NULL, lan_id INT(11) NOT NULL)"),
@@ -104,21 +104,12 @@ $sql_statements = array(
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"short_title","clm_old"=>"0","statement"=>"ALTER TABLE games ADD short_title VARCHAR(255) CHARSET utf8mb4 NULL AFTER raw_name"),
 
 			// Update 1.5
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"mode_details","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD mode_details INT(11) NULL AFTER mode"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"mode","clm_old"=>"0","statement"=>"ALTER table tm ADD mode INT(11) NOT NULL AFTER game"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"banner","clm_old"=>"0","statement"=>"ALTER table tm ADD banner VARCHAR(255) CHARSET utf8mb4 NULL AFTER mode"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"min_player","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD min_player INT(11) NOT NULL AFTER banner"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"starttime","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD starttime DATETIME NOT NULL AFTER min_player"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"end_date","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD end_date VARCHAR(255) CHARSET utf8mb4 NULL AFTER starttime"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"player_count","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD player_count INT(11) NULL AFTER min_player"),
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"addon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD addon INT(11) NULL AFTER short_title"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"lan_id","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD lan_id INT(11) NOT NULL AFTER tm_winner_team_id"),
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"banner","clm_old"=>"0","statement"=>"ALTER table games ADD banner VARCHAR(255) CHARSET utf8mb4 NULL AFTER icon"),
 
 		## RENAME COLUMN
 			// Update 1.5
 			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_period_id","clm_old"=>"starttime","statement"=>"ALTER TABLE tm CHANGE `starttime` `tm_period_id` INT(11) NOT NULL"),
-			array("tbl_name"=>"tm","tbl_old"=>"0","clm_name"=>"tm_winner_team_id","clm_old"=>"end_date","statement"=>"ALTER TABLE tm CHANGE `end_date` `tm_winner_team_id` INT(11) NULL"),
 			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"vote_count","clm_old"=>"player_id","statement"=>"ALTER TABLE tm_vote CHANGE `player_id` `vote_count` INT(11) NOT NULL"),
 		
 		## MODIFY COLUMN
@@ -134,10 +125,10 @@ $sql_statements = array(
 	
 	### - DELETE STATEMENTS - ###
 		## DELETE TABLE
-		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"table_to_delete","clm_name"=>"0","clm_old"=>"0","statement"=>"DROP TABLE table_to_delete")
+		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"table_to_delete","clm_name"=>"0","clm_old"=>"0","statement"=>"DROP TABLE table_to_delete"),
 
 		## DELETE COLUMN
-		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"column_to_delete","statement"=>"DELETE column_to_delete FROM table");
+		// Beispiel: array("tbl_name"=>"0","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"column_to_delete","statement"=>"ALTER TABLE table DROP COLUMN column_to_delete"),
 );
 
 transformArray($con,$sql_statements);

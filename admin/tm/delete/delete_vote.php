@@ -5,6 +5,8 @@
     include(INC . "connect.php");
     include(INIT . "get_parameters.php");
 
+    $message = new message();
+
     if(isset($_REQUEST["vote_id"]))
     {
         $vote_id = $_REQUEST["vote_id"];
@@ -15,17 +17,17 @@
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_DELETE_VOTE");
-                echo buildJSONOutput(array("message"=>displayMessage()));
+                echo buildJSONOutput($message->displayMessage());
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
-                echo buildJSONOutput(array("message"=>displayMessage()));
+                echo buildJSONOutput($message->displayMessage());
             }
         } else {
             $message->getMessageCode("ERR_ADMIN_DB");
-            echo buildJSONOutput(array("message"=>displayMessage()));
+            echo buildJSONOutput($message->displayMessage());
         }
     } else {
         $message->getMessageCode("ERR_ADMIN_EMPTY_PARAM");
-        echo buildJSONOutput(array("message"=>displayMessage()));
+        echo buildJSONOutput($message->displayMessage());
     }
 ?>

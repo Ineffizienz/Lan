@@ -904,4 +904,15 @@ function getVotedGamesByPlayerId($con,$player_id)
 	return $votedGames;
 }
 
+function getTournamentPeriodId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_period ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_period_id = $row["ID"];
+	}
+
+	return $tm_period_id;
+}
+
 ?>
