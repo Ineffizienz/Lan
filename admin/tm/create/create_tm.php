@@ -29,8 +29,6 @@ if(isset($_REQUEST["game_id"]))
         {
             $tm_period_id = getTournamentPeriodId($con);
             $game_name = getGameInfoByID($con,$game_id);
-            $game_name = array_shift($game_name);
-            $game_name = $game_name["name"];
             
             $sql = "INSERT INTO tm (game,mode,mode_details,tm_period_id,tm_end_register,lan_id) VALUES ('$game_name','$mode','$mode_details','$tm_period_id','$end_register','$lan_id')";
             if(mysqli_query($con,$sql))

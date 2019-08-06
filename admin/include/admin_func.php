@@ -354,7 +354,7 @@ function displayTmGames($con)
 	return $output;
 }
 
-function displayTournaments($con)
+/*function displayTournaments($con)
 {
 	$tournaments = getTournaments($con);
 
@@ -390,7 +390,7 @@ function displayTournaments($con)
 	}
 
 	return $output;
-}
+}*/
 
 function displayVotedTournaments($con)
 {
@@ -401,11 +401,10 @@ function displayVotedTournaments($con)
 	foreach ($voted_tm as $tournament)
 	{
 		$game_name = getGameInfoById($con,$tournament["game_id"]);
-		$game_name = array_shift($game_name);
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($tournmanet["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
+			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
 		} else {
 			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
 		}
