@@ -440,9 +440,11 @@ $(document).ready(function(){
 	{
 		displayResult(result.message);
 
-		if(result.parent_element in result)
+		if(result.hasOwnProperty("parent_element"))
 		{
 			reloadContent(result.parent_element,result.child_element);
+		} else {
+			console.log("nö");
 		}
 	}
 
@@ -486,6 +488,7 @@ $(document).ready(function(){
 
 		$("#game_id").val(game_id);
 		$("#vote_id").val(vote_id);
+
 		$("#tm_create_popup").show();
 	}
 
