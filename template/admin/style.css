@@ -266,6 +266,10 @@ td
 	align-content: center;
 	width:50%;
 }
+#tm_create_popup
+{
+	display:none;
+}
 
 
 /* ---------------------- ACHIEVEMENTS -----------------------
@@ -293,7 +297,7 @@ td
 {
 	display:none;
 }
-input[type=text],[type=password],[type=date]
+input[type=text],[type=password],[type=date],[type=time]
 	{
 		padding-left: 10px;
 		background-color: #fff;

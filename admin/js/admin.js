@@ -361,12 +361,18 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var game_id = $(".game").attr("data-tm-game");
-		var vote_id = $(this).attr("data-tm-vote");
+		var game_id = $("#game_id").val();
+		var mode = $("#tm_mode").find("option:selected").attr("value");
+		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
+		var tm_time_from = $("#tm_time_from").val();
+		var tm_time_to = $("#tm_time_to").val();
+		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, vote_id};
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
 
-		postAjax(obj,getEndpoint("start_tournament"),setResult);
+		$("#tm_create_popup").hide();
+
+		postAjax(obj,getEndpoint("create_tournament"),setResult);
 	}
 
 	function getVoteParam(event)
@@ -471,6 +477,18 @@ $(document).ready(function(){
 		$(this).siblings(".settings_grn").slideToggle();
 	}
 
+	function displayPopup(event)
+	{
+		event.preventDefault();
+
+		vote_id = $(this).attr("data-tm-vote");
+		game_id = $(this).attr("data-tm-game");
+
+		$("#game_id").val(game_id);
+		$("#vote_id").val(vote_id);
+		$("#tm_create_popup").show();
+	}
+
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
@@ -508,5 +526,6 @@ function refreshVotes()
 	$(document).on("click","#create_new_trigger",getNewTrigger);
 	$("#start_tm").on("click",getTournamentParam);
 	$("#delete_vote").on("click",getVoteParam);
+	$(".define_tm").on("click",displayPopup);
 
 });
