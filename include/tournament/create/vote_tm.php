@@ -19,7 +19,6 @@
         if(empty($votedGames))
         {
             $sql = "INSERT INTO tm_vote (game_id, vote_count, starttime, endtime) VALUES ('$game_id','1','$start','$end')";
-            var_dump($sql);
             if(mysqli_query($con,$sql))
             {
                 $tm_vote_id = getTournamentVoteId($con,$game_id);

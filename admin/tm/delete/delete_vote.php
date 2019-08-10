@@ -11,13 +11,13 @@
     {
         $vote_id = $_REQUEST["vote_id"];
         $sql = "DELETE FROM tm_vote_player WHERE tm_vote_id = '$vote_id'";
-        if(mysqli_query($con,$sql)
+        if(mysqli_query($con,$sql))
         {
             $sql = "DELETE FROM tm_vote WHERE ID = '$vote_id'";
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_DELETE_VOTE");
-                echo buildJSONOutput($message->displayMessage());
+                echo buildJSONOutput(array($message->displayMessage(),"#tm_votes","#tm_votes"));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage());

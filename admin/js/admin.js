@@ -451,10 +451,10 @@ $(document).ready(function(){
 		if($.isArray(parent_element))
 		{
 			$.each(parent_element, function(key, value) {
-				$(value).load(window.location.href + ' ' + child_element[key]);
+				$(value).load(location.href + ' ' + child_element[key]);
 			});
 		} else {
-			$(parent_element).load(window.location.href + ' ' + child_element);
+			$(parent_element).load(location.href + ' ' + child_element);
 		}
 	}
 	
@@ -525,7 +525,7 @@ function refreshVotes()
 	$(document).on("click",".start_tm",getStartingTmData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
 	$("#start_tm").on("click",getTournamentParam);
-	$("#delete_vote").on("click",getVoteParam);
+	$(".delete_vote").on("click",getVoteParam);
 	$(".define_tm").on("click",displayPopup);
 
 });
