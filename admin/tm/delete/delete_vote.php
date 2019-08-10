@@ -17,7 +17,7 @@
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_DELETE_VOTE");
-                echo buildJSONOutput(array($message->displayMessage(),"#tm_votes","#tm_votes"));
+                echo buildJSONOutput(array($message->displayMessage(),"#vote_page","#tm_votes"));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage());

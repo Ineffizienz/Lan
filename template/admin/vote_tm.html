@@ -1,16 +1,18 @@
 <div>
     <h2>Turnierabstimmungen</h2>
-    <table cellspacing="0" cellpadding="0" style="margin:0 auto;" id="tm_votes">
-        <tr>
-            <th>Spiel</th>
-            <th>Abstimmungsbeginn</th>
-            <th>Abstimmungsende</th>
-            <th>Votes</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-        </tr>
-            {$votes}
-    </table>
+    <div id="vote_page">
+        <table cellspacing="0" cellpadding="0" style="margin:0 auto;" id="tm_votes">
+            <tr>
+                <th>Spiel</th>
+                <th>Abstimmungsbeginn</th>
+                <th>Abstimmungsende</th>
+                <th>Votes</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+                {$votes}
+        </table>
+    </div>
 </div>
 <div id="tm_create_popup" class="popup">
     {$define_tm_popup}

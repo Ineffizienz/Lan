@@ -502,7 +502,7 @@ setInterval(refreshVotes,20000);
 
 function refreshVotes()
 {
-	$("#tm_votes").load(location.href + ' #tm_votes');
+	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
 	$("#create").on("click", getNumber);
@@ -528,7 +528,7 @@ function refreshVotes()
 	$(document).on("click",".start_tm",getStartingTmData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
 	$("#start_tm").on("click",getTournamentParam);
-	$(".delete_vote").on("click",getVoteParam);
-	$(".define_tm").on("click",displayPopup);
+	$(document).on("click",".delete_vote",getVoteParam);
+	$(document).on("click",".define_tm",displayPopup);
 
 });
