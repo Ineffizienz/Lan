@@ -611,4 +611,24 @@ function generateVoteOption($con)
 
 }
 
+function displayRunningVotes($con)
+{
+	$votes = getVotedTournaments($con);
+	$part = file_get_contents("template/part/running_vote.html");
+
+	foreach ($votes as $vote)
+	{
+		$game_info = getGameInfoById($con,$vote["game_id"]);
+		$banner_url = $game_info["banner"];
+		if(!isset($output))
+		{
+			$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--"),array($banner_url,$vote["vote_count"],$vote["endtime"]),$part);
+		} else {
+			$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--"),array($banner_url,$vote["vote_count"],$vote["endtime"]),$part);
+		}
+	}
+
+	return $output;
+}
+
 ?>
