@@ -356,9 +356,26 @@ function getGameIcon($con,$game_id)
 	{
 		$row = mysqli_fetch_array($result);
 		$game_icon = $row["game_icon"];	
-
-		return $game_icon;
+	
+	} else {
+		$game_icon = array();
 	}
+
+	return $game_icon;
+}
+
+function getGameBanner($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT banner FROM games WHERE ID = '$game_id'");
+	if(!empty($result))
+	{
+		$row = mysqli_fetch_array($result);
+		$game_banner = $row["banner"];
+	} else {
+		$game_banner = array();
+	}
+
+	return $game_banner;
 }
 
 function getHasTableByGameID($con,$game_id)

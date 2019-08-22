@@ -30,8 +30,16 @@
 						<input type="file" name="new_game_icon" id="new_game_icon">
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<label for="new_game_banner">Banner des neuen Spiels:</label>
+					</td>
+					<td>
+						<input type="file" name="new_game_banner" id="new_game_banner">
+					</td>
+				</tr>
 			</table>
-			<button id='b_add_game'>Spiel hinzufügen</button>
+			<button id="b_add_game">Spiel hinzufügen</button>
 		</form>
 	</div>	
 </div>
@@ -49,6 +57,7 @@
 				<th>Raw-Name</th>
 				<th>Addon</th>
 				<th>Icon</th>
+				<th>Banner</th>
 				<th>Has Table</th>
 			</tr>
 			{$admin_games}

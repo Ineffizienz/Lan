@@ -45,6 +45,9 @@ function getEndpoint(param)
         case "update_game_icon":
             endpoint = "admin/game/edit/update_icon.php";
             break;
+        case "update_game_banner":
+            endpoint = "admin/game/edit/update_banner.php";
+            break;
         case "upload_keys":
             endpoint = "admin/key/create_keylist.php";
             break;

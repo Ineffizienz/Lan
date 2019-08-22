@@ -89,9 +89,16 @@ $(document).ready(function(){
 
 		if($("#new_game_icon").get(0).files.length == 0)
 		{
-			form_data.append("file","0");
+			form_data.append("game_icon","0");
 		} else {
-			form_data.append("file",image);
+			form_data.append("game_icon",image);
+		}
+
+		if($("#new_game_banner").get(0).files.length == 0)
+		{
+			form_data.append("game_banner","0");
+		} else {
+			form_data.append("game_banner",image);
 		}
 
 		postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
@@ -167,6 +174,29 @@ $(document).ready(function(){
 		}
 
 		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon,id));
+	}
+
+	function getBannerData(event)
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var game_id = retrieveGameID(this);
+		var banner_id = "#lbl_"+ $(this).siblings().attr("for");
+
+		var image = $(banner_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("game_id",game_id);
+
+		if($(banner_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner,id));
 	}
 
 	function getFile(event) //Upload for new Keys
@@ -519,6 +549,7 @@ function refreshVotes()
 	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
+	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".settings_edit",showInputField);
