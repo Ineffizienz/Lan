@@ -13,9 +13,9 @@
 	
 	if(!empty($existing_banner))
 	{
-		if(file_exists(ICON . $existing_banner))
+		if(file_exists(BANNER . $existing_banner))
 		{
-			unlink(ICON . $existing_banner);
+			unlink(BANNER . $existing_banner);
 			$sql = "UPDATE games SET banner = NULL WHERE ID = '$game_id'";
 			if(!mysqli_query($con,$sql))
 			{
@@ -33,7 +33,7 @@
 	$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
 	if($result_validate == "1")
 	{
-		move_uploaded_file($_FILES["file"]["tmp_name"], ICON . $_FILES["file"]["name"]);
+		move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
 		$path = $_FILES["file"]["name"];
 		
 		$sql = "UPDATE games SET banner = '$path' WHERE ID = '$game_id'";

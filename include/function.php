@@ -622,9 +622,9 @@ function displayRunningVotes($con)
 		$banner_url = $game_info["banner"];
 		if(!isset($output))
 		{
-			$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--"),array($banner_url,$vote["vote_count"],$vote["endtime"]),$part);
+			$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
 		} else {
-			$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--"),array($banner_url,$vote["vote_count"],$vote["endtime"]),$part);
+			$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
 		}
 	}
 

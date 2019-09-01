@@ -39,6 +39,9 @@ function getEndpoint(param)
 		case "vote_tm":
 			endpoint = "include/tournament/create/vote_tm.php";
 			break;
+		case "add_vote":
+			endpoint = "include/tournament/create/count_vote.php";
+			break;
 	}
 
 	return endpoint;

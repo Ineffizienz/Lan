@@ -894,6 +894,22 @@ function getVotedTournaments($con)
 	return $votedTournaments;
 }
 
+function getVoteIds($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votes[] = $row["ID"];
+	}
+
+	if(empty($votes))
+	{
+		$votes = array();
+	}
+
+	return $votes;
+}
+
 function getTournamentVoteId($con,$game_id)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");
@@ -919,6 +935,11 @@ function getVotedGamesByPlayerId($con,$player_id)
 	}
 
 	return $votedGames;
+}
+
+function getPlayerVotes($con,$vote_id)
+{
+	return mysqli_num_rows(mysqli_query($con, "SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id';")) > 0;
 }
 
 function getTournamentPeriodId($con)

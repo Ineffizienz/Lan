@@ -87,7 +87,7 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_matches","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_matches (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, match_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_match","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_match (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, result_team1 VARCHAR(255) CHARSET utf8mb4 NULL, result_team2 VARCHAR(255) NULL)"),
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
-		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
+		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, vote_count INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
 		array("tbl_name"=>"tm_vote_player","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote_player (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, tm_vote_id INT(11) NOT NULL, player_id INT(11) NOT NULL)"),
 
 	
@@ -212,7 +212,7 @@ function execStatementTable($con,$param,$tbl_name,$tbl_name_old,$sql)
 				echo "Keine Updates verfügbar.";
 		}
 	} else {
-		echo mysqli_error($con);
+		echo mysqli_error($con) . "<br>";
 	}
 }
 

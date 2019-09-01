@@ -212,6 +212,17 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("vote_tm"),displayResponse);
 	}
 
+	function getVoteID(event)
+	{
+		event.preventDefault();
+
+		var vote_id = $(".tm_vote_for").attr("data-voted-tm");
+
+		obj = {vote_id};
+
+		postAjax(obj,getEndpoint("add_vote"),displayResponse);
+	}
+
 
 /*############################################################################################*/
 	
@@ -452,5 +463,6 @@ $(".tm_vote_container").hover(function () {
 	$(document).on("change",".checkmark_container input",getCheckedGame);
 	$(".sbm").on("click",getWowData);
 	$("#vote_now").on("click",getVotedGame);
+	$(".tm_vote_for").on("click",getVoteID);
 });
 

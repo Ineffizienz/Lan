@@ -23,6 +23,7 @@ $tpl = new template();
 $title = "Du nicht nehmen Kerze!";
 $message = new message();
 
+$_SESSION["player_id"] = 1;
 
 if(!isset($_SESSION["player_id"]))
 {
