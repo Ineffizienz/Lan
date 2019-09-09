@@ -173,7 +173,7 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon,id));
+		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
 	}
 
 	function getBannerData(event)
@@ -182,8 +182,9 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var game_id = retrieveGameID(this);
-		var banner_id = "#lbl_"+ $(this).siblings().attr("for");
+		var banner_id = "#" + $(this).siblings().attr("for");
 
+		console.log(banner_id);
 		var image = $(banner_id).prop('files')[0];
 		var form_data = new FormData();
 
@@ -196,7 +197,7 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner,id));
+		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 	}
 
 	function getFile(event) //Upload for new Keys

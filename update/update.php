@@ -99,6 +99,7 @@ $sql_statements = array(
 			// Update 1.3
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"has_table","clm_old"=>"0","statement"=>"ALTER TABLE games ADD has_table INT(11) NULL"),
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"icon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD icon VARCHAR(255) CHARSET utf8mb4 NULL"),
+			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"vote_closed","clm_old"=>"0","statement"=>"ALTER TABLE tm_vote ADD vote_closed INT(11) NOT NULL AFTER endtime"),
 
 			// Update 1.4.1
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"short_title","clm_old"=>"0","statement"=>"ALTER TABLE games ADD short_title VARCHAR(255) CHARSET utf8mb4 NULL AFTER raw_name"),

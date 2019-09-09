@@ -259,7 +259,7 @@ function getSinglePlayerPref($con, $player_id)
 
 function getGameData($con)
 {
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, banner, has_table FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;

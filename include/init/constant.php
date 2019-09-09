@@ -10,7 +10,7 @@
 	
 	define("IMG",ROOT . "/images/");
 	define("ICON",IMG . "game_icon/");
-	define("BANNER",IMG . "game_banner/");
+	define("BANNER",IMG . "banner/");
 	define("AC",IMG . "achievements/");
 
 	define("TMP",ROOT . "/template/");

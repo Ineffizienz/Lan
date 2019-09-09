@@ -297,6 +297,10 @@ td
 {
 	display:none;
 }
+.sec_banner_upload
+{
+	display:none;
+}
 input[type=text],[type=password],[type=date],[type=time]
 	{
 		padding-left: 10px;
