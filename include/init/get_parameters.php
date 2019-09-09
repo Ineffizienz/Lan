@@ -937,9 +937,9 @@ function getVotedGamesByPlayerId($con,$player_id)
 	return $votedGames;
 }
 
-function getPlayerVotes($con,$vote_id)
+function getPlayerVotes($con,$player_id,$vote_id)
 {
-	return mysqli_num_rows(mysqli_query($con, "SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id';")) > 0;
+	return mysqli_num_rows(mysqli_query($con, "SELECT * FROM tm_vote_player WHERE tm_vote_id = '$vote_id' AND player_id ='$player_id';")) > 0;
 }
 
 function getTournamentPeriodId($con)
@@ -951,6 +951,22 @@ function getTournamentPeriodId($con)
 	}
 
 	return $tm_period_id;
+}
+
+function getVoteById($con,$vote_id)
+{
+	$result = mysqli_query($con,"SELECT game_id, vote_count, starttime, endtime FROM tm_vote WHERE ID = '$vote_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_vote = $row;
+	}
+
+	if(empty($tm_vote))
+	{
+		$tm_vote = array();
+	}
+
+	return $tm_vote;
 }
 
 ?>

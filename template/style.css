@@ -1036,6 +1036,7 @@ h4
 {
 	margin:0;
 	padding:0;
+	cursor:pointer;
 	background-color: #C0C0C0;
 	border: 3px solid #fff inset;
 	border-left:0;
