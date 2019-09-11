@@ -1,6 +1,10 @@
 <?php
 
 include(dirname(__FILE__,2) . "/include/connect.php");
+include("scheduler.php");
+
+// EREIGNISSE
+echo defineEvents($con);
 
 // Update 1.1
 /*
