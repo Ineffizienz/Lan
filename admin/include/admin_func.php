@@ -238,33 +238,6 @@ function displaySingleGame($con)
 	return $output;
 }
 
-/*function buildVisibilityOption($con)
-{
-	$ac_visib = getAchievementVisibility($con);
-
-	$visib_name = array();
-
-	foreach ($ac_visib as $visib_id)
-	{
-		if(!empty($visib_id))
-		{
-			if($visib_id == "1")
-			{
-				$combine = array("ID" => $visib_id, "name" => "Sichtbar");
-			} else {
-				$combine = array("ID" => $visib_id, "name" => "Unsichtbar");
-			}
-		}
-
-		if(!in_array($combine,$visib_name))
-		{
-			array_push($visib_name,$combine);
-		}
-	}
-
-	return $visib_name;
-}*/
-
 function validateInput($new_game)
 {
 	if(isset($new_game) && ($new_game !== ""))
@@ -409,11 +382,18 @@ function displayVotedTournaments($con)
 	{
 		$game_name = getGameInfoById($con,$tournament["game_id"]);
 
+		if($tournament["vote_closed"] == "0")
+		{
+			$closed = "Nein";
+		} else {
+			$closed = "Ja";
+		}
+
 		if(!isset($output))
 		{
-			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
+			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
 		} else {
-			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$tournament["ID"]),$part);
+			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
 		}
 	}
 
