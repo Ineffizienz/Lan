@@ -514,13 +514,33 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		vote_id = $(this).attr("data-tm-vote");
-		game_id = $(this).attr("data-tm-game");
+		var vote_id = $(this).attr("data-tm-vote");
+		var game_id = $(this).attr("data-tm-game");
+		var game_name = $(this).attr("data-tm-game-name");
 
 		$("#game_id").val(game_id);
 		$("#vote_id").val(vote_id);
+		$("#game_name").val(game_name);
 
 		$("#tm_create_popup").show();
+	}
+
+	function closePopup(event)
+	{
+		event.preventDefault();
+		$("#tm_create_popup").hide();
+	}
+
+	function disableOnChange(event)
+	{
+		var mode_value = $(this).find("option:selected").attr("value");
+
+		if(mode_value == "1")
+		{
+			$("#tm_mode_details").prop('disabled','disabled');
+		} else {
+			$("#tm_mode_details").prop('disabled', false);
+		}
 	}
 
 /*
@@ -562,5 +582,7 @@ function refreshVotes()
 	$("#start_tm").on("click",getTournamentParam);
 	$(document).on("click",".delete_vote",getVoteParam);
 	$(document).on("click",".define_tm",displayPopup);
+	$(document).on("click","#tm_close_popup",closePopup);
+	$(document).on("change","#tm_mode",disableOnChange);
 
 });
