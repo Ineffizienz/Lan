@@ -880,7 +880,7 @@ function getVotedGames($con,$game_id)
 
 function getVotedTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime FROM tm_vote");
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$votedTournaments[] = $row;

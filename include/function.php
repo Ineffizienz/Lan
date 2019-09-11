@@ -620,11 +620,16 @@ function displayRunningVotes($con)
 	{
 		$game_info = getGameInfoById($con,$vote["game_id"]);
 		$banner_url = $game_info["banner"];
-		if(!isset($output))
+		if($vote["vote_closed"] !== "1")
 		{
-			$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			if(!isset($output))
+			{
+				$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			} else {
+				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			}
 		} else {
-			$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			$output = "";
 		}
 	}
 
