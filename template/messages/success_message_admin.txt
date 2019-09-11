@@ -16,3 +16,6 @@ SUC_ADMIN_ADDED_GAMEKEY: Key erfolgreich hinzugefügt.
 SUC_ADMIN_UPDATE_ADDON: Das Addon wurde erfolgreich akutalisiert.
 SUC_ADMIN_CHANGE_AC_IMAGE: Das Achievement-Icon wurde erfolgreich geändert.
 SUC_ADMIN_CREATE_TRIGGER: Trigger erfolgreich erstellt.
+SUC_ADMIN_DELETE_VOTE: Die Abstimmung wurde erfolgreich gelöscht.
+SUC_ADMIN_CREATE_TM_FROM_VOTE: Turnier erfolgreich aus einer Abstimmung erstellt.
+SUC_ADMIN_BANNER_CHANGED: Das Banner wurde erfolgreich geändert.

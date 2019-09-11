@@ -23,7 +23,6 @@ $tpl = new template();
 $title = "Du nicht nehmen Kerze!";
 $message = new message();
 
-
 if(!isset($_SESSION["player_id"]))
 {
 	include 'include/auth/validate_ticket.php';
@@ -97,6 +96,8 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 
 
 		/***************************** TUNRIERE *****************************/
+		$tpl->assign("vote_option",generateVoteOption($con));
+		$tpl->assign("running_votes",displayRunningVotes($con));
 
 		/***************************** SETTING *****************************/
 

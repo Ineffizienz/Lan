@@ -31,6 +31,7 @@
 
 	function build_option($optionArr,$selected)
 	{
+		
 		$output_option = "<option value='" . $selected["id"] . "' selected>" . $selected["name"];
 
 		$part = file_get_contents("template/part/option.html");
@@ -40,7 +41,7 @@
 			if($option["id"] !== $selected["id"])
 			{
 				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
-			}
+			} 
 		}
 		
 		return $output_option;	
@@ -325,9 +326,9 @@
 				$gameInfo = getGameInfoById($con,$pref);
 				if (!isset($output))
 				{
-					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
+					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
 				} else {
-					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
+					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
 				}
 				
 			}
@@ -585,6 +586,54 @@ function displayAvailableAchievements($con, $player_id)
 		}
 		return $output;
 	}
+}
+
+/******************************* TOURNAMENTS ************************************/
+
+function generateVoteOption($con)
+{
+	$games = getFullGameData($con);
+	$selected = array();
+
+	$part = file_get_contents("template/part/option.html");
+
+	foreach ($games as $game)
+	{
+		if(!isset($output))
+		{
+			$output = str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		} else {
+			$output .= str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		}
+	}
+
+	return $output;
+
+}
+
+function displayRunningVotes($con)
+{
+	$votes = getVotedTournaments($con);
+	$part = file_get_contents("template/part/running_vote.html");
+
+	foreach ($votes as $vote)
+	{
+		$game_info = getGameInfoById($con,$vote["game_id"]);
+		$banner_url = $game_info["banner"];
+		if($vote["vote_closed"] !== "1")
+		{
+			if(!isset($output))
+			{
+				$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			} else {
+				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			}
+		} else {
+			$output = "";
+		}
+	}
+
+	return $output;
 }
 
 ?>

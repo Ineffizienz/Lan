@@ -194,10 +194,37 @@ $(document).ready(function(){
 
 		obj = {checkedGame};
 		
-		addPref(obj,getEndpoint("add_pref"),reactToChange);
+		postAjax(obj,getEndpoint("add_pref"),reactToChange);
+	}
+
+/*#############################################################################################
+#################################### Tournaments ############################################## 
+###############################################################################################*/
+
+	function getVotedGame(event)
+	{
+		event.preventDefault();
+
+		var game_id = $("#votedGame").find("option:selected").attr("value");
+
+		obj = {game_id};
+
+		postAjax(obj,getEndpoint("vote_tm"),displayResponse);
+	}
+
+	function getVoteID(event)
+	{
+		event.preventDefault();
+
+		var vote_id = $(".tm_vote_for").attr("data-voted-tm");
+
+		obj = {vote_id};
+
+		postAjax(obj,getEndpoint("add_vote"),displayResponse);
 	}
 
 
+/*############################################################################################*/
 	
 	function getAjax(obj, endpoint, fn){
 		return $.ajax({
@@ -391,6 +418,23 @@ $(document).ready(function(){
 		}
 	}
 
+/*#############################################################################################
+#################################### Basic Animation ########################################## 
+###############################################################################################*/
+
+$(".tm_vote_container").hover(function () {
+	$(this).find(".tm_vote_for").animate({width: "60px"}, 100);
+	$(this).find(".tm_vote_sign").show(0);
+}, function () {
+	$(".tm_vote_for").animate({width: "0px"}, 300);
+	$(".tm_vote_sign").hide(0);
+});
+
+
+/*#############################################################################################
+#################################### Events ################################################### 
+###############################################################################################*/
+
 	//Create new team
 	$("#create-team").on("click", retrieveTeam);
 	$("#t_name").keypress(function(e) {
@@ -418,5 +462,7 @@ $(document).ready(function(){
 	$(document).on("click",".add_pref",showPrefs);
 	$(document).on("change",".checkmark_container input",getCheckedGame);
 	$(".sbm").on("click",getWowData);
+	$("#vote_now").on("click",getVotedGame);
+	$(".tm_vote_for").on("click",getVoteID);
 });
 

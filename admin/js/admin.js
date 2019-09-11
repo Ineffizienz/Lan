@@ -89,9 +89,16 @@ $(document).ready(function(){
 
 		if($("#new_game_icon").get(0).files.length == 0)
 		{
-			form_data.append("file","0");
+			form_data.append("game_icon","0");
 		} else {
-			form_data.append("file",image);
+			form_data.append("game_icon",image);
+		}
+
+		if($("#new_game_banner").get(0).files.length == 0)
+		{
+			form_data.append("game_banner","0");
+		} else {
+			form_data.append("game_banner",image);
 		}
 
 		postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
@@ -166,7 +173,31 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon,id));
+		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
+	}
+
+	function getBannerData(event)
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var game_id = retrieveGameID(this);
+		var banner_id = "#" + $(this).siblings().attr("for");
+
+		console.log(banner_id);
+		var image = $(banner_id).prop('files')[0];
+		var form_data = new FormData();
+
+		form_data.append("game_id",game_id);
+
+		if($(banner_id).get(0).files.length == 0)
+		{
+			form_data.append("file","0");
+		} else {
+			form_data.append("file",image);
+		}
+
+		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 	}
 
 	function getFile(event) //Upload for new Keys
@@ -357,6 +388,35 @@ $(document).ready(function(){
 
 	}
 
+	function getTournamentParam(event)
+	{
+		event.preventDefault();
+
+		var game_id = $("#game_id").val();
+		var mode = $("#tm_mode").find("option:selected").attr("value");
+		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
+		var tm_time_from = $("#tm_time_from").val();
+		var tm_time_to = $("#tm_time_to").val();
+		var vote_id = $("#vote_id").val();
+
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
+
+		$("#tm_create_popup").hide();
+
+		postAjax(obj,getEndpoint("create_tournament"),setResult);
+	}
+
+	function getVoteParam(event)
+	{
+		event.preventDefault();
+
+		var vote_id = $(this).attr("data-tm-vote");
+
+		obj = {vote_id};
+
+		postAjax(obj,getEndpoint("delete_vote"),setResult);
+	}
+
 
 //########################### Send Data ##################################################################
 	
@@ -411,9 +471,11 @@ $(document).ready(function(){
 	{
 		displayResult(result.message);
 
-		if(result.parent_element in result)
+		if(result.hasOwnProperty("parent_element"))
 		{
 			reloadContent(result.parent_element,result.child_element);
+		} else {
+			console.log("nö");
 		}
 	}
 
@@ -422,10 +484,10 @@ $(document).ready(function(){
 		if($.isArray(parent_element))
 		{
 			$.each(parent_element, function(key, value) {
-				$(value).load(window.location.href + ' ' + child_element[key]);
+				$(value).load(location.href + ' ' + child_element[key]);
 			});
 		} else {
-			$(parent_element).load(window.location.href + ' ' + child_element);
+			$(parent_element).load(location.href + ' ' + child_element);
 		}
 	}
 	
@@ -448,7 +510,31 @@ $(document).ready(function(){
 		$(this).siblings(".settings_grn").slideToggle();
 	}
 
+	function displayPopup(event)
+	{
+		event.preventDefault();
 
+		vote_id = $(this).attr("data-tm-vote");
+		game_id = $(this).attr("data-tm-game");
+
+		$("#game_id").val(game_id);
+		$("#vote_id").val(vote_id);
+
+		$("#tm_create_popup").show();
+	}
+
+/*
+###########################################################
+######################## TIME-EVENT #######################
+###########################################################
+*/
+
+setInterval(refreshVotes,20000);
+
+function refreshVotes()
+{
+	$("#vote_page").load(location.href + ' #tm_votes');
+}
 
 	$("#create").on("click", getNumber);
 	$("#upload").on("click", getFile);
@@ -464,6 +550,7 @@ $(document).ready(function(){
 	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
+	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".settings_edit",showInputField);
@@ -472,5 +559,8 @@ $(document).ready(function(){
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
+	$("#start_tm").on("click",getTournamentParam);
+	$(document).on("click",".delete_vote",getVoteParam);
+	$(document).on("click",".define_tm",displayPopup);
 
 });

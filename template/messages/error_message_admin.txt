@@ -22,3 +22,4 @@ ERR_ADMIN_TM_EXISTS: Es existiert bereits ein Turnier für dieses Spiel.
 ERR_ADMIN_INTERN_#4: Es ist ein Datenbankfehler aufgreteten: 
 ERR_ADMIN_TM_DOES_NOT_EXISTS: Das angegebene Turnier existiert nicht.
 ERR_ADMIN_TM_CANNOT_BE_STARTED: Das Turnier kann nicht gestartet werden. Es läuft bereits.
+ERR_ADIM_EMPTY_PARAM: Es wurde ein leerer Parameter übergeben.

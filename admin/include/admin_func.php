@@ -213,6 +213,13 @@ function displaySingleGame($con)
 			$icon = "<img src='images/game_icon/" . $game["icon"] . "' height='64'>";
 		}
 
+		if (empty($game["banner"]))
+		{
+			$banner = "No Banner";
+		} else {
+			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
+		}
+
 		if(empty($game["addon"]))
 		{
 			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
@@ -222,41 +229,14 @@ function displaySingleGame($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
+			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
 		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
+			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
 		}
 	}
 
 	return $output;
 }
-
-/*function buildVisibilityOption($con)
-{
-	$ac_visib = getAchievementVisibility($con);
-
-	$visib_name = array();
-
-	foreach ($ac_visib as $visib_id)
-	{
-		if(!empty($visib_id))
-		{
-			if($visib_id == "1")
-			{
-				$combine = array("ID" => $visib_id, "name" => "Sichtbar");
-			} else {
-				$combine = array("ID" => $visib_id, "name" => "Unsichtbar");
-			}
-		}
-
-		if(!in_array($combine,$visib_name))
-		{
-			array_push($visib_name,$combine);
-		}
-	}
-
-	return $visib_name;
-}*/
 
 function validateInput($new_game)
 {
@@ -354,7 +334,7 @@ function displayTmGames($con)
 	return $output;
 }
 
-function displayTournaments($con)
+/*function displayTournaments($con)
 {
 	$tournaments = getTournaments($con);
 
@@ -390,6 +370,42 @@ function displayTournaments($con)
 	}
 
 	return $output;
+}*/
+
+function displayVotedTournaments($con)
+{
+	$voted_tm = getVotedTournaments($con);
+
+	$part = file_get_contents(TMP . "admin/part/voted_tm_tpl.html");
+
+	foreach ($voted_tm as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game_id"]);
+
+		if($tournament["vote_closed"] == "0")
+		{
+			$closed = "Nein";
+		} else {
+			$closed = "Ja";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
+		} else {
+			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
+		}
+	}
+
+	return $output;
+
+}
+
+function displayDefineTmPopup($con)
+{
+	$part = file_get_contents(TMP . "admin/part/popup/define_tm_popup.html");
+
+	return $part;
 }
 
 ?>

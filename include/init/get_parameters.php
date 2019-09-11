@@ -242,6 +242,11 @@ function getSinglePlayerPref($con, $player_id)
 		$player_pref[] = $row["game_id"];
 	}
 
+	if(empty($player_pref))
+	{
+		$player_pref = array();
+	}
+
 	return $player_pref;
 
 }
@@ -254,7 +259,7 @@ function getSinglePlayerPref($con, $player_id)
 
 function getGameData($con)
 {
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, banner, has_table FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -294,10 +299,10 @@ function getGameInfo($con) // function.php/generate_options
 
 function getGameInfoById($con,$game_id)
 {
-	$result = mysqli_query($con,"SELECT name, raw_name, short_title, icon FROM games WHERE ID = '$game_id'");
+	$result = mysqli_query($con,"SELECT name, raw_name, short_title, icon, banner FROM games WHERE ID = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
-		$gameinfo[] = $row;
+		$gameinfo = $row;
 	}
 
 	return $gameinfo;
@@ -351,9 +356,26 @@ function getGameIcon($con,$game_id)
 	{
 		$row = mysqli_fetch_array($result);
 		$game_icon = $row["game_icon"];	
-
-		return $game_icon;
+	
+	} else {
+		$game_icon = array();
 	}
+
+	return $game_icon;
+}
+
+function getGameBanner($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT banner FROM games WHERE ID = '$game_id'");
+	if(!empty($result))
+	{
+		$row = mysqli_fetch_array($result);
+		$game_banner = $row["banner"];
+	} else {
+		$game_banner = array();
+	}
+
+	return $game_banner;
 }
 
 function getHasTableByGameID($con,$game_id)
@@ -369,7 +391,7 @@ function getRawNameByID($con,$game_id)
 {
 	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE game_id = '$game_id'");
 	$row = mysqli_fetch_array($result);
-	$o_rawname = $raw["raw_name"];
+	$o_rawname = $row["raw_name"];
 	
 	return $o_rawname;
 }
@@ -838,6 +860,113 @@ function getTmStartById($con,$tm_id)
 	}
 
 	return $tm_starttime;
+}
+
+function getVotedGames($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT ID, vote_count FROM tm_vote WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedGames = $row;
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
+function getVotedTournaments($con)
+{
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedTournaments[] = $row;
+	}
+
+	if(empty($votedTournaments))
+	{
+		$votedTournaments = array();
+	}
+
+	return $votedTournaments;
+}
+
+function getVoteIds($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votes[] = $row["ID"];
+	}
+
+	if(empty($votes))
+	{
+		$votes = array();
+	}
+
+	return $votes;
+}
+
+function getTournamentVoteId($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$voteID = $row["ID"];
+	}
+	
+	return $voteID;
+}
+
+function getVotedGamesByPlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT tm_vote_id FROM tm_vote_player WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedGames[] = $row["tm_vote_id"];
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
+function getPlayerVotes($con,$player_id,$vote_id)
+{
+	return mysqli_num_rows(mysqli_query($con, "SELECT * FROM tm_vote_player WHERE tm_vote_id = '$vote_id' AND player_id ='$player_id';")) > 0;
+}
+
+function getTournamentPeriodId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_period ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_period_id = $row["ID"];
+	}
+
+	return $tm_period_id;
+}
+
+function getVoteById($con,$vote_id)
+{
+	$result = mysqli_query($con,"SELECT game_id, vote_count, starttime, endtime FROM tm_vote WHERE ID = '$vote_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_vote = $row;
+	}
+
+	if(empty($tm_vote))
+	{
+		$tm_vote = array();
+	}
+
+	return $tm_vote;
 }
 
 ?>
