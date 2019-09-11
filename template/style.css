@@ -1032,6 +1032,11 @@ h4
 	font-family: Calibri;
 	width: 350px;
 }
+#tm_start_vote
+{
+	margin-top:15%;
+	text-align:center;
+}
 .tm_vote_for
 {
 	margin:0;
