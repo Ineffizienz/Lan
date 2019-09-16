@@ -216,8 +216,8 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var vote_id = $(".tm_vote_for").attr("data-voted-tm");
-
+		var vote_id = $(this).attr("data-voted-tm");
+		
 		obj = {vote_id};
 
 		postAjax(obj,getEndpoint("add_vote"),displayResponse);

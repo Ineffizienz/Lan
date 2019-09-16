@@ -1048,7 +1048,7 @@ h4
 	border-radius: 0px 20px 20px 0;
 	box-shadow: 0 2px 2px 0;
 	height: 60px;
-	width: 0px;
+	/*width: 0px;*/
 }
 .tm_vote_sign
 {
