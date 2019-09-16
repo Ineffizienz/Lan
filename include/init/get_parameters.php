@@ -840,6 +840,88 @@ function getTournaments($con)
 	return $tms;
 }
 
+function getLastTmId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_tm_id = $row["ID"];
+	}
+
+	return $last_tm_id;
+}
+
+function getPlayerIdsFromVote($con,$vote_id)
+{
+	$result = mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedPlayerIds[] = $row["player_id"];
+	}
+
+	return $votedPlayerIds;
+}
+
+function getGamersListIds($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gamerslist_id = $row["ID"];
+	}
+
+	return $gamerslist_id;
+}
+
+function getTeamsByTmId($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_team WHERE tournament_id = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$team_ids = $row["ID"];
+	}
+
+	return $team_ids;
+}
+
+function getLastMatchId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$match_id = $row["ID"];
+	}
+
+	return $match_id;
+}
+
+function getMatchesIdByMatchId($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_matches WHERE match_id = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$matches_id = $row["ID"];
+	}
+
+	return $matches_id;
+}
+
+function getPlayerIdFromGamerslist($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT player_id FROM tm_gamerslist WHERE tm_id = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$player_ids[] = $row["player_id"];
+	}
+
+	if(empty($player_ids))
+	{
+		$player_ids = array();
+	}
+
+	return $player_ids;
+}
+
 function getTmById($con,$tm_id)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'");

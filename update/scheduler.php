@@ -23,5 +23,4 @@ function scheduleEndOfVote($con)
     
     return $response;
 }
-
 ?>

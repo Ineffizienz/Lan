@@ -395,11 +395,12 @@ $(document).ready(function(){
 		var game_id = $("#game_id").val();
 		var mode = $("#tm_mode").find("option:selected").attr("value");
 		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
-		var tm_time_from = $("#tm_time_from").val();
-		var tm_time_to = $("#tm_time_to").val();
+		var max_player = $("#tm_max_player").val();
+		var tm_time_from = $("#tm_time_from").val(); //Fehlermeldung wenn nicht vollständig!
+		var tm_time_to = $("#tm_time_to").val(); //Fehlermeldung wenn nicht vollständig!
 		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
+		obj = {game_id, mode, mode_details, max_player, tm_time_from, tm_time_to, vote_id};
 
 		$("#tm_create_popup").hide();
 

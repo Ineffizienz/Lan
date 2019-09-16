@@ -110,7 +110,9 @@ $sql_statements = array(
 
 			// Update 1.5
 			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"addon","clm_old"=>"0","statement"=>"ALTER TABLE games ADD addon INT(11) NULL AFTER short_title"),
-			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"banner","clm_old"=>"0","statement"=>"ALTER table games ADD banner VARCHAR(255) CHARSET utf8mb4 NULL AFTER icon"),
+			array("tbl_name"=>"games","tbl_old"=>"0","clm_name"=>"banner","clm_old"=>"0","statement"=>"ALTER TABLE games ADD banner VARCHAR(255) CHARSET utf8mb4 NULL AFTER icon"),
+			array("tbl_name"=>"tm_gamerslist","tbl_old"=>0,"clm_name"=>"tm_id","clm_old"=>"0","statement"=>"ALTER TABLE tm_gamerslist ADD tm_id INT(11) AFTER ID"),
+			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"max_player","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD max_player INT(11) AFTER player_count"),
 
 		## RENAME COLUMN
 			// Update 1.5

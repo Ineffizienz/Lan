@@ -301,7 +301,7 @@ td
 {
 	display:none;
 }
-input[type=text],[type=password],[type=date],[type=time]
+input[type=text],[type=password],[type=date],[type=time],[type=number]
 	{
 		padding-left: 10px;
 		background-color: #fff;

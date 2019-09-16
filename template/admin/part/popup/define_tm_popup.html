@@ -31,13 +31,13 @@
         <label for="max_player">Maximale Spieleranzahl</label>
     </div>
     <div>
-        <input type="number" name="max_player" id="max_player">
+        <input type="number" name="max_player" id="tm_max_player">
     </div>
     <div>
         <label for="tm_time_from">Von</label>
     </div>
     <div>
-        <input type="time" id="tm_time_from" name="tm_time_from">
+        <input type="time" id="tm_time_from" min="0000" max="2400" name="tm_time_from" required>
     </div>
     <div>
         <label for="tm_time_to">Bis</label>
@@ -45,6 +45,14 @@
     <div>
         <input type="time" id="tm_time_to" name="tm_time_to">
     </div>
+    <!--<div>
+        <label for="tm_ressource">Serverressource</label>
+    </div>
+    <div>
+        <select name="tm_ressource" id="tm_ressource">
+            {$ressources}
+        </select>
+    </div>-->
     <div>&nbsp;</div>
     <div>
         <button id="start_tm">Turnier starten</button>
