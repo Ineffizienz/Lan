@@ -628,8 +628,6 @@ function displayRunningVotes($con)
 			} else {
 				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
 			}
-		} else {
-			$output = "";
 		}
 	}
 
