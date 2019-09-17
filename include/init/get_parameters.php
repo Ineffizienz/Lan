@@ -795,7 +795,125 @@ function getServerStatus($con)
 	return $s_status;
 }
 
-//###################### Tournaments ################################
+
+/*
+###########################################################
+######################## Tournament-Votes #################
+###########################################################
+*/
+
+function getPlayerIdsFromVote($con,$vote_id)
+{
+	$result = mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedPlayerIds[] = $row["player_id"];
+	}
+
+	return $votedPlayerIds;
+}
+
+function getVotedGames($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT ID, vote_count FROM tm_vote WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedGames = $row;
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
+function getVotedTournaments($con)
+{
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedTournaments[] = $row;
+	}
+
+	if(empty($votedTournaments))
+	{
+		$votedTournaments = array();
+	}
+
+	return $votedTournaments;
+}
+
+function getVoteIds($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votes[] = $row["ID"];
+	}
+
+	if(empty($votes))
+	{
+		$votes = array();
+	}
+
+	return $votes;
+}
+
+function getTournamentVoteId($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$voteID = $row["ID"];
+	}
+	
+	return $voteID;
+}
+
+function getVotedGamesByPlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT tm_vote_id FROM tm_vote_player WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$votedGames[] = $row["tm_vote_id"];
+	}
+
+	if(empty($votedGames))
+	{
+		$votedGames = array();
+	}
+
+	return $votedGames;
+}
+
+function getPlayerVotes($con,$player_id,$vote_id)
+{
+	return mysqli_num_rows(mysqli_query($con, "SELECT * FROM tm_vote_player WHERE tm_vote_id = '$vote_id' AND player_id ='$player_id';")) > 0;
+}
+
+function getVoteById($con,$vote_id)
+{
+	$result = mysqli_query($con,"SELECT game_id, vote_count, starttime, endtime FROM tm_vote WHERE ID = '$vote_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_vote = $row;
+	}
+
+	if(empty($tm_vote))
+	{
+		$tm_vote = array();
+	}
+
+	return $tm_vote;
+}
+
+/*
+###########################################################
+######################## Tournaments ######################
+###########################################################
+*/
 
 function getTournamentGames($con)
 {
@@ -831,7 +949,7 @@ function getTournamentModes($con,$game)
 
 function getTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, DATE_FORMAT(`starttime`, '%d.%m.%Y %H:%i') AS starttime, game, mode, mode_details, player_count FROM tm");
+	$result = mysqli_query($con,"SELECT ID, game_id, mode, mode_details, player_count, tm_period_id FROM tm");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$tms[] = $row;
@@ -849,17 +967,6 @@ function getLastTmId($con)
 	}
 
 	return $last_tm_id;
-}
-
-function getPlayerIdsFromVote($con,$vote_id)
-{
-	$result = mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$votedPlayerIds[] = $row["player_id"];
-	}
-
-	return $votedPlayerIds;
 }
 
 function getGamersListIds($con)
@@ -944,86 +1051,6 @@ function getTmStartById($con,$tm_id)
 	return $tm_starttime;
 }
 
-function getVotedGames($con,$game_id)
-{
-	$result = mysqli_query($con,"SELECT ID, vote_count FROM tm_vote WHERE game_id = '$game_id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$votedGames = $row;
-	}
-
-	if(empty($votedGames))
-	{
-		$votedGames = array();
-	}
-
-	return $votedGames;
-}
-
-function getVotedTournaments($con)
-{
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$votedTournaments[] = $row;
-	}
-
-	if(empty($votedTournaments))
-	{
-		$votedTournaments = array();
-	}
-
-	return $votedTournaments;
-}
-
-function getVoteIds($con)
-{
-	$result = mysqli_query($con,"SELECT ID FROM tm_vote");
-	while($row=mysqli_fetch_array($result))
-	{
-		$votes[] = $row["ID"];
-	}
-
-	if(empty($votes))
-	{
-		$votes = array();
-	}
-
-	return $votes;
-}
-
-function getTournamentVoteId($con,$game_id)
-{
-	$result = mysqli_query($con,"SELECT ID FROM tm_vote WHERE game_id = '$game_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$voteID = $row["ID"];
-	}
-	
-	return $voteID;
-}
-
-function getVotedGamesByPlayerId($con,$player_id)
-{
-	$result = mysqli_query($con,"SELECT tm_vote_id FROM tm_vote_player WHERE player_id = '$player_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$votedGames[] = $row["tm_vote_id"];
-	}
-
-	if(empty($votedGames))
-	{
-		$votedGames = array();
-	}
-
-	return $votedGames;
-}
-
-function getPlayerVotes($con,$player_id,$vote_id)
-{
-	return mysqli_num_rows(mysqli_query($con, "SELECT * FROM tm_vote_player WHERE tm_vote_id = '$vote_id' AND player_id ='$player_id';")) > 0;
-}
-
 function getTournamentPeriodId($con)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm_period ORDER BY ID DESC LIMIT 1");
@@ -1035,20 +1062,19 @@ function getTournamentPeriodId($con)
 	return $tm_period_id;
 }
 
-function getVoteById($con,$vote_id)
+function getTournamentPeriod($con,$period_id)
 {
-	$result = mysqli_query($con,"SELECT game_id, vote_count, starttime, endtime FROM tm_vote WHERE ID = '$vote_id'");
+	$result = mysqli_query($con,"SELECT DATE_FORMAT(`time_from`, '%d.%m.%Y %H:%i') AS time_from, DATE_FORMAT(`time_to`, '%d.%m.%Y %H:%i') AS time_to FROM tm_period WHERE ID = '$period_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
-		$tm_vote = $row;
+		$tm_period = $row;
 	}
 
-	if(empty($tm_vote))
+	if(empty($tm_period))
 	{
-		$tm_vote = array();
+		$tm_period = array();
 	}
 
-	return $tm_vote;
+	return $tm_period;
 }
-
 ?>

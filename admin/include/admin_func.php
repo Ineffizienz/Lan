@@ -334,13 +334,14 @@ function displayTmGames($con)
 	return $output;
 }
 
-/*function displayTournaments($con)
+function displayTournaments($con)
 {
 	$tournaments = getTournaments($con);
 
 	foreach ($tournaments as $tournament)
 	{
-		$game_name = getGameInfoById($con,$tournament["game"]);
+		$game_name = getGameInfoById($con,$tournament["game_id"]);
+		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
 
 		$part = file_get_contents(TMP . "admin/part/tm_table.html");
 
@@ -354,7 +355,7 @@ function displayTmGames($con)
 		$game_mode = translateGameMode($tournament["mode"]);
 		$game_mode_details = translateGameModeDetails($tournament["mode_details"]);
 
-		if(strtotime($tournament["starttime"]) < time())
+		if(strtotime($tm_period["time_from"]) < time())
 		{
 			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
 		} else {
@@ -363,14 +364,14 @@ function displayTmGames($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
 		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
 		}
 	}
 
 	return $output;
-}*/
+}
 
 function displayVotedTournaments($con)
 {

@@ -264,7 +264,7 @@ td
 	grid-column-gap:30px;
 	grid-row-gap:15px;
 	align-content: center;
-	width:50%;
+	width:100%;
 }
 #tm_create_popup
 {
