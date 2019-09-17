@@ -42,7 +42,6 @@ if(isset($_REQUEST["game_id"]))
                 foreach ($player_ids as $player_id)
                 {
                     $player_ids_gamerslist = getPlayerIdFromGamerslist($con,$tm_id);
-                    print_r($player_ids_gamerslist);
 
                     if(empty($player_ids_gamerslist))
                     {
@@ -71,8 +70,15 @@ if(isset($_REQUEST["game_id"]))
                     $sql = "DELETE FROM tm_vote WHERE ID = '$vote_id'";
                     if(mysqli_query($con,$sql))
                     {
-                        $message->getMessageCode("SUC_ADMIN_CREATE_TM_FROM_VOTE");
-                        echo buildJSONOutput($message->displayMessage());
+                        $sql = "CREATE EVENT IF NOT EXISTS start_tm" . $tm_id . " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 MINUTE ENABLE DO UPDATE tm SET tm_locked = 1 WHERE ID = '$tm_id'";
+                        if(mysqli_query($con,$sql))
+                        {
+                            $message->getMessageCode("SUC_ADMIN_CREATE_TM_FROM_VOTE");
+                            echo buildJSONOutput($message->displayMessage());
+                        } else {
+                            $message->getMessageCode("ERR_ADMIN_DB");
+                            echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
+                        }
                     } else {
                         $message->getMessageCode("ERR_ADMIN_DB");
                         echo buildJSONoutput($message->displayMessage() . mysqli_error($con));
