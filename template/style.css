@@ -977,6 +977,36 @@ h4
 #tm_container
 {
 	display:grid;
+	grid-template-rows: auto auto;
+	align-content: center;
+	margin: 0 auto;
+	cursor: pointer;
+	background-color:#C0C0C0;
+	border-radius:5px;
+	box-shadow: 0 2px 2px 0;
+	width:58%;
+}
+.tm_container_img
+{
+	padding-top: 8px;
+	text-align:center;
+	width: auto;
+}
+.tm_container_img img
+{
+	box-shadow: 0 2px 2px 0;
+}
+.tm_container_details
+{
+	display:grid;
+	grid-template-columns: 50% 50%;
+	align-content: center;
+	text-align:center;
+}
+
+#tm_vote_container
+{
+	display:grid;
 	grid-template-columns:auto auto auto;
 	grid-column-gap:30px;
 	grid-row-gap:30px;
