@@ -893,6 +893,11 @@ function getPlayerVotes($con,$player_id,$vote_id)
 	return mysqli_num_rows(mysqli_query($con, "SELECT * FROM tm_vote_player WHERE tm_vote_id = '$vote_id' AND player_id ='$player_id';")) > 0;
 }
 
+function getVotedPlayers($con,$vote_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'"));
+}
+
 function getVoteById($con,$vote_id)
 {
 	$result = mysqli_query($con,"SELECT game_id, vote_count, starttime, endtime FROM tm_vote WHERE ID = '$vote_id'");
