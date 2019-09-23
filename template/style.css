@@ -980,11 +980,14 @@ h4
 	grid-template-rows: auto auto;
 	align-content: center;
 	margin: 0 auto;
-	cursor: pointer;
 	background-color:#C0C0C0;
 	border-radius:5px;
 	box-shadow: 0 2px 2px 0;
 	width:58%;
+}
+.tm_single
+{
+	cursor:pointer;
 }
 .tm_container_img
 {
