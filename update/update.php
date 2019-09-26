@@ -1,6 +1,9 @@
 <?php
 
 include(dirname(__FILE__,2) . "/include/connect.php");
+include("db_ops.php");
+
+defineEvents($con);
 
 // Update 1.1
 /*
