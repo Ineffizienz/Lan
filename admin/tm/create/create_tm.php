@@ -37,7 +37,7 @@ if(isset($_REQUEST["game_id"]))
             $sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,max_player,tm_period_id,tm_end_register,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$max_player','$tm_period_id','$end_register','0')";
             if(mysqli_query($con,$sql))
             {
-                $tm_id = getLastTmId($con) + 1;
+                $tm_id = getLastTmId($con);
                 $player_ids = getPlayerIdsFromVote($con,$vote_id);
                 
                 foreach ($player_ids as $player_id)
