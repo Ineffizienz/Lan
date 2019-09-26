@@ -978,12 +978,16 @@ h4
 {
 	display:grid;
 	grid-template-rows: auto auto;
+	grid-row-gap: 15px;
 	align-content: center;
 	margin: 0 auto;
+	width:58%;
+}
+#tm_container a
+{
 	background-color:#C0C0C0;
 	border-radius:5px;
 	box-shadow: 0 2px 2px 0;
-	width:58%;
 }
 .tm_single
 {

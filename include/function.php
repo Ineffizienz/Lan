@@ -654,13 +654,42 @@ function displayTournaments($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($banner,$tm_period["time_from"],$player_count),$part);
+			$output = str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
 		} else {
-			$output = str_replace(array("--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($banner,$tm_period["time_from"],$player_count),$part);
+			$output .= str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
 		}
 	}
 
 	return $output;
+}
+
+function displayTournamentParticipants($con,$tm_id)
+{
+	$tm_player = getPlayerIdFromGamerslist($con,$tm_id);
+
+	$list = implode(",",$tm_player);
+	
+	$part = file_get_contents("template/part/tm_participants.html");
+
+	$output = str_replace("--PlAYER_LIST--",$list,$part);
+
+	return $output;
+}
+
+function displayTournamentTree($con)
+{
+	if(isset($_REQUEST["id"]))
+	{
+		$tm_id = $_REQUEST["id"];
+		$tm_status = getTournamentStatus($con,$tm_id);
+
+		if($tm_status !== "1")
+		{
+			$tournament = displayTournamentParticipants($con,$tm_id);
+		}
+	}
+
+	return $tm_id;
 }
 
 ?>
