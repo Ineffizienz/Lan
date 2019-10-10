@@ -1034,6 +1034,30 @@ function getPlayerIdFromGamerslist($con,$tm_id)
 	return $player_ids;
 }
 
+function getPlayerFromGamerslist($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT player_id FROM tm_gamerslist WHERE tm_id = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$player_ids[] = $row["player_id"];
+	}
+
+	$player_name = array();
+
+	foreach ($player_ids as $player_id)
+	{
+		$result = mysqli_query($con,"SELECT name FROM player WHERE ID = '$player_id'");
+		while($row=mysqli_fetch_array($result))
+		{
+			$single_name = $row["name"];
+		}
+
+		array_push($player_name,$single_name);
+	}
+
+	return $player_name;
+}
+
 function getTmById($con,$tm_id)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'");
@@ -1081,5 +1105,16 @@ function getTournamentPeriod($con,$period_id)
 	}
 
 	return $tm_period;
+}
+
+function getTournamentStatus($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT tm_locked FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_locked = $row["tm_locked"];
+	}
+
+	return $tm_locked;
 }
 ?>

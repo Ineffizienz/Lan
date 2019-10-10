@@ -665,13 +665,13 @@ function displayTournaments($con)
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tm_player = getPlayerIdFromGamerslist($con,$tm_id);
+	$tm_player = getPlayerFromGamerslist($con,$tm_id);
 
 	$list = implode(",",$tm_player);
 	
-	$part = file_get_contents("template/part/tm_participants.html");
+	$part = file_get_contents("template/part/unlocked_tm.html");
 
-	$output = str_replace("--PlAYER_LIST--",$list,$part);
+	$output = str_replace("--PLAYER_LIST--",$list,$part);
 
 	return $output;
 }
@@ -689,7 +689,7 @@ function displayTournamentTree($con)
 		}
 	}
 
-	return $tm_id;
+	return $tournament;
 }
 
 ?>
