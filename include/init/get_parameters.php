@@ -832,12 +832,15 @@ function getVotedGames($con,$game_id)
 function getVotedTournaments($con)
 {
 	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
-	while($row=mysqli_fetch_assoc($result))
+	if(!empty($result))
 	{
-		$votedTournaments[] = $row;
+		while($row=mysqli_fetch_assoc($result))
+		{
+			$votedTournaments[] = $row;
+		}
 	}
 
-	if(empty($votedTournaments))
+	if(empty($votedTournaments) || !isset($votedTournaments))
 	{
 		$votedTournaments = array();
 	}
@@ -955,9 +958,17 @@ function getTournamentModes($con,$game)
 function getTournaments($con)
 {
 	$result = mysqli_query($con,"SELECT ID, game_id, mode, mode_details, player_count, tm_period_id FROM tm");
-	while($row=mysqli_fetch_assoc($result))
+	if(!empty($result))
 	{
-		$tms[] = $row;
+		while($row=mysqli_fetch_assoc($result))
+		{
+			$tms[] = $row;
+		}
+	}
+
+	if(empty($tms) || !isset($tms))
+	{
+		$tms = array();
 	}
 
 	return $tms;
