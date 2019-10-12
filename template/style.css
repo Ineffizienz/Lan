@@ -989,6 +989,15 @@ h4
 	border-radius:5px;
 	box-shadow: 0 2px 2px 0;
 }
+#tm_unlocked
+{
+	display:grid;
+	grid-template-columns: auto auto;
+	align-content: center;
+	text-align:center;
+	margin:5px;
+	width:75%;
+}
 .tm_single
 {
 	cursor:pointer;
@@ -1010,7 +1019,6 @@ h4
 	align-content: center;
 	text-align:center;
 }
-
 #tm_vote_container
 {
 	display:grid;
