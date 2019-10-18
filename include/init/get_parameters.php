@@ -1128,4 +1128,38 @@ function getTournamentStatus($con,$tm_id)
 
 	return $tm_locked;
 }
+
+function getJointPlayer($con,$tm_id,$player_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT player_id FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'")) > 0;
+}
+
+// Für bereits gestartete Turniere
+function getTmPairs($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$teams[] = $row;
+	}
+
+	foreach ($teams as $team)
+	{
+		$result = mysqli_query($con,"SELECT gamerslist_id FROM tm_team WHERE ID = '$team'");
+		while($row=mysqli_fetch_array($result))
+		{
+			$gamerslist_id = $row["gamerslist_id"];
+		}
+
+		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN player.ID = tm_gamerslist.player_id WHERE tm.gamerslist.ID = '$gamerslist_id'");
+		while($row=mysqli_fetch_array($result))
+		{
+			$single_name = $row["name"];
+		}
+
+		array_push($player_name,$single_name);
+	}
+
+	return $player_name;
+}
 ?>

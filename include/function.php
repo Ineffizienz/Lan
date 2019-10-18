@@ -671,10 +671,19 @@ function displayTournamentParticipants($con,$tm_id)
 	
 	$part = file_get_contents("template/part/unlocked_tm.html");
 
-	$output = str_replace("--PLAYER_LIST--",$list,$part);
+	$output = str_replace(array("--PLAYER_LIST--","--TM_ID--"),array($list,$tm_id),$part);
 
 	return $output;
 }
+
+/*function displayTournamentLocked($con,$tm_id)
+{
+	$tm_player = getTmPairs($con,$tm_id);
+
+	//$part = file_get_contents("template/part/locked_tm.html");
+
+	return $tm_player;
+}*/
 
 function displayTournamentTree($con)
 {
@@ -686,6 +695,8 @@ function displayTournamentTree($con)
 		if($tm_status !== "1")
 		{
 			$tournament = displayTournamentParticipants($con,$tm_id);
+		} else {
+			//$tournament = displayTournamentLocked($con,$tm_id);
 		}
 	}
 
