@@ -1,6 +1,7 @@
 <?php
 /* Notizen
         - Vote nach Start des Turniers bereinigen!
+        - Remove max_player from script
 */
 include(dirname(__FILE__,4) . "/include/init/constant.php");
 include(dirname(__FILE__,3) . "/include/admin_func.php");
@@ -34,7 +35,7 @@ if(isset($_REQUEST["game_id"]))
             $end_register = date("Y-m-d H:i:s", strtotime("+30 minutes")); //begrenzt den Anmeldungszeitraum für Turniere auf 30 Minuten
             $vote_count = getVotedPlayers($con,$vote_id);
             
-            $sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,max_player,tm_period_id,tm_end_register,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$max_player','$tm_period_id','$end_register','0')";
+            $sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$tm_period_id','$end_register','0')";
             if(mysqli_query($con,$sql))
             {
                 $tm_id = getLastTmId($con);
