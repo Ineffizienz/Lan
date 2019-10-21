@@ -666,12 +666,13 @@ function displayTournaments($con)
 function displayTournamentParticipants($con,$tm_id)
 {
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
+	$banner = getTmBanner($con,$tm_id);
 
-	$list = implode(",",$tm_player);
+	$list = implode(", ",$tm_player);
 	
 	$part = file_get_contents("template/part/unlocked_tm.html");
 
-	$output = str_replace(array("--PLAYER_LIST--","--TM_ID--"),array($list,$tm_id),$part);
+	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);
 
 	return $output;
 }

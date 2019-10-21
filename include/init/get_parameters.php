@@ -1129,6 +1129,28 @@ function getTournamentStatus($con,$tm_id)
 	return $tm_locked;
 }
 
+function getTmBanner($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT banner FROM games INNER JOIN tm ON games.ID = tm.game_id WHERE tm.ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$game_banner = $row["banner"];
+	}
+
+	return $game_banner;
+}
+
+function getPlayerCountTm($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT player_count FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$player_count = $row["player_count"];
+	}
+
+	return $player_count;
+}
+
 function getJointPlayer($con,$tm_id,$player_id)
 {
 	return mysqli_num_rows(mysqli_query($con,"SELECT player_id FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'")) > 0;

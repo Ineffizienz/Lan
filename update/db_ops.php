@@ -8,11 +8,13 @@ function defineEvents($con)
 function t_setUpMatches($con)
 {
     $sql = "USE project_ziphon;
+    SET @active_trigger = 0;
+
     DROP TRIGGER IF EXISTS t_setMatches;
     delimiter //
     CREATE TRIGGER t_setMatches AFTER UPDATE ON tm
     FOR EACH ROW
-    BEGIN
+    thisTrigger: BEGIN
         DECLARE tm_id int;
         DECLARE player_id int;
         DECLARE team_1 int;
@@ -24,39 +26,43 @@ function t_setUpMatches($con)
         DECLARE player_cursor CURSOR FOR SELECT player_id FROM tm_gamerslist WHERE tm_id = @tm_id ORDER BY RAND();
         DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_done = 1;
         
-        IF OLD.tm_locked <=> NEW.tm_locked THEN
+        IF @active_trigger = 1 THEN
+			LEAVE thisTrigger;
+		END IF;
 
-            SET tm_id = (SELECT ID FROM tm);
-            
-            OPEN player_cursor;
+            IF OLD.tm_locked <=> NEW.tm_locked THEN
 
-            FETCH NEXT FROM player_cursor INTO player_id;
-            WHILE NOT cursor_done DO
+                SET tm_id = (SELECT ID FROM tm);
+                
+                OPEN player_cursor;
 
-                SET last_paarung_id = (SELECT ID FROM tm_paarung WHERE tournament = @tm_id ORDER BY ID DESC);
-                SET team_2 = (SELECT team_2 FROM tm_paarung WHERE ID = @last_paarung_id);
+                FETCH NEXT FROM player_cursor INTO player_id;
+                WHILE NOT cursor_done DO
 
-                IF NOT team_2 THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
-                    UPDATE tm_paarung SET team_2 = @player_id WHERE tm_paarung = @last_paarung_id;
-                    
-                    INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
+                    SET last_paarung_id = (SELECT ID FROM tm_paarung WHERE tournament = @tm_id ORDER BY ID DESC);
+                    SET team_2 = (SELECT team_2 FROM tm_paarung WHERE ID = @last_paarung_id);
 
-                    SET match_id = (SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1);
+                    IF NOT team_2 THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
+                        UPDATE tm_paarung SET team_2 = @player_id WHERE tm_paarung = @last_paarung_id;
+                        
+                        INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
 
-                    INSERT INTO tm_matches (match_id) VALUES (@match_id);
+                        SET match_id = (SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1);
 
-                    SET matches_id = (SELECT ID FROM tm_matches WHERE match_id = @match_id);
+                        INSERT INTO tm_matches (match_id) VALUES (@match_id);
 
-                    UPDATE tm_paarung SET matches_id = @matches_id WHERE ID = @last_paarung_id;
+                        SET matches_id = (SELECT ID FROM tm_matches WHERE match_id = @match_id);
 
-                ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
-                    INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
-                END IF;
+                        UPDATE tm_paarung SET matches_id = @matches_id WHERE ID = @last_paarung_id;
 
-                FETCH player_cursor INTO player_id;
-            END WHILE;
-            CLOSE player_cursor;
-        END IF;
+                    ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
+                        INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
+                    END IF;
+
+                    FETCH player_cursor INTO player_id;
+                END WHILE;
+                CLOSE player_cursor;
+            END IF;
 
         
     END; //
