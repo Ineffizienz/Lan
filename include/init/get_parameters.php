@@ -1080,17 +1080,6 @@ function getTmById($con,$tm_id)
 	return $existing_tm;
 }
 
-function getTmStartById($con,$tm_id)
-{
-	$result = mysqli_query($con,"SELECT starttime FROM tm WHERE ID = '$tm_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$tm_starttime = $row["starttime"];
-	}
-
-	return $tm_starttime;
-}
-
 function getTournamentPeriodId($con)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm_period ORDER BY ID DESC LIMIT 1");
@@ -1173,7 +1162,7 @@ function getTmPairs($con,$tm_id)
 			$gamerslist_id = $row["gamerslist_id"];
 		}
 
-		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN player.ID = tm_gamerslist.player_id WHERE tm.gamerslist.ID = '$gamerslist_id'");
+		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON player.ID = tm_gamerslist.player_id WHERE tm.gamerslist.ID = '$gamerslist_id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$single_name = $row["name"];

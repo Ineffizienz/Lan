@@ -631,6 +631,10 @@ function displayRunningVotes($con)
 		}
 	}
 
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Abstimmungen.";
+	}
 	return $output;
 }
 
@@ -660,6 +664,11 @@ function displayTournaments($con)
 		}
 	}
 
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Turniere.";
+	}
+
 	return $output;
 }
 
@@ -677,14 +686,28 @@ function displayTournamentParticipants($con,$tm_id)
 	return $output;
 }
 
-/*function displayTournamentLocked($con,$tm_id)
+function displayTournamentLocked($con,$tm_id)
 {
-	$tm_player = getTmPairs($con,$tm_id);
+	$tm_player_pair = getTmPairs($con,$tm_id);
 
-	//$part = file_get_contents("template/part/locked_tm.html");
+	$part = file_get_contents("template/part/locked_tm.html");
+	$part_pair = file_get_contents("template/part/player_pair.html");
+	foreach ($tm_player_pair as $pair)
+	{
+		$player_1 = $pair[0];
+		$player_2 = $pair[1];
+		if(!isset($pair_output))
+		{
+			$pair_output = str_replace(array("--PLAYER_1--","PLAYER_2--"),array($player_1,$player_2),$part_pair);
+		} else {
+			$pair_output .= str_replace(array("--PLAYER_1--","PLAYER_2--"),array($player_1,$player_2),$part_pair);
+		}
+	}
 
-	return $tm_player;
-}*/
+	$output = str_replace("--PLAYER-PAIR--",$pair_output,$part);
+
+	return $output;
+}
 
 function displayTournamentTree($con)
 {
@@ -697,11 +720,14 @@ function displayTournamentTree($con)
 		{
 			$tournament = displayTournamentParticipants($con,$tm_id);
 		} else {
-			//$tournament = displayTournamentLocked($con,$tm_id);
+			$tournament = displayTournamentLocked($con,$tm_id);
 		}
 	}
 
-	return $tournament;
+	if(!empty($tournament))
+	{
+		return $tournament;
+	}
 }
 
 ?>

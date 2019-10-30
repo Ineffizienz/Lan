@@ -30,17 +30,22 @@ function t_setUpMatches($con)
 			LEAVE thisTrigger;
 		END IF;
 
-            IF OLD.tm_locked <=> NEW.tm_locked THEN
+        IF OLD.tm_locked <=> NEW.tm_locked THEN
 
-                SET tm_id = (SELECT ID FROM tm);
-                
-                OPEN player_cursor;
+            SET tm_id = (SELECT ID FROM tm);
+            
+            OPEN player_cursor;
 
-                FETCH NEXT FROM player_cursor INTO player_id;
-                WHILE NOT cursor_done DO
+            FETCH NEXT FROM player_cursor INTO player_id;
+            WHILE NOT cursor_done DO
 
-                    SET last_paarung_id = (SELECT ID FROM tm_paarung WHERE tournament = @tm_id ORDER BY ID DESC);
-                    SET team_2 = (SELECT team_2 FROM tm_paarung WHERE ID = @last_paarung_id);
+                SET paarung = (SELECT COUNT(*) FROM tm_paarung);
+
+                IF paarung = 0 THEN
+                    INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
+                ELSE
+                    
+                    SET team_2 = (SELECT team_2 FROM tm_paarung ORDER BY ID DESC LIMIT 1);
 
                     IF NOT team_2 THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
                         UPDATE tm_paarung SET team_2 = @player_id WHERE tm_paarung = @last_paarung_id;
@@ -58,11 +63,12 @@ function t_setUpMatches($con)
                     ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
                         INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
                     END IF;
+                END IF;
 
-                    FETCH player_cursor INTO player_id;
-                END WHILE;
-                CLOSE player_cursor;
-            END IF;
+                FETCH player_cursor INTO player_id;
+            END WHILE;
+            CLOSE player_cursor;
+        END IF;
 
         
     END; //

@@ -21,13 +21,13 @@ if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
     if(mysqli_query($con,$sql))
     {
         $player_count++;
-        $sql = "SET @active_trigger = 1";
+        $sql = "UPDATE trigger_variables SET trigger_disabled = 1 WHERE trigger_name = 't_setMatches'";
         if(mysqli_query($con,$sql))
         {
             $sql = "UPDATE tm SET player_count = '$player_count' WHERE ID = '$tm_id'";
             if(mysqli_query($con,$sql))
             {
-                $sql = "SET @active_trigger = 0";
+                $sql = "UPDATE trigger_variables SET trigger_disabled = 0 WHERE trigger_name = 't_setMatches'";
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_JOIN_TM");
