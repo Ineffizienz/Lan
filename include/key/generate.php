@@ -11,15 +11,15 @@
 
 	$player_id = $_SESSION["player_id"];
 	
-	$raw_name = $_REQUEST["game"];
+	$game_id = $_REQUEST["game"];
 
-	if (empty($raw_name))
+	if (empty($game_id))
 	{
 		$not = "Wähle bitte ein Spiel aus.";
 		echo $not;
 	} else {
 			
-			$game_key = generateGameKey($con,$raw_name,$player_id);
+			$game_key = generateGameKey($con, $player_id, $game_id);
 
 			if(substr($game_key,0,3) == "ERR")
 			{

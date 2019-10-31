@@ -288,7 +288,7 @@ function getGameID($con,$game)
 
 function getGameInfo($con) // function.php/generate_options
 {
-	$result = mysqli_query($con,"SELECT name, raw_name AS id FROM games ORDER BY name");
+	$result = mysqli_query($con,"SELECT name, ID AS id FROM games ORDER BY name");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo[] = $row;
@@ -403,47 +403,22 @@ function getRawNameByID($con,$game_id)
 ###########################################################
 */
 
-function getPlayerGameKey($con,$id,$raw_name) //bezieht den Gamekey, der für einen bestimmten Spieler hinterlegt wurde / function.php/generateGameKey
+function getPlayerGameKey($con, int $player_id, int $game_id) //bezieht den Gamekey, der für einen bestimmten Spieler hinterlegt wurde / function.php/generateGameKey
 {
-	$result = mysqli_query($con,"SELECT game_key FROM $raw_name WHERE player_id = '$id'");
-	while ($row=mysqli_fetch_array($result))
-	{
-		$key = $row["game_key"];
-	}
-
-	if(empty($key))
-	{
-		$key = array();
-	}
-
-	return $key;
+	$result = mysqli_query($con, "SELECT gamekey FROM gamekeys WHERE (game_id = '$game_id') AND (player_id = '$player_id') AND (rejected = '0') LIMIT 1;");
+	if(mysqli_num_rows($result) > 0)
+		return mysqli_fetch_array($result)["gamekey"];
+	else
+		return false;
 }
 
-function getGameKey($con,$raw_name) //bezieht einen freien Gamekey / function.php/generateGameKey
+function getGameKey($con, int $game_id) //bezieht einen freien Gamekey / function.php/generateGameKey
 {
-	$result = mysqli_query($con,"SELECT game_key FROM $raw_name WHERE player_id IS NULL");
-	$row = mysqli_fetch_array($result);
-	$first_key = $row["game_key"];
-
-	return $first_key;
-}
-
-function getOldGameKey($con,$id,$raw_name) // reject_key.php
-{
-	$result = mysqli_query($con,"SELECT game_key FROM $raw_name WHERE player_id = '$id'");
-	$row = mysqli_fetch_array($result);
-	$old_key = $row["game_key"];
-
-	return $old_key;
-}
-
-function getNewGameKey($con,$raw_name) //bezieht einen neuen GameKey, wenn der alte nicht funktioniert hat / reject_key.php
-{
-	$result = mysqli_query($con,"SELECT game_key FROM $raw_name WHERE player_id IS NULL");
-	$row=mysqli_fetch_array($result);
-	$new_key = $row["game_key"];
-
-	return $new_key;
+	$result = mysqli_query($con,"SELECT gamekey FROM gamekeys WHERE (game_id = '$game_id') AND (player_id IS NULL) AND (rejected = '0') LIMIT 1;");
+	if(mysqli_num_rows($result) == 0)
+		return false;
+	else
+		return mysqli_fetch_array($result)["gamekey"];
 }
 
 function getAllKeys($con,$raw_name) // function.php/verifyKey
