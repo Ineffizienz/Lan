@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__).'../../include/init/get_parameters.php';
+
 function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
 {
 	if (file_exists("template/" . $file))
@@ -255,8 +257,8 @@ function validateInput($new_game)
 
 function verifyKey($con, int $game_id, string $key)
 {
-	$result = mysqli_query($con, "SELECT ID FROM gamekeys WHERE (gamekeys.game_id = '$game_id') AND (gamekey = $key);");
-	if(mysql_num_rows($result) > 0)
+	$result = mysqli_query($con, "SELECT ID FROM gamekeys WHERE (game_id = '$game_id') AND (gamekey = '$key');");
+	if(mysqli_num_rows($result) > 0)
 		return "ERR_KEY_EXISTS";
 	else
 		return true;
