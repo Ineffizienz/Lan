@@ -8,65 +8,93 @@ function defineEvents($con)
 function t_setUpMatches($con)
 {
     $sql = "USE project_ziphon;
-    SET @active_trigger = 0;
-
     DROP TRIGGER IF EXISTS t_setMatches;
     delimiter //
     CREATE TRIGGER t_setMatches AFTER UPDATE ON tm
     FOR EACH ROW
     thisTrigger: BEGIN
         DECLARE tm_id int;
-        DECLARE player_id int;
+        DECLARE player_id_gl int;
         DECLARE team_1 int;
         DECLARE team_2 int;
+        DECLARE paarung int;
         DECLARE last_paarung_id int;
         DECLARE match_id int;
         DECLARE matches_id int;
-        DECLARE cursor_done int DEFAULT 0;
-        DECLARE player_cursor CURSOR FOR SELECT player_id FROM tm_gamerslist WHERE tm_id = @tm_id ORDER BY RAND();
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_done = 1;
+        DECLARE trigger_disabled int;
+        DECLARE count_var int;
+        declare error_time varchar(255);
+        DECLARE player_var varchar(255);
+        DECLARE tm_var varchar(255);
+        DECLARE cursor_var varchar(255);
+        DECLARE cursor_done int DEFAULT FALSE;
+        DECLARE tm_id_table varchar(255);
+		DECLARE player_cursor CURSOR FOR (SELECT ID FROM tm_gamerslist WHERE (tm_gamerslist.tm_id = NEW.ID) AND (NEW.tm_locked) ORDER BY RAND());
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_done = TRUE;
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+            GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+				SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+				select CURRENT_TIMESTAMP into error_time;
+				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
+                
+		END; 
+        DECLARE EXIT HANDLER FOR SQLWarning
+		BEGIN
+            GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+				SET @full_error = CONCAT("Warning ", @errno, " (", @sqlstate, "): ", @text);
+				select CURRENT_TIMESTAMP into error_time;
+				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
+                
+		END;
+
+           
+        #SET trigger_disabled = (SELECT trigger_disabled FROM trigger_variables WHERE trigger_variables.trigger_name = 't_setMatches');
         
-        IF @active_trigger = 1 THEN
+        IF trigger_disabled = 1 THEN
 			LEAVE thisTrigger;
 		END IF;
 
-        IF OLD.tm_locked <=> NEW.tm_locked THEN
+        IF NEW.tm_locked != OLD.tm_locked THEN # Überprüft, ob sich die Spalte tm_locked geändert hat
+			SET tm_var = CONCAT('TM Status (nach if): ', NEW.tm_locked, ', ', OLD.tm_locked);
+            
+            INSERT INTO log_trigger_error(error_type, error_statement) VALUES ('msg-2',tm_var);
 
-            SET tm_id = (SELECT ID FROM tm);
+            SET tm_id = (SELECT ID FROM tm WHERE NEW.tm_locked);
+            SET count_var = 1;
             
             OPEN player_cursor;
+            
+            cursor_loop: LOOP
+				FETCH player_cursor INTO player_id_gl;
+				
+                IF cursor_done THEN
+					LEAVE cursor_loop;
+				END IF;
+                                 
+				SET last_paarung_id = (SELECT ID FROM tm_paarung ORDER BY tm_paarung.ID DESC LIMIT 1);
+				
+				IF ((count_var % 2) = 0) THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
+					UPDATE tm_paarung SET tm_paarung.team_2 = player_id_gl WHERE tm_paarung.ID = last_paarung_id;
+					
+					INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
 
-            FETCH NEXT FROM player_cursor INTO player_id;
-            WHILE NOT cursor_done DO
+					SET match_id = (SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1);
 
-                SET paarung = (SELECT COUNT(*) FROM tm_paarung);
+					INSERT INTO tm_matches (match_id) VALUES (match_id);
 
-                IF paarung = 0 THEN
-                    INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
-                ELSE
-                    
-                    SET team_2 = (SELECT team_2 FROM tm_paarung ORDER BY ID DESC LIMIT 1);
+					SET matches_id = (SELECT ID FROM tm_matches WHERE tm_matches.match_id = match_id);
 
-                    IF NOT team_2 THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
-                        UPDATE tm_paarung SET team_2 = @player_id WHERE tm_paarung = @last_paarung_id;
-                        
-                        INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
+					UPDATE tm_paarung SET matches_id = matches_id WHERE tm_paarung.ID = last_paarung_id;
 
-                        SET match_id = (SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1);
+				ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
+					INSERT INTO tm_paarung (team_1, tournament) VALUES (player_id_gl, tm_id);
+				END IF;
 
-                        INSERT INTO tm_matches (match_id) VALUES (@match_id);
-
-                        SET matches_id = (SELECT ID FROM tm_matches WHERE match_id = @match_id);
-
-                        UPDATE tm_paarung SET matches_id = @matches_id WHERE ID = @last_paarung_id;
-
-                    ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
-                        INSERT INTO tm_paarung (team_1, tournament) VALUES (@player_id, @tm_id);
-                    END IF;
-                END IF;
-
-                FETCH player_cursor INTO player_id;
-            END WHILE;
+                SET count_var = count_var + 1;
+            END LOOP;
             CLOSE player_cursor;
         END IF;
 

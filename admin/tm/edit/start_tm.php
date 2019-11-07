@@ -22,18 +22,11 @@
             $message->getMessageCode("ERR_ADMIN_TM_CANNOT_BE_STARTED");
             echo buildJSONOutput($message->displayMessage());
         } else {
-            $sql = "SET @active_trigger = 0";
-            if (mysqli_query($con,$sql))
+            $sql = "UPDATE tm SET tm_locked = '1' WHERE ID = '$tm_id'";
+            if(mysqli_query($con,$sql))
             {
-                $sql = "UPDATE tm SET tm_locked = '1' WHERE ID = '$tm_id'";
-                if(mysqli_query($con,$sql))
-                {
-                    $message->getMessageCode("SUC_ADMIN_START_TM");
-                    echo buildJSONOutput($message->displayMessage());
-                } else {
-                    $message->getMessageCode("ERR_ADMIN_DB");
-                    echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                }
+                $message->getMessageCode("SUC_ADMIN_START_TM");
+                echo buildJSONOutput($message->displayMessage());
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
