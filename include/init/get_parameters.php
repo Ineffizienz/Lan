@@ -939,6 +939,17 @@ function getTournamentGames($con)
 	return $tm_game;
 }
 
+function getSingleTournamentGame($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT game_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_game = $row["game_id"];
+	}
+
+	return $tm_game;
+}
+
 function getTournamentModes($con,$game)
 {
 	$result = mysqli_query($con,"SELECT mode FROM tm WHERE game = '$game'");
@@ -1013,6 +1024,28 @@ function getLastMatchId($con)
 	while($row=mysqli_fetch_array($result))
 	{
 		$match_id = $row["ID"];
+	}
+
+	return $match_id;
+}
+
+function getMatchesIdFromPaarung($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT matches_id FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$matches_id[] = $row["matches_id"];
+	}
+
+	return $matches_id;
+}
+
+function getMatchIdFromMatches($con,$matches_id)
+{
+	$result = mysqli_query($con,"SELECT match_id FROM tm_matches WHERE ID = '$matches_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$match_id = $row["match_id"];
 	}
 
 	return $match_id;
@@ -1107,6 +1140,17 @@ function getTournamentPeriod($con,$period_id)
 	return $tm_period;
 }
 
+function getPeriodIdFromTournament($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT tm_period_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_period_id = $row["tm_period_id"];
+	}
+
+	return $tm_period_id;
+}
+
 function getTournamentStatus($con,$tm_id)
 {
 	$result = mysqli_query($con,"SELECT tm_locked FROM tm WHERE ID = '$tm_id'");
@@ -1154,7 +1198,7 @@ function getTmPairs($con,$tm_id)
 		$teams[] = $row;
 	}
 
-	foreach ($teams as $team)
+	/*foreach ($teams as $team)
 	{
 		$result = mysqli_query($con,"SELECT gamerslist_id FROM tm_team WHERE ID = '$team'");
 		while($row=mysqli_fetch_array($result))
@@ -1162,15 +1206,15 @@ function getTmPairs($con,$tm_id)
 			$gamerslist_id = $row["gamerslist_id"];
 		}
 
-		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON player.ID = tm_gamerslist.player_id WHERE tm.gamerslist.ID = '$gamerslist_id'");
+		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON player.ID = tm_gamerslist.player_id WHERE tm_gamerslist.ID = '$gamerslist_id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$single_name = $row["name"];
 		}
 
 		array_push($player_name,$single_name);
-	}
+	}*/
 
-	return $player_name;
+	return $teams;
 }
 ?>
