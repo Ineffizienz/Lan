@@ -1,4 +1,5 @@
 <?php
+ini_set('max_execution_time', '700');
 include(dirname(__FILE__,2) . "/include/connect.php");
 
 echo "Konvertiere Key-Tabellenformat Rejected keys werden wieder als valide gesehn, da Fehler durch wiederholte keys aufgetreten sein könnten.<br>";
