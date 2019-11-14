@@ -398,6 +398,11 @@ function displayVotedTournaments($con)
 		}
 	}
 
+	if(!isset($output) || empty($output))
+	{
+		$output = "Es sind bisher keine Votes vorhanden.";
+	}
+
 	return $output;
 
 }
