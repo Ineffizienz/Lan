@@ -1217,4 +1217,15 @@ function getTmPairs($con,$tm_id)
 
 	return $teams;
 }
+
+function getUsernameFromGamerslist($con,$gamerslist_id)
+{
+	$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.ID = '$gamerslist_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$player_name = $row["name"];
+	}
+
+	return $player_name;
+}
 ?>

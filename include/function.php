@@ -697,10 +697,10 @@ function displayTournamentLocked($con,$tm_id)
 		$player_1 = $pair[0];
 		$player_2 = $pair[1];
 
-		$player_1 = getSingleUsername($con,$player_1);
+		$player_1 = getUsernameFromGamerslist($con,$player_1);
 		if(!empty($player_2))
 		{
-			$player_2 = getSingleUsername($con,$player_2);
+			$player_2 = getUsernameFromGamerslist($con,$player_2);
 		} else {
 			$player_2 = "Wildcard";
 		}
