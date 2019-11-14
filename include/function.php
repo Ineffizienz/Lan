@@ -706,9 +706,9 @@ function displayTournamentLocked($con,$tm_id)
 
 		if(!isset($pair_output))
 		{
-			$pair_output = str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
+			$pair_output = str_replace(array("--TM_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$player_1,$player_2),$part_pair);
 		} else {
-			$pair_output .= str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
+			$pair_output .= str_replace(array("--TM_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$player_1,$player_2),$part_pair);
 		}
 	}
 
@@ -739,6 +739,13 @@ function displayTournamentTree($con)
 	{
 		return $tournament;
 	}
+}
+
+function displayResultPopup()
+{
+	$part = file_get_contents(TMP . "part/popup/result_popup.html");
+
+	return $part;
 }
 
 ?>

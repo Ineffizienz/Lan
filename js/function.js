@@ -238,9 +238,9 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var tm_id = $(this).attr("data-tm-id");
-		var result_1 = ;
-		var result_2 = ;
+		var tm_id = $("#tm_id").val();
+		var result_1 = $("#result_1").val();
+		var result_2 = $("#result_2").val();
 
 		obj = {tm_id, result_1, result_2};
 
@@ -454,6 +454,27 @@ $(".tm_vote_container").hover(function () {
 	$(".tm_vote_sign").hide(0);
 });
 
+/*#############################################################################################
+#################################### Popups ################################################### 
+###############################################################################################*/
+
+function displayResultPopup(event)
+{
+	event.preventDefault();
+	
+	var tm_id = $(this).attr("data-tm-id");
+
+	$("#tm_id").val(tm_id);
+
+	$(".tm_result_popup").show();
+}
+
+function closeResultPopup(event)
+{
+	event.preventDefault();
+
+	$(".tm_result_popup").hide();
+}
 
 /*#############################################################################################
 #################################### Events ################################################### 
@@ -489,5 +510,10 @@ $(".tm_vote_container").hover(function () {
 	$("#vote_now").on("click",getVotedGame);
 	$(".tm_vote_for").on("click",getVoteID);
 	$("#join_tm").on("click",getJointPlayerID);
+	$("#send_result").on("click",getMatchResults);
+
+	//Popup
+	$(".tm_locked_player_pair").on("click",displayResultPopup);
+	$("#result_close_popup").on("click",closeResultPopup);
 });
 

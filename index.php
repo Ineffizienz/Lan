@@ -100,6 +100,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		$tpl->assign("running_votes",displayRunningVotes($con));
 		$tpl->assign("tournaments",displayTournaments($con));
 		$tpl->assign("tournament_view",displayTournamentTree($con));
+		$tpl->assign("result_popup",displayResultPopup());
 
 		/***************************** SETTING *****************************/
 
