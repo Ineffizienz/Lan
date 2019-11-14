@@ -696,15 +696,27 @@ function displayTournamentLocked($con,$tm_id)
 	{
 		$player_1 = $pair[0];
 		$player_2 = $pair[1];
+
+		$player_1 = getSingleUsername($con,$player_1);
+		if(!empty($player_2))
+		{
+			$player_2 = getSingleUsername($con,$player_2);
+		} else {
+			$player_2 = "Wildcard";
+		}
+
 		if(!isset($pair_output))
 		{
-			$pair_output = str_replace(array("--PLAYER_1--","PLAYER_2--"),array($player_1,$player_2),$part_pair);
+			$pair_output = str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
 		} else {
-			$pair_output .= str_replace(array("--PLAYER_1--","PLAYER_2--"),array($player_1,$player_2),$part_pair);
+			$pair_output .= str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
 		}
 	}
 
-	$output = str_replace("--PLAYER-PAIR--",$pair_output,$part);
+	$tm_game = getSingleTournamentGame($con,$tm_id);
+	$tm_banner = getGameBanner($con,$tm_game);
+
+	$output = str_replace(array("--PLAYER_PAIR--","--BANNER--"),array($pair_output,$tm_banner),$part);
 
 	return $output;
 }
