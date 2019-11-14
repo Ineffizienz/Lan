@@ -264,7 +264,7 @@ td
 	grid-column-gap:30px;
 	grid-row-gap:15px;
 	align-content: center;
-	width:50%;
+	width:100%;
 }
 #tm_create_popup
 {
@@ -301,7 +301,7 @@ td
 {
 	display:none;
 }
-input[type=text],[type=password],[type=date],[type=time]
+input[type=text],[type=password],[type=date],[type=time],[type=number]
 	{
 		padding-left: 10px;
 		background-color: #fff;

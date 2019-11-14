@@ -17,6 +17,9 @@
 			case 'tm':
 				$content = build_content("turnier.html");
 			break;
+			case 'single_tm':
+				$content = build_content("tournament_view.html");
+			break;
 			case 'conf':
 				$content = build_content("settings.html");
 			break;

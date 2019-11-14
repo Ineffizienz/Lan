@@ -42,6 +42,9 @@ function getEndpoint(param)
 		case "add_vote":
 			endpoint = "include/tournament/create/add_vote.php";
 			break;
+		case "join_tm":
+			endpoint = "include/tournament/edit/join_tm.php";
+			break;
 	}
 
 	return endpoint;

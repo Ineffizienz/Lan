@@ -977,6 +977,75 @@ h4
 #tm_container
 {
 	display:grid;
+	grid-template-rows: auto auto;
+	grid-row-gap: 15px;
+	align-content: center;
+	margin: 0 auto;
+	width:49em;
+}
+#tm_container a
+{
+	background-color:#C0C0C0;
+	border-radius:5px;
+	box-shadow: 0 2px 2px 0;
+}
+#tm_unlocked
+{
+	display:grid;
+	grid-template-columns: auto auto;
+	align-content: center;
+	text-align:center;
+	margin:5px;
+	width:75%;
+}
+#tm_locked
+{
+	display:grid;
+	grid-gap:15px;
+}
+#tm_locked_banner_container
+{
+	text-align:center;
+}
+#tm_locked_banner_container img
+{
+	margin-top:5px;
+	box-shadow: 0 2px 2px 0;
+	border-radius:8px;
+}
+.tm_locked_player_pair
+{
+	padding:8px;
+	background-color:#fff;
+	border-radius:25px;
+	text-align:center;
+	box-shadow:0 2px 2px 0;
+	width:15%;
+}
+.tm_single
+{
+	cursor:pointer;
+}
+.tm_container_img
+{
+	padding-top: 8px;
+	text-align:center;
+	width: auto;
+}
+.tm_container_img img
+{
+	box-shadow: 0 2px 2px 0;
+}
+.tm_container_details
+{
+	display:grid;
+	grid-template-columns: 50% 50%;
+	align-content: center;
+	text-align:center;
+}
+#tm_vote_container
+{
+	display:grid;
 	grid-template-columns:auto auto auto;
 	grid-column-gap:30px;
 	grid-row-gap:30px;
@@ -1048,13 +1117,13 @@ h4
 	border-radius: 0px 20px 20px 0;
 	box-shadow: 0 2px 2px 0;
 	height: 60px;
-	width: 0px;
 }
 .tm_vote_sign
 {
 	display:none;
-	line-height:64px;
+	line-height:60px;
 	text-align:center;
+	height:60px;
 }
 .tm_rv_banner
 {
