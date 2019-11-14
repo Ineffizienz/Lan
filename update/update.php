@@ -116,12 +116,14 @@ $sql_statements = array(
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_end_register","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_end_register INT(11) AFTER tm_period_id"),
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_winner_team_id","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_winner_team_id INT(11) AFTER tm_end_register"),
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_locked","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_locked INT(11) AFTER tm_winner_team_id"),
+			array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"game_id","clm_old"=>"0","statement"=>"ALTER TABLE pref ADD game_id INT(11) AFTER 'user_id'"),
 
 		## RENAME COLUMN
 			// Update 1.5
 			array("tbl_name"=>"ac","tbl_old"=>"0","clm_name"=>"ac_category","clm_old"=>"ac_categorie","statement"=>"ALTER TABLE ac CHANGE `ac_categorie` `ac_category` INT(11)"),
 			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"vote_count","clm_old"=>"player_id","statement"=>"ALTER TABLE tm_vote CHANGE `player_id` `vote_count` INT(11) NOT NULL"),
 			array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"game_id","clm_old"=>"game","statement"=>"ALTER TABLE tm CHANGE `game` `game_id` INT(11) NOT NULL"),
+			array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"player_id","clm_old"=>"user_id","statement"=>"ALTER TABLE pref CHANGE `user_id` `player_id` INT(11) NOT NULL"),
 		
 		## MODIFY COLUMN
 			// clm_old = 2 --> Änderung des Charsets
