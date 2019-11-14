@@ -32,7 +32,7 @@
 	function build_option($optionArr,$selected)
 	{
 		
-		$output_option = "<option value='" . $selected["id"] . "' selected>" . $selected["name"];
+		$output_option = "<option value='{$selected['id']}' selected>".$selected['name'];
 
 		$part = file_get_contents("template/part/option.html");
 
@@ -218,21 +218,20 @@
 
 	}
 
-	function generateGameKey($con,$raw_name,$player_id)
+	function generateGameKey($con, int $player_id, int $game_id)
 	{
-		$key = getPlayerGameKey($con,$player_id,$raw_name);
+		$key = getPlayerGameKey($con, $player_id, $game_id);
 
-		if ((empty($key)) || ($key == "") || ($key == NULL))
+		if ($key === false)
 		{
+			$first_key = getGameKey($con, $game_id);
 
-			$first_key = getGameKey($con,$raw_name);
-
-			if(empty($first_key))
+			if($first_key === false)
 			{
 				$message_code = "ERR_NO_KEY";
 				return $message_code;
 			} else {
-				mysqli_query($con,"UPDATE $raw_name SET player_id = '$player_id' WHERE game_key = '$first_key'");
+				mysqli_query($con,"UPDATE gamekeys SET player_id = '$player_id' WHERE (gamekey = '$first_key') AND (game_id = '$game_id');");
 				return $first_key;
 			}
 		} else {

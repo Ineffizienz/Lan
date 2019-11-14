@@ -9,45 +9,23 @@
 	$message = new message();
 
 	$player_id = $_SESSION["player_id"];
-	$raw_name = getSingleRawName($con,$_REQUEST["game"]);
-	$old_key = getOldGameKey($con,$player_id,$raw_name);
-	$new_key = getNewGameKey($con,$raw_name);
-
-	$sql = "INSERT INTO rejected_key (game_key,game,player_id) VALUES ('$old_key','$raw_name','$player_id')";
-	if(mysqli_query($con,$sql))
+	$game_id = $_REQUEST["game"];
+	if(mysqli_query($con,"UPDATE gamekeys SET rejected = '1' WHERE (player_id = '$player_id') AND (game_id = '$game_id') LIMIT 1;"))
 	{
-		if(empty($new_key))
+		$new_key = generateGameKey($con, $player_id, $game_id);
+		if(substr($new_key,0,3) == "ERR")
 		{
-			$sql = "UPDATE $raw_name SET game_key = NULL WHERE player_id = '$player_id'";
-			if(mysqli_query($con,$sql))
-			{
-				$message->getMessageCode("ERR_NO_KEY");
-				echo json_encode(array("message" => $message->displayMessage()));
-			} else {
-				$message->getMessageCode("ERR_DB");
-				echo json_encode(array("message" => $message->displayMessage()));
-			}
-		} else {
-			$sql = "DELETE FROM $raw_name WHERE player_id = '$player_id' AND game_key = '$old_key'";
-			if (mysqli_query($con,$sql))
-			{
-				$sql = "UPDATE $raw_name SET player_id = '$player_id' WHERE game_key = '$new_key'";
-				if (mysqli_query($con,$sql))
-				{
-					echo json_encode(array("key" => $new_key));
-				} else {
-					$message->getMessageCode("ERR_DB");
-					echo json_encode(array("message" => $message->displayMessage()));
-				}
-			} else {
-				$message->getMessageCode("ERR_DB");
-				echo json_encode(array("message" => $message->displayMessage()));
-			}
-			
+			$message->getMessageCode($new_key);
+			echo json_encode(array("message" => $message->displayMessage()));
 		}
-	} else {
+		else
+		{
+			echo json_encode(array("key" => $new_key));
+		}
+	}
+	else
+	{
 		$message->getMessageCode("ERR_DB");
 		echo json_encode(array("message" => $message->displayMessage()));
 	}
-
 ?>

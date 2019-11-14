@@ -49,7 +49,7 @@ function getEndpoint(param)
             endpoint = "admin/game/edit/update_banner.php";
             break;
         case "upload_keys":
-            endpoint = "admin/key/create_keylist.php";
+            endpoint = "admin/key/edit/create_keylist.php";
             break;
         case "create_achievement":
             endpoint = "admin/achievement/edit/create_achievement.php";

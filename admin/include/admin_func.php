@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__).'../../include/init/get_parameters.php';
+
 function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
 {
 	if (file_exists("template/" . $file))
@@ -253,18 +255,13 @@ function validateInput($new_game)
 	}
 }
 
-function verifyKey($con,$raw_name,$key)
+function verifyKey($con, int $game_id, string $key)
 {
-		
-	$all_keys = getAllKeys($con,$raw_name);
-	if(in_array($key,$all_keys))
-	{
-		$message_code = "ERR_KEY_EXISTS";
-		return $message_code;
-	} else {
+	$result = mysqli_query($con, "SELECT ID FROM gamekeys WHERE (game_id = '$game_id') AND (gamekey = '$key');");
+	if(mysqli_num_rows($result) > 0)
+		return "ERR_KEY_EXISTS";
+	else
 		return true;
-	}
-
 }
 
 function verifyGame($con,$new_game,$new_raw_name)
@@ -314,10 +311,7 @@ function validateImageFile($filesize,$filetype)
 
 function createGame($con,$new_game,$new_raw_name)
 {
-
-	mysqli_query($con,"CREATE TABLE $new_raw_name (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_key VARCHAR(255) NULL, player_id INT(11) NULL)");
-    mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name')");
-
+    mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name');");
 }
 
 function displayTmGames($con)

@@ -90,7 +90,7 @@ $(document).ready(function(){
 
 		obj = {game};
 
-		getAjax(obj, getEndpoint("reject_key"), displayResponse);
+		getAjax(obj, getEndpoint("reject_gamekey"), displayResponse);
 	}
 
 /*#############################################################################################
