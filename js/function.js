@@ -216,11 +216,22 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var vote_id = $(".tm_vote_for").attr("data-voted-tm");
-
+		var vote_id = $(this).attr("data-voted-tm");
+		
 		obj = {vote_id};
 
 		postAjax(obj,getEndpoint("add_vote"),displayResponse);
+	}
+
+	function getJointPlayerID(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("data-tm-id");
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("join_tm"),displayResponse);
 	}
 
 
@@ -464,5 +475,6 @@ $(".tm_vote_container").hover(function () {
 	$(".sbm").on("click",getWowData);
 	$("#vote_now").on("click",getVotedGame);
 	$(".tm_vote_for").on("click",getVoteID);
+	$("#join_tm").on("click",getJointPlayerID);
 });
 

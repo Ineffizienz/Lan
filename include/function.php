@@ -628,12 +628,118 @@ function displayRunningVotes($con)
 			} else {
 				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
 			}
-		} else {
-			$output = "";
 		}
 	}
 
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Abstimmungen.";
+	}
 	return $output;
+}
+
+function displayTournaments($con)
+{
+	$tournaments = getTournaments($con);
+	$part = file_get_contents("template/part/overview_tournament.html");
+
+	foreach ($tournaments as $tournament)
+	{
+		$game_info = getGameInfoById($con,$tournament["game_id"]);
+		$banner = $game_info["banner"];
+		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
+
+		if(empty($tournament["player_count"]))
+		{
+			$player_count = "0";
+		} else {
+			$player_count = $tournament["player_count"];
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
+		} else {
+			$output .= str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
+		}
+	}
+
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Turniere.";
+	}
+
+	return $output;
+}
+
+function displayTournamentParticipants($con,$tm_id)
+{
+	$tm_player = getPlayerFromGamerslist($con,$tm_id);
+	$banner = getTmBanner($con,$tm_id);
+
+	$list = implode(", ",$tm_player);
+	
+	$part = file_get_contents("template/part/unlocked_tm.html");
+
+	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);
+
+	return $output;
+}
+
+function displayTournamentLocked($con,$tm_id)
+{
+	$tm_player_pair = getTmPairs($con,$tm_id);
+
+	$part = file_get_contents("template/part/locked_tm.html");
+	$part_pair = file_get_contents("template/part/player_pair.html");
+	foreach ($tm_player_pair as $pair)
+	{
+		$player_1 = $pair[0];
+		$player_2 = $pair[1];
+
+		$player_1 = getUsernameFromGamerslist($con,$player_1);
+		if(!empty($player_2))
+		{
+			$player_2 = getUsernameFromGamerslist($con,$player_2);
+		} else {
+			$player_2 = "Wildcard";
+		}
+
+		if(!isset($pair_output))
+		{
+			$pair_output = str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
+		} else {
+			$pair_output .= str_replace(array("--PLAYER_1--","--PLAYER_2--"),array($player_1,$player_2),$part_pair);
+		}
+	}
+
+	$tm_game = getSingleTournamentGame($con,$tm_id);
+	$tm_banner = getGameBanner($con,$tm_game);
+
+	$output = str_replace(array("--PLAYER_PAIR--","--BANNER--"),array($pair_output,$tm_banner),$part);
+
+	return $output;
+}
+
+function displayTournamentTree($con)
+{
+	if(isset($_REQUEST["id"]))
+	{
+		$tm_id = $_REQUEST["id"];
+		$tm_status = getTournamentStatus($con,$tm_id);
+
+		if($tm_status !== "1")
+		{
+			$tournament = displayTournamentParticipants($con,$tm_id);
+		} else {
+			$tournament = displayTournamentLocked($con,$tm_id);
+		}
+	}
+
+	if(!empty($tournament))
+	{
+		return $tournament;
+	}
 }
 
 ?>

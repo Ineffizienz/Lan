@@ -17,4 +17,24 @@
 	define("KEY_FOLDER",ROOT . "/key_list/");
 
 	define("IP",$_SERVER["REMOTE_ADDR"]);
+
+	if(!file_exists(IMG))
+	{
+		mkdir(IMG);
+	}
+
+	if(!file_exists(ICON))
+	{
+		mkdir(ICON);
+	}
+
+	if(!file_exists(BANNER))
+	{
+		mkdir(BANNER);
+	}
+
+	if(!file_exists(AC))
+	{
+		mkdir(AC);
+	}
 ?>

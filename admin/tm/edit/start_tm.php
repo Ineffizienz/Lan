@@ -15,22 +15,21 @@
         $message->getMessageCode("ERR_ADMIN_TM_DOES_NOT_EXISTS");
         echo buildJSONOutput($message->displayMessage());
     } else {
-        $starttime = getTmStartById($con,$tm_id);
-        
-        if(strtotime($starttime) < time())
+        $tm_locked = getTournamentStatus($con,$tm_id);
+
+        if($tm_locked == "1")
         {
             $message->getMessageCode("ERR_ADMIN_TM_CANNOT_BE_STARTED");
             echo buildJSONOutput($message->displayMessage());
         } else {
-            $new_starttime = date("Y-m-d H:i:s", time());
-            $sql = "UPDATE tm SET starttime = '$new_starttime' WHERE ID = '$tm_id'";
+            $sql = "UPDATE tm SET tm_locked = '1' WHERE ID = '$tm_id'";
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_START_TM");
-                echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
-            } else {
-                $message->getMessageCode("ERR_ADMIN_INTERN_#4");
                 echo buildJSONOutput($message->displayMessage());
+            } else {
+                $message->getMessageCode("ERR_ADMIN_DB");
+                echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
             }
         }
     }
