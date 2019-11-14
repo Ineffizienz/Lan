@@ -234,6 +234,19 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("join_tm"),displayResponse);
 	}
 
+	function getMatchResults(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("data-tm-id");
+		var result_1 = ;
+		var result_2 = ;
+
+		obj = {tm_id, result_1, result_2};
+
+		postAjax(obj,getEndpoint("enter_result"),displayResponse);
+	}
+
 
 /*############################################################################################*/
 	

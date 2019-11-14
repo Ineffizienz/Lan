@@ -15,3 +15,4 @@ SUC_CHANGE_VISIB: Sichtbarkeit erfolgreich geändert.
 SUC_ACC_CREATE: Du hast dir erfolgreich einen WOW-Account angelegt.
 SUC_TM_VOTED_FOR: Ihr habt euren Hut erfolgreich in den Ring geworfen. Bravo.
 SUC_JOIN_TM: Sehr wohl. Ihr seid nun Teil dieses jämmerlichen Haufens.
+SUC_ENTER_RESULT: Wohl gekämpft!

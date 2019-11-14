@@ -701,7 +701,7 @@ function displayTournamentLocked($con,$tm_id)
 		{
 			$player_2 = getUsernameFromGamerslist($con,$player_2);
 		} else {
-			$player_2 = "Wildcard";
+			$player_2 = "<i>Wildcard</i>";
 		}
 
 		if(!isset($pair_output))

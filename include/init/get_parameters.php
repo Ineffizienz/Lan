@@ -1015,6 +1015,17 @@ function getMatchesIdFromPaarung($con,$tm_id)
 	return $matches_id;
 }
 
+function getSingleMatchesIdFromPaarung($con,$gamerslist_id,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT matches_id FROM tm_paarung WHERE ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id')) AND tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$matches_id = $row["matches_id"];
+	}
+
+	return $matches_id;
+}
+
 function getMatchIdFromMatches($con,$matches_id)
 {
 	$result = mysqli_query($con,"SELECT match_id FROM tm_matches WHERE ID = '$matches_id'");
@@ -1202,5 +1213,21 @@ function getUsernameFromGamerslist($con,$gamerslist_id)
 	}
 
 	return $player_name;
+}
+
+function getGamerslistIdByPlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$gamerslist_id = $row["ID"];
+	}
+
+	return $gamerslist_id;
+}
+
+function getPairIdByGamerslistId($con,$gamerslist_id,$tm_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id')) AND tournament = '$tm_id'")) > 0;
 }
 ?>
