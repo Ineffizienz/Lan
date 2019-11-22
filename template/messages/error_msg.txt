@@ -46,3 +46,4 @@ ERR_NO_GAME_TO_VOTE_FOR: Hört auf mich mit Hüten zu bewerfen.
 ERR_VOTE_EXISTS: Irgendjemand ist euch zuvor gekommen! Die Abstimmung existiert bereits!
 ERR_ALLREADY_JOINT_TM: Ihr seid bereits diesem Turnier beigetreten. Wie anmaßend von euch!
 ERR_INCORRECT_MATCH: Versucht Ihr ein anderes Duell zu beeinflussen? Wagt es euch ja nicht!
+ERR_NO_DRAW: Das kann nicht sein. Es kann nur einen Sieger geben!
