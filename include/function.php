@@ -700,7 +700,7 @@ function displayTournamentLocked($con,$tm_id)
 		if(!empty($player_2))
 		{
 			$player_2 = getUsernameFromGamerslist($con,$player_2);
-		} else {
+		} elseif (empty($player_2) && !(empty($player_1))) {
 			$player_2 = "<i>Wildcard</i>";
 		}
 
