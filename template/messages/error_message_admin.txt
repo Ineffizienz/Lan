@@ -24,4 +24,5 @@ ERR_ADMIN_TM_DOES_NOT_EXISTS: Das angegebene Turnier existiert nicht.
 ERR_ADMIN_TM_CANNOT_BE_STARTED: Das Turnier kann nicht gestartet werden. Es läuft bereits.
 ERR_ADMIN_EMPTY_PARAM: Es wurde ein leerer Parameter übergeben.
 ERR_ADMIN_KEYLIST_MOVE: Fehler beim Verschieben der Keyliste
+ERR_ADMIN_MISSING_PAIR: Es wurden keine Paarungen erstellt.
 

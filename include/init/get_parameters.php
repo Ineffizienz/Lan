@@ -1230,4 +1230,104 @@ function getPairIdByGamerslistId($con,$gamerslist_id,$tm_id)
 {
 	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id')) AND tournament = '$tm_id'")) > 0;
 }
+
+function getPairIdByTm($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND successor IS NULL ORDER BY ID ASC");
+	while($row=mysqli_fetch_array($result))
+	{
+		$pair_ids[] = $row["ID"];
+	}
+
+	return $pair_ids;
+}
+
+function getSinglePairIdByMatches($con,$matches_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE matches_id = '$matches_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$pair_id = $row["ID"];
+	}
+
+	return $pair_id;
+}
+
+function getResultPair($con,$gamerslist_id,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id')) AND tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_pair = $row["ID"];
+	}
+
+	return $result_pair;
+}
+
+function getNewPair($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_pair = $row["ID"];
+	}
+
+	return $new_pair;
+}
+
+function getNewMatchId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_match_id = $row["ID"];
+	}
+
+	return $new_match_id;
+}
+
+function getNewMatchesId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_matches ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_matches_id = $row["ID"];
+	}
+
+	return $new_matches_id;
+}
+
+function getPairCount($con,$tm_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL)"));
+	/*$result = mysqli_query($con,"SELECT COUNT(*) FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL)");
+	while($row=mysqli_fetch_array($result))
+	{
+		$pair_count = $row;
+	}
+
+	return $pair_count;*/
+}
+
+function getLastPairId($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_pair_id = $row["ID"];
+	}
+
+	return $last_pair_id;
+}
+
+function getFirstPairId($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) ORDER BY ID ASC LIMIT 2");
+	while($row=mysqli_fetch_array($result))
+	{
+		$first_pair_id[] = $row["ID"];
+	}
+
+	return $first_pair_id;
+}
 ?>
