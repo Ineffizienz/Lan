@@ -1009,7 +1009,17 @@ h4
 	align-content: center;
 	text-align:center;
 	margin:5px;
-	width:75%;
+	width:100%;
+}
+#tm_unlocked_banner_container
+{
+	grid-column: 1 / span 2;
+	align-content: center;
+}
+#tm_unlocked_banner_container img
+{
+	border-radius:10px;
+	box-shadow:0 2px 2px 0;
 }
 #tm_locked
 {
