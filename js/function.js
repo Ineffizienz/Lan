@@ -239,10 +239,11 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var tm_id = $("#tm_id").val();
+		var pair_id = $("#pair_id").val();
 		var result_1 = $("#result_1").val();
 		var result_2 = $("#result_2").val();
 
-		obj = {tm_id, result_1, result_2};
+		obj = {tm_id, pair_id, result_1, result_2};
 
 		postAjax(obj,getEndpoint("enter_result"),displayResponse);
 	}
@@ -463,8 +464,10 @@ function displayResultPopup(event)
 	event.preventDefault();
 	
 	var tm_id = $(this).attr("data-tm-id");
+	var pair_id = $(this).attr("data-pair-id");
 
 	$("#tm_id").val(tm_id);
+	$("#pair_id").val(pair_id);
 
 	$(".tm_result_popup").show();
 }

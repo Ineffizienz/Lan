@@ -693,8 +693,9 @@ function displayTournamentLocked($con,$tm_id)
 	$part_pair = file_get_contents("template/part/player_pair.html");
 	foreach ($tm_player_pair as $pair)
 	{
-		$player_1 = $pair[0];
-		$player_2 = $pair[1];
+		$pair_id = $pair[0];
+		$player_1 = $pair[1];
+		$player_2 = $pair[2];
 
 		$player_1 = getUsernameFromGamerslist($con,$player_1);
 		if(!empty($player_2))
@@ -706,9 +707,9 @@ function displayTournamentLocked($con,$tm_id)
 
 		if(!isset($pair_output))
 		{
-			$pair_output = str_replace(array("--TM_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$player_1,$player_2),$part_pair);
+			$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
 		} else {
-			$pair_output .= str_replace(array("--TM_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$player_1,$player_2),$part_pair);
+			$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
 		}
 	}
 
