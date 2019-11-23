@@ -37,7 +37,7 @@
                     $successor_id = getSuccessorFromPair($con,$pair_id);
                     if($result_1 > $result_2)
                     {
-                        if(getSuccessorTeams($con,$successor_id))
+                        if(empty(getSuccessorTeams($con,$pair_id)))
                         {
                             $sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
                             if(mysqli_query($con,$sql))
@@ -60,7 +60,7 @@
                             }
                         }
                     } else {
-                        if(getSuccessorTeams($con,$successor_id))
+                        if(empty(getSuccessorTeams($con,$pair_id)))
                         {
                             $sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
                             if(mysqli_query($con,$sql))

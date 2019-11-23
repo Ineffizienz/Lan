@@ -1331,6 +1331,17 @@ function getSuccessorFromPair($con,$pair_id)
 
 function getSuccessorTeams($con,$successor_id)
 {
-	return mysqli_num_rows(mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$successor_id'")) > 0;
+	$result = mysqli_query($con,"SELECT team_1 FROM tm_paarung WHERE ID = '$successor_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$team_1 = $row["team_1"];
+	}
+
+	if(empty($team_1))
+	{
+		$team_1 = array();
+	}
+
+	return $team_1;
 }
 ?>
