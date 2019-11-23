@@ -37,7 +37,7 @@ function t_setUpMatches($con)
 		BEGIN
             GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
 				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
-				SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+				SET @full_error = CONCAT('ERROR ', @errno, ' (', @sqlstate, '): ', @text);
 				select CURRENT_TIMESTAMP into error_time;
 				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
                 
@@ -46,7 +46,7 @@ function t_setUpMatches($con)
 		BEGIN
             GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
 				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
-				SET @full_error = CONCAT("Warning ", @errno, " (", @sqlstate, "): ", @text);
+				SET @full_error = CONCAT('Warning ', @errno, ' (', @sqlstate, '): ', @text);
 				select CURRENT_TIMESTAMP into error_time;
 				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
                 
