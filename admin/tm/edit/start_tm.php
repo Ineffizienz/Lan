@@ -84,8 +84,8 @@
                                 $message->getMessageCode("ERR_ADMIN_DB");
                                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                             }
+                            $stage_count++;
                         }
-                        $stage_count++;
                         $pair_count = getPairCount($con,$tm_id); // setzt den neuen Wert für die Anzahl der Paarungen
                     }
 
