@@ -90,7 +90,7 @@ function t_setUpMatches($con)
 					UPDATE tm_paarung SET tm_paarung.matches_id = matches_id WHERE tm_paarung.ID = last_paarung_id;
 
 				ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
-					INSERT INTO tm_paarung (team_1, tournament) VALUES (player_id_gl, tm_id);
+					INSERT INTO tm_paarung (team_1, tournament, stage) VALUES (player_id_gl, tm_id, '1');
 				END IF;
 
                 SET count_var = count_var + 1;
