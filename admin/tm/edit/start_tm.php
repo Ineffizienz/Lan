@@ -31,6 +31,7 @@
                     $message->getMessageCode("ERR_ADMIN_MISSING_PAIR");
                     echo buildJSONOutput($message->displayMessage());
                 } else {
+                    $stage_count = 2;
                     while(($pair_count/2) > 1)
                     {
                         if(($pair_count % 2) == 1) // Wenn die es mehr weniger Spieler als Paarungen gibt, dann wird trotzdem eine Paarung für einen Wildcard-Spieler erstellt.
@@ -44,7 +45,7 @@
                         {
                             $last_pair_id = "";
                             $first_pair_id = "";
-                            $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament) VALUES (NULL, NULL, '$tm_id')";
+                            $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES (NULL, NULL, '$tm_id', '$stage_count')";
                             if(mysqli_query($con,$sql))
                             {
                                 $last_pair_id = getLastPairId($con,$tm_id);
@@ -84,12 +85,14 @@
                                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                             }
                         }
+                        $stage_count++;
                         $pair_count = getPairCount($con,$tm_id); // setzt den neuen Wert für die Anzahl der Paarungen
                     }
 
                     if(getPairCount($con,$tm_id) > 1) // Sollten nach dem letzten Schleifendurchlauf zwei Paarungen ohne Nachfolger sein, wird eine weitere Paarung hinzugefügt. Hierbei handelt es sich dann um das Finale.
                     {
-                        $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament) VALUES (NULL, NULL, '$tm_id')";
+                        $stage_count++;
+                        $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES (NULL, NULL, '$tm_id', '$stage_count')";
                         if(mysqli_query($con,$sql))
                         {
                             $last_pair_id = getLastPairId($con,$tm_id);
