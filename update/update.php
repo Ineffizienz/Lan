@@ -117,6 +117,7 @@ $sql_statements = array(
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_winner_team_id","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_winner_team_id INT(11) AFTER tm_end_register"),
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_locked","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_locked INT(11) AFTER tm_winner_team_id"),
 			array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"game_id","clm_old"=>"0","statement"=>"ALTER TABLE pref ADD game_id INT(11) AFTER 'user_id'"),
+			array("tbl_name"=>"tm_paarung","tbl_old"=>"0","clm_name"=>"stage","clm_old"=>"0","statement"=>"ALTER TABLE tm_paarung ADD stage INT(11) AFTER tournament"),
 
 		## RENAME COLUMN
 			// Update 1.5
