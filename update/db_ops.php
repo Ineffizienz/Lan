@@ -61,7 +61,7 @@ function t_setUpMatches($con)
 
         IF NEW.tm_locked != OLD.tm_locked THEN # Überprüft, ob sich die Spalte tm_locked geändert hat
 
-            SET tm_id = (SELECT ID FROM tm ORDER BY ID DESC LIMIT 1);
+            SET tm_id = NEW.ID;
             
             SET count_var = 1;
             
