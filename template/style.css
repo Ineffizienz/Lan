@@ -1179,7 +1179,13 @@ main
 }
 .round
 {
-    display:flex;
+	/*display:grid;
+	grid-template-columns: auto;
+	align-content: center;
+	width: 200px;
+	list-style:none;
+	padding:0;*/
+	display:flex;
     flex-direction:column;
     justify-content:center;
     width:200px;
@@ -1211,25 +1217,17 @@ main
     
 	li.game-top
 	{ 
-		border-bottom:1px solid #aaa; 
-		background-color: #fff;
-		line-height: 4em;
-		border-radius: 0 5px 5px 0;
-		box-shadow: 0 1px 1px 0;
+		border-bottom:3px solid #aaa; 
 	}
   
     li.game-spacer{ 
-      border-right:1px solid #aaa;
+      border-right:3px solid #aaa;
       min-height:40px;
     }
   
     li.game-bottom{ 
 	margin-bottom: 10px;  
-	border-top:1px solid #aaa;
-	  background-color: #fff;
-		line-height: 4em;
-		border-radius: 0 5px 5px 0;
-		box-shadow: 0 1px 1px 0;
+	border-top:3px solid #aaa;
     }
 
 
