@@ -1195,6 +1195,11 @@ function getUsernameFromGamerslist($con,$gamerslist_id)
 		$player_name = $row["name"];
 	}
 
+	if(!isset($player_name) || empty($player_name))
+	{
+		$player_name = "";
+	}
+
 	return $player_name;
 }
 
@@ -1343,5 +1348,27 @@ function getSuccessorTeams($con,$successor_id)
 	}
 
 	return $team_1;
+}
+
+function getStages($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT DISTINCT stage FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$stages[] = $row["stage"];
+	}
+
+	return $stages;
+}
+
+function getPairsByStages($con,$tm_id,$stage)
+{
+	$result = mysqli_query($con,"SELECT ID, team_1, team_2 FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pairs[] = $row;
+	}
+
+	return $pairs;
 }
 ?>
