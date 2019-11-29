@@ -10,7 +10,7 @@
     $tm_id = $_REQUEST["tm_id"];
     $pair_id = $_REQUEST["pair_id"];
 
-    $gamerslist_id = getGamerslistIdByPlayerId($con,$player_id);
+    $gamerslist_id = getGamerslistIdByPlayerId($con,$player_id,$tm_id);
     if(getGamerslistIdFromPair($con,$gamerslist_id,$pair_id))
     {
         $matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
@@ -32,8 +32,8 @@
                 if(mysqli_query($con,$sql))
                 {
                     $team_gamerslist = getGamerslistIdByPair($con,$pair_id);
-                    $team_1 = $gamerslist_id["team_1"];
-                    $team_2 = $gamerslist_id["team_2"];
+                    $team_1 = $team_gamerslist["team_1"];
+                    $team_2 = $team_gamerslist["team_2"];
                     $successor_id = getSuccessorFromPair($con,$pair_id);
                     if($result_1 > $result_2)
                     {

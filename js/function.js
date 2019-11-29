@@ -466,6 +466,9 @@ function displayResultPopup(event)
 	var tm_id = $(this).attr("data-tm-id");
 	var pair_id = $(this).attr("data-pair-id");
 
+	console.log(tm_id);
+	console.log(pair_id);
+
 	$("#tm_id").val(tm_id);
 	$("#pair_id").val(pair_id);
 
@@ -516,7 +519,7 @@ function closeResultPopup(event)
 	$("#send_result").on("click",getMatchResults);
 
 	//Popup
-	$(".tm_locked_player_pair").on("click",displayResultPopup);
+	$(".game").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
 });
 

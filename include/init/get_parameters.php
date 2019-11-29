@@ -1203,9 +1203,9 @@ function getUsernameFromGamerslist($con,$gamerslist_id)
 	return $player_name;
 }
 
-function getGamerslistIdByPlayerId($con,$player_id)
+function getGamerslistIdByPlayerId($con,$player_id,$tm_id)
 {
-	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE player_id = '$player_id'");
+	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE player_id = '$player_id' AND tm_id = '$tm_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$gamerslist_id = $row["ID"];

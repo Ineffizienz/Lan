@@ -1224,7 +1224,8 @@ main
     }
   
     li.game-bottom{ 
-	  border-top:1px solid #aaa;
+	margin-bottom: 10px;  
+	border-top:1px solid #aaa;
 	  background-color: #fff;
 		line-height: 4em;
 		border-radius: 0 5px 5px 0;
