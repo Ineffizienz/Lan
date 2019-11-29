@@ -20,7 +20,7 @@ require_once(INC . "function.php");
 
 $tpl = new template();
 
-$title = "Du nicht nehmen Kerze!";
+$title = "Press ALT+F4 to Ragequit!";
 $message = new message();
 
 if(!isset($_SESSION["player_id"]))

@@ -134,7 +134,7 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var has_table = $(this).find('option:selected').attr("value");
-		var game_id = retrieveGameId(this);
+		var game_id = retrieveGameID(this);
 
 		obj = {game_id,has_table};
 
@@ -145,9 +145,10 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
+		var game_id = retrieveGameID(this);
 		var addon = $(this).find('option:selected').attr("value");
 
-		obj = {addon};
+		obj = {game_id,addon};
 
 		postAjax(obj,getEndpoint("update_addon"),displayResult);
 
