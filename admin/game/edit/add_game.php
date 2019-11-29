@@ -2,7 +2,6 @@
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
 	include(dirname(__FILE__,3). "/include/admin_func.php");
 	include(INC . "connect.php");
-	include(INIT . "get_parameters.php");
 	include(CL . "message_class.php");
 
 	$message = new message();
