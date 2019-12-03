@@ -734,39 +734,6 @@ function displayTournamentLocked($con,$tm_id)
 	$output = str_replace(array("--SECTION--","--BANNER--"),array($output_stage,$tm_banner),$part);
 
 	return $output;
-
-	/*$tm_player_pair = getTmPairs($con,$tm_id);
-
-	$part = file_get_contents("template/part/locked_tm.html");
-	$part_pair = file_get_contents("template/part/player_pair.html");
-	foreach ($tm_player_pair as $pair)
-	{
-		$pair_id = $pair[0];
-		$player_1 = $pair[1];
-		$player_2 = $pair[2];
-
-		$player_1 = getUsernameFromGamerslist($con,$player_1);
-		if(!empty($player_2))
-		{
-			$player_2 = getUsernameFromGamerslist($con,$player_2);
-		} elseif (empty($player_2) && !(empty($player_1))) {
-			$player_2 = "<i>Wildcard</i>";
-		}
-
-		if(!isset($pair_output))
-		{
-			$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
-		} else {
-			$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
-		}
-	}
-
-	$tm_game = getSingleTournamentGame($con,$tm_id);
-	$tm_banner = getGameBanner($con,$tm_game);
-
-	$output = str_replace(array("--PLAYER_PAIR--","--BANNER--"),array($pair_output,$tm_banner),$part);
-
-	return $output;*/
 }
 
 function displayTournamentTree($con)
