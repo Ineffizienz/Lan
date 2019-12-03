@@ -89,7 +89,7 @@
                         $pair_count = getPairCount($con,$tm_id); // setzt den neuen Wert für die Anzahl der Paarungen
                     }
 
-                    if(getPairCount($con,$tm_id) > 1) // Sollten nach dem letzten Schleifendurchlauf zwei Paarungen ohne Nachfolger sein, wird eine weitere Paarung hinzugefügt. Hierbei handelt es sich dann um das Finale.
+                    if(getPairCount($con,$tm_id) == 0) // Sollten nach dem letzten Schleifendurchlauf zwei Paarungen ohne Nachfolger sein, wird eine weitere Paarung hinzugefügt. Hierbei handelt es sich dann um das Finale.
                     {
                         $stage_count++;
                         $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES (NULL, NULL, '$tm_id', '$stage_count')";
@@ -110,8 +110,25 @@
                                         $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (ID != '$last_pair_id')";
                                         if(mysqli_query($con,$sql))
                                         {
-                                            $message->getMessageCode("SUC_ADMIN_START_TM");
-                                            echo buildJSONOutput($message->displayMessage());
+                                            $first_level_wildcard = getFirstLevelWildcard($con,$tm_id);
+                                            if(isset($first_level_wildcard))
+                                            {
+                                                $pair_data = getGamerslistIdAndSuccessor($con,$first_level_wildcard);
+                                                $successor = $pair_data["successor"];
+                                                $team_1 = $pair_data["team_1"];
+                                                $sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor'";
+                                                if(mysqli_query($con,$sql))
+                                                {
+                                                    $message->getMessageCode("SUC_ADMIN_START_TM");
+                                                    echo buildJSONOutput($message->displayMessage());
+                                                } else {
+                                                    $message->getMessageCode("ERR_ADMIN_DB");
+                                                    echo buildJSONOutput($message->displayMessage());
+                                                }
+                                            } else {
+                                                $message->getMessageCode("SUC_ADMIN_START_TM");
+                                                echo buildJSONOutput($message->displayMessage());
+                                            }
                                         } else {
                                             $message->getMessageCode("ERR_ADMIN_DB");
                                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
@@ -132,6 +149,27 @@
                         } else {
                             $message->getMessageCode("ERR_ADMIN_DB");
                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
+                        }
+                    } else {
+                        $first_level_wildcard = getFirstLevelWildcard($con,$tm_id);
+                        if(isset($first_level_wildcard))
+                        {
+                            $pair_data = getGamerslistIdAndSuccessor($con,$first_level_wildcard);
+                            $pair_data = array_shift($pair_data);
+                            $successor = $pair_data["successor"];
+                            $team_1 = $pair_data["team_1"];
+                            $sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor'";
+                            if(mysqli_query($con,$sql))
+                            {
+                                $message->getMessageCode("SUC_ADMIN_START_TM");
+                                echo buildJSONOutput($message->displayMessage());
+                            } else {
+                                $message->getMessageCode("ERR_ADMIN_DB");
+                                echo buildJSONOutput($message->displayMessage());
+                            }
+                        } else {
+                            $message->getMessageCode("SUC_ADMIN_START_TM");
+                            echo buildJSONOutput($message->displayMessage());
                         }
                     }
                 }

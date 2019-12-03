@@ -1371,4 +1371,31 @@ function getPairsByStages($con,$tm_id,$stage)
 
 	return $pairs;
 }
+
+function getFirstLevelWildcard($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND team_2 IS NULL AND stage = '1'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$wildcard = $row["ID"];
+	}
+
+	if(empty($wildcard) || !isset($wildcard))
+	{
+		$wildcard = "";
+	}
+
+	return $wildcard;
+}
+
+function getGamerslistIdAndSuccessor($con,$pair_id)
+{
+	$result = mysqli_query($con,"SELECT team_1, successor FROM tm_paarung WHERE ID = '$pair_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pair_data[] = $row;
+	}
+
+	return $pair_data;
+}
 ?>
