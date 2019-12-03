@@ -92,6 +92,7 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, vote_count INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
 		array("tbl_name"=>"tm_vote_player","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote_player (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, tm_vote_id INT(11) NOT NULL, player_id INT(11) NOT NULL, UNIQUE (tm_vote_id,player_id))"),
+		array("tbl_name"=>"log_trigger_error","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE log_trigger_error (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, error_type VARCHAR(45) NOT NULL, error_statement(255) NOT NULL)"),
 
 	
 	### - ALTER STATEMENTS - ###
