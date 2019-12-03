@@ -1203,24 +1203,20 @@ main
   /*
    *  General Styles
   */
-  body{
-    font-family:sans-serif;
-    font-size:small;
-    padding:10px;
-    line-height:1.4em;
-  }
   
   li.game{
-	cursor: pointer;
+	  cursor:pointer;
     padding-left:20px;
   }
+ 
     
 	li.game-top
 	{ 
 		border-bottom:3px solid #aaa; 
 	}
   
-    li.game-spacer{ 
+    li.game-spacer{
+		cursor:pointer; 
       border-right:3px solid #aaa;
       min-height:40px;
     }
