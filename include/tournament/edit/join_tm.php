@@ -11,7 +11,7 @@ $message = new message();
 if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
 {
     $message->getMessageCode("ERR_ALLREADY_JOINT_TM");
-    echo json_encode(array($message->displayMessage()));
+    echo json_encode(array("message"=>$message->displayMessage()));
 } else {
     $tm_id = $_REQUEST["tm_id"];
 
@@ -28,11 +28,11 @@ if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
             echo json_encode(array("message"=>$message->displayMessage()));
         } else {
             $message->getMessageCode("ERR_DB");
-            echo json_encode(array($message->displayMessage() . mysqli_error($con)));
+            echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
         }
     } else {
         $message->getMessageCode("ERR_DB");
-        echo json_encode(array($message->displayMessage() . mysqli_error($con)));
+        echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
     }
 }
 
