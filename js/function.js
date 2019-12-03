@@ -245,6 +245,8 @@ $(document).ready(function(){
 
 		obj = {tm_id, pair_id, result_1, result_2};
 
+		closeResultPopup(event);
+
 		postAjax(obj,getEndpoint("enter_result"),displayResponse);
 	}
 
@@ -465,12 +467,13 @@ function displayResultPopup(event)
 	
 	var tm_id = $(this).attr("data-tm-id");
 	var pair_id = $(this).attr("data-pair-id");
-
-	console.log(tm_id);
-	console.log(pair_id);
+	var player_1 = $(this).attr("data-player-first");
+	var player_2 = $(this).attr("data-player-second");
 
 	$("#tm_id").val(tm_id);
 	$("#pair_id").val(pair_id);
+	$("#player_1").html(player_1);
+	$("#player_2").html(player_2);
 
 	$(".tm_result_popup").show();
 }
@@ -480,6 +483,8 @@ function closeResultPopup(event)
 	event.preventDefault();
 
 	$(".tm_result_popup").hide();
+	$("#result_1").val("");
+	$("#result_2").val("");
 }
 
 /*#############################################################################################
