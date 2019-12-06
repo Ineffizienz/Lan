@@ -1398,4 +1398,9 @@ function getGamerslistIdAndSuccessor($con,$pair_id)
 
 	return $pair_data;
 }
+
+function getSuccessorCount($con,$successor_id)
+{
+	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
+}
 ?>
