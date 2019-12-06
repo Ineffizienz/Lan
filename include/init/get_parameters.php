@@ -1301,9 +1301,9 @@ function getLastPairId($con,$tm_id)
 	return $last_pair_id;
 }
 
-function getFirstPairId($con,$tm_id)
+function getFirstPairId($con,$tm_id,$stage)
 {
-	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) ORDER BY ID ASC LIMIT 2");
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (stage = '$stage') ORDER BY ID ASC LIMIT 2");
 	while($row=mysqli_fetch_array($result))
 	{
 		$first_pair_id[] = $row["ID"];
