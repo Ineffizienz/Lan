@@ -994,7 +994,7 @@ h4
 	grid-row-gap: 15px;
 	align-content: center;
 	margin: 0 auto;
-	width:49em;
+	max-width: 550px;
 }
 #tm_container a
 {
@@ -1054,11 +1054,13 @@ h4
 {
 	padding-top: 8px;
 	text-align:center;
-	width: auto;
 }
 .tm_container_img img
 {
 	box-shadow: 0 2px 2px 0;
+	width: 100%;
+	max-width: 500px;
+	height: auto;
 }
 .tm_container_details
 {
