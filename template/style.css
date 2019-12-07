@@ -1208,6 +1208,10 @@ main
 	  cursor:pointer;
     padding-left:20px;
   }
+  li.game span{
+    float:right;
+    margin-right:5px;
+  }
  
     
 	li.game-top

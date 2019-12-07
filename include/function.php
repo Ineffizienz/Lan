@@ -712,11 +712,26 @@ function displayTournamentLocked($con,$tm_id)
 				$player_2 = "<i>Wildcard</i>";
 			}
 
+			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
+			$match_id = getMatchIdFromMatches($con,$matches_id);
+			$result_p1 = getResultP1FromMatch($con,$match_id);
+			$result_p2 = getResultP2FromMatch($con,$match_id);
+
+			if(empty($result_p1))
+			{
+				$result_p1 = "";
+			}
+
+			if(empty($result_p2))
+			{
+				$result_p2 = "";
+			}
+
 			if(!isset($pair_output))
 			{
-				$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
+				$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
 			} else {
-				$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--"),array($tm_id,$pair_id,$player_1,$player_2),$part_pair);
+				$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
 			}
 		}
 

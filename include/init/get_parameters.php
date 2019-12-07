@@ -1034,6 +1034,11 @@ function getMatchIdFromMatches($con,$matches_id)
 		$match_id = $row["match_id"];
 	}
 
+	if(empty($match_id))
+	{
+		$match_id = "";
+	}
+
 	return $match_id;
 }
 
@@ -1403,4 +1408,37 @@ function getSuccessorCount($con,$successor_id)
 {
 	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
 }
+
+function getResultP1FromMatch($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT result_team1 FROM tm_match WHERE ID = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_p1 = $row["result_team1"];
+	}
+
+	if(empty($result_p1))
+	{
+		$result_p1 = "";
+	}
+
+	return $result_p1;
+}
+
+function getResultP2FromMatch($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT result_team2 FROM tm_match WHERE ID = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_p2 = $row["result_team2"];
+	}
+
+	if(empty($result_p2))
+	{
+		$result_p2 = "";
+	}
+
+	return $result_p2;
+}
+
 ?>
