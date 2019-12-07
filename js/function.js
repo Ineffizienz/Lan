@@ -449,9 +449,9 @@ $(document).ready(function(){
 #################################### Basic Animation ########################################## 
 ###############################################################################################*/
 
-$(".tm_vote_container").hover(function () {
-	$(this).find(".tm_vote_for").animate({width: "60px"}, 100);
-	$(this).find(".tm_vote_sign").show(0);
+$(".tm_running_vote_container").hover(function () {
+	$(this).siblings(".tm_vote_for").animate({width: "60px"}, 100);
+	$(this).siblings(".tm_vote_for").find(".tm_vote_sign").show(0);
 }, function () {
 	$(".tm_vote_for").animate({width: "0px"}, 300);
 	$(".tm_vote_sign").hide(0);

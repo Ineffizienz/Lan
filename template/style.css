@@ -1114,7 +1114,8 @@ h4
 	display: grid;
 	grid-template-columns: auto auto;
 	align-items: center;
-	width: 18%;
+	width: auto;
+	max-width:350px;
 }
 .tm_running_vote_container
 {
