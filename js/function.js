@@ -220,7 +220,7 @@ $(document).ready(function(){
 		
 		obj = {vote_id};
 
-		postAjax(obj,getEndpoint("add_vote"),displayResponse);
+		postAjax(obj,getEndpoint("add_vote"),refreshVoteItem);
 	}
 
 	function getJointPlayerID(event)
@@ -356,6 +356,13 @@ $(document).ready(function(){
 
 	}
 
+	function refreshVoteItem(response)
+	{
+		displayMessage(response.message);
+
+		$("#vote_id_" + response.vote_id).load(location.href + " #playercount_" + response.vote_id);
+	}
+
 	function displayStatus(stat)
 	{
 		$("#status_circle").css("background-color",stat.color);
@@ -449,9 +456,9 @@ $(document).ready(function(){
 #################################### Basic Animation ########################################## 
 ###############################################################################################*/
 
-$(".tm_running_vote_container").hover(function () {
-	$(this).siblings(".tm_vote_for").animate({width: "60px"}, 100);
-	$(this).siblings(".tm_vote_for").find(".tm_vote_sign").show(0);
+$(".tm_vote_container").hover(function () {
+	$(this).find(".tm_vote_for").animate({width: "60px"}, 100);
+	$(this).find(".tm_vote_sign").show(0);
 }, function () {
 	$(".tm_vote_for").animate({width: "0px"}, 300);
 	$(".tm_vote_sign").hide(0);

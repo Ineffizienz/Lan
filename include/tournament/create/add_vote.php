@@ -27,8 +27,8 @@
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_TM_VOTED_FOR");
-                    echo json_encode(array("message"=>$message->displayMessage()));
-                } else {
+                    echo json_encode(array("message"=>$message->displayMessage(),"vote_id" => $vote_id));
+                } else { 
                     $message->getMessageCode("ERR_DB");
                     echo json_encode(array("message"=>$message->displayMessage()));
                 }
