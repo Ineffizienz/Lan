@@ -247,7 +247,7 @@ $(document).ready(function(){
 
 		closeResultPopup(event);
 
-		postAjax(obj,getEndpoint("enter_result"),displayResponse);
+		postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
 	}
 
 
@@ -354,13 +354,6 @@ $(document).ready(function(){
 		$('#t_name').val("");
 		$('#name').val("");
 
-	}
-
-	function refreshVoteItem(response)
-	{
-		displayMessage(response.message);
-
-		$("#vote_id_" + response.vote_id).load(location.href + " #playercount_" + response.vote_id);
 	}
 
 	function displayStatus(stat)
