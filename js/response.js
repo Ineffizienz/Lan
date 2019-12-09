@@ -17,3 +17,18 @@ function refreshMatchResult(response)
 
     $("#tm_locked").load(location.href + " #tournament_tree");
 }
+
+
+
+/*
+###########################################################
+######################## TIME-EVENT #######################
+###########################################################
+*/
+
+
+setInterval(autoRefreshMatchResult,20000);
+function autoRefreshMatchResult()
+{
+    $("#tm_locked").load(location.href + " #tournament_tree");
+}
