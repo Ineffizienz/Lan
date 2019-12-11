@@ -506,7 +506,7 @@ h4
 	padding: 2px;
 }
 
-/* ---------------------- Popup ---------------------------
+/* ---------------------- Popups ---------------------------
 --------------------------------------------------------------*/
 
 #popup_response
@@ -528,6 +528,26 @@ h4
 	box-shadow: 0 5px 5px 0;
 	color: #fff;
 	width:10%;
+}
+
+#result_close_popup
+{
+	text-align:right;
+}
+
+#result_popup_input_area
+{
+	display:grid;
+	grid-template-columns: auto auto auto;
+	align-content: center;
+	text-align:center;
+}
+
+.result_popup_player
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	align-content:center;
 }
 
 
