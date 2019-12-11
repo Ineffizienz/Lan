@@ -1026,6 +1026,8 @@ h4
 {
 	display:grid;
 	grid-template-columns: auto auto;
+	grid-column-gap: 25px;
+	grid-row-gap: 15px;
 	align-content: center;
 	text-align:center;
 	margin:5px;
@@ -1040,6 +1042,17 @@ h4
 {
 	border-radius:10px;
 	box-shadow:0 2px 2px 0;
+}
+#tm_unlocked_button_container
+{
+	grid-column: 1/span 2;
+	margin-top:25px;
+}
+#tm_unlocked_button_container button
+{
+	box-shadow: 0 2px 2px 0;
+	font-weight: bold;
+	height: 35px;
 }
 #tm_locked
 {
