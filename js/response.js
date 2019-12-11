@@ -27,8 +27,8 @@ function refreshMatchResult(response)
 */
 
 
-setInterval(autoRefreshMatchResult,20000);
+/*setInterval(autoRefreshMatchResult,20000);
 function autoRefreshMatchResult()
 {
     $("#tm_locked").load(location.href + " #tournament_tree");
-}
+}*/
