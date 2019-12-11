@@ -457,6 +457,16 @@ $(".tm_vote_container").hover(function () {
 	$(".tm_vote_sign").hide(0);
 });
 
+$(".game-spacer").hover(function () {
+	$(this).css("background-color","#C0C0C0");
+	$(this).css("text-align","center");
+	$(this).css("font-style","italic");
+	$(this).html("Enter Result");
+}, function() {
+	$(this).css("background-color","#e5e5e5");
+	$(this).html("");
+});
+
 /*#############################################################################################
 #################################### Popups ################################################### 
 ###############################################################################################*/
