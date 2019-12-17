@@ -34,7 +34,7 @@ if(isset($_REQUEST["game_id"]))
             $end_register = date("Y-m-d H:i:s", strtotime("+30 minutes")); //begrenzt den Anmeldungszeitraum für Turniere auf 30 Minuten
             $vote_count = getVotedPlayers($con,$vote_id);
             
-            $sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$tm_period_id','$end_register','0')";
+            $sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,tm_locked,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$tm_period_id','$end_register','0','0')";
             if(mysqli_query($con,$sql))
             {
                 $tm_id = getLastTmId($con);
