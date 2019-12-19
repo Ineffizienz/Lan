@@ -231,6 +231,8 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
+		disableButton(this,event);
+
 		postAjax(obj,getEndpoint("join_tm"),refreshTournamentPlayerList);
 	}
 
@@ -241,6 +243,8 @@ $(document).ready(function(){
 		var tm_id = $(this).attr("data-tm-id");
 
 		obj = {tm_id};
+
+		disableButton(this,event);
 
 		postAjax(obj,getEndpoint("leave_tm"),refreshTournamentPlayerList);
 	}
@@ -482,6 +486,14 @@ $(".game-spacer").hover(function () {
 	$(this).css("background-color","#e5e5e5");
 	$(this).html("");
 });
+
+function disableButton(ele, event)
+{
+	event.preventDefault();
+
+	$(ele).prop("disabled", "disabled");
+	$(ele).css("cursor", "crosshair");
+}
 
 /*#############################################################################################
 #################################### Popups ################################################### 
