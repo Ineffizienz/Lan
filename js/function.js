@@ -243,11 +243,16 @@ $(document).ready(function(){
 		var result_1 = $("#result_1").val();
 		var result_2 = $("#result_2").val();
 
-		obj = {tm_id, pair_id, result_1, result_2};
+		if((result_1.length > 2) || (result_2.length > 2))
+		{
+			console.log("Eingabe zu groß.");
+		} else {
+			obj = {tm_id, pair_id, result_1, result_2};
 
-		closeResultPopup(event);
+			closeResultPopup(event);
 
-		postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+			postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+		}
 	}
 
 
