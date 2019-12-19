@@ -231,7 +231,7 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("join_tm"),displayResponse);
+		postAjax(obj,getEndpoint("join_tm"),refreshTournamentPlayerList);
 	}
 
 	function getLeaveTournament(event)
@@ -242,7 +242,7 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("leave_tm"),displayResponse);
+		postAjax(obj,getEndpoint("leave_tm"),refreshTournamentPlayerList);
 	}
 
 	function getMatchResults(event)

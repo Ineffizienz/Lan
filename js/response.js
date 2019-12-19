@@ -18,6 +18,13 @@ function refreshMatchResult(response)
     $("#tm_locked").load(location.href + " #tournament_tree");
 }
 
+function refreshTournamentPlayerList(response)
+{
+    displayMessage(response.message);
+
+    $("#player_list_container").load(location.href + " #tm_player_list");
+}
+
 
 
 /*
