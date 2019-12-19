@@ -234,6 +234,17 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("join_tm"),displayResponse);
 	}
 
+	function getLeaveTournament(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("data-tm-id");
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("leave_tm"),displayResponse);
+	}
+
 	function getMatchResults(event)
 	{
 		event.preventDefault();
@@ -540,6 +551,7 @@ function closeResultPopup(event)
 	$(".tm_vote_for").on("click",getVoteID);
 	$("#join_tm").on("click",getJointPlayerID);
 	$("#send_result").on("click",getMatchResults);
+	$("#leave_tm").on("click",getLeaveTournament);
 
 	//Popup
 	$(".game").on("click",displayResultPopup);
