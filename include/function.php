@@ -707,7 +707,7 @@ function displayTournamentLocked($con,$tm_id)
 			$successor = getSuccessorFromPair($con,$pair_id);
 
 			$player_1 = getUsernameFromGamerslist($con,$player_1);
-			if((getSuccessorCount($con,$successor) == 1) || $stage == "1")
+			if((getSuccessorCount($con,$successor) == 1) || (($stage == "1") && empty($player_2)))
 			{
 				$player_2 = "<i>Wildcard</i>";
 			} else {
