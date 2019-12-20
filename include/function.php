@@ -704,12 +704,14 @@ function displayTournamentLocked($con,$tm_id)
 			$player_1 = $pair["team_1"];
 			$player_2 = $pair["team_2"];
 
+			$successor = getSuccessorFromPair($con,$pair_id);
+
 			$player_1 = getUsernameFromGamerslist($con,$player_1);
-			if(!empty($player_2))
+			if((getSuccessorCount($con,$successor) == 1) || $stage == "1")
 			{
-				$player_2 = getUsernameFromGamerslist($con,$player_2);
-			} elseif (empty($player_2) && !(empty($player_1))) {
 				$player_2 = "<i>Wildcard</i>";
+			} else {
+				$player_2 = getUsernameFromGamerslist($con,$player_2);
 			}
 
 			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
