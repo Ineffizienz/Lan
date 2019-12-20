@@ -12,14 +12,23 @@
 
     if(getSinglePlayerIDFromGamerslist($con,$tm_id,$player_id))
     {
-        $sql = "DELETE FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'";
+        $player_count = getPlayerCountTm($con,$tm_id);
+        $player_count = $player_count-1;
+        $sql = "UPDATE tm SET player_count = $player_count WHERE ID = '$tm_id'";
         if(mysqli_query($con,$sql))
         {
-            $message->getMessageCode("SUC_LEAVE_TOURNAMENT");
-            echo json_encode(array("message"=>$message->displayMessage()));
+            $sql = "DELETE FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'";
+            if(mysqli_query($con,$sql))
+            {
+                $message->getMessageCode("SUC_LEAVE_TOURNAMENT");
+                echo json_encode(array("message"=>$message->displayMessage()));
+            } else {
+                $message->getMessageCode("ERR_DB");
+                echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
+            }
         } else {
             $message->getMessageCode("ERR_DB");
-            echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
+            echo json_encode(array("message"=>$message->displayMessage()));
         }
     } else {
         $message->getMessageCode("ERR_LEAVE_TOURNAMENT");
