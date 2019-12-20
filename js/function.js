@@ -1,6 +1,78 @@
+function gameSpacerHover ()
+{
+	$(".game-spacer").on({mouseover: function () {
+		$(this).css("background-color","#C0C0C0");
+		$(this).css("text-align","center");
+		$(this).css("font-style","italic");
+		$(this).html("Enter Result");
+	}, mouseleave: function() {
+		$(this).css("background-color","#e5e5e5");
+		$(this).html("");
+	}});
+	
+	$(".game-spacer").on("click",displayResultPopup);
+}
+
+/*#############################################################################################
+#################################### Popups ################################################### 
+###############################################################################################*/
+
+function displayResultPopup(event)
+{
+	event.preventDefault();
+	
+	var tm_id = $(this).attr("data-tm-id");
+	var pair_id = $(this).attr("data-pair-id");
+	var player_1 = $(this).attr("data-player-first");
+	var player_2 = $(this).attr("data-player-second");
+
+	if(!(player_1 === "") && !(player_2 === ""))
+	{
+		$("#tm_id").val(tm_id);
+		$("#pair_id").val(pair_id);
+		$("#player_1").html(player_1);
+		$("#player_2").html(player_2);
+
+		$(".tm_result_popup").show();
+	}
+}
+
+function closeResultPopup(event)
+{
+	event.preventDefault();
+
+	$(".tm_result_popup").hide();
+	$("#result_1").val("");
+	$("#result_2").val("");
+}
+
 $(document).ready(function(){
 
 	var obj = {};
+	
+	gameSpacerHover();
+
+	/*var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+	
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+	
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+	};
+
+	var page = getUrlParameter("page");
+
+	if(page == "single_tm")
+	{
+		
+	}*/
 
 	function checkInput(accountname,password,email)
 	{
@@ -477,55 +549,12 @@ $(".tm_vote_container").hover(function () {
 	$(".tm_vote_sign").hide(0);
 });
 
-$(".game-spacer").hover(function () {
-	$(this).css("background-color","#C0C0C0");
-	$(this).css("text-align","center");
-	$(this).css("font-style","italic");
-	$(this).html("Enter Result");
-}, function() {
-	$(this).css("background-color","#e5e5e5");
-	$(this).html("");
-});
-
 function disableButton(ele, event)
 {
 	event.preventDefault();
 
 	$(ele).prop("disabled", "disabled");
 	$(ele).css("cursor", "crosshair");
-}
-
-/*#############################################################################################
-#################################### Popups ################################################### 
-###############################################################################################*/
-
-function displayResultPopup(event)
-{
-	event.preventDefault();
-	
-	var tm_id = $(this).attr("data-tm-id");
-	var pair_id = $(this).attr("data-pair-id");
-	var player_1 = $(this).attr("data-player-first");
-	var player_2 = $(this).attr("data-player-second");
-
-	if(!(player_1 === "") && !(player_2 === ""))
-	{
-		$("#tm_id").val(tm_id);
-		$("#pair_id").val(pair_id);
-		$("#player_1").html(player_1);
-		$("#player_2").html(player_2);
-
-		$(".tm_result_popup").show();
-	}
-}
-
-function closeResultPopup(event)
-{
-	event.preventDefault();
-
-	$(".tm_result_popup").hide();
-	$("#result_1").val("");
-	$("#result_2").val("");
 }
 
 /*#############################################################################################
@@ -566,7 +595,7 @@ function closeResultPopup(event)
 	$("#leave_tm").on("click",getLeaveTournament);
 
 	//Popup
-	$(".game").on("click",displayResultPopup);
+	$(".game-spacer").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
 });
 

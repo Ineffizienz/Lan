@@ -15,7 +15,7 @@ function refreshMatchResult(response)
 {
     displayMessage(response.message);
 
-    $("#tm_locked").load(location.href + " #tournament_tree");
+    $("#tournament_tree").load(location.href + " .round", gameSpacerHover);
 }
 
 function refreshTournamentPlayerList(response)
