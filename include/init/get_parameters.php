@@ -806,7 +806,7 @@ function getVotedGames($con,$game_id)
 
 function getVotedTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote");
 	if(!empty($result))
 	{
 		while($row=mysqli_fetch_assoc($result))
@@ -1150,6 +1150,11 @@ function getTournamentStatus($con,$tm_id)
 		$tm_locked = $row["tm_locked"];
 	}
 
+	if(empty($tm_locked))
+	{
+		$tm_locked = "";
+	}
+
 	return $tm_locked;
 }
 
@@ -1439,6 +1444,22 @@ function getResultP2FromMatch($con,$match_id)
 	}
 
 	return $result_p2;
+}
+
+function getSinglePlayerIDFromGamerslist($con,$tm_id,$player_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'")) > 0;
+}
+
+function getSecondPairId($con,$pair_id,$successor_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id' AND ID != '$pair_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$second_pair = $row["ID"];
+	}
+
+	return $second_pair;
 }
 
 ?>
