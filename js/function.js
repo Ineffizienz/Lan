@@ -334,11 +334,17 @@ $(document).ready(function(){
 		{
 			console.log("Eingabe zu groß.");
 		} else {
-			obj = {tm_id, pair_id, result_1, result_2};
+			if(($.isNumeric(result_1)) && ($.isNumeric(result_2)))
+			{
+				obj = {tm_id, pair_id, result_1, result_2};
 
-			closeResultPopup(event);
+				closeResultPopup(event);
 
-			postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+				postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+			} else {
+				console.log("Eingabe ist keine Zahl.");
+			}
+
 		}
 	}
 
