@@ -18,7 +18,7 @@
         $result_1 = $_REQUEST["result_1"];
         $result_2 = $_REQUEST["result_2"];
         
-        if(empty($result_1) || empty($result_2))
+        if(($result_1 == "") || ($result_2 == ""))
         {
             $message->getMessageCode("ERR_NO_RESULT");
             echo json_encode(array("message"=>$message->displayMessage()));

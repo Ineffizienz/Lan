@@ -1422,7 +1422,7 @@ function getResultP1FromMatch($con,$match_id)
 		$result_p1 = $row["result_team1"];
 	}
 
-	if(empty($result_p1))
+	if(!isset($result_p1))
 	{
 		$result_p1 = "";
 	}
@@ -1438,7 +1438,7 @@ function getResultP2FromMatch($con,$match_id)
 		$result_p2 = $row["result_team2"];
 	}
 
-	if(empty($result_p2))
+	if(!isset($result_p2))
 	{
 		$result_p2 = "";
 	}

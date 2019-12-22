@@ -719,12 +719,12 @@ function displayTournamentLocked($con,$tm_id)
 			$result_p1 = getResultP1FromMatch($con,$match_id);
 			$result_p2 = getResultP2FromMatch($con,$match_id);
 
-			if(empty($result_p1))
+			if($result_p1 == "")
 			{
 				$result_p1 = "";
 			}
 
-			if(empty($result_p2))
+			if($result_p2 == "")
 			{
 				$result_p2 = "";
 			}
