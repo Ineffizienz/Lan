@@ -806,7 +806,7 @@ function getVotedGames($con,$game_id)
 
 function getVotedTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote");
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote ORDER BY endtime DESC");
 	if(!empty($result))
 	{
 		while($row=mysqli_fetch_assoc($result))
