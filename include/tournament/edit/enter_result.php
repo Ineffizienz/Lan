@@ -18,46 +18,55 @@
         $result_1 = $_REQUEST["result_1"];
         $result_2 = $_REQUEST["result_2"];
         
-        if(($result_1 == "") || ($result_2 == ""))
+        if(empty($match_id))
         {
-            $message->getMessageCode("ERR_NO_RESULT");
+            $message->getMessageCode("ERR_NO_MATCH");
             echo json_encode(array("message"=>$message->displayMessage()));
         } else {
-            if($result_1 == $result_2)
+            if(($result_1 == "") || ($result_2 == ""))
             {
-                $message->getMessageCode("ERR_NO_DRAW");
+                $message->getMessageCode("ERR_NO_RESULT");
                 echo json_encode(array("message"=>$message->displayMessage()));
             } else {
-                $sql = "UPDATE tm_match SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$match_id'";
-                if(mysqli_query($con,$sql))
+                if($result_1 == $result_2)
                 {
-                    $team_gamerslist = getGamerslistIdByPair($con,$pair_id);
-                    $team_1 = $team_gamerslist["team_1"];
-                    $team_2 = $team_gamerslist["team_2"];
-                    $successor_id = getSuccessorFromPair($con,$pair_id);
-                    $second_pair = getSecondPairId($con,$pair_id,$successor_id);
-                    if($result_1 > $result_2)
+                    $message->getMessageCode("ERR_NO_DRAW");
+                    echo json_encode(array("message"=>$message->displayMessage()));
+                } else {
+                    $sql = "UPDATE tm_match SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$match_id'";
+                    if(mysqli_query($con,$sql))
                     {
-                        if($pair_id < $second_pair)
+                        $team_gamerslist = getGamerslistIdByPair($con,$pair_id);
+                        $team_1 = $team_gamerslist["team_1"];
+                        $team_2 = $team_gamerslist["team_2"];
+                        $successor_id = getSuccessorFromPair($con,$pair_id);
+                        $second_pair = getSecondPairId($con,$pair_id,$successor_id);
+                        if($result_1 > $result_2)
                         {
-                            $sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor_id'";
-                            if(mysqli_query($con,$sql))
+                            if($pair_id < $second_pair)
                             {
-                                if(getSuccessorCount($con,$successor_id) == 1)
+                                $sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor_id'";
+                                if(mysqli_query($con,$sql))
                                 {
-                                    $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-                                    $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-                                    if(mysqli_query($con,$sql))
+                                    if(getSuccessorCount($con,$successor_id) == 1)
                                     {
-                                        $match_id = getMatchIdFromMatches($con,$matches_id);
-                                        $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+                                        $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+                                        $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
                                         if(mysqli_query($con,$sql))
                                         {
-                                            $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                            $match_id = getMatchIdFromMatches($con,$matches_id);
+                                            $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
                                             if(mysqli_query($con,$sql))
                                             {
-                                                $message->getMessageCode("SUC_ENTER_RESULT");
-                                                echo json_encode(array("message"=>$message->displayMessage()));
+                                                $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                                if(mysqli_query($con,$sql))
+                                                {
+                                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                } else {
+                                                    $message->getMessageCode("ERR_DB");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                }
                                             } else {
                                                 $message->getMessageCode("ERR_DB");
                                                 echo json_encode(array("message"=>$message->displayMessage()));
@@ -67,36 +76,75 @@
                                             echo json_encode(array("message"=>$message->displayMessage()));
                                         }
                                     } else {
-                                        $message->getMessageCode("ERR_DB");
+                                        $message->getMessageCode("SUC_ENTER_RESULT");
                                         echo json_encode(array("message"=>$message->displayMessage()));
                                     }
                                 } else {
-                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                    $message->getMessageCode("ERR_DB");
                                     echo json_encode(array("message"=>$message->displayMessage()));
                                 }
                             } else {
-                                $message->getMessageCode("ERR_DB");
-                                echo json_encode(array("message"=>$message->displayMessage()));
-                            }
+                                $sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
+                                if(mysqli_query($con,$sql))
+                                {
+                                    if(getSuccessorCount($con,$successor_id) == 1)
+                                    {
+                                        $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+                                        $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+                                        if(mysqli_query($con,$sql))
+                                        {
+                                            $match_id = getMatchIdFromMatches($con,$matches_id);
+                                            $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+                                            if(mysqli_query($con,$sql))
+                                            {
+                                                $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                                if(mysqli_query($con,$sql))
+                                                {
+                                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                } else {
+                                                    $message->getMessageCode("ERR_DB");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                }
+                                            } else {
+                                                $message->getMessageCode("ERR_DB");
+                                                echo json_encode(array("message"=>$message->displayMessage()));
+                                            }
+                                        } else {
+                                            $message->getMessageCode("ERR_DB");
+                                            echo json_encode(array("message"=>$message->displayMessage()));
+                                        }
+                                    } else {
+                                        $message->getMessageCode("SUC_ENTER_RESULT");
+                                        echo json_encode(array("message"=>$message->displayMessage()));
+                                    } 
+                                }
+                            }       	                    
                         } else {
-                            $sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
-                            if(mysqli_query($con,$sql))
+                            if($pair_id < $second_pair)
                             {
-                                if(getSuccessorCount($con,$successor_id) == 1)
+                                $sql = "UPDATE tm_paarung SET team_1 = '$team_2' WHERE ID = '$successor_id'";
+                                if(mysqli_query($con,$sql))
                                 {
-                                    $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-                                    $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-                                    if(mysqli_query($con,$sql))
+                                    if(getSuccessorCount($con,$successor_id) == 1)
                                     {
-                                        $match_id = getMatchIdFromMatches($con,$matches_id);
-                                        $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+                                        $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+                                        $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
                                         if(mysqli_query($con,$sql))
                                         {
-                                            $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                            $match_id = getMatchIdFromMatches($con,$matches_id);
+                                            $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
                                             if(mysqli_query($con,$sql))
                                             {
-                                                $message->getMessageCode("SUC_ENTER_RESULT");
-                                                echo json_encode(array("message"=>$message->displayMessage()));
+                                                $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                                if(mysqli_query($con,$sql))
+                                                {
+                                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                } else {
+                                                    $message->getMessageCode("ERR_DB");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                }
                                             } else {
                                                 $message->getMessageCode("ERR_DB");
                                                 echo json_encode(array("message"=>$message->displayMessage()));
@@ -106,75 +154,36 @@
                                             echo json_encode(array("message"=>$message->displayMessage()));
                                         }
                                     } else {
-                                        $message->getMessageCode("ERR_DB");
+                                        $message->getMessageCode("SUC_ENTER_RESULT");
                                         echo json_encode(array("message"=>$message->displayMessage()));
                                     }
                                 } else {
-                                    $message->getMessageCode("SUC_ENTER_RESULT");
-                                    echo json_encode(array("message"=>$message->displayMessage()));
-                                } 
-                            }
-                        }       	                    
-                    } else {
-                        if($pair_id < $second_pair)
-                        {
-                            $sql = "UPDATE tm_paarung SET team_1 = '$team_2' WHERE ID = '$successor_id'";
-                            if(mysqli_query($con,$sql))
-                            {
-                                if(getSuccessorCount($con,$successor_id) == 1)
-                                {
-                                    $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-                                    $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-                                    if(mysqli_query($con,$sql))
-                                    {
-                                        $match_id = getMatchIdFromMatches($con,$matches_id);
-                                        $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
-                                        if(mysqli_query($con,$sql))
-                                        {
-                                            $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-                                            if(mysqli_query($con,$sql))
-                                            {
-                                                $message->getMessageCode("SUC_ENTER_RESULT");
-                                                echo json_encode(array("message"=>$message->displayMessage()));
-                                            } else {
-                                                $message->getMessageCode("ERR_DB");
-                                                echo json_encode(array("message"=>$message->displayMessage()));
-                                            }
-                                        } else {
-                                            $message->getMessageCode("ERR_DB");
-                                            echo json_encode(array("message"=>$message->displayMessage()));
-                                        }
-                                    } else {
-                                        $message->getMessageCode("ERR_DB");
-                                        echo json_encode(array("message"=>$message->displayMessage()));
-                                    }
-                                } else {
-                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                    $message->getMessageCode("ERR_DB");
                                     echo json_encode(array("message"=>$message->displayMessage()));
                                 }
                             } else {
-                                $message->getMessageCode("ERR_DB");
-                                echo json_encode(array("message"=>$message->displayMessage()));
-                            }
-                        } else {
-                            $sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
-                            if(mysqli_query($con,$sql))
-                            {
-                                if(getSuccessorCount($con,$successor_id) == 1)
+                                $sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
+                                if(mysqli_query($con,$sql))
                                 {
-                                    $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-                                    $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-                                    if(mysqli_query($con,$sql))
+                                    if(getSuccessorCount($con,$successor_id) == 1)
                                     {
-                                        $match_id = getMatchIdFromMatches($con,$matches_id);
-                                        $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+                                        $matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+                                        $sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
                                         if(mysqli_query($con,$sql))
                                         {
-                                            $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                            $match_id = getMatchIdFromMatches($con,$matches_id);
+                                            $sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
                                             if(mysqli_query($con,$sql))
                                             {
-                                                $message->getMessageCode("SUC_ENTER_RESULT");
-                                                echo json_encode(array("message"=>$message->displayMessage()));
+                                                $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+                                                if(mysqli_query($con,$sql))
+                                                {
+                                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                } else {
+                                                    $message->getMessageCode("ERR_DB");
+                                                    echo json_encode(array("message"=>$message->displayMessage()));
+                                                }
                                             } else {
                                                 $message->getMessageCode("ERR_DB");
                                                 echo json_encode(array("message"=>$message->displayMessage()));
@@ -184,25 +193,23 @@
                                             echo json_encode(array("message"=>$message->displayMessage()));
                                         }
                                     } else {
-                                        $message->getMessageCode("ERR_DB");
+                                        $message->getMessageCode("SUC_ENTER_RESULT");
                                         echo json_encode(array("message"=>$message->displayMessage()));
                                     }
                                 } else {
-                                    $message->getMessageCode("SUC_ENTER_RESULT");
+                                    $message->getMessageCode("ERR_DB");
                                     echo json_encode(array("message"=>$message->displayMessage()));
                                 }
-                            } else {
-                                $message->getMessageCode("ERR_DB");
-                                echo json_encode(array("message"=>$message->displayMessage()));
                             }
                         }
+                    } else {
+                        $message->getMessageCode("ERR_DB");
+                        echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
                     }
-                } else {
-                    $message->getMessageCode("ERR_DB");
-                    echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
                 }
             }
-        }       
+        }
+               
     } else {
         $message->getMessageCode("ERR_INCORRECT_MATCH");
         echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));

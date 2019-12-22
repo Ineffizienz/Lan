@@ -49,3 +49,4 @@ ERR_INCORRECT_MATCH: Versucht Ihr ein anderes Duell zu beeinflussen? Wagt es euc
 ERR_NO_DRAW: Das kann nicht sein. Es kann nur einen Sieger geben!
 ERR_NO_RESULT: Ihr müsst schon alles angeben, um eure Ehre zu erhalten!
 ERR_LEAVE_TOURNAMENT: Seid nicht albern!
+ERR_NO_MATCH: Schmückt euch nicht mit fremden Federn!

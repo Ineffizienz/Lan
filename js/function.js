@@ -28,12 +28,15 @@ function displayResultPopup(event)
 
 	if(!(player_1 === "") && !(player_2 === ""))
 	{
-		$("#tm_id").val(tm_id);
-		$("#pair_id").val(pair_id);
-		$("#player_1").html(player_1);
-		$("#player_2").html(player_2);
+		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
+		{
+			$("#tm_id").val(tm_id);
+			$("#pair_id").val(pair_id);
+			$("#player_1").html(player_1);
+			$("#player_2").html(player_2);
 
-		$(".tm_result_popup").show();
+			$(".tm_result_popup").show();
+		}
 	}
 }
 
