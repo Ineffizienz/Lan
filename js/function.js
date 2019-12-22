@@ -4,7 +4,7 @@ function gameSpacerHover ()
 		$(this).css("background-color","#C0C0C0");
 		$(this).css("text-align","center");
 		$(this).css("font-style","italic");
-		$(this).html("Enter Result");
+		$(this).html("Ergebnis eingeben.");
 	}, mouseleave: function() {
 		$(this).css("background-color","#e5e5e5");
 		$(this).html("");
@@ -342,6 +342,7 @@ $(document).ready(function(){
 
 				postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
 			} else {
+				//displayMessage("Seid nicht albern!")
 				console.log("Eingabe ist keine Zahl.");
 			}
 
