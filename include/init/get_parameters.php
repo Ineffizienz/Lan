@@ -1462,4 +1462,20 @@ function getSecondPairId($con,$pair_id,$successor_id)
 	return $second_pair;
 }
 
+function getMatchLockTime($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT match_locked FROM tm_matches WHERE match_id = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$lock_time = $row["match_locked"];
+	}
+
+	if(empty($lock_time))
+	{
+		$lock_time = "";
+	}
+
+	return $lock_time;
+}
+
 ?>
