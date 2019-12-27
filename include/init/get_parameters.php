@@ -1477,5 +1477,4 @@ function getMatchLockTime($con,$match_id)
 
 	return $lock_time;
 }
-
 ?>
