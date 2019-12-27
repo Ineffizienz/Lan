@@ -960,6 +960,12 @@ function getTournaments($con)
 	return $tms;
 }
 
+function getGamesFromTournament($con,$game_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm WHERE game_id = '$game_id'")) > 0;
+}
+
+
 function getLastTmId($con)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm ORDER BY ID DESC LIMIT 1");

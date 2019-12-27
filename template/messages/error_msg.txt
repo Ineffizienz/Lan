@@ -51,3 +51,4 @@ ERR_NO_RESULT: Ihr müsst schon alles angeben, um eure Ehre zu erhalten!
 ERR_LEAVE_TOURNAMENT: Seid nicht albern!
 ERR_NO_MATCH: Schmückt euch nicht mit fremden Federn!
 ERR_MATCH_LOCKED: Haltet euch doch nicht mit Vergangenem auf!
+ERR_TM_FOR_GAME_EXISTS: Ein solches Turnier existiert bereits!
