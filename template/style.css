@@ -1050,6 +1050,7 @@ h4
 }
 #tm_unlocked_button_container button
 {
+	margin: 10px;
 	cursor:pointer;
 	box-shadow: 0 2px 2px 0;
 	font-weight: bold;
