@@ -7,7 +7,7 @@
 
 	$message = new message();
 	$last_ip = getLastIp($con);
-	$c_name = $_REQUEST["cover"];
+	$c_name = $_REQUEST["c_name"];
 
 	if(!empty($c_name))
 	{

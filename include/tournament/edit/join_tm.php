@@ -11,7 +11,7 @@ $message = new message();
 if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
 {
     $message->getMessageCode("ERR_ALLREADY_JOINT_TM");
-    echo json_encode(array($message->displayMessage()));
+    echo json_encode(array("message"=>$message->displayMessage()));
 } else {
     $tm_id = $_REQUEST["tm_id"];
 
@@ -21,29 +21,18 @@ if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
     if(mysqli_query($con,$sql))
     {
         $player_count++;
-        $sql = "UPDATE trigger_variables SET trigger_disabled = 1 WHERE trigger_name = 't_setMatches'";
+        $sql = "UPDATE tm SET player_count = '$player_count' WHERE ID = '$tm_id'";
         if(mysqli_query($con,$sql))
         {
-            $sql = "UPDATE tm SET player_count = '$player_count' WHERE ID = '$tm_id'";
-            if(mysqli_query($con,$sql))
-            {
-                $sql = "UPDATE trigger_variables SET trigger_disabled = 0 WHERE trigger_name = 't_setMatches'";
-                if(mysqli_query($con,$sql))
-                {
-                    $message->getMessageCode("SUC_JOIN_TM");
-                    echo json_encode($message->displayMessage());
-                } else {
-                    $message->getMessageCode("ERR_DB");
-                    echo json_encode(array($message->displayMessage() . mysqli_error($con)));
-                }
-            } else {
-                $message->getMessageCode("ERR_DB");
-                echo json_encode(array($message->displayMessage() . mysqli_error($con)));
-            }
+            $message->getMessageCode("SUC_JOIN_TM");
+            echo json_encode(array("message"=>$message->displayMessage()));
+        } else {
+            $message->getMessageCode("ERR_DB");
+            echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
         }
     } else {
         $message->getMessageCode("ERR_DB");
-        echo json_encode(array($message->displayMessage() . mysqli_error($con)));
+        echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
     }
 }
 

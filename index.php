@@ -20,7 +20,7 @@ require_once(INC . "function.php");
 
 $tpl = new template();
 
-$title = "Du nicht nehmen Kerze!";
+$title = "Press ALT+F4 to Ragequit!";
 $message = new message();
 
 if(!isset($_SESSION["player_id"]))
@@ -100,6 +100,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		$tpl->assign("running_votes",displayRunningVotes($con));
 		$tpl->assign("tournaments",displayTournaments($con));
 		$tpl->assign("tournament_view",displayTournamentTree($con));
+		$tpl->assign("result_popup",displayResultPopup());
 
 		/***************************** SETTING *****************************/
 

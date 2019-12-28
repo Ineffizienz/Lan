@@ -8,6 +8,7 @@ function defineEvents($con)
 function t_setUpMatches($con)
 {
     $sql = "USE project_ziphon;
+
     DROP TRIGGER IF EXISTS t_setMatches;
     delimiter //
     CREATE TRIGGER t_setMatches AFTER UPDATE ON tm
@@ -26,6 +27,7 @@ function t_setUpMatches($con)
         declare error_time varchar(255);
         DECLARE player_var varchar(255);
         DECLARE tm_var varchar(255);
+        DECLARE msg_var varchar(255);
         DECLARE cursor_var varchar(255);
         DECLARE cursor_done int DEFAULT FALSE;
         DECLARE tm_id_table varchar(255);
@@ -35,7 +37,7 @@ function t_setUpMatches($con)
 		BEGIN
             GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
 				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
-				SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+				SET @full_error = CONCAT('ERROR ', @errno, ' (', @sqlstate, '): ', @text);
 				select CURRENT_TIMESTAMP into error_time;
 				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
                 
@@ -44,32 +46,30 @@ function t_setUpMatches($con)
 		BEGIN
             GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
 				@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
-				SET @full_error = CONCAT("Warning ", @errno, " (", @sqlstate, "): ", @text);
+				SET @full_error = CONCAT('Warning ', @errno, ' (', @sqlstate, '): ', @text);
 				select CURRENT_TIMESTAMP into error_time;
 				Insert into log_trigger_error(error_type, error_statement) values (error_time, @full_error); 
                 
 		END;
 
            
-        #SET trigger_disabled = (SELECT trigger_disabled FROM trigger_variables WHERE trigger_variables.trigger_name = 't_setMatches');
+        #SET trigger_disabled = (SELECT trigger_disabled FROM trigger_variables WHERE trigger_name = 't_setMatches');
         
         IF trigger_disabled = 1 THEN
 			LEAVE thisTrigger;
 		END IF;
 
         IF NEW.tm_locked != OLD.tm_locked THEN # Überprüft, ob sich die Spalte tm_locked geändert hat
-			SET tm_var = CONCAT('TM Status (nach if): ', NEW.tm_locked, ', ', OLD.tm_locked);
-            
-            INSERT INTO log_trigger_error(error_type, error_statement) VALUES ('msg-2',tm_var);
 
-            SET tm_id = (SELECT ID FROM tm WHERE NEW.tm_locked);
+            SET tm_id = NEW.ID;
+            
             SET count_var = 1;
             
             OPEN player_cursor;
             
             cursor_loop: LOOP
 				FETCH player_cursor INTO player_id_gl;
-				
+
                 IF cursor_done THEN
 					LEAVE cursor_loop;
 				END IF;
@@ -81,21 +81,22 @@ function t_setUpMatches($con)
 					
 					INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
 
-					SET match_id = (SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1);
+					SET match_id = (SELECT ID FROM tm_match ORDER BY tm_match.ID DESC LIMIT 1);
 
 					INSERT INTO tm_matches (match_id) VALUES (match_id);
 
 					SET matches_id = (SELECT ID FROM tm_matches WHERE tm_matches.match_id = match_id);
 
-					UPDATE tm_paarung SET matches_id = matches_id WHERE tm_paarung.ID = last_paarung_id;
+					UPDATE tm_paarung SET tm_paarung.matches_id = matches_id WHERE tm_paarung.ID = last_paarung_id;
 
 				ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
-					INSERT INTO tm_paarung (team_1, tournament) VALUES (player_id_gl, tm_id);
+					INSERT INTO tm_paarung (team_1, tournament, stage) VALUES (player_id_gl, tm_id, '1');
 				END IF;
 
                 SET count_var = count_var + 1;
             END LOOP;
             CLOSE player_cursor;
+            
         END IF;
 
         

@@ -806,7 +806,7 @@ function getVotedGames($con,$game_id)
 
 function getVotedTournaments($con)
 {
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, endtime, vote_closed FROM tm_vote");
+	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote ORDER BY endtime DESC");
 	if(!empty($result))
 	{
 		while($row=mysqli_fetch_assoc($result))
@@ -960,6 +960,12 @@ function getTournaments($con)
 	return $tms;
 }
 
+function getGamesFromTournament($con,$game_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm WHERE game_id = '$game_id'")) > 0;
+}
+
+
 function getLastTmId($con)
 {
 	$result = mysqli_query($con,"SELECT ID FROM tm ORDER BY ID DESC LIMIT 1");
@@ -1015,12 +1021,28 @@ function getMatchesIdFromPaarung($con,$tm_id)
 	return $matches_id;
 }
 
+function getSingleMatchesIdFromPaarung($con,$pair_id)
+{
+	$result = mysqli_query($con,"SELECT matches_id FROM tm_paarung WHERE ID = '$pair_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$matches_id = $row["matches_id"];
+	}
+
+	return $matches_id;
+}
+
 function getMatchIdFromMatches($con,$matches_id)
 {
 	$result = mysqli_query($con,"SELECT match_id FROM tm_matches WHERE ID = '$matches_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$match_id = $row["match_id"];
+	}
+
+	if(empty($match_id))
+	{
+		$match_id = "";
 	}
 
 	return $match_id;
@@ -1134,6 +1156,11 @@ function getTournamentStatus($con,$tm_id)
 		$tm_locked = $row["tm_locked"];
 	}
 
+	if(empty($tm_locked))
+	{
+		$tm_locked = "";
+	}
+
 	return $tm_locked;
 }
 
@@ -1167,28 +1194,11 @@ function getJointPlayer($con,$tm_id,$player_id)
 // Für bereits gestartete Turniere
 function getTmPairs($con,$tm_id)
 {
-	$result = mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE tournament = '$tm_id'");
+	$result = mysqli_query($con,"SELECT ID, team_1, team_2 FROM tm_paarung WHERE tournament = '$tm_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$teams[] = $row;
 	}
-
-	/*foreach ($teams as $team)
-	{
-		$result = mysqli_query($con,"SELECT gamerslist_id FROM tm_team WHERE ID = '$team'");
-		while($row=mysqli_fetch_array($result))
-		{
-			$gamerslist_id = $row["gamerslist_id"];
-		}
-
-		$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON player.ID = tm_gamerslist.player_id WHERE tm_gamerslist.ID = '$gamerslist_id'");
-		while($row=mysqli_fetch_array($result))
-		{
-			$single_name = $row["name"];
-		}
-
-		array_push($player_name,$single_name);
-	}*/
 
 	return $teams;
 }
@@ -1201,6 +1211,276 @@ function getUsernameFromGamerslist($con,$gamerslist_id)
 		$player_name = $row["name"];
 	}
 
+	if(!isset($player_name) || empty($player_name))
+	{
+		$player_name = "";
+	}
+
 	return $player_name;
+}
+
+function getGamerslistIdByPlayerId($con,$player_id,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE player_id = '$player_id' AND tm_id = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$gamerslist_id = $row["ID"];
+	}
+
+	return $gamerslist_id;
+}
+
+function getGamerslistIdFromPair($con,$gamerslist_id,$pair_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$pair_id' AND ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id'))")) > 0;
+}
+
+function getPairIdByTm($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND successor IS NULL ORDER BY ID ASC");
+	while($row=mysqli_fetch_array($result))
+	{
+		$pair_ids[] = $row["ID"];
+	}
+
+	return $pair_ids;
+}
+
+function getSinglePairIdByMatches($con,$matches_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE matches_id = '$matches_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$pair_id = $row["ID"];
+	}
+
+	return $pair_id;
+}
+
+function getResultPair($con,$gamerslist_id,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id')) AND tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_pair = $row["ID"];
+	}
+
+	return $result_pair;
+}
+
+function getNewPair($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_pair = $row["ID"];
+	}
+
+	return $new_pair;
+}
+
+function getNewMatchId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_match_id = $row["ID"];
+	}
+
+	return $new_match_id;
+}
+
+function getNewMatchesId($con)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_matches ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$new_matches_id = $row["ID"];
+	}
+
+	return $new_matches_id;
+}
+
+function getPairCount($con,$tm_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL)"));
+}
+
+function getLastPairId($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_pair_id = $row["ID"];
+	}
+
+	return $last_pair_id;
+}
+
+function getFirstPairId($con,$tm_id,$stage)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (stage = '$stage') ORDER BY ID ASC LIMIT 2");
+	while($row=mysqli_fetch_array($result))
+	{
+		$first_pair_id[] = $row["ID"];
+	}
+
+	return $first_pair_id;
+}
+
+function getGamerslistIdByPair($con,$pair_id)
+{
+	$result = mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$pair_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gamerslist_ids = $row;
+	}
+
+	return $gamerslist_ids;
+}
+
+function getSuccessorFromPair($con,$pair_id)
+{
+	$result = mysqli_query($con,"SELECT successor FROM tm_paarung WHERE ID = '$pair_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$successor = $row["successor"];
+	}
+
+	return $successor;
+}
+
+function getSuccessorTeams($con,$successor_id)
+{
+	$result = mysqli_query($con,"SELECT team_1 FROM tm_paarung WHERE ID = '$successor_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$team_1 = $row["team_1"];
+	}
+
+	if(empty($team_1))
+	{
+		$team_1 = array();
+	}
+
+	return $team_1;
+}
+
+function getStages($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT DISTINCT stage FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$stages[] = $row["stage"];
+	}
+
+	return $stages;
+}
+
+function getPairsByStages($con,$tm_id,$stage)
+{
+	$result = mysqli_query($con,"SELECT ID, team_1, team_2 FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pairs[] = $row;
+	}
+
+	return $pairs;
+}
+
+function getFirstLevelWildcard($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND team_2 IS NULL AND stage = '1'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$wildcard = $row["ID"];
+	}
+
+	if(empty($wildcard) || !isset($wildcard))
+	{
+		$wildcard = "";
+	}
+
+	return $wildcard;
+}
+
+function getGamerslistIdAndSuccessor($con,$pair_id)
+{
+	$result = mysqli_query($con,"SELECT team_1, successor FROM tm_paarung WHERE ID = '$pair_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pair_data[] = $row;
+	}
+
+	return $pair_data;
+}
+
+function getSuccessorCount($con,$successor_id)
+{
+	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
+}
+
+function getResultP1FromMatch($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT result_team1 FROM tm_match WHERE ID = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_p1 = $row["result_team1"];
+	}
+
+	if(!isset($result_p1))
+	{
+		$result_p1 = "";
+	}
+
+	return $result_p1;
+}
+
+function getResultP2FromMatch($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT result_team2 FROM tm_match WHERE ID = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$result_p2 = $row["result_team2"];
+	}
+
+	if(!isset($result_p2))
+	{
+		$result_p2 = "";
+	}
+
+	return $result_p2;
+}
+
+function getSinglePlayerIDFromGamerslist($con,$tm_id,$player_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE tm_id = '$tm_id' AND player_id = '$player_id'")) > 0;
+}
+
+function getSecondPairId($con,$pair_id,$successor_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id' AND ID != '$pair_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$second_pair = $row["ID"];
+	}
+
+	return $second_pair;
+}
+
+function getMatchLockTime($con,$match_id)
+{
+	$result = mysqli_query($con,"SELECT match_locked FROM tm_matches WHERE match_id = '$match_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$lock_time = $row["match_locked"];
+	}
+
+	if(empty($lock_time))
+	{
+		$lock_time = "";
+	}
+
+	return $lock_time;
 }
 ?>

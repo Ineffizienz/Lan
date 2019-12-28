@@ -92,6 +92,7 @@ $sql_statements = array(
 		array("tbl_name"=>"tm_gamerslist","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_gamerslist (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, player_id INT(11) NOT NULL)"),
 		array("tbl_name"=>"tm_vote","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, user_id INT(11) NOT NULL, vote_count INT(11) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL)"),
 		array("tbl_name"=>"tm_vote_player","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE tm_vote_player (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, tm_vote_id INT(11) NOT NULL, player_id INT(11) NOT NULL, UNIQUE (tm_vote_id,player_id))"),
+		array("tbl_name"=>"log_trigger_error","tbl_old"=>"0","clm_name"=>"0","clm_old"=>"0","statement"=>"CREATE TABLE log_trigger_error (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, error_type VARCHAR(45) NOT NULL, error_statement VARCHAR(255) NOT NULL)"),
 
 	
 	### - ALTER STATEMENTS - ###
@@ -117,6 +118,8 @@ $sql_statements = array(
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_winner_team_id","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_winner_team_id INT(11) AFTER tm_end_register"),
 			array("tbl_name"=>"tm","tbl_old"=>0,"clm_name"=>"tm_locked","clm_old"=>"0","statement"=>"ALTER TABLE tm ADD tm_locked INT(11) AFTER tm_winner_team_id"),
 			array("tbl_name"=>"pref","tbl_old"=>"0","clm_name"=>"game_id","clm_old"=>"0","statement"=>"ALTER TABLE pref ADD game_id INT(11) AFTER 'user_id'"),
+			array("tbl_name"=>"tm_paarung","tbl_old"=>"0","clm_name"=>"stage","clm_old"=>"0","statement"=>"ALTER TABLE tm_paarung ADD stage INT(11) AFTER tournament"),
+			array("tbl_name"=>"tm_matches","tbl_old"=>"0","clm_name"=>"match_locked","clm_old"=>"0","statement"=>"ALTER TABLE tm_matches ADD match_locked DATETIME NULL AFTER match_id"),
 
 		## RENAME COLUMN
 			// Update 1.5

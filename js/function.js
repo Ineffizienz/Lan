@@ -1,6 +1,81 @@
+function gameSpacerHover ()
+{
+	$(".game-spacer").on({mouseover: function () {
+		$(this).css("background-color","#C0C0C0");
+		$(this).css("text-align","center");
+		$(this).css("font-style","italic");
+		$(this).html("Ergebnis eingeben.");
+	}, mouseleave: function() {
+		$(this).css("background-color","#e5e5e5");
+		$(this).html("");
+	}});
+	
+	$(".game-spacer").on("click",displayResultPopup);
+}
+
+/*#############################################################################################
+#################################### Popups ################################################### 
+###############################################################################################*/
+
+function displayResultPopup(event)
+{
+	event.preventDefault();
+	
+	var tm_id = $(this).attr("data-tm-id");
+	var pair_id = $(this).attr("data-pair-id");
+	var player_1 = $(this).attr("data-player-first");
+	var player_2 = $(this).attr("data-player-second");
+
+	if(!(player_1 === "") && !(player_2 === ""))
+	{
+		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
+		{
+			$("#tm_id").val(tm_id);
+			$("#pair_id").val(pair_id);
+			$("#player_1").html(player_1);
+			$("#player_2").html(player_2);
+
+			$(".tm_result_popup").show();
+		}
+	}
+}
+
+function closeResultPopup(event)
+{
+	event.preventDefault();
+
+	$(".tm_result_popup").hide();
+	$("#result_1").val("");
+	$("#result_2").val("");
+}
+
 $(document).ready(function(){
 
 	var obj = {};
+	
+	gameSpacerHover();
+
+	/*var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+	
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+	
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+	};
+
+	var page = getUrlParameter("page");
+
+	if(page == "single_tm")
+	{
+		
+	}*/
 
 	function checkInput(accountname,password,email)
 	{
@@ -220,7 +295,7 @@ $(document).ready(function(){
 		
 		obj = {vote_id};
 
-		postAjax(obj,getEndpoint("add_vote"),displayResponse);
+		postAjax(obj,getEndpoint("add_vote"),refreshVoteItem);
 	}
 
 	function getJointPlayerID(event)
@@ -231,7 +306,50 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("join_tm"),displayResponse);
+		disableButton(this,event);
+
+		postAjax(obj,getEndpoint("join_tm"),refreshTournamentPlayerList);
+	}
+
+	function getLeaveTournament(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("data-tm-id");
+
+		obj = {tm_id};
+
+		disableButton(this,event);
+
+		postAjax(obj,getEndpoint("leave_tm"),refreshTournamentPlayerList);
+	}
+
+	function getMatchResults(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $("#tm_id").val();
+		var pair_id = $("#pair_id").val();
+		var result_1 = $("#result_1").val();
+		var result_2 = $("#result_2").val();
+
+		if((result_1.length > 2) || (result_2.length > 2))
+		{
+			console.log("Eingabe zu groß.");
+		} else {
+			if(($.isNumeric(result_1)) && ($.isNumeric(result_2)))
+			{
+				obj = {tm_id, pair_id, result_1, result_2};
+
+				closeResultPopup(event);
+
+				postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+			} else {
+				//displayMessage("Seid nicht albern!")
+				console.log("Eingabe ist keine Zahl.");
+			}
+
+		}
 	}
 
 
@@ -441,6 +559,21 @@ $(".tm_vote_container").hover(function () {
 	$(".tm_vote_sign").hide(0);
 });
 
+function disableButton(ele, event)
+{
+	event.preventDefault();
+
+	if($(ele).attr("id") === "leave_tm")
+	{
+		$(ele).siblings("#join_tm").prop("disabled", false);
+		$(ele).siblings("#join_tm").css("cursor", "pointer");
+	} else {
+		$(ele).siblings("#leave_tm").prop("disabled", false);
+		$(ele).siblings("#leave_tm").css("cursor", "pointer");
+	}
+	$(ele).prop("disabled", "disabled");
+	$(ele).css("cursor", "crosshair");
+}
 
 /*#############################################################################################
 #################################### Events ################################################### 
@@ -476,5 +609,11 @@ $(".tm_vote_container").hover(function () {
 	$("#vote_now").on("click",getVotedGame);
 	$(".tm_vote_for").on("click",getVoteID);
 	$("#join_tm").on("click",getJointPlayerID);
+	$("#send_result").on("click",getMatchResults);
+	$("#leave_tm").on("click",getLeaveTournament);
+
+	//Popup
+	$(".game-spacer").on("click",displayResultPopup);
+	$("#result_close_popup").on("click",closeResultPopup);
 });
 
