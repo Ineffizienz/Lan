@@ -563,6 +563,14 @@ function disableButton(ele, event)
 {
 	event.preventDefault();
 
+	if($(ele).attr("id") === "leave_tm")
+	{
+		$(ele).siblings("#join_tm").prop("disabled", false);
+		$(ele).siblings("#join_tm").css("cursor", "pointer");
+	} else {
+		$(ele).siblings("#leave_tm").prop("disabled", false);
+		$(ele).siblings("#leave_tm").css("cursor", "pointer");
+	}
 	$(ele).prop("disabled", "disabled");
 	$(ele).css("cursor", "crosshair");
 }
