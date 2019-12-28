@@ -31,7 +31,8 @@
 
 	function build_option($optionArr,$selected)
 	{
-		$output_option = "<option value='" . $selected["id"] . "' selected>" . $selected["name"];
+		
+		$output_option = "<option value='{$selected['id']}' selected>".$selected['name'];
 
 		$part = file_get_contents("template/part/option.html");
 
@@ -40,7 +41,7 @@
 			if($option["id"] !== $selected["id"])
 			{
 				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
-			}
+			} 
 		}
 		
 		return $output_option;	
@@ -217,21 +218,20 @@
 
 	}
 
-	function generateGameKey($con,$raw_name,$player_id)
+	function generateGameKey($con, int $player_id, int $game_id)
 	{
-		$key = getPlayerGameKey($con,$player_id,$raw_name);
+		$key = getPlayerGameKey($con, $player_id, $game_id);
 
-		if ((empty($key)) || ($key == "") || ($key == NULL))
+		if ($key === false)
 		{
+			$first_key = getGameKey($con, $game_id);
 
-			$first_key = getGameKey($con,$raw_name);
-
-			if(empty($first_key))
+			if($first_key === false)
 			{
 				$message_code = "ERR_NO_KEY";
 				return $message_code;
 			} else {
-				mysqli_query($con,"UPDATE $raw_name SET player_id = '$player_id' WHERE game_key = '$first_key'");
+				mysqli_query($con,"UPDATE gamekeys SET player_id = '$player_id' WHERE (gamekey = '$first_key') AND (game_id = '$game_id');");
 				return $first_key;
 			}
 		} else {
@@ -325,9 +325,9 @@
 				$gameInfo = getGameInfoById($con,$pref);
 				if (!isset($output))
 				{
-					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
+					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
 				} else {
-					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo[0]["icon"],$gameInfo[0]["short_title"]), $part);
+					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
 				}
 				
 			}
@@ -584,6 +584,379 @@ function displayAvailableAchievements($con, $player_id)
 			}
 		}
 		return $output;
+	}
+}
+
+/******************************* TOURNAMENTS ************************************/
+
+function generateVoteOption($con)
+{
+	$games = getFullGameData($con);
+	$selected = array();
+
+	$part = file_get_contents("template/part/option.html");
+
+	foreach ($games as $game)
+	{
+		if(!isset($output))
+		{
+			$output = str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		} else {
+			$output .= str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
+		}
+	}
+
+	return $output;
+
+}
+
+function displayRunningVotes($con)
+{
+	$votes = getVotedTournaments($con);
+	$part = file_get_contents("template/part/running_vote.html");
+
+	foreach ($votes as $vote)
+	{
+		$game_info = getGameInfoById($con,$vote["game_id"]);
+		$banner_url = $game_info["banner"];
+		if($vote["vote_closed"] !== "1")
+		{
+			if(!isset($output))
+			{
+				$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			} else {
+				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
+			}
+		}
+	}
+
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Abstimmungen.";
+	}
+	return $output;
+}
+
+function displayTournaments($con)
+{
+	$tournaments = getTournaments($con);
+	$part = file_get_contents("template/part/overview_tournament.html");
+
+	foreach ($tournaments as $tournament)
+	{
+		$game_info = getGameInfoById($con,$tournament["game_id"]);
+		$banner = $game_info["banner"];
+		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
+
+		if(empty($tournament["player_count"]))
+		{
+			$player_count = "0";
+		} else {
+			$player_count = $tournament["player_count"];
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
+		} else {
+			$output .= str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
+		}
+	}
+
+	if(empty($output))
+	{
+		$output = "Es gibt gegenwärtig keine Turniere.";
+	}
+
+	return $output;
+}
+
+function displayTournamentParticipants($con,$tm_id)
+{
+	$tm_player = getPlayerFromGamerslist($con,$tm_id);
+	$banner = getTmBanner($con,$tm_id);
+
+	$list = implode(", ",$tm_player);
+	
+	$part = file_get_contents("template/part/unlocked_tm.html");
+
+	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);
+
+	return $output;
+}
+
+function displayTournamentLocked($con,$tm_id)
+{
+	$stages = getStages($con,$tm_id);
+	
+	$part = file_get_contents("template/part/locked_tm.html");
+	$part_stages = file_get_contents("template/part/tm_section.html");
+
+	foreach ($stages as $stage)
+	{
+		$part_pair = file_get_contents("template/part/player_pair.html");
+		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
+
+		$pair_output ="";
+		foreach ($pairs_by_stages as $pair)
+		{
+			$pair_id = $pair["ID"];
+			$player_1 = $pair["team_1"];
+			$player_2 = $pair["team_2"];
+
+			$successor = getSuccessorFromPair($con,$pair_id);
+
+			$player_1 = getUsernameFromGamerslist($con,$player_1);
+			if((getSuccessorCount($con,$successor) == 1) || (($stage == "1") && empty($player_2)))
+			{
+				$player_2 = "<i>Wildcard</i>";
+			} else {
+				$player_2 = getUsernameFromGamerslist($con,$player_2);
+			}
+
+			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
+			$match_id = getMatchIdFromMatches($con,$matches_id);
+			$result_p1 = getResultP1FromMatch($con,$match_id);
+			$result_p2 = getResultP2FromMatch($con,$match_id);
+
+			if($result_p1 == "")
+			{
+				$result_p1 = "";
+			}
+
+			if($result_p2 == "")
+			{
+				$result_p2 = "";
+			}
+
+			if(!isset($pair_output))
+			{
+				$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
+			} else {
+				$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
+			}
+		}
+
+		if(!isset($output_stage))
+		{
+			$output_stage = str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
+		} else {
+			$output_stage .= str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
+		}
+	}
+
+	$tm_game = getSingleTournamentGame($con,$tm_id);
+	$tm_banner = getGameBanner($con,$tm_game);
+
+	$output = str_replace(array("--SECTION--","--BANNER--"),array($output_stage,$tm_banner),$part);
+
+	return $output;
+}
+
+function displayTournamentTree($con)
+{
+	if(isset($_REQUEST["id"]))
+	{
+		$tm_id = $_REQUEST["id"];
+		$tm_status = getTournamentStatus($con,$tm_id);
+
+		if($tm_status !== "1")
+		{
+			$tournament = displayTournamentParticipants($con,$tm_id);
+		} else {
+			$tournament = displayTournamentLocked($con,$tm_id);
+		}
+	}
+
+	if(!empty($tournament))
+	{
+		return $tournament;
+	}
+}
+
+function displayResultPopup()
+{
+	$part = file_get_contents(TMP . "part/popup/result_popup.html");
+
+	return $part;
+}
+
+function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2)
+{
+	$successor_id = getSuccessorFromPair($con,$pair_id);
+	$successor_matches = getSingleMatchesIdFromPaarung($con,$successor_id);
+	$successor_match = getMatchIdFromMatches($con,$successor_matches);
+	$successor_result = getResultP1FromMatch($con,$successor_match);
+
+	if(!empty($successor_result) || ($successor_result >= "0"))
+	{
+		return "ERR_MATCH_LOCKED";
+	} else {
+		if(($result_1 == "") || ($result_2 == ""))
+		{
+			return "ERR_NO_RESULT";
+		} else {
+			if($result_1 == $result_2)
+			{
+				return "ERR_NO_DRAW";
+			} else {
+				$sql = "UPDATE tm_match SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$match_id'";
+				if(mysqli_query($con,$sql))
+				{
+					$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
+					$sql = "UPDATE tm_matches SET match_locked = '$match_lock' WHERE match_id = '$match_id'";
+					if(mysqli_query($con,$sql))
+					{
+						$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
+						$team_1 = $team_gamerslist["team_1"];
+						$team_2 = $team_gamerslist["team_2"];
+						$second_pair = getSecondPairId($con,$pair_id,$successor_id);
+						if($result_1 > $result_2)
+						{
+							if($pair_id < $second_pair)
+							{
+								$sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor_id'";
+								if(mysqli_query($con,$sql))
+								{
+									if(getSuccessorCount($con,$successor_id) == 1)
+									{
+										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+										if(mysqli_query($con,$sql))
+										{
+											$match_id = getMatchIdFromMatches($con,$matches_id);
+											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											if(mysqli_query($con,$sql))
+											{
+												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+												if(mysqli_query($con,$sql))
+												{
+													return "SUC_ENTER_RESULT";
+												} else {
+													return "ERR_DB";
+												}
+											} else {
+												return "ERR_DB";
+											}
+										} else {
+											return "ERR_DB";
+										}
+									} else {
+										return "SUC_ENTER_RESULT";
+									}
+								} else {
+									return "ERR_DB";
+								}
+							} else {
+								$sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
+								if(mysqli_query($con,$sql))
+								{
+									if(getSuccessorCount($con,$successor_id) == 1)
+									{
+										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+										if(mysqli_query($con,$sql))
+										{
+											$match_id = getMatchIdFromMatches($con,$matches_id);
+											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											if(mysqli_query($con,$sql))
+											{
+												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+												if(mysqli_query($con,$sql))
+												{
+													return "SUC_ENTER_RESULT";
+												} else {
+													return "ERR_DB";
+												}
+											} else {
+												return "ERR_DB";
+											}
+										} else {
+											return "ERR_DB";
+										}
+									} else {
+										return "SUC_ENTER_RESULT";
+									} 
+								}
+							}       	                    
+						} else {
+							if($pair_id < $second_pair)
+							{
+								$sql = "UPDATE tm_paarung SET team_1 = '$team_2' WHERE ID = '$successor_id'";
+								if(mysqli_query($con,$sql))
+								{
+									if(getSuccessorCount($con,$successor_id) == 1)
+									{
+										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+										if(mysqli_query($con,$sql))
+										{
+											$match_id = getMatchIdFromMatches($con,$matches_id);
+											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											if(mysqli_query($con,$sql))
+											{
+												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+												if(mysqli_query($con,$sql))
+												{
+													return "SUC_ENTER_RESULT";
+												} else {
+													return "ERR_DB";
+												}
+											} else {
+												return "ERR_DB";
+											}
+										} else {
+											return "ERR_DB";
+										}
+									} else {
+										return "SUC_ENTER_RESULT";
+									}
+								} else {
+									return "ERR_DB";
+								}
+							} else {
+								$sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
+								if(mysqli_query($con,$sql))
+								{
+									if(getSuccessorCount($con,$successor_id) == 1)
+									{
+										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+										if(mysqli_query($con,$sql))
+										{
+											$match_id = getMatchIdFromMatches($con,$matches_id);
+											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											if(mysqli_query($con,$sql))
+											{
+												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+												if(mysqli_query($con,$sql))
+												{
+													return "SUC_ENTER_RESULT";
+												} else {
+													return "ERR_DB";
+												}
+											} else {
+												return "ERR_DB";
+											}
+										} else {
+											return "ERR_DB";
+										}
+									} else {
+										return "SUC_ENTER_RESULT";
+									}
+								} else {
+									return "ERR_DB";
+								}
+							}
+						} 
+					} else {
+						return "ERR_DB";
+					}
+				} else {
+					return "ERR_DB";
+				}
+			}
+		}
 	}
 }
 

@@ -45,8 +45,11 @@ function getEndpoint(param)
         case "update_game_icon":
             endpoint = "admin/game/edit/update_icon.php";
             break;
+        case "update_game_banner":
+            endpoint = "admin/game/edit/update_banner.php";
+            break;
         case "upload_keys":
-            endpoint = "admin/key/create_keylist.php";
+            endpoint = "admin/key/edit/create_keylist.php";
             break;
         case "create_achievement":
             endpoint = "admin/achievement/edit/create_achievement.php";
@@ -56,6 +59,12 @@ function getEndpoint(param)
             break;
         case "create_tournament":
             endpoint = "admin/tm/create/create_tm.php";
+            break;
+        case "vote_tournament":
+            endpoint = "admin/tm/create/vote_tm.php";
+            break;
+        case "delete_vote":
+            endpoint = "admin/tm/delete/delete_vote.php";
             break;
 	}
 

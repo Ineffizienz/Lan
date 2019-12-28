@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__).'../../include/init/get_parameters.php';
+
 function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
 {
 	if (file_exists("template/" . $file))
@@ -213,6 +215,13 @@ function displaySingleGame($con)
 			$icon = "<img src='images/game_icon/" . $game["icon"] . "' height='64'>";
 		}
 
+		if (empty($game["banner"]))
+		{
+			$banner = "No Banner";
+		} else {
+			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
+		}
+
 		if(empty($game["addon"]))
 		{
 			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
@@ -222,41 +231,14 @@ function displaySingleGame($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
+			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
 		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$has_table),$singleGame_template);
+			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
 		}
 	}
 
 	return $output;
 }
-
-/*function buildVisibilityOption($con)
-{
-	$ac_visib = getAchievementVisibility($con);
-
-	$visib_name = array();
-
-	foreach ($ac_visib as $visib_id)
-	{
-		if(!empty($visib_id))
-		{
-			if($visib_id == "1")
-			{
-				$combine = array("ID" => $visib_id, "name" => "Sichtbar");
-			} else {
-				$combine = array("ID" => $visib_id, "name" => "Unsichtbar");
-			}
-		}
-
-		if(!in_array($combine,$visib_name))
-		{
-			array_push($visib_name,$combine);
-		}
-	}
-
-	return $visib_name;
-}*/
 
 function validateInput($new_game)
 {
@@ -273,18 +255,13 @@ function validateInput($new_game)
 	}
 }
 
-function verifyKey($con,$raw_name,$key)
+function verifyKey($con, int $game_id, string $key)
 {
-		
-	$all_keys = getAllKeys($con,$raw_name);
-	if(in_array($key,$all_keys))
-	{
-		$message_code = "ERR_KEY_EXISTS";
-		return $message_code;
-	} else {
+	$result = mysqli_query($con, "SELECT ID FROM gamekeys WHERE (game_id = '$game_id') AND (gamekey = '$key');");
+	if(mysqli_num_rows($result) > 0)
+		return "ERR_KEY_EXISTS";
+	else
 		return true;
-	}
-
 }
 
 function verifyGame($con,$new_game,$new_raw_name)
@@ -334,10 +311,7 @@ function validateImageFile($filesize,$filetype)
 
 function createGame($con,$new_game,$new_raw_name)
 {
-
-	mysqli_query($con,"CREATE TABLE $new_raw_name (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_key VARCHAR(255) NULL, player_id INT(11) NULL)");
-    mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name')");
-
+    mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name');");
 }
 
 function displayTmGames($con)
@@ -360,7 +334,8 @@ function displayTournaments($con)
 
 	foreach ($tournaments as $tournament)
 	{
-		$game_name = getGameInfoById($con,$tournament["game"]);
+		$game_name = getGameInfoById($con,$tournament["game_id"]);
+		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
 
 		$part = file_get_contents(TMP . "admin/part/tm_table.html");
 
@@ -374,7 +349,7 @@ function displayTournaments($con)
 		$game_mode = translateGameMode($tournament["mode"]);
 		$game_mode_details = translateGameModeDetails($tournament["mode_details"]);
 
-		if(strtotime($tournament["starttime"]) < time())
+		if(strtotime($tm_period["time_from"]) < time())
 		{
 			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "' disabled>Turnier starten</button>";
 		} else {
@@ -383,13 +358,54 @@ function displayTournaments($con)
 
 		if(!isset($output))
 		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
 		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name[0]["name"],$game_mode,$game_mode_details,$tournament["starttime"],$player_count,$startbutton),$part);
+			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
 		}
 	}
 
 	return $output;
+}
+
+function displayVotedTournaments($con)
+{
+	$voted_tm = getVotedTournaments($con);
+
+	$part = file_get_contents(TMP . "admin/part/voted_tm_tpl.html");
+
+	foreach ($voted_tm as $tournament)
+	{
+		$game_name = getGameInfoById($con,$tournament["game_id"]);
+
+		if($tournament["vote_closed"] == "0")
+		{
+			$closed = "Nein";
+		} else {
+			$closed = "Ja";
+		}
+
+		if(!isset($output))
+		{
+			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
+		} else {
+			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
+		}
+	}
+
+	if(!isset($output) || empty($output))
+	{
+		$output = "Es sind bisher keine Votes vorhanden.";
+	}
+
+	return $output;
+
+}
+
+function displayDefineTmPopup($con)
+{
+	$part = file_get_contents(TMP . "admin/part/popup/define_tm_popup.html");
+
+	return $part;
 }
 
 ?>

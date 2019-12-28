@@ -36,6 +36,21 @@ function getEndpoint(param)
 		case "change_profil_image":
 			endpoint = "include/profil/profil_image.php";
 			break;
+		case "vote_tm":
+			endpoint = "include/tournament/create/vote_tm.php";
+			break;
+		case "add_vote":
+			endpoint = "include/tournament/create/add_vote.php";
+			break;
+		case "join_tm":
+			endpoint = "include/tournament/edit/join_tm.php";
+			break;
+		case "leave_tm":
+			endpoint = "include/tournament/edit/leave_tm.php";
+			break;
+		case "enter_result":
+			endpoint = "include/tournament/edit/enter_result.php";
+			break;
 	}
 
 	return endpoint;

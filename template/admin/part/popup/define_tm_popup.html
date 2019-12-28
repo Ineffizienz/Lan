@@ -1,0 +1,60 @@
+<div>
+    <div id="tm_close_popup" style="text-align:right;">
+        <i class="fa fa-times" aria-hidden="true" style="text-align:right;cursor:pointer"></i>
+    </div>
+    <input type="hidden" name="game_id" id="game_id" value="">
+    <input type="hidden" name="vote_id" id="vote_id" value="">
+    <div>
+        <label for="game">Spiel:</label>
+    </div>
+        <input type="text" name="game" id="game_name" value="" disabled>
+    <div>
+        <label for="mode">Modus:</label>
+    </div>
+    <div>
+        <select name="tm_mode" id="tm_mode">
+            <option value="1">Mann gegen Mann
+            <option value="2">2 gegen 2
+            <option value="3">Teams
+        </select>
+    </div>
+    <div>
+        <label for="mode_details">Modus-Details:</label>
+    </div>
+    <div>
+        <select name="tm_mode_details" id="tm_mode_details">
+            <option value="1">Keine Details
+            <option value="2">zufällige Teams
+        </select>
+    </div>
+    <div>
+        <label for="max_player">Maximale Spieleranzahl</label>
+    </div>
+    <div>
+        <input type="number" name="max_player" id="tm_max_player">
+    </div>
+    <div>
+        <label for="tm_time_from">Von</label>
+    </div>
+    <div>
+        <input type="time" id="tm_time_from" min="0000" max="2400" name="tm_time_from" required>
+    </div>
+    <div>
+        <label for="tm_time_to">Bis</label>
+    </div>
+    <div>
+        <input type="time" id="tm_time_to" name="tm_time_to">
+    </div>
+    <!--<div>
+        <label for="tm_ressource">Serverressource</label>
+    </div>
+    <div>
+        <select name="tm_ressource" id="tm_ressource">
+            {$ressources}
+        </select>
+    </div>-->
+    <div>&nbsp;</div>
+    <div>
+        <button id="start_tm">Turnier starten</button>
+    </div> 
+</div>
