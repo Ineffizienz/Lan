@@ -38,7 +38,12 @@ function validate_ticket(mysqli $con)
 	{
 		$row = mysqli_fetch_assoc($result);
 		$_SESSION["player_id"] = (int)$row["ID"];
-		$message->getMessageCode("SUC_VAL_APPROVED");
-		return array(true, $message);
+
+		$sql = "UPDATE player SET ticket_active = '1' WHERE ID = '" . addslashes($_SESSION['player_id']) . "'";
+		if(mysqli_query($con,$sql))
+		{
+			$message->getMessageCode("SUC_VAL_APPROVED");
+			return array(true, $message);
+		}
 	}
 }
