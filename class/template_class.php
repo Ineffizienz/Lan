@@ -45,11 +45,15 @@ class template {
          }
 
          public function parseFunctions() {
-                 while( preg_match( "/" .$this->leftDelimiterF ."include file=\"(.*)\.(.*)\""
-                           .$this->rightDelimiterF ."/isUe", $this->template) )
-                 {
-                         $this->template = preg_replace("/" .$this->leftDelimiterF ."include file=\"(.*)\.(.*)\"" .$this->rightDelimiterF."/isUe","file_get_contents(\$this->templateDir.'\\1'.'.'.'\\2')",$this->template);
-                 }
+                
+                $this->template = preg_replace_callback("/" .$this->leftDelimiterF ."include file=(.*)\.(.*)" .$this->rightDelimiterF."/isU",
+                function($matches){
+                        foreach($matches as $match)
+                        {
+                                return file_get_contents($this->templateDir . substr(rtrim($match,"}"),14));
+                        }
+                },
+                $this->template);
 
                  /* Diese Zeile macht es m�glich innerhalb des HTML-Templates Kommentare zu verfassen. Da die Funktion preg_replace mit PHP 7 deaktiviert wurde, ist
                     preg_replace_callback die einzige Alternative. Da ich aber keine brauchbare Callback-Funktion habe, ist sie vorl�ufig deaktiviert. */
