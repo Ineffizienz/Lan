@@ -27,7 +27,7 @@ BODY
 {
 	display:grid;
 	grid-template-rows: auto auto;
-	row-gap: 5%;
+	row-gap: 2em;
 }
 #head
 {
@@ -42,8 +42,9 @@ BODY
 {
 	display:grid;
 	grid-template-rows: auto auto;
-	row-gap: 8%;
+	row-gap: 5%;
 	align-content: center;
+	min-height: 450px;
 	max-height: 450px;
 }
 #content
@@ -135,6 +136,8 @@ h4
 	}
 		#navigation ul
 		{
+			margin: 0;
+			padding: 0;
 			list-style: none;
 			font-size: 11pt;
 			width: 100%;
@@ -142,8 +145,8 @@ h4
 			#navigation ul li a
 			{
 				display:block;
+				margin: 0 auto;
 				margin-bottom: 3%;
-				transition: background-color 0.3s;
 				background-color: #333;
 				box-shadow: 0 2px 2px 0 #202020;
 				text-align:center;
@@ -715,7 +718,7 @@ h4
 	  	padding: 2px;
 	  	font-size: 10pt;
 	  	border: 1px solid #bbb;
-	  	border-radius: 3px;
+		border-radius: 3px;
 	  	width:250px;
 	}
 	select:focus
@@ -800,7 +803,14 @@ h4
 --------------------------------------------------------------*/
 #status_container
 {
+	margin: 0;
+	padding: 0;
 	text-align:center;
+}
+#status_circle_container
+{
+	display:inline-block;
+	margin-right:2%;
 }
 #status_circle
 {
