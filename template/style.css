@@ -1197,7 +1197,8 @@ h4
 }
 #tm_start_vote
 {
-	margin-top:15%;
+	margin-top:5%;
+	margin-bottom: 5%;
 	text-align:center;
 }
 .tm_vote_for
