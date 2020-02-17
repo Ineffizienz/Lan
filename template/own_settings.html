@@ -1,39 +1,39 @@
-<div style="margin-left:0 !important;">
+<div>
 	<div class="settings_container">
 		<div class="settings_headline_container">
 			<h3 class="settings_headline">Basisdaten</h3>
 		</div>
 		<div class="settings_data_container">
-			<div style="float:left;width:70%;">
-				<div class="settings_data">
-					<div>
-						<span class="settings_desc">Nickname: </span> 
-						<span id="user">{$nickname}</span> <i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i>
-					</div>
-					<div>
-						<span class="settings_desc">IP:</span> {$ip}
-					</div>
-					<div id="settings_pref_container">
-						<div>
-							<span class="settings_desc">Präferenzen:</span> 
+			<div>
+				<div>
+					<span class="settings_desc">Nickname: </span> 
+					<span id="user">{$nickname}</span> <i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i>
+				</div>
+				<div>
+					<span class="settings_desc">IP:</span> 
+					<span>{$ip}</span>
+				</div>
+				<div>
+					<span class="settings_desc">Präferenzen:</span> 
+				</div>
+				<div id="settings_pref_container">
+					<div id="cloud_container"> <!--currently required for auto-reload - function.js -->
+						<div class="cloud">
+							{$pref}
 						</div>
-						<div id="cloud_container">
-							<div class="cloud">
-								{$pref}
-							</div>
-						</div>
-						<div id="controllPref">
-							<i class="fa fa-plus fa-1x add_pref" aria-hidden="true"></i>
-							<div id="selBar">
+					</div>
+					<div id="controllPref">
+						<i class="fa fa-plus fa-1x add_pref" aria-hidden="true"></i>
+						<div id="selBar">
+							<div id="selBar_container">
 								{$checkbox_container}
 							</div>
-							<div class="clear"></div>
 						</div>
 						<div class="clear"></div>
 					</div>
 				</div>
 			</div>
-			<div style="float:right;margin-right:10%;width:20%;">
+			<div>
 				{$profil_image}
 			</div>
 			<div class="clear"></div>

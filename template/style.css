@@ -214,11 +214,6 @@ h4
 			{
 				line-height:25px;
 			}
-			#container
-			{
-				margin: 1%;
-			}
-
 
 /* ---------------------- VALIDATION ---------------------------
 --------------------------------------------------------------*/
@@ -271,6 +266,13 @@ h4
 /* ---------------------- SETTINGS ---------------------------
 --------------------------------------------------------------*/
 
+#settings_view_container
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	align-content: center;
+	margin-top: 2%;
+}
 .settings_container
 {
 	margin:0 auto;
@@ -292,16 +294,23 @@ h4
 }
 .settings_data_container
 {
+	display: grid;
+	grid-template-columns: 80% 20%;
 	background-color: #d6d6d6;
 	border:1px solid #A0A0A0;
 	border-top:0px;
 	border-radius: 0 0 8px 8px;
 	padding-left:15px;
-	margin-bottom: 5%;
+	padding-bottom: 2%;
+}
+#settings_nav
+{
+	display:grid;
+	grid-template-columns: 7em 7em;
+	column-gap: 0;
 }
 .settings_nav
 {
-	float:left;
 	margin: 0;
 	padding-left:5px;
 	padding-right:5px;
@@ -313,8 +322,7 @@ h4
 	font-weight:bold;
 	line-height: 35px;
 	text-align:center;
-	min-width:50px;
-	width:auto;
+	width:7em;
 }
 .settings_nav:hover
 {
@@ -373,6 +381,12 @@ h4
 {
 	grid-column:1/ span 2;
 	text-align:center;
+}
+#settings_pref_container
+{
+	display:grid;
+	grid-template-columns: 80% 20%;
+	grid-column-gap: 0;
 }
 
 
@@ -826,17 +840,14 @@ h4
 
 .cloud
 {
-	float:left;
-	margin-bottom:2%;
-	background-color:#d6d6d6;
-	text-align:justify;
-	width:95%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 .pref_container 
 {
-	float:left;
 	display: grid;
-	grid-template-columns: auto auto;
+	grid-template-columns: 45px auto;
 	padding:3px;
 	margin:2px;
 	background-color:#e1e1e1;
@@ -844,36 +855,28 @@ h4
 	border-radius:50px;
 	box-shadow: 0 2px 2px 0;
 	min-width:100px;
-	max-width:40%;
-	height: 25px;
+	width: auto;
 }
 .pref_icon
 {
 	vertical-align: middle;
 }
-.pref_game
+.pref_game img
 {
-	font-size:9pt;
-	font-weight:bold;
+	height:35px;
 }
-.pref_container p
+.pref_desc_container span
 {
-	margin:0;
-	padding:0;
+	padding-right: 5px;
+	line-height:30px;
 }
-#controllPref
-{
-	float:left;
-}	
 	.add_pref
 	{
-		float:left;
 		cursor: pointer;
 	}
 	#selBar
 	{
 		display:none;
-		float:left;
 		position:absolute;
 		background-color:#e1e1e1;
 		box-shadow: 0 2px 2px 0;
@@ -884,28 +887,31 @@ h4
 		min-width:150px;
 		z-index:10;
 	}
+	#selBar_container
+	{
+		display:grid;
+		grid-template-rows:auto;
+	}
 	.checkmark_container
 	{
 		display:block;
 		position:relative;
-		float:left;
-		padding-left:35px;
-		margin-bottom: 12px;
 		cursor: pointer;
 		font-size: 22px;
 		user-select: none;
 		-moz-user-select: none;
+		width: 20px;
+		height: 20px;
 	}
 	.checkmark_container input
 	{
-		position:absolute;
 		display:none;
 	}
 	.checkmark
 	{
 		position:absolute;
-		top:0;
-		left:0;
+		top:7px;
+		left:10px;
 		height: 20px;
 		width: 20px;
 		background-color:#eee;
@@ -942,19 +948,22 @@ h4
 	}
 	.checkbox_container
 	{
-		margin:2%;
+		display:grid;
+		grid-template-columns: 10% 90%;
+		align-content:center;
 	}
 		.checkmark_name
 		{
-			float:left;
+			display:grid;
+			grid-template-columns: 15% auto;
 		}
 		.checkmark_name img
 		{
-			float:left;
+			height: 35px;
 		}
 		.checkmark_name span
 		{
-			float:right;
+			line-height:30px;
 		}
 
 /* ---------------------- WOW-Server ---------------------------
