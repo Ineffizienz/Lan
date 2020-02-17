@@ -1033,7 +1033,12 @@ h4
 
 /* ---------------------- Turniere ---------------------------
 --------------------------------------------------------------*/
-
+#tournament_generel_container
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	row-gap: 2%;
+}
 #tm_container
 {
 	display:grid;
