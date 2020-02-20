@@ -20,7 +20,6 @@ BODY
 
 #wrap
 {
-	margin: 0 auto;
 	height:auto;
 }
 #main
@@ -271,7 +270,6 @@ h4
 {
 	display:grid;
 	grid-template-rows: auto auto;
-	align-content: center;
 	margin-top: 2%;
 }
 .settings_container
@@ -306,15 +304,11 @@ h4
 }
 #settings_nav
 {
-	display:grid;
-	grid-template-columns: 7em 7em;
-	column-gap: 0;
+	display:flex;
 }
 .settings_nav
 {
 	margin: 0;
-	padding-left:5px;
-	padding-right:5px;
 	background-color:#FFFFFF;
 	color: #000000;
 	transition: color 0.3s, background-color 0.3s;
@@ -332,7 +326,6 @@ h4
 }
 #settings_container
 {
-	margin: 0;
 	padding-top: 0.5%;
 	padding-bottom: 0.5%;
 	box-shadow: 0 0 1px 0 #333;
@@ -355,6 +348,7 @@ h4
 	top: 20%;
 	left:35%;
 	display:none;
+	box-shadow: 0 2px 2px 0;
 	width:35%;
 	z-index: 10;
 }
@@ -376,7 +370,6 @@ h4
 #settings_popup_headline
 {
 	grid-column:1 / span 2;
-	align-content:center;
 }
 #settings_popup_form
 {
@@ -387,7 +380,6 @@ h4
 {
 	display:grid;
 	grid-template-columns: 80% 20%;
-	grid-column-gap: 0;
 }
 
 
@@ -810,8 +802,6 @@ h4
 --------------------------------------------------------------*/
 #status_container
 {
-	margin: 0;
-	padding: 0;
 	text-align:center;
 }
 #status_circle_container
@@ -884,7 +874,6 @@ h4
 	#selBar_container
 	{
 		display:grid;
-		grid-template-rows:auto;
 	}
 	.checkmark_container
 	{
@@ -944,7 +933,6 @@ h4
 	{
 		display:grid;
 		grid-template-columns: 10% 90%;
-		align-content:center;
 	}
 		.checkmark_name
 		{
@@ -1136,7 +1124,6 @@ h4
 {
 	display:grid;
 	grid-template-columns: 50% 50%;
-	align-content: center;
 	text-align:center;
 }
 #tm_vote_container
@@ -1145,7 +1132,6 @@ h4
 	grid-template-columns:auto auto auto;
 	grid-column-gap:30px;
 	grid-row-gap:30px;
-	align-content: center;
 }
 .tm_mode
 {
@@ -1206,15 +1192,10 @@ h4
 }
 .tm_vote_for
 {
-	margin:0;
-	padding:0;
 	cursor:pointer;
 	background-color: #C0C0C0;
-	border: 3px solid #fff inset;
-	border-left:0;
 	border-radius: 0px 20px 20px 0;
 	box-shadow: 0 2px 2px 0;
-	height: 60px;
 }
 .tm_vote_sign
 {
@@ -1241,6 +1222,13 @@ h4
 .tm_result_popup
 {
 	display:none;
+}
+#tm_vote_desc_text
+{
+	margin:0 auto;
+	margin-bottom:15px;
+	text-align:justify;
+	width:50%;
 }
 
 /* ---------------------- Turnierbaum ---------------------------
