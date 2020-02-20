@@ -14,30 +14,49 @@ BODY
 /* ---------------------- TEMPLATE --------------------------- 
 --------------------------------------------------------------*/
 
+* {
+	box-sizing: border-box;
+}
+
 #wrap
 {
-	margin: 0 auto;
 	height:auto;
+}
+#main
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	row-gap: 2em;
 }
 #head
 {
-	margin-left: 2%;
-	margin-right: 2%;
+	margin: 0 auto;
 	background-color: #063B9E;
 	border: 1px solid #FFFFFF;
 	border-radius: 0 0 5px 5px;
 	box-shadow: 0 5px 5px 0;
 	width:95%;
 }
+#menu
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	row-gap: 5%;
+	align-content: center;
+	min-height: 450px;
+	max-height: 450px;
+}
 #content
 {
-	margin: 2%;
+	display: grid;
+	grid-template-columns: 20% 80%;
+	align-content:center;
+	margin: 0 auto;
 	background-color: #e5e5e5;
 	border: 2px solid #FFFFFF;
 	border-radius: 5px 5px;
 	box-shadow: 0 5px 5px 0;
 	opacity: 1;
-	min-height: 35%;
 	height: auto;
 	width:95%;
 }
@@ -112,23 +131,21 @@ h4
 
 	#navigation
 	{
-		float:left;
-		padding-top: 1%;
-		width:20%;
+		width:100%;
 	}
 		#navigation ul
 		{
-			margin: 0 auto;
-			margin-right: 20%;
+			margin: 0;
+			padding: 0;
 			list-style: none;
 			font-size: 11pt;
-			width: 80%;
+			width: 100%;
 		}
 			#navigation ul li a
 			{
 				display:block;
+				margin: 0 auto;
 				margin-bottom: 3%;
-				transition: background-color 0.3s;
 				background-color: #333;
 				box-shadow: 0 2px 2px 0 #202020;
 				text-align:center;
@@ -169,12 +186,10 @@ h4
 
 		#displayed_content
 		{
-			float:left;
-			margin-top:0 ;
-			margin-left: 0%;
+			margin: 0 auto;
 			min-height:20%;
 			height: auto;
-			width:75%;
+			width:95%;
 		}
 			#displayed_content form
 			{
@@ -198,11 +213,6 @@ h4
 			{
 				line-height:25px;
 			}
-			#container
-			{
-				margin: 1%;
-			}
-
 
 /* ---------------------- VALIDATION ---------------------------
 --------------------------------------------------------------*/
@@ -224,6 +234,7 @@ h4
 .reg_container
 {
 	width:100%;
+	height: 100px;
 }
 .reg_label
 {
@@ -255,6 +266,12 @@ h4
 /* ---------------------- SETTINGS ---------------------------
 --------------------------------------------------------------*/
 
+#settings_view_container
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	margin-top: 2%;
+}
 .settings_container
 {
 	margin:0 auto;
@@ -276,19 +293,22 @@ h4
 }
 .settings_data_container
 {
+	display: grid;
+	grid-template-columns: 80% 20%;
 	background-color: #d6d6d6;
 	border:1px solid #A0A0A0;
 	border-top:0px;
 	border-radius: 0 0 8px 8px;
 	padding-left:15px;
-	margin-bottom: 5%;
+	padding-bottom: 2%;
+}
+#settings_nav
+{
+	display:flex;
 }
 .settings_nav
 {
-	float:left;
 	margin: 0;
-	padding-left:5px;
-	padding-right:5px;
 	background-color:#FFFFFF;
 	color: #000000;
 	transition: color 0.3s, background-color 0.3s;
@@ -297,8 +317,7 @@ h4
 	font-weight:bold;
 	line-height: 35px;
 	text-align:center;
-	min-width:50px;
-	width:auto;
+	width:7em;
 }
 .settings_nav:hover
 {
@@ -307,7 +326,6 @@ h4
 }
 #settings_container
 {
-	margin: 0;
 	padding-top: 0.5%;
 	padding-bottom: 0.5%;
 	box-shadow: 0 0 1px 0 #333;
@@ -330,6 +348,7 @@ h4
 	top: 20%;
 	left:35%;
 	display:none;
+	box-shadow: 0 2px 2px 0;
 	width:35%;
 	z-index: 10;
 }
@@ -351,12 +370,16 @@ h4
 #settings_popup_headline
 {
 	grid-column:1 / span 2;
-	align-content:center;
 }
 #settings_popup_form
 {
 	grid-column:1/ span 2;
 	text-align:center;
+}
+#settings_pref_container
+{
+	display:grid;
+	grid-template-columns: 80% 20%;
 }
 
 
@@ -426,11 +449,11 @@ h4
 {
 	display:grid;
 	grid-template-columns: 25% auto;
+	align-content: center;
 	margin-top: 1%;
 	background-color: #DAD8D8;
 	box-shadow: 0 5px 5px 0;
 	border-radius: 0 20px 20px 0;
-	width: auto;
 	height: 100px;
 }
 .ac_headline
@@ -448,25 +471,19 @@ h4
 }
 .ac_image
 {
-	grid-row: 1 / 2;
 	text-align: center;
-	width: auto;
 }
 .ac_image img
 {
-	margin-top: 5%;
 	border-radius: 15%;
 	box-shadow: 2px 2px 0 0 #C0C0C0;
 	max-width: 120px;
-	height: auto;
 	max-height: 85px;
 }
 .ac_text
 {
-	float:left;
-	margin-left:-4px;
 	width: auto;
-	vertical-align: top;
+	height: 100px;
 }
 .ac_text p
 {
@@ -479,6 +496,7 @@ h4
 }
 #available_aclist
 {
+	display: flex;
 	margin-top:10%;
 	border-top:1px solid #000000;
 }
@@ -489,11 +507,9 @@ h4
 }
 .ac_small
 {
-	float:left;
 	margin-top:0.5%;
 	text-align:center;
-	width:5%;
-	height:auto;
+	width:4%;
 }
 .ac_name
 {
@@ -701,7 +717,7 @@ h4
 	  	padding: 2px;
 	  	font-size: 10pt;
 	  	border: 1px solid #bbb;
-	  	border-radius: 3px;
+		border-radius: 3px;
 	  	width:250px;
 	}
 	select:focus
@@ -784,6 +800,15 @@ h4
 
 /* ---------------------- STATUS ---------------------------
 --------------------------------------------------------------*/
+#status_container
+{
+	text-align:center;
+}
+#status_circle_container
+{
+	display:inline-block;
+	margin-right:2%;
+}
 #status_circle
 {
 	display:inline-block;
@@ -799,17 +824,14 @@ h4
 
 .cloud
 {
-	float:left;
-	margin-bottom:2%;
-	background-color:#d6d6d6;
-	text-align:justify;
-	width:95%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 .pref_container 
 {
-	float:left;
 	display: grid;
-	grid-template-columns: auto auto;
+	grid-template-columns: 45px auto;
 	padding:3px;
 	margin:2px;
 	background-color:#e1e1e1;
@@ -817,36 +839,28 @@ h4
 	border-radius:50px;
 	box-shadow: 0 2px 2px 0;
 	min-width:100px;
-	max-width:40%;
-	height: 25px;
+	width: auto;
 }
 .pref_icon
 {
 	vertical-align: middle;
 }
-.pref_game
+.pref_game img
 {
-	font-size:9pt;
-	font-weight:bold;
+	height:35px;
 }
-.pref_container p
+.pref_desc_container span
 {
-	margin:0;
-	padding:0;
+	padding-right: 5px;
+	line-height:30px;
 }
-#controllPref
-{
-	float:left;
-}	
 	.add_pref
 	{
-		float:left;
 		cursor: pointer;
 	}
 	#selBar
 	{
 		display:none;
-		float:left;
 		position:absolute;
 		background-color:#e1e1e1;
 		box-shadow: 0 2px 2px 0;
@@ -857,28 +871,30 @@ h4
 		min-width:150px;
 		z-index:10;
 	}
+	#selBar_container
+	{
+		display:grid;
+	}
 	.checkmark_container
 	{
 		display:block;
 		position:relative;
-		float:left;
-		padding-left:35px;
-		margin-bottom: 12px;
 		cursor: pointer;
 		font-size: 22px;
 		user-select: none;
 		-moz-user-select: none;
+		width: 20px;
+		height: 20px;
 	}
 	.checkmark_container input
 	{
-		position:absolute;
 		display:none;
 	}
 	.checkmark
 	{
 		position:absolute;
-		top:0;
-		left:0;
+		top:7px;
+		left:10px;
 		height: 20px;
 		width: 20px;
 		background-color:#eee;
@@ -915,19 +931,21 @@ h4
 	}
 	.checkbox_container
 	{
-		margin:2%;
+		display:grid;
+		grid-template-columns: 10% 90%;
 	}
 		.checkmark_name
 		{
-			float:left;
+			display:grid;
+			grid-template-columns: 15% auto;
 		}
 		.checkmark_name img
 		{
-			float:left;
+			height: 35px;
 		}
 		.checkmark_name span
 		{
-			float:right;
+			line-height:30px;
 		}
 
 /* ---------------------- WOW-Server ---------------------------
@@ -1006,7 +1024,12 @@ h4
 
 /* ---------------------- Turniere ---------------------------
 --------------------------------------------------------------*/
-
+#tournament_generel_container
+{
+	display:grid;
+	grid-template-rows: auto auto;
+	row-gap: 2%;
+}
 #tm_container
 {
 	display:grid;
@@ -1101,7 +1124,6 @@ h4
 {
 	display:grid;
 	grid-template-columns: 50% 50%;
-	align-content: center;
 	text-align:center;
 }
 #tm_vote_container
@@ -1110,7 +1132,6 @@ h4
 	grid-template-columns:auto auto auto;
 	grid-column-gap:30px;
 	grid-row-gap:30px;
-	align-content: center;
 }
 .tm_mode
 {
@@ -1165,20 +1186,16 @@ h4
 }
 #tm_start_vote
 {
-	margin-top:15%;
+	margin-top:5%;
+	margin-bottom: 5%;
 	text-align:center;
 }
 .tm_vote_for
 {
-	margin:0;
-	padding:0;
 	cursor:pointer;
 	background-color: #C0C0C0;
-	border: 3px solid #fff inset;
-	border-left:0;
 	border-radius: 0px 20px 20px 0;
 	box-shadow: 0 2px 2px 0;
-	height: 60px;
 }
 .tm_vote_sign
 {
@@ -1205,6 +1222,13 @@ h4
 .tm_result_popup
 {
 	display:none;
+}
+#tm_vote_desc_text
+{
+	margin:0 auto;
+	margin-bottom:15px;
+	text-align:justify;
+	width:50%;
 }
 
 /* ---------------------- Turnierbaum ---------------------------
