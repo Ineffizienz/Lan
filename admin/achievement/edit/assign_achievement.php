@@ -3,7 +3,6 @@
 	include(dirname(__FILE__,3) . "/include/admin_func.php");
 	include(CL . "message_class.php");
 	include(INC . "connect.php");
-	include(INIT . "get_parameters.php");
 
 	$message = new message();
 

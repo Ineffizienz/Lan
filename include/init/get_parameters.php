@@ -175,22 +175,6 @@ function getAllUserIDs($con)
 	return $user_ids;
 }
 
-function getUsernameById($con,$id)
-{
-	/* Used in:
-		:Admin
-		- delete_player.php
-	*/
-
-	$result = mysqli_query($con,"SELECT name FROM player WHERE ID = '$id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$username = $row["name"];
-	}
-
-	return $username;
-}
-
 /*
 ###########################################################
 ######################## PLAYER ###########################
@@ -339,7 +323,6 @@ function getRawName($con)
 	/* Used in:
 		:Admin
 		- admin_func.php/verifyGame
-		- delete_player.php
 	*/
 
 	$result = mysqli_query($con,"SELECT raw_name FROM games ORDER BY name");
@@ -467,6 +450,16 @@ function getGameKey($con, int $game_id)
 		return false;
 	else
 		return mysqli_fetch_array($result)["gamekey"];
+}
+
+function getAllPlayerKeys($con,$player_id)
+{
+	/* Used in:
+		:Admin
+		- delete_player.php
+	*/
+
+	return mysqli_num_rows(mysqli_query($con,"SELECT gamekey FROM gamekeys WHERE player_id = '$player_id'")) > 0;
 }
 
 /*
