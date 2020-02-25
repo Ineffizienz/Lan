@@ -194,7 +194,6 @@
 	}
 	function getUserRelatedStatusColor($con,$player_id)
 	{
-		//$user_id = getUserId($con,$ip); --> remove
 		$status = getStatus($con,$player_id);
 		$status_color = getStatusColor($con,$status);
 
@@ -205,7 +204,6 @@
 
 	function getUserStatusOption($con,$player_id)
 	{
-		//$user_id = getUserId($con,$ip); --> remove
 		$status_data = getStatusData($con);
 		$user_status = getStatus($con,$player_id);
 		$status_name = getStatusName($con,$user_status);
