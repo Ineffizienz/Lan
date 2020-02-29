@@ -1,9 +1,5 @@
 <?php
 
-require_once dirname(__FILE__,3) . "/include/init/constant.php";
-require_once CL.'message_class.php';
-require_once INC.'connect.php';
-
 /**
  * Checks, whether the ticket_id given via post exists in the database. If it does $_SESSION["player_id"] is set accordingly
  * 
@@ -51,6 +47,3 @@ function validate_ticket(mysqli $con)
 		}
 	}
 }
-
-list($success, $msg) = validate_ticket($con);
-echo json_encode(array("message" => $msg->displayMessage()));
