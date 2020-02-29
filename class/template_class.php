@@ -67,7 +67,7 @@ class template {
 	 * In case multiple rows are given, all placeholders that are present in the template should be replaced, otherwise they will be present multiple times afterwards.
 	 *
 	 * @param array $data An assoc array of replacements or even multiple rows of such arrays.
-	 * @param clear_if_empty If true: and an empty 2D array is given, this template will be empty as a result. If false it will be unchanged.
+	 * @param bool clear_if_empty If true: if an empty 2D array is given, this template will be empty as a result. If false it will be unchanged.
 	 * @return template
 	 */
 	public function assign_array(array $data, bool $clear_if_empty = true): template
@@ -96,20 +96,20 @@ class template {
 	 * If not all placeholders are replaced, the result will have the same placeholder multiple times. As a result it will never be useful to do any more assignmenst after this.
 	 *
 	 * @param array $rows An array of rows (which are associative arrays containing placeholder => replacement).
-	 * @param clear_if_empty If true: an empty array is given, this template will be empty as a result. If false it will be unchanged.
+	 * @param bool clear_if_empty If true: if an empty array is given, this template will be empty as a result. If false it will be unchanged.
 	 * @return template
 	 */
 	protected function assign_array_2D(array $rows, bool $clear_if_empty = true): template
 	{
 		if(count($rows) > 0 || $clear_if_empty)
 		{
-			$template = $this;
+			$template = clone $this;
 			$this->template = "";
 			foreach($rows as $row)
 			{
-				$tmp = $template;
+				$tmp = clone $template;
 				$tmp->assign_array_1D($row);
-				$this->template .= $tmp->display();
+				$this->template .= $tmp->r_display();
 			}
 		}
 		return $this;
@@ -158,7 +158,7 @@ class template {
 	public function display() {
 		   foreach($this->sub_templates as $key=>$sub) 
 		   {
-				   $this->assign($key,$sub->display());
+				   $this->assign($key,$sub->r_display());
 		   }
 		   echo $this->template;
 	}
