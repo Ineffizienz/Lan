@@ -314,24 +314,15 @@
 
 		if(empty($player_pref))
 		{
-			$output = "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
+			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
 		} else {
-			$part = file_get_contents("template/part/single_pref.html");
+			
+			$tpl = new template("template/part/");
+			$tpl->load("single_pref.html");
+			$tpl->assign_array($player_pref);
 
-			foreach ($player_pref as $pref)
-			{
-				$gameInfo = getGameInfoById($con,$pref);
-				if (!isset($output))
-				{
-					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
-				} else {
-					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
-				}
-				
-			}
+			return $tpl->r_display();
 		}
-
-		return $output;
 	}
 	
 	function createCheckbox($con, $player_id)
@@ -751,7 +742,7 @@ function displayTournamentLocked($con,$tm_id)
 	return $output;
 }
 
-function displayTournamentTree($con)
+function displayTournamentTree($con):string
 {
 	if(isset($_REQUEST["id"]))
 	{
@@ -769,6 +760,8 @@ function displayTournamentTree($con)
 	if(!empty($tournament))
 	{
 		return $tournament;
+	} else {
+		return "";
 	}
 }
 

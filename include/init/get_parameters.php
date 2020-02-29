@@ -189,7 +189,7 @@ function getPlayerData($con)
 		- player_settings_view.php
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, ip, team_id, team_captain FROM player");
+	$result = mysqli_query($con,"SELECT ID, name, ip, wow_account, team_id, team_captain FROM player");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$player[] = $row;
@@ -220,11 +220,10 @@ function getSinglePlayerPref($con, $player_id)
 		- function.php/displayPlayerPrefs
 		- function.php/createCheckbox
 	*/
-
-	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
-	while ($row=mysqli_fetch_array($result))
+	$result = mysqli_query($con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$player_id'");
+	while ($row=mysqli_fetch_assoc($result))
 	{
-		$player_pref[] = $row["game_id"];
+		$player_pref[] = $row;
 	}
 
 	if(empty($player_pref))
@@ -299,7 +298,6 @@ function getGameInfoById($con,$game_id)
 {
 	/* Used in:
 		:User
-		- function.php/displayPlayerPrefs
 		- function.php/displayRunningVotes
 		- function.php/displayTournaments
 
