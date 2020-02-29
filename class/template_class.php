@@ -44,7 +44,7 @@ class template {
 			$this->parseFunctions();
 	}
 
-	public function assign(string $placeholder, string $replacement):template {
+	public function assign(string $placeholder, string $replacement): template {
 
 		   $temp = explode(".",$placeholder,2);
 
@@ -73,7 +73,7 @@ class template {
 	public function assign_array(array $data, bool $clear_if_empty = true): template
 	{
 		if(is_multi($data))
-			return$this->assign_array_2D($data, $clear_if_empty);
+			return $this->assign_array_2D($data, $clear_if_empty);
 		return $this->assign_array_1D ($data);
 	}
 	
