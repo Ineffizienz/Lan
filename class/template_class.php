@@ -7,6 +7,7 @@ class template {
          private $templateFile = "";
          private $templateName = "";
          private $template = "";
+         private $sub_templates = array();
          private $leftDelimiter = '{$';
          private $rightDelimiter = '}';
          private $leftDelimiterF = '{';
@@ -40,8 +41,45 @@ class template {
                  $this->parseFunctions();
          }
 
-         public function assign($replace,$replacement) {
-                 $this->template = str_replace($this->leftDelimiter .$replace.$this->rightDelimiter,$replacement, $this->template);
+         public function assign(string $placeholder, string $replacement):template {
+                 
+                $temp = explode(".",$placeholder,2);
+                
+                if(count($temp) == 1)
+                {
+                        $this->template = str_replace($this->leftDelimiter .$placeholder.$this->rightDelimiter,$replacement, $this->template);
+                } else {
+                        list($placeholder_first,$placeholder_remainder) = $temp;
+                        $this->sub_templates[$placeholder_first]->assign($placeholder_remainder,$replacement);
+                }                
+
+                return $this;
+         }
+
+         public function assign_subtemplate(string $placeholder, $replacement):template
+         {
+                $temp = explode(".",$placeholder,2);
+
+                if(count($temp) == 1)
+                {
+                        if(is_string($replacement))
+                        {
+                                $this->sub_templates[$placeholder] = new template();
+                                $this->sub_templates[$placeholder]->load($replacement);
+                                return $this->sub_templates[$placeholder];
+                        }
+
+                        if(get_class($replacement) == "template")
+                        {
+                                $this->sub_template[$placeholder] = $replacement;
+                                return $replacement;
+                        }
+                } else {
+                        list($placeholder_first,$placeholder_remainder) = $temp;
+                        $this->sub_templates[$placeholder_first]->assign_subtemplate($placeholder_remainder,$replacement);
+
+                        return $this->sub_template[$placeholder_first];
+                }
          }
 
          public function parseFunctions() {
@@ -55,14 +93,15 @@ class template {
                 },
                 $this->template);
 
-                 /* Diese Zeile macht es m�glich innerhalb des HTML-Templates Kommentare zu verfassen. Da die Funktion preg_replace mit PHP 7 deaktiviert wurde, ist
-                    preg_replace_callback die einzige Alternative. Da ich aber keine brauchbare Callback-Funktion habe, ist sie vorl�ufig deaktiviert. */
-
-                 //$this->template = preg_replace_callback("/" .$this->leftDelimiterC . "(.*)" . $this->rightDelimiterC ."/isUe","",$this->template);
+                $this->template = preg_replace("/" .$this->leftDelimiterC . "(.*)" . $this->rightDelimiterC ."/isU","",$this->template);
          }
 
          public function display() {
-                 echo $this->template;
+                foreach($this->sub_templates as $key=>$sub) 
+                {
+                        $this->assign($key,$sub->display());
+                }
+                echo $this->template;
          }
 
          public function r_display() {
