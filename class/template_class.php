@@ -11,6 +11,7 @@ class template {
 	private $templateName = "";
 	private $template = "";
 	private $sub_templates = array();
+	private $selectedSubtemplate = '';
 	private $leftDelimiter = '{$';
 	private $rightDelimiter = '}';
 	private $leftDelimiterF = '{';
@@ -45,18 +46,21 @@ class template {
 	}
 
 	public function assign(string $placeholder, string $replacement): template {
+		return $this->assign_internal($this->selectedSubtemplate.$placeholder, $replacement);
+	}
 
-		   $temp = explode(".",$placeholder,2);
+	protected function assign_internal(string $placeholder, string $replacement): template {
+		$temp = explode(".",$placeholder,2);
 
-		   if(count($temp) == 1)
-		   {
-				   $this->template = str_replace($this->leftDelimiter .$placeholder.$this->rightDelimiter,$replacement, $this->template);
-		   } else {
-				   list($placeholder_first,$placeholder_remainder) = $temp;
-				   $this->sub_templates[$placeholder_first]->assign($placeholder_remainder,$replacement);
-		   }                
+		if(count($temp) == 1)
+		{
+			$this->template = str_replace($this->leftDelimiter .$placeholder.$this->rightDelimiter,$replacement, $this->template);
+		} else{
+			list($placeholder_first,$placeholder_remainder) = $temp;
+			$this->sub_templates[$placeholder_first]->assign($placeholder_remainder,$replacement);
+		}                
 
-		   return $this;
+		return $this;
 	}
 
 	/**
@@ -115,7 +119,12 @@ class template {
 		return $this;
 	}
 
-	public function assign_subtemplate(string $placeholder, $replacement):template
+	public function assign_subtemplate(string $placeholder, $replacement): template
+	{
+		return assign_subtemplate_internal($this->selectedSubtemplate.$placeholder, $replacement);
+	}
+	
+	protected function assign_subtemplate_internal(string $placeholder, $replacement): template
 	{
 		   $temp = explode(".",$placeholder,2);
 
@@ -140,6 +149,21 @@ class template {
 				   return $this->sub_template[$placeholder_first];
 		   }
 	}
+	
+	/**
+	 * Selects a subtemplate to which the following assignments will be applied.
+	 * 
+	 * This can make the the following assignments easier  for example if you have a main skeleton template with a content subtemplate to which you want to do a lot of assignments. You can change the selected subtemplate any time.
+	 * 
+	 * @param string $path "absolute path" of the subtemplate. Not as in file path but as in names of the placeholders. Examples: "placeholder_sub_level1" or "placeholder_sub_level1.placeholder_sub_level2"
+	 */
+	public function select_subtemplate(string $path)
+	{
+		if($path != '')
+			$this->selectedSubtemplate = $path . '.';
+		else
+			$this->selectedSubtemplate = $path;
+	}
 
 	public function parseFunctions() {
 
@@ -158,7 +182,7 @@ class template {
 	public function display() {
 		   foreach($this->sub_templates as $key=>$sub) 
 		   {
-				   $this->assign($key,$sub->r_display());
+				   $this->assign_internal($key,$sub->r_display());
 		   }
 		   echo $this->template;
 	}
