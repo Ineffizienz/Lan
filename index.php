@@ -30,8 +30,10 @@ if(!isset($_SESSION["player_id"]))
 	list($success, $message) = validate_ticket($con);
 	if(!$success)
 	{
-		$tpl->load("validate_ticket.html");
-		$tpl->assign("headline",$title);
+		$tpl->load("skeleton.html");
+		$tpl->assign("headline", $title);
+		$tpl->assign_subtemplate('content', 'validate_ticket.html');
+		$tpl->select_subtemplate('content');
 
 		$tpl->assign("sir_brummel",$message->displayMessage());
 
@@ -50,8 +52,10 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		list($success, $message) = reg_name($con, $message);
 		if(!$success)
 		{
-			$tpl->load("reg_name.html");
-			$tpl->assign("headline",$title);
+			$tpl->load("skeleton.html");
+			$tpl->assign("headline", $title);
+			$tpl->assign_subtemplate('content', 'reg_name.html');
+			$tpl->select_subtemplate('content');
 
 			$tpl->assign("sir_brummel",$message->displayMessage());
 
