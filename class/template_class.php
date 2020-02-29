@@ -121,7 +121,7 @@ class template {
 
 	public function assign_subtemplate(string $placeholder, $replacement): template
 	{
-		return assign_subtemplate_internal($this->selectedSubtemplate.$placeholder, $replacement);
+		return $this->assign_subtemplate_internal($this->selectedSubtemplate.$placeholder, $replacement);
 	}
 	
 	protected function assign_subtemplate_internal(string $placeholder, $replacement): template
