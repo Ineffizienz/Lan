@@ -69,11 +69,13 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 
 		include(INC . "controller.php");
 
-		$tpl->load("index.html");
+		$tpl->load("skeleton.html");
+		$tpl->assign("headline", $title);
+		$tpl->assign_subtemplate('content', 'index.html');
+		$tpl->select_subtemplate('content');
 
 		$tpl->assign("sir_brummel",$message->displayMessage());
 		
-		$tpl->assign("headline",$title);
 		$tpl->assign("lantitle",$title);
 		$tpl->assign("menu",build_content("menu.html"));
 
