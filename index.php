@@ -18,9 +18,11 @@ require_once(CL . "achievement_class.php");
 require_once(INC . "connect.php");
 require_once(INC . "function.php");
 
-$tpl = new template();
+$tpl = new template("skeleton.html");
 
 $title = "Press ALT+F4 to Ragequit!";
+$tpl->assign("headline", $title);
+
 $message = new message();
 
 if(!isset($_SESSION["player_id"]))
@@ -30,10 +32,7 @@ if(!isset($_SESSION["player_id"]))
 	list($success, $message) = validate_ticket($con);
 	if(!$success)
 	{
-		$tpl->load("skeleton.html");
-		$tpl->assign("headline", $title);
 		$tpl->assign_subtemplate('content', 'validate_ticket.html');
-		$tpl->select_subtemplate('content');
 
 		$tpl->assign("sir_brummel",$message->displayMessage());
 
@@ -52,10 +51,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		list($success, $message) = reg_name($con, $message);
 		if(!$success)
 		{
-			$tpl->load("skeleton.html");
-			$tpl->assign("headline", $title);
 			$tpl->assign_subtemplate('content', 'reg_name.html');
-			$tpl->select_subtemplate('content');
 
 			$tpl->assign("sir_brummel",$message->displayMessage());
 
@@ -67,61 +63,17 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 	{
 		$player_id = $_SESSION["player_id"];
 
-		include(INC . "controller.php");
-
-		$tpl->load("skeleton.html");
-		$tpl->assign("headline", $title);
 		$tpl->assign_subtemplate('content', 'index.html');
-		$tpl->select_subtemplate('content');
-
+		$tpl->assign("lantitle",$title);
 		$tpl->assign("sir_brummel",$message->displayMessage());
 		
-		$tpl->assign("lantitle",$title);
-		$tpl->assign("menu",build_content("menu.html"));
-
-		if (isset($content))
-		{
-			$tpl->assign("content",$content);
-		}
-
-		if (isset($settings))
-		{
-			$tpl->assign("settings",$settings); // controller.php
-		}
-
-		$tpl->assign("teams",members($con));
-		$tpl->assign("games",generate_options($con));
-		$tpl->assign("members",teamMembers($con,$player_id));
+		$tpl->assign_subtemplate('menu', 'menu.html');
 		$tpl->assign("status",getUserRelatedStatusColor($con,$player_id));
 		$tpl->assign("status_option",getUserStatusOption($con,$player_id));
-
-		/******************************WOW-Server **************************/
-		$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player_id));
-		$tpl->assign("realm",getRealmName($con_wow));
-		$tpl->assign("server_on",displayServerStatus($con_wow));
-
-
-		/***************************** TUNRIERE *****************************/
-		$tpl->assign("vote_option",generateVoteOption($con));
-		$tpl->assign("running_votes",displayRunningVotes($con));
-		$tpl->assign("tournaments",displayTournaments($con));
-		$tpl->assign("tournament_view",displayTournamentTree($con));
-		$tpl->assign("result_popup",displayResultPopup());
-
-		/***************************** SETTING *****************************/
-
-		$tpl->assign("ip",IP);
-		$tpl->assign("profil_image",displayProfilImage($con, $player_id));
-		$tpl->assign("nickname",getSingleUsername($con, $player_id));
-		$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
-		$tpl->assign("checkbox_container",createCheckbox($con, $player_id));
-		$tpl->assign("team",displaySinglePlayerTeam($con, $player_id));
-		$tpl->assign("captain",displayCaptain($con, $player_id));
-		$tpl->assign("t_members",displayPlayerTeamMember($con, $player_id));
-		$tpl->assign("player_achievements",displayPlayerAchievements($con, $player_id));
-		$tpl->assign("ac_small",displayAvailableAchievements($con, $player_id));
-
-
+		
+		include(INC . "controller.php");
+		run_controller($tpl);
+		
 		$tpl->display();
 	}
 }

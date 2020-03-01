@@ -145,7 +145,7 @@ function getLastIp($con)
 	return $last_ip;
 }
 
-function getUserImage($con, $player_id)
+function getUserImage(mysqli $con, $player_id)
 {
 	/* Used in:
 		:User

@@ -10,8 +10,6 @@ class template {
 	private $templateFile = "";
 	private $templateName = "";
 	private $template = "";
-	private $sub_templates = array();
-	private $selectedSubtemplate = '';
 	private $leftDelimiter = '{$';
 	private $rightDelimiter = '}';
 	private $leftDelimiterF = '{';
@@ -19,46 +17,39 @@ class template {
 	private $leftDelimiterC = '\{\*';
 	private $rightDelimiterC = '\*\}';
 
-	public function __construct($tpl_dir = "") {
-			if (!empty($tpl_dir))
-			{
-					$this->templateDir = $tpl_dir;
-			}
+	/**
+	 * 
+	 * @param string $path Path to either a template file (all that end with .html) or a template directory.
+	 */
+	public function __construct(string $path = "") {
+		if(endsWith($path, '.html'))
+			$this->load ($path);
+		elseif(!empty($path))
+			$this->templateDir = $path;
 	}
 
-	public function load($file) {
-			$this->templateName = $file;
-			$this->templateFile = $this->templateDir.$file;
+	public function load($file): template {
+		$this->templateName = $file;
+		$this->templateFile = $this->templateDir.$file;
 
-			if (!empty($this->templateFile))
+		if (!empty($this->templateFile))
+		{
+			if (file_exists($this->templateFile))
 			{
-					if (file_exists($this->templateFile))
-					{
-							$this->template = file_get_contents($this->templateFile);
-					} else {
-							return false;
-					}
+				$this->template = file_get_contents($this->templateFile);
 			} else {
-					return false;
+				return false;
 			}
+		} else {
+			return false;
+		}
 
-			$this->parseFunctions();
+		$this->parseFunctions();
+		return $this;
 	}
 
 	public function assign(string $placeholder, string $replacement): template {
-		return $this->assign_internal($this->selectedSubtemplate.$placeholder, $replacement);
-	}
-
-	protected function assign_internal(string $placeholder, string $replacement): template {
-		$temp = explode(".",$placeholder,2);
-
-		if(count($temp) == 1)
-		{
-			$this->template = str_replace($this->leftDelimiter .$placeholder.$this->rightDelimiter,$replacement, $this->template);
-		} else{
-			list($placeholder_first,$placeholder_remainder) = $temp;
-			$this->sub_templates[$placeholder_first]->assign($placeholder_remainder,$replacement);
-		}                
+		$this->template = str_replace($this->leftDelimiter .$placeholder.$this->rightDelimiter,$replacement, $this->template);             
 
 		return $this;
 	}
@@ -121,70 +112,33 @@ class template {
 
 	public function assign_subtemplate(string $placeholder, $replacement): template
 	{
-		return $this->assign_subtemplate_internal($this->selectedSubtemplate.$placeholder, $replacement);
-	}
-	
-	protected function assign_subtemplate_internal(string $placeholder, $replacement): template
-	{
-		   $temp = explode(".",$placeholder,2);
-
-		   if(count($temp) == 1)
-		   {
-				   if(is_string($replacement))
-				   {
-						   $this->sub_templates[$placeholder] = new template();
-						   $this->sub_templates[$placeholder]->load($replacement);
-						   return $this->sub_templates[$placeholder];
-				   }
-
-				   if(get_class($replacement) == "template")
-				   {
-						   $this->sub_template[$placeholder] = $replacement;
-						   return $replacement;
-				   }
-		   } else {
-				   list($placeholder_first,$placeholder_remainder) = $temp;
-				   $this->sub_templates[$placeholder_first]->assign_subtemplate($placeholder_remainder,$replacement);
-
-				   return $this->sub_template[$placeholder_first];
-		   }
-	}
-	
-	/**
-	 * Selects a subtemplate to which the following assignments will be applied.
-	 * 
-	 * This can make the the following assignments easier  for example if you have a main skeleton template with a content subtemplate to which you want to do a lot of assignments. You can change the selected subtemplate any time.
-	 * 
-	 * @param string $path "absolute path" of the subtemplate. Not as in file path but as in names of the placeholders. Examples: "placeholder_sub_level1" or "placeholder_sub_level1.placeholder_sub_level2"
-	 */
-	public function select_subtemplate(string $path)
-	{
-		if($path != '')
-			$this->selectedSubtemplate = $path . '.';
-		else
-			$this->selectedSubtemplate = $path;
+		if(is_string($replacement))
+		{
+			$tmp = new template();
+			$tmp->load($replacement);
+			$this->assign($placeholder, $tmp->r_display());
+		}
+		elseif(get_class($replacement) == "template")
+			$this->assign($placeholder, $replacement->r_display());
+		return $this;
 	}
 
 	public function parseFunctions() {
 
-		   $this->template = preg_replace_callback("/" .$this->leftDelimiterF ."include file=(.*)\.(.*)" .$this->rightDelimiterF."/isU",
-		   function($matches){
-				   foreach($matches as $match)
-				   {
-						   return file_get_contents($this->templateDir . substr(rtrim($match,"}"),14));
-				   }
-		   },
-		   $this->template);
+		$this->template = preg_replace_callback("/" .$this->leftDelimiterF ."include file=(.*)\.(.*)" .$this->rightDelimiterF."/isU",
+		function($matches){
+			foreach($matches as $match)
+			{
+				return file_get_contents($this->templateDir . substr(rtrim($match,"}"),14));
+			}
+		},
+		$this->template);
 
-		   $this->template = preg_replace("/" .$this->leftDelimiterC . "(.*)" . $this->rightDelimiterC ."/isU","",$this->template);
+		$this->template = preg_replace("/" .$this->leftDelimiterC . "(.*)" . $this->rightDelimiterC ."/isU","",$this->template);
 	}
 
 	public function display() {
-		   foreach($this->sub_templates as $key=>$sub) 
-		   {
-				   $this->assign_internal($key,$sub->r_display());
-		   }
-		   echo $this->template;
+		echo $this->template;
 	}
 
 	public function r_display() {

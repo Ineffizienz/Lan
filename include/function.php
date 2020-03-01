@@ -10,25 +10,6 @@
 	***************************** Build-Functions **********************************
 	*/
 
-	function build_content($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
-	{
-		if (file_exists("template/" . $file))
-		{
-			$data = fopen("template/" . $file, "r");
-			while (!feof($data))
-			{
-				if (!isset($content))
-				{
-					$content = fgets($data);
-				} else {	
-					$content .= fgets($data);
-				}
-			}
-			fclose($data);
-			return ($content);
-		}
-	}
-
 	function build_option($optionArr,$selected)
 	{
 		
@@ -173,25 +154,7 @@
 
 		return $team_list;
 	}
-	function teamMembers($con,$player_id) //Gibt die eigenen Teammitglieder aus
-	{
-		$team_id = getTeamId($con,$player_id);  // beziehen der eigenen Team-ID
-		$team_members = getTeamMembers($con,$player_id,$team_id);
-
-		if (!empty($team_members))
-		{
-			foreach ($team_members as $team_member)
-			{
-				if (!isset($members))
-				{
-					$members = "<option>" . $team_member;
-				} else {
-					$members .= "<option>" . $team_member;
-				}
-			}
-			return $members;
-		}
-	}
+	
 	function getUserRelatedStatusColor($con,$player_id)
 	{
 		$status = getStatus($con,$player_id);
@@ -237,22 +200,16 @@
 		} 
 	}
 
-	function displayProfilImage($con,$player_id)
+	function displayProfilImage(mysqli $con, $player_id): template
 	{
+		$image_path = getUserImage($con,$player_id);
 
-		$profil_image = getUserImage($con,$player_id);
-
-		if (empty($profil_image))
-		{
-			return build_content("part/empty_image.html");
-		} else {
-			$image_template = file_get_contents("template/part/profil_image.html");
-
-			$output = str_replace("--IMAGE_PATH--",$profil_image,$image_template);
-
-			return $output;
+		if (empty($image_path))
+			return new template("part/empty_image.html");
+		else {
+			$tpl = new template("part/profil_image.html");
+			return $tpl->assign('image_path', $image_path);
 		}
-		
 	}
 	
 	function displaySinglePlayerTeam($con, $player_id)
