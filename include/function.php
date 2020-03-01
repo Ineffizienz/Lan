@@ -46,11 +46,7 @@
 				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
 				if(mysqli_query($con,$sql_status))
 				{
-					$sql_ac = "ALTER TABLE ac_player ADD `$player_id` INT(11) NULL";
-					if(mysqli_query($con,$sql_ac))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}
