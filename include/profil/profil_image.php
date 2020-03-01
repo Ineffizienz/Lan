@@ -1,6 +1,6 @@
 <?php
-	session_start();
 	include(dirname(__FILE__,3) . "/include/init/constant.php");
+	require_once INC . 'session.php';
 	include(CL . "message_class.php");
 	include(CL . "progress_class.php");
 	include(INC . "connect.php");
@@ -14,7 +14,7 @@
 	if($resultValidateImage == "1")
 	{
 	
-		$username = getSingleUsername($con,$player_id);
+		$username = getSingleUsername($con,$player_id)['name'];
 		$extension = pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION);
 		$root_path = ROOT . "/user/" . $username;
 

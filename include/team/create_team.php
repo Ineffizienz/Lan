@@ -1,6 +1,6 @@
 <?php //add to index.php --> include("inlude/create_team.php");
-session_start();
 include(dirname(__FILE__,2) . "/init/constant.php");
+require_once INC . 'session.php';
 include(CL . "message_class.php");
 include(CL . "progress_class.php");
 include(INC . "connect.php");

@@ -5,6 +5,7 @@
 	define("INC",ROOT . "/include/");
 	define("AUTH", INC . "/auth/");
 	define("INIT",INC . "/init/");
+	define("LIB",INC . "/lib/");
 
 	define("CL",ROOT . "/class/");
 	

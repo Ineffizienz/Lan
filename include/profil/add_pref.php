@@ -1,6 +1,6 @@
 <?php
-    session_start();
     include(dirname(__FILE__,2) . "/init/constant.php");
+	require_once INC . 'session.php';
     include(INC . "connect.php");
     include(INIT . "get_parameters.php");
     include(CL . "message_class.php");

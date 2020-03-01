@@ -54,6 +54,8 @@ $(document).ready(function(){
 	var obj = {};
 	
 	gameSpacerHover();
+	
+	$("#result").fadeOut(7000);
 
 	/*var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = window.location.search.substring(1),

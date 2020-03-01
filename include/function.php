@@ -10,25 +10,6 @@
 	***************************** Build-Functions **********************************
 	*/
 
-	function build_content($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
-	{
-		if (file_exists("template/" . $file))
-		{
-			$data = fopen("template/" . $file, "r");
-			while (!feof($data))
-			{
-				if (!isset($content))
-				{
-					$content = fgets($data);
-				} else {	
-					$content .= fgets($data);
-				}
-			}
-			fclose($data);
-			return ($content);
-		}
-	}
-
 	function build_option($optionArr,$selected)
 	{
 		
@@ -50,28 +31,31 @@
 	/**
 	 * 
 	 * @param mysqli $con
-	 * @param string $username
+	 * @param string $nick
+	 * @param string $real_name
 	 * @param int $player_id
 	 * @return boolean true on success
 	 */
-	function initializePlayer(mysqli $con, string $username, int $player_id)
+	function initializePlayer(mysqli $con, string $nick, string $real_name, int $player_id)
 	{
-		$sql_user = "UPDATE player SET name='$username' WHERE ID='$player_id'";
+		$sql_user = "UPDATE player SET name='$nick', real_name='$real_name' WHERE ID='$player_id'";
 		if (mysqli_query($con,$sql_user))
 		{
-			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
-			if(mysqli_query($con,$sql_fl))
+			$sql_fl_check = "SELECT first_login FROM player WHERE ID='$player_id';";
+			if(mysqli_fetch_assoc(mysqli_query($con, $sql_fl_check))['first_login'] != '0')
 			{
-				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
-				if(mysqli_query($con,$sql_status))
+				$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
+				if(mysqli_query($con,$sql_fl))
 				{
-					$sql_ac = "ALTER TABLE ac_player ADD `$player_id` INT(11) NULL";
-					if(mysqli_query($con,$sql_ac))
+					$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
+					if(mysqli_query($con,$sql_status))
 					{
 						return true;
 					}
 				}
 			}
+			else
+				return true;
 		}
 		return false;
 	}
@@ -173,25 +157,7 @@
 
 		return $team_list;
 	}
-	function teamMembers($con,$player_id) //Gibt die eigenen Teammitglieder aus
-	{
-		$team_id = getTeamId($con,$player_id);  // beziehen der eigenen Team-ID
-		$team_members = getTeamMembers($con,$player_id,$team_id);
-
-		if (!empty($team_members))
-		{
-			foreach ($team_members as $team_member)
-			{
-				if (!isset($members))
-				{
-					$members = "<option>" . $team_member;
-				} else {
-					$members .= "<option>" . $team_member;
-				}
-			}
-			return $members;
-		}
-	}
+	
 	function getUserRelatedStatusColor($con,$player_id)
 	{
 		$status = getStatus($con,$player_id);
@@ -237,22 +203,16 @@
 		} 
 	}
 
-	function displayProfilImage($con,$player_id)
+	function displayProfilImage(mysqli $con, $player_id): template
 	{
+		$image_path = getUserImage($con,$player_id);
 
-		$profil_image = getUserImage($con,$player_id);
-
-		if (empty($profil_image))
-		{
-			return build_content("part/empty_image.html");
-		} else {
-			$image_template = file_get_contents("template/part/profil_image.html");
-
-			$output = str_replace("--IMAGE_PATH--",$profil_image,$image_template);
-
-			return $output;
+		if (empty($image_path))
+			return new template("part/empty_image.html");
+		else {
+			$tpl = new template("part/profil_image.html");
+			return $tpl->assign('image_path', $image_path);
 		}
-		
 	}
 	
 	function displaySinglePlayerTeam($con, $player_id)
@@ -314,24 +274,15 @@
 
 		if(empty($player_pref))
 		{
-			$output = "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
+			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
 		} else {
-			$part = file_get_contents("template/part/single_pref.html");
+			
+			$tpl = new template("template/part/");
+			$tpl->load("single_pref.html");
+			$tpl->assign_array($player_pref);
 
-			foreach ($player_pref as $pref)
-			{
-				$gameInfo = getGameInfoById($con,$pref);
-				if (!isset($output))
-				{
-					$output = str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
-				} else {
-					$output .= str_replace(array("--GAME_ID--","--ICON--","--PREF--"), array($pref,$gameInfo["icon"],$gameInfo["short_title"]), $part);
-				}
-				
-			}
+			return $tpl->r_display();
 		}
-
-		return $output;
 	}
 	
 	function createCheckbox($con, $player_id)
@@ -751,7 +702,7 @@ function displayTournamentLocked($con,$tm_id)
 	return $output;
 }
 
-function displayTournamentTree($con)
+function displayTournamentTree($con):string
 {
 	if(isset($_REQUEST["id"]))
 	{
@@ -769,6 +720,8 @@ function displayTournamentTree($con)
 	if(!empty($tournament))
 	{
 		return $tournament;
+	} else {
+		return "";
 	}
 }
 
