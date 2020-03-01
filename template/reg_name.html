@@ -1,20 +1,24 @@
 <form method="post">
-	<div id="content">
+	<div id="reg_content">
 		<div id="result">
 			{$sir_brummel}
 		</div>
 		<div id="reg_container">
-			<div>
-				<div>
+			<div class="reg_form">
+				<div class="reg_label">
 					<label for="username">Trage bitte deinen Nickname ein:</label>
 				</div>
 				<div>
 					<input type="text" name="username" id="username" value="{$name}" required>
 				</div>
 			</div>
-			<div>
-				<label for="real_name">Trage bitte deinen Klarnamen ein:</label>
-				<input type="text" name="real_name" id="real_name" value="{$real_name}" required>
+			<div class="reg_form">
+				<div class="reg_label">
+					<label for="real_name">Trage bitte deinen Klarnamen ein:</label>
+				</div>
+				<div>
+					<input type="text" name="real_name" id="real_name" value="{$real_name}" required>
+				</div>
 			</div>
 			<div>
 				<button type="submit" id="reg_username" name="reg_username">OK</button>	
