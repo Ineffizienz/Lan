@@ -46,7 +46,7 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 
-		var player = $(this).children("i").attr("id");
+		var player = $(this).closest("tr").attr("id");
 
 		obj = {player};
 
