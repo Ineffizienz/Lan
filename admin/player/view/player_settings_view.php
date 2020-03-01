@@ -22,6 +22,4 @@
 			$player .= str_replace(array("--ID--","--NAME--","--IP--","--WoW--","--TEAM--","--T_NAME--","--CAPTAIN--","--ID--"),array($data["ID"],$data["name"],$data["ip"],$data["wow_account"],$team_data,$t_name,$t_captain,$data["ID"]),$table_template);
 		}
 	}
-
-	//<i class='fa fa-pencil' aria-hidden='true'></i>
 ?>

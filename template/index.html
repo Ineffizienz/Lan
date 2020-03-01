@@ -1,57 +1,31 @@
-<!DOCTYPE html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="template/style.css">
-	<link rel="stylesheet" href="font_awesome/css/font-awesome.min.css">
-	<!-- ganz dringend die JQuery-Library downloaden!!!! -->
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script>
-		$(document).ready(function() {
-			$("#link_tournament").click(function(){
-				$("#tournament").slideToggle();
-			});
-			$("#reject").hide();
-		});	
-	</script>
-	<title>{$headline}</title>
-</head>
-<body>
-	<div id="wrap">
-		<div id="main">
-			<div id="head">
-				<h1>{$lantitle}</h1>
+<div id="main">
+	<div id="head">
+		<h1>{$lantitle}</h1>
+	</div>
+	<div id="content">
+		<div id="result">
+			{$sir_brummel}
+		</div>
+		<div id="menu">
+			{$menu}
+		</div>
+		<div id="displayed_content">
+			{$content}
+			<div id="popup_container" style="display:none;"></div>
+		</div>
+	</div>
+	<div id="settings_change_popup">
+		<div class="settings_cp_container">
+			<div id="settings_popup_close">
+				<i class="fa fa-times" aria-hidden="true" id="close_popup" style="cursor:pointer;"></i>
 			</div>
-			<div id="content">
-				<div id="result">
-					{$sir_brummel}
-				</div>
-				<div id="menu">
-					{$menu}
-				</div>
-				<div id="displayed_content">
-					{$content}
-					<div id="popup_container" style="display:none;"></div>
-				</div>
+			<div id="settings_popup_headline">
+				<h2>Gib bitte einen neuen Nickname an!</h2>
 			</div>
-			<div id="settings_change_popup">
-				<div class="settings_cp_container">
-					<div id="settings_popup_close">
-						<i class="fa fa-times" aria-hidden="true" id="close_popup" style="cursor:pointer;"></i>
-					</div>
-					<div id="settings_popup_headline">
-						<h2>Gib bitte einen neuen Nickname an!</h2>
-					</div>
-					<div id="settings_popup_form">
-						<input type="text" name="nick" id="newuser">
-						<button id="change_username" class="button">Änderung bestätigen</button>
-					</div>
-				</div>
+			<div id="settings_popup_form">
+				<input type="text" name="nick" id="newuser">
+				<button id="change_username" class="button">Änderung bestätigen</button>
 			</div>
 		</div>
 	</div>
-</body>
-<script src="js/function.js"></script>
-<script src="js/controller.js"></script>
-<script src="js/response.js"></script>
-</html>
+</div>
