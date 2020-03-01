@@ -1,7 +1,5 @@
 <?php
 error_reporting(E_ALL);
-session_set_cookie_params(3600*24*7); //set session cookie lifetime to 7 days. Don't forget to change the server config, too! - change session.gc_maxlifetime to 259200 secs
-session_start();
 
 /*************** NOTES ********************/
 /*
@@ -11,6 +9,7 @@ session_start();
 header("Content-Type: text/html; charset=utf-8");
 
 include ("include/init/constant.php");
+require_once INC . 'session.php';
 require_once(CL . "template_class.php");
 require_once(CL . "message_class.php");
 require_once(CL . "achievement_class.php");
@@ -42,9 +41,11 @@ if(!isset($_SESSION["player_id"]))
 if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 {
 	$first_login = getFirstLoginById($con, $_SESSION["player_id"]);
+	$user_names = getSingleUsername($con, $_SESSION["player_id"]);
+	$display_name_reg = $first_login || $user_names["real_name"] == '';
 	
 	$success = false;
-	if($first_login)
+	if($display_name_reg)
 	{
 		include 'include/auth/reg_name.php';
 	
@@ -52,7 +53,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		if(!$success)
 		{
 			$tpl->assign_subtemplate('content', 'reg_name.html');
-			$tpl->assign_array(getSingleUsername($con, $_SESSION["player_id"]));
+			$tpl->assign_array($user_names);
 
 			$tpl->assign("sir_brummel",$message->displayMessage());
 
@@ -60,7 +61,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		}
 	}
 	
-	if(!$first_login || $success)
+	if(!$display_name_reg || $success)
 	{
 		$player_id = $_SESSION["player_id"];
 

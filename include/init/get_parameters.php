@@ -113,7 +113,7 @@ function getSingleUsername($con, $player_id): array
 	*/
 
 	$result = mysqli_query($con,"SELECT name, real_name FROM player WHERE ID = '$player_id'");
-	return mysqli_fetch_array($result);
+	return mysqli_fetch_assoc($result);
 }
 
 function getUserStatus($con,$user_id) //bezieht den Userstatus eines bestimmten Spielers
