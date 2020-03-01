@@ -129,6 +129,7 @@ td
 .ov_table
 {
 	margin: 0 auto;
+	text-align:center;
 	font-size: 11pt;
 }
 .ov_extend
@@ -137,7 +138,6 @@ td
 }
 .ov_table td
 {
-	padding-left: 1%;
 	border: 1px solid #000000;
 }
 
@@ -147,7 +147,7 @@ td
 .p_view
 {
 	margin: 0 auto;
-	width: 50%;
+	width: 70%;
 }
 .p_button_delete
 {

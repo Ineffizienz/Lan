@@ -19,3 +19,4 @@ SUC_ADMIN_CREATE_TRIGGER: Trigger erfolgreich erstellt.
 SUC_ADMIN_DELETE_VOTE: Die Abstimmung wurde erfolgreich gelöscht.
 SUC_ADMIN_CREATE_TM_FROM_VOTE: Turnier erfolgreich aus einer Abstimmung erstellt.
 SUC_ADMIN_BANNER_CHANGED: Das Banner wurde erfolgreich geändert.
+SUC_ADMIN_CREATE_TICKET_ID: Ticket-ID erfolgreich erstellt.
