@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="template/style.css">
+	<link rel="stylesheet" href="font_awesome/css/font-awesome.min.css">
+	<!-- ganz dringend die JQuery-Library downloaden!!!! -->
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/function.js" defer></script>
+	<script src="js/controller.js" defer></script>
+	<script src="js/response.js" defer></script>
+	<script>
+		$(document).ready(function() {
+			$("#link_tournament").click(function(){
+				$("#tournament").slideToggle();
+			});
+			$("#reject").hide();
+		});	
+	</script>
+	<title>{$headline}</title>
+</head>
+<body>
+	<div id="wrap">
+		{$content}
+	</div>
+</body>
+</html>

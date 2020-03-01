@@ -1,51 +1,74 @@
 <?php
+function run_controller(template $tpl)
+{
+	global $con;
+	$player_id = $_SESSION["player_id"];
 	if (isset($_REQUEST["page"]))
 	{
 		switch ($_REQUEST["page"]) {
-			case 'keygen':
-				$content = build_content("key_generate.html");
-			break;
 			case 'wow_server':
-				$content = build_content("wow_server.html");
+				global $con_wow, $con_char;
+				$tpl->assign_subtemplate('content', "wow_server.html");
+				$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player_id));
+				$tpl->assign("realm",getRealmName($con_wow));
+				$tpl->assign("server_on",displayServerStatus($con_wow));
 			break;
 			case 'teams':
-				$content = build_content("teams.html");
+				$tpl->assign_subtemplate('content', "teams.html");
+				$tpl->assign("teams",members($con));
 			break;
 			case 'c_team':
-				$content = build_content("create_team.html");
+				$tpl->assign_subtemplate('content', "create_team.html");
 			break;
 			case 'tm':
-				$content = build_content("turnier.html");
+				$tpl->assign_subtemplate('content', "turnier.html");
+				$tpl->assign("vote_option",generateVoteOption($con));
+				$tpl->assign("running_votes",displayRunningVotes($con));
+				$tpl->assign("tournaments",displayTournaments($con));
+				$tpl->assign("result_popup",displayResultPopup());
 			break;
 			case 'single_tm':
-				$content = build_content("tournament_view.html");
+				$tpl->assign_subtemplate('content', "tournament_view.html");
+				$tpl->assign("tournament_view",displayTournamentTree($con));
 			break;
 			case 'conf':
-				$content = build_content("settings.html");
+				$tpl->assign_subtemplate('content', "settings.html");
 			break;
 			case 'tschedule':
-				$content = build_content("time_schedule.html");
+				$tpl->assign_subtemplate('content', "time_schedule.html");
 			break;
 			default:
-				$content = build_content("key_generate.html");
+				$tpl->assign_subtemplate('content', 'key_generate.html');
+				$tpl->assign("games",generate_options($con));
 		}
 	} else {
-		$content = build_content("key_generate.html");
+		$tpl->assign_subtemplate('content', 'key_generate.html');
+		$tpl->assign("games",generate_options($con));
 	}
 	
-
 	if (isset($_REQUEST["subpage"]))
 	{
 		switch ($_REQUEST["subpage"]) {
 			case 'team_conf':
-				$settings = build_content("team_settings.html");
+				$tpl->assign_subtemplate('settings', "team_settings.html");
+				$tpl->assign("team",displaySinglePlayerTeam($con, $player_id));
+				$tpl->assign("captain",displayCaptain($con, $player_id));
+				$tpl->assign("t_members",displayPlayerTeamMember($con, $player_id));
 			break;
 			case 'own':
-				$settings = build_content("own_settings.html");
+				$tpl->assign_subtemplate('settings', "own_settings.html");
+				$tpl->assign("ip",IP);
+				$tpl->assign_array(getSingleUsername($con, $player_id));
+				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player_id));
+				$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
+				$tpl->assign("checkbox_container",createCheckbox($con, $player_id));
 			break;
 			case 'achieve':
-				$settings = build_content("achievement_list.html");
+				$tpl->assign_subtemplate('settings', "achievement_list.html");
+				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player_id));
+				$tpl->assign("ac_small",displayAvailableAchievements($con, $player_id));
 			break;
 		}
 	}
+}
 ?>
