@@ -41,9 +41,11 @@ if(!isset($_SESSION["player_id"]))
 if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 {
 	$first_login = getFirstLoginById($con, $_SESSION["player_id"]);
+	$user_names = getSingleUsername($con, $_SESSION["player_id"]);
+	$display_name_reg = $first_login || $user_names["real_name"] == '';
 	
 	$success = false;
-	if($first_login)
+	if($display_name_reg)
 	{
 		include 'include/auth/reg_name.php';
 	
@@ -51,7 +53,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		if(!$success)
 		{
 			$tpl->assign_subtemplate('content', 'reg_name.html');
-			$tpl->assign_array(getSingleUsername($con, $_SESSION["player_id"]));
+			$tpl->assign_array($user_names);
 
 			$tpl->assign("sir_brummel",$message->displayMessage());
 
@@ -59,7 +61,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		}
 	}
 	
-	if(!$first_login || $success)
+	if(!$display_name_reg || $success)
 	{
 		$player_id = $_SESSION["player_id"];
 
