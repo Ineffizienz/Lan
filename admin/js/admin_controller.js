@@ -66,6 +66,9 @@ function getEndpoint(param)
         case "delete_vote":
             endpoint = "admin/tm/delete/delete_vote.php";
             break;
+        case "create_ticket":
+            endpoint = "admin/player/edit/create_ticket.php";
+            break;
 	}
 
 	return endpoint;

@@ -54,6 +54,17 @@ $(document).ready(function(){
 
 	}
 
+	function getTicketData(event)
+	{
+		event.preventDefault();
+
+		var player_id = $(this).closest("tr").attr("id");
+
+		obj = {player_id};
+
+		getAjax(obj,getEndpoint("create_ticket"),displayTicketID);
+	}
+
 /*#############################################################################################
 #################################### Teams #################################################### 
 ###############################################################################################*/
@@ -469,6 +480,17 @@ $(document).ready(function(){
 		displayResult(result.message);
 	}
 
+	function displayTicketID(result)
+	{
+		displayResult(result.message);
+
+		if(result.hasOwnProperty("ticket_id"))
+		{
+			console.log(this);
+			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
+		}
+	}
+
 	function setResult(result)
 	{
 		displayResult(result.message);
@@ -586,5 +608,6 @@ function refreshVotes()
 	$(document).on("click",".define_tm",displayPopup);
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
+	$(document).on("click",".create_ticket",getTicketData);
 
 });
