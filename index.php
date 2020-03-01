@@ -1,7 +1,5 @@
 <?php
 error_reporting(E_ALL);
-session_set_cookie_params(3600*24*7); //set session cookie lifetime to 7 days. Don't forget to change the server config, too! - change session.gc_maxlifetime to 259200 secs
-session_start();
 
 /*************** NOTES ********************/
 /*
@@ -11,6 +9,7 @@ session_start();
 header("Content-Type: text/html; charset=utf-8");
 
 include ("include/init/constant.php");
+require_once INC . 'session.php';
 require_once(CL . "template_class.php");
 require_once(CL . "message_class.php");
 require_once(CL . "achievement_class.php");
