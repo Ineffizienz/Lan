@@ -4,11 +4,19 @@
 			{$sir_brummel}
 		</div>
 		<div id="reg_container">
-			<div id="reg_label">
-				<label for="username">Trage bitte deinen Nickname ein:</label>
+			<div>
+				<div>
+					<label for="username">Trage bitte deinen Nickname ein:</label>
+				</div>
+				<div>
+					<input type="text" name="username" id="username" value="{$name}" required>
+				</div>
 			</div>
-			<div id="reg_form">
-				<input type="text" name="username" id="username">
+			<div>
+				<label for="real_name">Trage bitte deinen Klarnamen ein:</label>
+				<input type="text" name="real_name" id="real_name" value="{$real_name}" required>
+			</div>
+			<div>
 				<button type="submit" id="reg_username" name="reg_username">OK</button>	
 			</div>
 		</div>

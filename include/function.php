@@ -31,24 +31,31 @@
 	/**
 	 * 
 	 * @param mysqli $con
-	 * @param string $username
+	 * @param string $nick
+	 * @param string $real_name
 	 * @param int $player_id
 	 * @return boolean true on success
 	 */
-	function initializePlayer(mysqli $con, string $username, int $player_id)
+	function initializePlayer(mysqli $con, string $nick, string $real_name, int $player_id)
 	{
-		$sql_user = "UPDATE player SET name='$username' WHERE ID='$player_id'";
+		$sql_user = "UPDATE player SET name='$nick', real_name='$real_name' WHERE ID='$player_id'";
 		if (mysqli_query($con,$sql_user))
 		{
-			$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
-			if(mysqli_query($con,$sql_fl))
+			$sql_fl_check = "SELECT first_login FROM player WHERE ID='$player_id';";
+			if(mysqli_fetch_assoc(mysqli_query($con, $sql_fl_check))['first_login'] != '0')
 			{
-				$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
-				if(mysqli_query($con,$sql_status))
+				$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
+				if(mysqli_query($con,$sql_fl))
 				{
-					return true;
+					$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
+					if(mysqli_query($con,$sql_status))
+					{
+						return true;
+					}
 				}
 			}
+			else
+				return true;
 		}
 		return false;
 	}

@@ -11,21 +11,22 @@ function reg_name(mysqli $con, $message)
 		//form not submitted -> no error message, just display from (handled by calling code)
 		return array(false, $message);
 	}	
-	$name = trim($_POST["username"]);
-	if($name == "")
+	$nick = trim($_POST["username"]);
+	$real_name = trim($_POST["real_name"]);
+	if($nick == "" || $real_name == "")
 	{
 		$message->getMessageCode("ERR_NO_USER_NAME");
 		return array(false, $message);
 	}
 	
-	if(checkPlayernameExists($con, $name))
+	if(checkPlayernameExists($con, $nick) != $_SESSION["player_id"])
 	{
-		//user with this name already exists
+		//another user with this name already exists
 		$message->getMessageCode("ERR_USER_NAME");
 		return array(false, $message);
 	}
 	
-	if (initializePlayer($con, $name, $_SESSION["player_id"]))
+	if (initializePlayer($con, $nick, $real_name, $_SESSION["player_id"]))
 	{
 		$message->getMessageCode("SUC_REG_NAME");
 		return array(true, $message);

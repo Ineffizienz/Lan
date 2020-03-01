@@ -52,6 +52,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		if(!$success)
 		{
 			$tpl->assign_subtemplate('content', 'reg_name.html');
+			$tpl->assign_array(getSingleUsername($con, $_SESSION["player_id"]));
 
 			$tpl->assign("sir_brummel",$message->displayMessage());
 

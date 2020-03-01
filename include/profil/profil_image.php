@@ -14,7 +14,7 @@
 	if($resultValidateImage == "1")
 	{
 	
-		$username = getSingleUsername($con,$player_id);
+		$username = getSingleUsername($con,$player_id)['name'];
 		$extension = pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION);
 		$root_path = ROOT . "/user/" . $username;
 

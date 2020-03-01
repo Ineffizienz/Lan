@@ -78,11 +78,14 @@ function getAllUsername($con)
  * 
  * @param mysqli $con
  * @param string $name
- * @return boolean true when name already exists
+ * @return boolean false if the name does not exist or the player id if it does
  */
 function checkPlayernameExists(mysqli $con, string $name)
 {
-	return mysqli_num_rows(mysqli_query($con, "SELECT ID FROM player WHERE name = '$name';")) > 0;
+	$res = mysqli_query($con, "SELECT ID FROM player WHERE name = '$name';");
+	if(mysqli_num_rows($res) == 0)
+		return false;
+	return mysqli_fetch_array($res)['ID'];
 }
 
 function getBasicUserData($con)
@@ -100,26 +103,17 @@ function getBasicUserData($con)
 	return $basic_user;
 }
 
-function getSingleUsername($con, $player_id)
+function getSingleUsername($con, $player_id): array
 {
 	/* Used in:
 		:User
 		- index.php
 		- profil_image.php
+		- index.php
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player WHERE ID = '$player_id'");
-	while ($row = mysqli_fetch_array($result))
-	{
-		$username = $row["name"];
-	}
-
-	if(empty($username))
-	{
-		$username = "";
-	}
-
-	return $username;
+	$result = mysqli_query($con,"SELECT name, real_name FROM player WHERE ID = '$player_id'");
+	return mysqli_fetch_array($result);
 }
 
 function getUserStatus($con,$user_id) //bezieht den Userstatus eines bestimmten Spielers
