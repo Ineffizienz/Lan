@@ -256,9 +256,6 @@ function getGameData($con) // function.php/createCheckbox, admin_func.php/displa
 function getFullGameData($con)
 {
 	/* Used in:
-		:User
-		- function.php/generateVoteOption
-
 		:Admin
 		- admin_func.php/displayTmGames
 	*/
@@ -269,6 +266,22 @@ function getFullGameData($con)
 		$gameData[] = $row;
 	}
 	
+	return $gameData;
+}
+
+function getMainGameData($con)
+{
+	/*Used in:
+		:User
+		- function.php/generateVoteOption
+	*/
+
+	$result = mysqli_query($con,"SELECT ID, name FROM games WHERE addon IS NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gameData[] = $row;
+	}
+
 	return $gameData;
 }
 
@@ -473,6 +486,22 @@ function getAllTeams($con)
 	*/
 
 	$result = mysqli_query($con,"SELECT ID, name FROM tm_teamname");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$teams[] = $row;
+	}
+
+	return $teams;
+}
+
+function getAllTeamsWithMember($con)
+{
+	/* Used in:
+		:User
+		- function.php/members
+	*/
+
+	$result = mysqli_query($con,"SELECT tm_teamname.ID, tm_teamname.name, player.name FROM tm_teamname LEFT JOIN player ON tm_teamname.ID = player.team_id");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$teams[] = $row;
@@ -1009,6 +1038,23 @@ function getVotedTournaments($con)
 	if(empty($votedTournaments) || !isset($votedTournaments))
 	{
 		$votedTournaments = array();
+	}
+
+	return $votedTournaments;
+}
+
+function getVotedTournamentsUser($con)
+{
+
+	/* Used in:
+		:User
+		- function.php/displayRunningVotes
+	*/
+
+	$result = mysqli_query($con,"SELECT tm_vote.ID, tm_vote.game_id, tm_vote.vote_count, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, tm_vote.vote_closed, games.banner FROM tm_vote LEFT JOIN games ON tm_vote.game_id = games.ID ORDER BY tm_vote.endtime DESC");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$votedTournaments[] = $row;
 	}
 
 	return $votedTournaments;

@@ -10,6 +10,14 @@
 	***************************** Build-Functions **********************************
 	*/
 
+	function build_option_new(array $options)
+	{
+		$tpl = new template("part/option.html");
+		$tpl->assign_array($options);
+
+		return $tpl->r_display();
+	}
+	
 	function build_option($optionArr,$selected)
 	{
 		
@@ -127,35 +135,19 @@
 	{
 		$gameinfo = getGameInfo($con);
 
-		$selected = array("id"=>"default","name"=>"Bitte wähle ein Spiel aus");
-
-		$option = build_option($gameinfo,$selected);
+		$option = build_option_new($gameinfo);
 		
-		return $option;
+		return "<option value='default' selected>Bitte wähle ein Spiel aus". $option;
 	}
 	function members($con) // gibt die vorhanden Teams aus (Teamname + Spieler)
 	{
-		$teams = getAllTeams($con);
+		$teams = getAllTeamsWithMember($con);
 
-		if (!empty($teams))
-		{
-			foreach ($teams as $team)
-			{
-				$member = getTeamMember($con,$team["ID"]);
-				$member = implode(", ",$member);
+		$tpl = new template("template/part/");
+		$tpl->load("team.html");
+		$tpl->assign_array($teams);
 
-				$part = file_get_contents("template/part/team.html");
-
-				if(!isset($team_list))
-				{
-					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
-				} else {
-					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
-				}
-			}
-		}
-
-		return $team_list;
+		return $tpl->r_display();
 	}
 	
 	function getUserRelatedStatusColor($con,$player_id)
@@ -277,8 +269,7 @@
 			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
 		} else {
 			
-			$tpl = new template("template/part/");
-			$tpl->load("single_pref.html");
+			$tpl = new template("part/single_pref.html");
 			$tpl->assign_array($player_pref);
 
 			return $tpl->r_display();
@@ -540,50 +531,30 @@ function displayAvailableAchievements($con, $player_id)
 
 function generateVoteOption($con)
 {
-	$games = getFullGameData($con);
-	$selected = array();
+	$games = getMainGameData($con);
+	
+	$tpl = new template("part/option.html");
+	$tpl->assign_array($games);
 
-	$part = file_get_contents("template/part/option.html");
-
-	foreach ($games as $game)
-	{
-		if(!isset($output))
-		{
-			$output = str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
-		} else {
-			$output .= str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
-		}
-	}
-
-	return $output;
+	return $tpl->r_display();
 
 }
 
 function displayRunningVotes($con)
 {
-	$votes = getVotedTournaments($con);
-	$part = file_get_contents("template/part/running_vote.html");
+	$votes = getVotedTournamentsUser($con);
 
-	foreach ($votes as $vote)
-	{
-		$game_info = getGameInfoById($con,$vote["game_id"]);
-		$banner_url = $game_info["banner"];
-		if($vote["vote_closed"] !== "1")
-		{
-			if(!isset($output))
-			{
-				$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
-			} else {
-				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
-			}
-		}
-	}
+	$tpl = new template("part/running_vote.html");
+	$tpl->assign_array($votes);
 
-	if(empty($output))
+	return $tpl->r_display();
+
+	// Rework required
+	/*if(empty($votes))
 	{
 		$output = "Es gibt gegenwärtig keine Abstimmungen.";
 	}
-	return $output;
+	return $output;*/
 }
 
 function displayTournaments($con)
@@ -727,9 +698,9 @@ function displayTournamentTree($con):string
 
 function displayResultPopup()
 {
-	$part = file_get_contents(TMP . "part/popup/result_popup.html");
+	$tpl = new template("part/popup/result_popup.html");
 
-	return $part;
+	return $tpl->r_display();;
 }
 
 function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2)

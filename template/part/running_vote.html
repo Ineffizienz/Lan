@@ -1,7 +1,7 @@
 <div class="tm_vote_container">
     <div class="tm_running_vote_container">
         <div class="tm_rv_banner">
-            <img src="images/banner/--BANNER--">
+            <img src="images/banner/{$banner}">
         </div>
         <div class="tm_rv_text">
             <div>Anzahl Spieler:</div>
@@ -10,12 +10,12 @@
         </div>
         <div class="tm_rv-data">
             <div id="vote_id_--VOTE-ID--">
-                <div class="tm_rv_playercount" id="playercount_--VOTE-ID--">--PLAYER_COUNT--</div>
+                <div class="tm_rv_playercount" id="playercount_--VOTE-ID--">{$vote_count}</div>
             </div>
-            <div>--TIME_REMAINING--</div>
+            <div>{$endtime}</div>
         </div>
     </div>
-    <div class="tm_vote_for" data-voted-tm="--VOTE-ID--">
+    <div class="tm_vote_for" data-voted-tm="{$ID}">
         <div class="tm_vote_sign">
             <i class="fa fa-check fa-2x fa-checkmark" aria-hidden="true" style="line-height:inherit;color:green;"></i>
         </div>
