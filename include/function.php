@@ -593,16 +593,21 @@ function displayTournaments($con)
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tm_player = getPlayerFromGamerslist($con,$tm_id);
-	$banner = getTmBanner($con,$tm_id);
-
-	$list = implode(", ",$tm_player);
+	$tpl = new template("part/unlocked_tm.html");
 	
-	$part = file_get_contents("template/part/unlocked_tm.html");
+	$tm_player = getPlayerFromGamerslist($con,$tm_id);
+	$tm_banner = getTmBanner($con,$tm_id);
 
-	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);
+	$player_list = implode(", ",$tm_player);
 
-	return $output;
+	$tpl->assign("player_list",$player_list);
+	$tpl->assign("tm_banner",$tm_banner);
+	
+	/*$part = file_get_contents("template/part/unlocked_tm.html");
+
+	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);*/
+
+	return $tpl->r_display();
 }
 
 function displayTournamentLocked($con,$tm_id)
