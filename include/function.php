@@ -559,36 +559,14 @@ function displayRunningVotes($con)
 
 function displayTournaments($con)
 {
-	$tournaments = getTournaments($con);
-	$part = file_get_contents("template/part/overview_tournament.html");
+	$tpl = new template("part/overview_tournament.html");
 
-	foreach ($tournaments as $tournament)
-	{
-		$game_info = getGameInfoById($con,$tournament["game_id"]);
-		$banner = $game_info["banner"];
-		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
+	$tournaments = getTournamentsOverview($con);
 
-		if(empty($tournament["player_count"]))
-		{
-			$player_count = "0";
-		} else {
-			$player_count = $tournament["player_count"];
-		}
+	$tpl->assign_array($tournaments);
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
-		} else {
-			$output .= str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
-		}
-	}
+	return $tpl->r_display();
 
-	if(empty($output))
-	{
-		$output = "Es gibt gegenwärtig keine Turniere.";
-	}
-
-	return $output;
 }
 
 function displayTournamentParticipants($con,$tm_id)
@@ -603,10 +581,6 @@ function displayTournamentParticipants($con,$tm_id)
 	$tpl->assign("player_list",$player_list);
 	$tpl->assign("tm_banner",$tm_banner);
 	
-	/*$part = file_get_contents("template/part/unlocked_tm.html");
-
-	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);*/
-
 	return $tpl->r_display();
 }
 

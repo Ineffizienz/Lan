@@ -1181,11 +1181,22 @@ function getSingleTournamentGame($con,$tm_id)
 	return $tm_game;
 }
 
+function getTournamentsOverview($con)
+{
+	$result = mysqli_query($con,"SELECT tm.ID, tm.game_id, tm.mode, tm.mode_details, tm.player_count, tm.tm_period_id, games.banner, DATE_FORMAT(tm_period.time_from, '%d.%m.%Y %H:%i') AS time_from FROM tm INNER JOIN games ON tm.game_id = games.ID LEFT OUTER JOIN tm_period ON tm.tm_period_id = tm_period.ID");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_data[] = $row;
+	}
+
+	return $tm_data;
+
+}
+
 function getTournaments($con)
 {
 	/* Used in:
 		:User
-		- function.php/displayTournaments
 		- function.php/displayTournamentTree
 
 		:Admin
