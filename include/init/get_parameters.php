@@ -685,9 +685,11 @@ function getStatus($con,$id)
 		- function.php/getUserStatusOption
 	*/
 
-	$result = mysqli_query($con,"SELECT status AS id FROM status WHERE user_id = '$id'");
-	$row = mysqli_fetch_array($result);
-	$status = $row["id"];
+	$result = mysqli_query($con,"SELECT status.status AS id, status_name.status_name FROM status INNER JOIN status_name ON status_name.status_id = status.status WHERE user_id = '$id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$status = $row;
+	}
 
 	return $status;
 }
@@ -706,36 +708,20 @@ function getStatusColor($con,$status)
 	return $s_color;
 }
 
-function getStatusData($con)
+function getStatusData($con, $user_status)
 {
 	/* Used in:
 		:User
 		- function.php/getUserStatusOption
 	*/
 
-	$result = mysqli_query($con,"SELECT status_id AS id,status_name AS name FROM status_name");
+	$result = mysqli_query($con,"SELECT status_id AS id,status_name AS name FROM status_name WHERE status_id != $user_status");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$status_data[] = $row;
 	}
 
 	return $status_data;
-}
-
-function getStatusName($con,$status_id)
-{
-	/* Used in:
-		:User
-		- function.php/UserStatusName
-	*/
-
-	$result = mysqli_query($con,"SELECT status_name AS name FROM status_name WHERE status_id = '$status_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$status_name = $row["name"];
-	}
-
-	return $status_name;
 }
 
 

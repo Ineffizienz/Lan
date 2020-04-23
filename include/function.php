@@ -153,7 +153,7 @@
 	function getUserRelatedStatusColor($con,$player_id)
 	{
 		$status = getStatus($con,$player_id);
-		$status_color = getStatusColor($con,$status);
+		$status_color = getStatusColor($con,$status["id"]);
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
 
@@ -162,15 +162,12 @@
 
 	function getUserStatusOption($con,$player_id)
 	{
-		$status_data = getStatusData($con);
 		$user_status = getStatus($con,$player_id);
-		$status_name = getStatusName($con,$user_status);
+		$status_data = getStatusData($con, $user_status["id"]);
 
+		$option = build_option_new($status_data);
 		
-		$selected = array("id"=>$user_status,"name"=>$status_name);
-		$output = build_option($status_data,$selected);
-		
-		return $output;
+		return "<option value='" . $user_status["id"] . "' selected>" . $user_status["status_name"] . $option;
 
 	}
 
@@ -286,10 +283,9 @@
 		} else {
 
 			$userPrefs = getSinglePlayerPref($con, $player_id);
-
+			
 			$part = file_get_contents("template/part/checkbox_container.html");
 			$checked_part = file_get_contents("template/part/checkbox_container_checked.html");
-
 			foreach ($games as $game)
 			{
 				if(in_array($game["ID"],$userPrefs))
