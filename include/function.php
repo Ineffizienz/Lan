@@ -17,24 +17,6 @@
 
 		return $tpl->r_display();
 	}
-	
-	function build_option($optionArr,$selected)
-	{
-		
-		$output_option = "<option value='{$selected['id']}' selected>".$selected['name'];
-
-		$part = file_get_contents("template/part/option.html");
-
-		foreach ($optionArr as $option)
-		{
-			if($option["id"] !== $selected["id"])
-			{
-				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
-			} 
-		}
-		
-		return $output_option;	
-	}
 
 	/**
 	 * 
