@@ -320,7 +320,6 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 		} else {
 			$tpl = new template();
 			$tpl->load("wow_server/characters_table.html");
-			$output = "";
 			$character_list = array();
 
 			### This Sub-Template defines each row for a character and moves it to an array
