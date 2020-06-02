@@ -321,21 +321,24 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 			$tpl = new template();
 			$tpl->load("wow_server/characters_table.html");
 			$output = "";
+			$character_list = array();
 
-			foreach($wow_account_chars as $chars)
-			{
-				$race = defineRace($chars["race"]);
-				$class = defineClass($chars["class"]);
-				$loc = defineLocation($chars["map"]);
-				$part = file_get_contents("template/part/characters_row.html");
-				if (!isset($output))
+			### This Sub-Template defines each row for a character and moves it to an array
+				$output = new template();
+				$output->load("part/characters_row.html");
+
+				foreach($wow_account_chars as $chars)
 				{
-					$output = str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
-				} else {
-					$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+					$race = defineRace($chars["race"]);
+					$class = defineClass($chars["class"]);
+					$loc = defineLocation($chars["map"]);
+
+					$character = array("name" => $chars["name"], "race" => $race, "class" => $class, "level" => $chars["level"], "location" => $loc);
+					array_push($character_list,$character);
 				}
-			}
-			$tpl->assign("characters",$output);
+				$output->assign_array($character_list);
+			
+			$tpl->assign_subtemplate("characters",$output);
 			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
 			$template = $tpl->r_display();
 			return $template;
