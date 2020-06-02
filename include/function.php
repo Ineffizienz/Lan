@@ -314,6 +314,7 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 		{
 			$tpl = new template();
 			$tpl->load("wow_server/character_table_empty.html");
+			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
 			$template = $tpl->r_display();
 			return $template;
 		} else {
@@ -335,6 +336,7 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 				}
 			}
 			$tpl->assign("characters",$output);
+			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
 			$template = $tpl->r_display();
 			return $template;
 		}
