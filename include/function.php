@@ -262,35 +262,32 @@
 		if(empty($games))
 		{
 			$output = "<i>Keine Spiele vorhanden</i>";
+			return $output;
 		} else {
 
-			$userPrefs = getSinglePlayerPref($con, $player_id);
+			$userPrefs = getPlayerPrefs($con, $player_id);
+			$options = array();
+			$checkbox = new template("part/checkbox_container.html");
 			
-			$part = file_get_contents("template/part/checkbox_container.html");
-			$checked_part = file_get_contents("template/part/checkbox_container_checked.html");
 			foreach ($games as $game)
 			{
 				if(in_array($game["ID"],$userPrefs))
 				{
-					if(!isset($output))
-					{
-						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
-					} else {
-						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
-					}
+					$checkbox_checked = new template("part/checkbox_checked.html");
+					$checkbox_checked->assign("game_id",$game["ID"]);
+					$checkbox_checked->assign("name",$game["name"]);
+					$is_userpref = array("game_id" => $game["ID"],"name" => $game["name"],"icon" => $game["icon"],"checkbox" => $checkbox_checked->r_display());
+					array_push($options,$is_userpref);
 				} else {
-					if(!isset($output))
-					{
-						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
-					} else {
-						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
-					}
-				}
-				
+					$checkbox_unchecked = new template("part/checkbox_unchecked.html");
+					$checkbox_unchecked->assign("game_id",$game["ID"]);
+					$checkbox_unchecked->assign("name",$game["name"]);
+					$no_userpref = array("game_id" => $game["ID"],"name" => $game["name"],"icon" => $game["icon"],"checkbox" => $checkbox_unchecked->r_display());
+					array_push($options,$no_userpref);
+				}	
 			}
+			return $checkbox->assign_array($options);
 		}
-
-		return $output;
 	}
 
 /******************************* WOW-Server ************************************/

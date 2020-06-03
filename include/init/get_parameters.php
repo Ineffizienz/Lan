@@ -229,6 +229,22 @@ function getSinglePlayerPref($con, $player_id)
 
 }
 
+function getPlayerPrefs($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$prefs[] = $row["game_id"];
+	}
+
+	if(empty($prefs))
+	{
+		$prefs = array();
+	}
+
+	return $prefs;
+}
+
 /*
 ###########################################################
 ######################## GAMES ############################

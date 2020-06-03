@@ -1,16 +1,16 @@
 <div class="checkbox_container">
     <div style="height:40px;">
-        <label class="checkmark_container" for="--GAME_ID--">
-            <input type="checkbox" name="--NAME--" id="--GAME_ID--" style="text-align:center;">
+        <label class="checkmark_container" for="{$game_id}">
+            {$checkbox}
             <span class="checkmark">&nbsp;</span>
         </label>
     </div>
     <div class="checkmark_name">
         <div>
-            <img src="images/game_icon/--ICON--" height="25">
+            <img src="images/game_icon/{$icon}" height="25">
         </div>
         <div>
-            <span>--NAME--</span>
+            <span>{$name}</span>
         </div>
     </div>
 </div>

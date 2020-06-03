@@ -61,7 +61,7 @@ function run_controller(template $tpl)
 				$tpl->assign_array(getSingleUsername($con, $player_id));
 				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player_id));
 				$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
-				$tpl->assign("checkbox_container",createCheckbox($con, $player_id));
+				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player_id));
 			break;
 			case 'achieve':
 				$tpl->assign_subtemplate('settings', "achievement_list.html");
