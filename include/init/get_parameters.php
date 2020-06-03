@@ -1170,17 +1170,17 @@ function getVoteById($con,$vote_id)
 ###########################################################
 */
 
-function getSingleTournamentGame($con,$tm_id)
+function getTournamentBanner($con,$tm_id)
 {
 	/* Used in:
 		:User
 		- function.php/displayTournamentLocked
 	*/
 
-	$result = mysqli_query($con,"SELECT game_id FROM tm WHERE ID = '$tm_id'");
+	$result = mysqli_query($con,"SELECT games.banner FROM games INNER JOIN tm ON tm.game_id = games.ID WHERE tm.ID = '$tm_id'");
 	while($row=mysqli_fetch_array($result))
 	{
-		$tm_game = $row["game_id"];
+		$tm_game = $row["banner"];
 	}
 
 	return $tm_game;

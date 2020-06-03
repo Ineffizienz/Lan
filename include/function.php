@@ -598,13 +598,14 @@ function displayTournamentLocked($con,$tm_id)
 			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $match_result["result_team1"], "result_p2" => $match_result["result_team2"]);
 			array_push($stage_array,$pair_array);
 		}
+		
 		$part_pair->assign_array($stage_array);
 		$step = array("player_pair" => $part_pair->r_display());
 		array_push($tournament_array,$step);
 
 	}
-	$tm_game = getSingleTournamentGame($con,$tm_id);
-	$tm_banner = getGameBanner($con,$tm_game);
+	
+	$tm_banner = getTournamentBanner($con,$tm_id);
 
 	$part_stages->assign_array($tournament_array);
 	$part->assign("banner",$tm_banner);
