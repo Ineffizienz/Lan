@@ -13,8 +13,7 @@
     $gamerslist_id = getGamerslistIdByPlayerId($con,$player_id,$tm_id);
     if(getGamerslistIdFromPair($con,$gamerslist_id,$pair_id))
     {
-        $matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
-        $match_id = getMatchIdFromMatches($con,$matches_id);
+        $match_id = getMatchId($con,$pair_id);
         $result_1 = $_REQUEST["result_1"];
         $result_2 = $_REQUEST["result_2"];
         

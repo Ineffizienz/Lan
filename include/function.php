@@ -592,8 +592,7 @@ function displayTournamentLocked($con,$tm_id)
 				$player_2 = getUsernameFromGamerslist($con,$player_2);
 			}
 
-			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
-			$match_id = getMatchIdFromMatches($con,$matches_id);
+			$match_id = getMatchId($con,$pair_id);
 			$match_result = getResultFromMatch($con,$match_id);
 
 			if($match_result["result_team1"] == "")
@@ -661,8 +660,7 @@ function displayResultPopup()
 function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
-	$successor_matches = getSingleMatchesIdFromPaarung($con,$successor_id);
-	$successor_match = getMatchIdFromMatches($con,$successor_matches);
+	$successor_match = getMatchId($con,$successor_matches);
 	$successor_result = getResultFromMatch($con,$successor_match);
 
 	if(!empty($successor_result["result_team1"]) || ($successor_result["result_team1"] >= "0"))
@@ -701,8 +699,8 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
 										if(mysqli_query($con,$sql))
 										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											$match_id = getMatchId($con,$successor_id);
+											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
 											if(mysqli_query($con,$sql))
 											{
 												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
@@ -734,8 +732,8 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
 										if(mysqli_query($con,$sql))
 										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											$match_id = getMatchId($con,$successor_id);
+											$sql = "DELETE FROM tm_match WHERE match_id = '$match_id'";
 											if(mysqli_query($con,$sql))
 											{
 												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
@@ -768,8 +766,8 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
 										if(mysqli_query($con,$sql))
 										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											$match_id = getMatchId($con,$successor_id);
+											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
 											if(mysqli_query($con,$sql))
 											{
 												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
@@ -801,8 +799,8 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
 										if(mysqli_query($con,$sql))
 										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
+											$match_id = getMatchId($con,$successor_id);
+											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
 											if(mysqli_query($con,$sql))
 											{
 												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";

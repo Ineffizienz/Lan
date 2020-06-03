@@ -1268,7 +1268,7 @@ function getMatchesIdFromPaarung($con,$tm_id)
 	return $matches_id;
 }
 
-function getSingleMatchesIdFromPaarung($con,$pair_id)
+function getMatchId($con,$pair_id)
 {
 	/* Used in:
 		:User
@@ -1276,24 +1276,18 @@ function getSingleMatchesIdFromPaarung($con,$pair_id)
 		- function.php/matchResultHandling
 		- enter_result.php
 	*/
-
-	$result = mysqli_query($con,"SELECT matches_id FROM tm_paarung WHERE ID = '$pair_id'");
+	$result = mysqli_query($con,"SELECT tm_matches.match_id FROM tm_matches INNER JOIN tm_paarung ON tm_paarung.matches_id = tm_matches.ID WHERE tm_paarung.ID = '$pair_id'");
 	while($row=mysqli_fetch_array($result))
 	{
-		$matches_id = $row["matches_id"];
+		$match_id = $row["match_id"];
 	}
 
-	return $matches_id;
+	return $match_id;
 }
 
 function getMatchIdFromMatches($con,$matches_id)
 {
 	/* Used in:
-		:User
-		- function.php/displayTournamentLocked
-		- function.php/matchResultHandling
-		- enter_result.php
-
 		:Admin
 		- delete_tm.php
 	*/
