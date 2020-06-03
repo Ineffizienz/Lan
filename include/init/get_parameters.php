@@ -212,7 +212,6 @@ function getSinglePlayerPref($con, $player_id)
 	/* Used in:
 		:User
 		- function.php/displayPlayerPrefs
-		- function.php/createCheckbox
 	*/
 	$result = mysqli_query($con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$player_id'");
 	while ($row=mysqli_fetch_assoc($result))
@@ -231,6 +230,10 @@ function getSinglePlayerPref($con, $player_id)
 
 function getPlayerPrefs($con,$player_id)
 {
+	/* Used in:
+		:User
+		- function.php/createCheckbox
+	*/
 	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
 	while($row=mysqli_fetch_array($result))
 	{
