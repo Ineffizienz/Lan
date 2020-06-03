@@ -1282,6 +1282,11 @@ function getMatchId($con,$pair_id)
 	{
 		$match_id = $row["match_id"];
 	}
+	
+	if(empty($match_id))
+	{
+		$match_id = "";
+	}
 
 	return $match_id;
 }
@@ -1335,23 +1340,10 @@ function getPlayerFromGamerslist($con,$tm_id)
 		- function.php/displayTournamentParticipants
 	*/
 
-	$result = mysqli_query($con,"SELECT player_id FROM tm_gamerslist WHERE tm_id = '$tm_id'");
-	while($row=mysqli_fetch_array($result))
+	$result = mysqli_query($con,"SELECT player.name FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.tm_id = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
 	{
-		$player_ids[] = $row["player_id"];
-	}
-
-	$player_name = array();
-
-	foreach ($player_ids as $player_id)
-	{
-		$result = mysqli_query($con,"SELECT name FROM player WHERE ID = '$player_id'");
-		while($row=mysqli_fetch_array($result))
-		{
-			$single_name = $row["name"];
-		}
-
-		array_push($player_name,$single_name);
+		$player_name[] = $row["name"];
 	}
 
 	return $player_name;
