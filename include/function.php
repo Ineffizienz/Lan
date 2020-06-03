@@ -565,17 +565,17 @@ function displayTournamentParticipants($con,$tm_id)
 
 function displayTournamentLocked($con,$tm_id)
 {
+	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
-	
-	$part = file_get_contents("template/part/locked_tm.html");
-	$part_stages = file_get_contents("template/part/tm_section.html");
+	$part = new template("part/locked_tm.html");
+	$part_stages = new template("part/tm_section.html");
 
 	foreach ($stages as $stage)
 	{
-		$part_pair = file_get_contents("template/part/player_pair.html");
+		$stage_array = array();
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
+		$part_pair = new template("part/player_pair.html");
 
-		$pair_output ="";
 		foreach ($pairs_by_stages as $pair)
 		{
 			$pair_id = $pair["ID"];
@@ -606,29 +606,22 @@ function displayTournamentLocked($con,$tm_id)
 			{
 				$result_p2 = "";
 			}
-
-			if(!isset($pair_output))
-			{
-				$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
-			} else {
-				$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
-			}
+			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_p1, "result_p2" => $result_p2);
+			array_push($stage_array,$pair_array);
 		}
+		$part_pair->assign_array($stage_array);
+		$step = array("player_pair" => $part_pair->r_display());
+		array_push($tournament_array,$step);
 
-		if(!isset($output_stage))
-		{
-			$output_stage = str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
-		} else {
-			$output_stage .= str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
-		}
 	}
-
 	$tm_game = getSingleTournamentGame($con,$tm_id);
 	$tm_banner = getGameBanner($con,$tm_game);
 
-	$output = str_replace(array("--SECTION--","--BANNER--"),array($output_stage,$tm_banner),$part);
+	$part_stages->assign_array($tournament_array);
+	$part->assign("banner",$tm_banner);
+	$part->assign("section",$part_stages->r_display());
 
-	return $output;
+	return $part->r_display();
 }
 
 function displayTournamentTree($con):string
