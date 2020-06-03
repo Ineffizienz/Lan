@@ -594,18 +594,22 @@ function displayTournamentLocked($con,$tm_id)
 
 			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
 			$match_id = getMatchIdFromMatches($con,$matches_id);
-			$result_p1 = getResultP1FromMatch($con,$match_id);
-			$result_p2 = getResultP2FromMatch($con,$match_id);
+			$match_result = getResultFromMatch($con,$match_id);
 
-			if($result_p1 == "")
+			if($match_result["result_team1"] == "")
 			{
 				$result_p1 = "";
+			} else {
+				$result_p1 = $match_result["result_team1"];
 			}
 
-			if($result_p2 == "")
+			if($match_result["result_team2"] == "")
 			{
 				$result_p2 = "";
+			} else {
+				$result_p2 = $match_result["result_team2"];
 			}
+
 			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_p1, "result_p2" => $result_p2);
 			array_push($stage_array,$pair_array);
 		}
@@ -659,9 +663,9 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 	$successor_id = getSuccessorFromPair($con,$pair_id);
 	$successor_matches = getSingleMatchesIdFromPaarung($con,$successor_id);
 	$successor_match = getMatchIdFromMatches($con,$successor_matches);
-	$successor_result = getResultP1FromMatch($con,$successor_match);
+	$successor_result = getResultFromMatch($con,$successor_match);
 
-	if(!empty($successor_result) || ($successor_result >= "0"))
+	if(!empty($successor_result["result_team1"]) || ($successor_result["result_team1"] >= "0"))
 	{
 		return "ERR_MATCH_LOCKED";
 	} else {

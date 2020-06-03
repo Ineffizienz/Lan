@@ -1736,7 +1736,7 @@ function getSuccessorCount($con,$successor_id)
 	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
 }
 
-function getResultP1FromMatch($con,$match_id)
+function getResultFromMatch($con,$match_id)
 {
 	/* Used in:
 		:User
@@ -1744,40 +1744,18 @@ function getResultP1FromMatch($con,$match_id)
 		- function.php/matchResultHandling
 	*/
 
-	$result = mysqli_query($con,"SELECT result_team1 FROM tm_match WHERE ID = '$match_id'");
-	while($row=mysqli_fetch_array($result))
+	$result = mysqli_query($con,"SELECT result_team1, result_team2 FROM tm_match WHERE ID = '$match_id'");
+	while($row=mysqli_fetch_assoc($result))
 	{
-		$result_p1 = $row["result_team1"];
+		$result_match = $row;
 	}
 
-	if(!isset($result_p1))
+	if(empty($result_match))
 	{
-		$result_p1 = "";
+		$result_match = array();
 	}
 
-	return $result_p1;
-}
-
-function getResultP2FromMatch($con,$match_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayTournamentLocked
-		- function.php/matchResultHandling
-	*/
-
-	$result = mysqli_query($con,"SELECT result_team2 FROM tm_match WHERE ID = '$match_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$result_p2 = $row["result_team2"];
-	}
-
-	if(!isset($result_p2))
-	{
-		$result_p2 = "";
-	}
-
-	return $result_p2;
+	return $result_match;
 }
 
 function getSinglePlayerIDFromGamerslist($con,$tm_id,$player_id)
