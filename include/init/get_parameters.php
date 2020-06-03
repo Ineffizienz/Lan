@@ -1175,6 +1175,7 @@ function getTournamentBanner($con,$tm_id)
 	/* Used in:
 		:User
 		- function.php/displayTournamentLocked
+		- function.php/displayTournamentParticipants
 	*/
 
 	$result = mysqli_query($con,"SELECT games.banner FROM games INNER JOIN tm ON tm.game_id = games.ID WHERE tm.ID = '$tm_id'");
@@ -1452,22 +1453,6 @@ function getTournamentStatus($con,$tm_id)
 	}
 
 	return $tm_locked;
-}
-
-function getTmBanner($con,$tm_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayTournamentParticipants
-	*/
-
-	$result = mysqli_query($con,"SELECT banner FROM games INNER JOIN tm ON games.ID = tm.game_id WHERE tm.ID = '$tm_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$game_banner = $row["banner"];
-	}
-
-	return $game_banner;
 }
 
 function getPlayerCountTm($con,$tm_id)

@@ -553,7 +553,7 @@ function displayTournamentParticipants($con,$tm_id)
 	$tpl = new template("part/unlocked_tm.html");
 	
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
-	$tm_banner = getTmBanner($con,$tm_id);
+	$tm_banner = getTournamentBanner($con,$tm_id);
 
 	$player_list = implode(", ",$tm_player);
 
