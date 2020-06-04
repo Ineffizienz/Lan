@@ -1170,25 +1170,12 @@ function getVoteById($con,$vote_id)
 ###########################################################
 */
 
-function getTournamentBanner($con,$tm_id)
+function getTournamentsOverview($con)
 {
 	/* Used in:
 		:User
-		- function.php/displayTournamentLocked
-		- function.php/displayTournamentParticipants
+		- function.php/displayTournaments
 	*/
-
-	$result = mysqli_query($con,"SELECT games.banner FROM games INNER JOIN tm ON tm.game_id = games.ID WHERE tm.ID = '$tm_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$tm_game = $row["banner"];
-	}
-
-	return $tm_game;
-}
-
-function getTournamentsOverview($con)
-{
 	$result = mysqli_query($con,"SELECT tm.ID, tm.game_id, tm.mode, tm.mode_details, tm.player_count, tm.tm_period_id, games.banner, DATE_FORMAT(tm_period.time_from, '%d.%m.%Y %H:%i') AS time_from FROM tm INNER JOIN games ON tm.game_id = games.ID LEFT OUTER JOIN tm_period ON tm.tm_period_id = tm_period.ID");
 	while($row=mysqli_fetch_assoc($result))
 	{
@@ -1224,6 +1211,23 @@ function getTournaments($con)
 	}
 
 	return $tms;
+}
+
+function getTournamentBanner($con,$tm_id)
+{
+	/* Used in:
+		:User
+		- function.php/displayTournamentLocked
+		- function.php/displayTournamentParticipants
+	*/
+
+	$result = mysqli_query($con,"SELECT games.banner FROM games INNER JOIN tm ON tm.game_id = games.ID WHERE tm.ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$tm_game = $row["banner"];
+	}
+
+	return $tm_game;
 }
 
 function getGamesFromTournament($con,$game_id)
