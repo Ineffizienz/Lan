@@ -10,22 +10,12 @@
 	***************************** Build-Functions **********************************
 	*/
 
-	function build_option($optionArr,$selected)
+	function build_option_new(array $options)
 	{
-		
-		$output_option = "<option value='{$selected['id']}' selected>".$selected['name'];
+		$tpl = new template("part/option.html");
+		$tpl->assign_array($options);
 
-		$part = file_get_contents("template/part/option.html");
-
-		foreach ($optionArr as $option)
-		{
-			if($option["id"] !== $selected["id"])
-			{
-				$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["id"],$option["name"]),$part);	
-			} 
-		}
-		
-		return $output_option;	
+		return $tpl->r_display();
 	}
 
 	/**
@@ -127,41 +117,25 @@
 	{
 		$gameinfo = getGameInfo($con);
 
-		$selected = array("id"=>"default","name"=>"Bitte wähle ein Spiel aus");
-
-		$option = build_option($gameinfo,$selected);
+		$option = build_option_new($gameinfo);
 		
-		return $option;
+		return "<option value='default' selected>Bitte wähle ein Spiel aus". $option;
 	}
 	function members($con) // gibt die vorhanden Teams aus (Teamname + Spieler)
 	{
-		$teams = getAllTeams($con);
+		$teams = getAllTeamsWithMember($con);
 
-		if (!empty($teams))
-		{
-			foreach ($teams as $team)
-			{
-				$member = getTeamMember($con,$team["ID"]);
-				$member = implode(", ",$member);
+		$tpl = new template("template/part/");
+		$tpl->load("team.html");
+		$tpl->assign_array($teams);
 
-				$part = file_get_contents("template/part/team.html");
-
-				if(!isset($team_list))
-				{
-					$team_list = str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
-				} else {
-					$team_list .= str_replace(array("--TEAM_ID--","--TEAM_NAME--","--MEMBER--"),array($team["ID"],$team["name"],$member),$part);
-				}
-			}
-		}
-
-		return $team_list;
+		return $tpl->r_display();
 	}
 	
 	function getUserRelatedStatusColor($con,$player_id)
 	{
 		$status = getStatus($con,$player_id);
-		$status_color = getStatusColor($con,$status);
+		$status_color = getStatusColor($con,$status["id"]);
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
 
@@ -170,15 +144,12 @@
 
 	function getUserStatusOption($con,$player_id)
 	{
-		$status_data = getStatusData($con);
 		$user_status = getStatus($con,$player_id);
-		$status_name = getStatusName($con,$user_status);
+		$status_data = getStatusData($con, $user_status["id"]);
 
+		$option = build_option_new($status_data);
 		
-		$selected = array("id"=>$user_status,"name"=>$status_name);
-		$output = build_option($status_data,$selected);
-		
-		return $output;
+		return "<option value='" . $user_status["id"] . "' selected>" . $user_status["status_name"] . $option;
 
 	}
 
@@ -277,8 +248,7 @@
 			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
 		} else {
 			
-			$tpl = new template("template/part/");
-			$tpl->load("single_pref.html");
+			$tpl = new template("part/single_pref.html");
 			$tpl->assign_array($player_pref);
 
 			return $tpl->r_display();
@@ -292,36 +262,32 @@
 		if(empty($games))
 		{
 			$output = "<i>Keine Spiele vorhanden</i>";
+			return $output;
 		} else {
 
-			$userPrefs = getSinglePlayerPref($con, $player_id);
-
-			$part = file_get_contents("template/part/checkbox_container.html");
-			$checked_part = file_get_contents("template/part/checkbox_container_checked.html");
-
+			$userPrefs = getPlayerPrefs($con, $player_id);
+			$options = array();
+			$checkbox = new template("part/checkbox_container.html");
+			
 			foreach ($games as $game)
 			{
 				if(in_array($game["ID"],$userPrefs))
 				{
-					if(!isset($output))
-					{
-						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
-					} else {
-						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$checked_part);
-					}
+					$checkbox_checked = new template("part/checkbox_checked.html");
+					$checkbox_checked->assign("game_id",$game["ID"]);
+					$checkbox_checked->assign("name",$game["name"]);
+					$is_userpref = array("game_id" => $game["ID"],"name" => $game["name"],"icon" => $game["icon"],"checkbox" => $checkbox_checked->r_display());
+					array_push($options,$is_userpref);
 				} else {
-					if(!isset($output))
-					{
-						$output = str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
-					} else {
-						$output .= str_replace(array("--GAME_ID--","--NAME--","--ICON--"),array($game["ID"],$game["name"],$game["icon"]),$part);
-					}
-				}
-				
+					$checkbox_unchecked = new template("part/checkbox_unchecked.html");
+					$checkbox_unchecked->assign("game_id",$game["ID"]);
+					$checkbox_unchecked->assign("name",$game["name"]);
+					$no_userpref = array("game_id" => $game["ID"],"name" => $game["name"],"icon" => $game["icon"],"checkbox" => $checkbox_unchecked->r_display());
+					array_push($options,$no_userpref);
+				}	
 			}
+			return $checkbox->assign_array($options);
 		}
-
-		return $output;
 	}
 
 /******************************* WOW-Server ************************************/
@@ -345,27 +311,31 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 		{
 			$tpl = new template();
 			$tpl->load("wow_server/character_table_empty.html");
+			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
 			$template = $tpl->r_display();
 			return $template;
 		} else {
 			$tpl = new template();
 			$tpl->load("wow_server/characters_table.html");
-			$output = "";
+			$character_list = array();
 
-			foreach($wow_account_chars as $chars)
-			{
-				$race = defineRace($chars["race"]);
-				$class = defineClass($chars["class"]);
-				$loc = defineLocation($chars["map"]);
-				$part = file_get_contents("template/part/characters_row.html");
-				if (!isset($output))
+			### This Sub-Template defines each row for a character and moves it to an array
+				$output = new template();
+				$output->load("part/characters_row.html");
+
+				foreach($wow_account_chars as $chars)
 				{
-					$output = str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
-				} else {
-					$output .= str_replace(array("--NAME--","--RACE--","--CLASS--","--LEVEL--","--LOCATION--"),array($chars["name"],$race,$class,$chars["level"],$loc),$part);
+					$race = defineRace($chars["race"]);
+					$class = defineClass($chars["class"]);
+					$loc = defineLocation($chars["map"]);
+
+					$character = array("name" => $chars["name"], "race" => $race, "class" => $class, "level" => $chars["level"], "location" => $loc);
+					array_push($character_list,$character);
 				}
-			}
-			$tpl->assign("characters",$output);
+				$output->assign_array($character_list);
+			
+			$tpl->assign_subtemplate("characters",$output);
+			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
 			$template = $tpl->r_display();
 			return $template;
 		}
@@ -540,113 +510,70 @@ function displayAvailableAchievements($con, $player_id)
 
 function generateVoteOption($con)
 {
-	$games = getFullGameData($con);
-	$selected = array();
+	$games = getMainGameData($con);
+	
+	$tpl = new template("part/option.html");
+	$tpl->assign_array($games);
 
-	$part = file_get_contents("template/part/option.html");
-
-	foreach ($games as $game)
-	{
-		if(!isset($output))
-		{
-			$output = str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
-		} else {
-			$output .= str_replace(array("--VALUE--","--NAME--"),array($game["ID"],$game["name"]),$part);
-		}
-	}
-
-	return $output;
+	return $tpl->r_display();
 
 }
 
 function displayRunningVotes($con)
 {
-	$votes = getVotedTournaments($con);
-	$part = file_get_contents("template/part/running_vote.html");
+	$tpl = new template("part/running_vote.html");
 
-	foreach ($votes as $vote)
-	{
-		$game_info = getGameInfoById($con,$vote["game_id"]);
-		$banner_url = $game_info["banner"];
-		if($vote["vote_closed"] !== "1")
-		{
-			if(!isset($output))
-			{
-				$output = str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
-			} else {
-				$output .= str_replace(array("--BANNER--","--PLAYER_COUNT--","--TIME_REMAINING--","--VOTE-ID--"),array($banner_url,$vote["vote_count"],$vote["endtime"],$vote["ID"]),$part);
-			}
-		}
-	}
+	$votes = getVotedTournamentsUser($con);
 
-	if(empty($output))
+	if(empty($votes))
 	{
-		$output = "Es gibt gegenwärtig keine Abstimmungen.";
+		return "Es gibt gegenwärtig keine Abstimmungen.";
+	} else {
+		$tpl->assign_array($votes);
+		return $tpl->r_display();
 	}
-	return $output;
 }
 
 function displayTournaments($con)
 {
-	$tournaments = getTournaments($con);
-	$part = file_get_contents("template/part/overview_tournament.html");
+	$tpl = new template("part/overview_tournament.html");
 
-	foreach ($tournaments as $tournament)
-	{
-		$game_info = getGameInfoById($con,$tournament["game_id"]);
-		$banner = $game_info["banner"];
-		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
+	$tournaments = getTournamentsOverview($con);
 
-		if(empty($tournament["player_count"]))
-		{
-			$player_count = "0";
-		} else {
-			$player_count = $tournament["player_count"];
-		}
+	$tpl->assign_array($tournaments);
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
-		} else {
-			$output .= str_replace(array("--TM_ID--","--BANNER--","--TIME_FROM--","--PLAYER_COUNT--"),array($tournament["ID"],$banner,$tm_period["time_from"],$player_count),$part);
-		}
-	}
+	return $tpl->r_display();
 
-	if(empty($output))
-	{
-		$output = "Es gibt gegenwärtig keine Turniere.";
-	}
-
-	return $output;
 }
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tm_player = getPlayerFromGamerslist($con,$tm_id);
-	$banner = getTmBanner($con,$tm_id);
-
-	$list = implode(", ",$tm_player);
+	$tpl = new template("part/unlocked_tm.html");
 	
-	$part = file_get_contents("template/part/unlocked_tm.html");
+	$tm_player = getPlayerFromGamerslist($con,$tm_id);
+	$tm_banner = getTournamentBanner($con,$tm_id);
 
-	$output = str_replace(array("--BANNER--","--PLAYER_LIST--","--TM_ID--"),array($banner,$list,$tm_id),$part);
+	$player_list = implode(", ",$tm_player);
 
-	return $output;
+	$tpl->assign("player_list",$player_list);
+	$tpl->assign("tm_banner",$tm_banner);
+	
+	return $tpl->r_display();
 }
 
 function displayTournamentLocked($con,$tm_id)
 {
+	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
-	
-	$part = file_get_contents("template/part/locked_tm.html");
-	$part_stages = file_get_contents("template/part/tm_section.html");
+	$part = new template("part/locked_tm.html");
+	$part_stages = new template("part/tm_section.html");
 
 	foreach ($stages as $stage)
 	{
-		$part_pair = file_get_contents("template/part/player_pair.html");
+		$stage_array = array();
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
+		$part_pair = new template("part/player_pair.html");
 
-		$pair_output ="";
 		foreach ($pairs_by_stages as $pair)
 		{
 			$pair_id = $pair["ID"];
@@ -663,43 +590,29 @@ function displayTournamentLocked($con,$tm_id)
 				$player_2 = getUsernameFromGamerslist($con,$player_2);
 			}
 
-			$matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
-			$match_id = getMatchIdFromMatches($con,$matches_id);
-			$result_p1 = getResultP1FromMatch($con,$match_id);
-			$result_p2 = getResultP2FromMatch($con,$match_id);
-
-			if($result_p1 == "")
+			$match_id = getMatchId($con,$pair_id);
+			if(!empty($match_id))
 			{
-				$result_p1 = "";
+				$match_result = getResultFromMatch($con,$match_id);
 			}
 
-			if($result_p2 == "")
-			{
-				$result_p2 = "";
-			}
-
-			if(!isset($pair_output))
-			{
-				$pair_output = str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
-			} else {
-				$pair_output .= str_replace(array("--TM_ID--","--PAIR_ID--","--PLAYER_1--","--PLAYER_2--","--RESULT_P1--","--RESULT_P2--"),array($tm_id,$pair_id,$player_1,$player_2,$result_p1,$result_p2),$part_pair);
-			}
+			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $match_result["result_team1"], "result_p2" => $match_result["result_team2"]);
+			array_push($stage_array,$pair_array);
 		}
+		
+		$part_pair->assign_array($stage_array);
+		$step = array("player_pair" => $part_pair->r_display());
+		array_push($tournament_array,$step);
 
-		if(!isset($output_stage))
-		{
-			$output_stage = str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
-		} else {
-			$output_stage .= str_replace("--PLAYER_PAIR--",$pair_output,$part_stages);
-		}
 	}
+	
+	$tm_banner = getTournamentBanner($con,$tm_id);
 
-	$tm_game = getSingleTournamentGame($con,$tm_id);
-	$tm_banner = getGameBanner($con,$tm_game);
+	$part_stages->assign_array($tournament_array);
+	$part->assign("banner",$tm_banner);
+	$part->assign("section",$part_stages->r_display());
 
-	$output = str_replace(array("--SECTION--","--BANNER--"),array($output_stage,$tm_banner),$part);
-
-	return $output;
+	return $part->r_display();
 }
 
 function displayTournamentTree($con):string
@@ -727,19 +640,18 @@ function displayTournamentTree($con):string
 
 function displayResultPopup()
 {
-	$part = file_get_contents(TMP . "part/popup/result_popup.html");
+	$tpl = new template("part/popup/result_popup.html");
 
-	return $part;
+	return $tpl->r_display();;
 }
 
-function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2)
+function matchResultHandling($con,$pair_id,$match_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
-	$successor_matches = getSingleMatchesIdFromPaarung($con,$successor_id);
-	$successor_match = getMatchIdFromMatches($con,$successor_matches);
-	$successor_result = getResultP1FromMatch($con,$successor_match);
+	$successor_match = getMatchId($con,$successor_id);
+	$successor_result = getResultFromMatch($con,$successor_match);
 
-	if(!empty($successor_result) || ($successor_result >= "0"))
+	if(!empty($successor_result["result_team1"]) || ($successor_result["result_team1"] >= "0"))
 	{
 		return "ERR_MATCH_LOCKED";
 	} else {
@@ -764,141 +676,9 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 						$second_pair = getSecondPairId($con,$pair_id,$successor_id);
 						if($result_1 > $result_2)
 						{
-							if($pair_id < $second_pair)
-							{
-								$sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							} else {
-								$sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									} 
-								}
-							}       	                    
+							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
 						} else {
-							if($pair_id < $second_pair)
-							{
-								$sql = "UPDATE tm_paarung SET team_1 = '$team_2' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							} else {
-								$sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchIdFromMatches($con,$matches_id);
-											$sql = "DELETE FROM tm_matches WHERE ID = '$matches_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							}
+							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
 						} 
 					} else {
 						return "ERR_DB";
@@ -908,6 +688,58 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 				}
 			}
 		}
+	}
+}
+
+function buildNexMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
+{
+	if($pair_id < $second_pair)
+	{
+		$sql = "UPDATE tm_paarung SET team_1 = '$team' WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			return checkForLastMatchUp($con,$successor_id);
+		} else {
+			return "ERR_DB";
+		}
+	} else {
+		$sql = "UPDATE tm_paarung SET team_2 = '$team' WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			return checkForLastMatchUp($con,$successor_id);
+		} else {
+			return "ERR_DB";
+		}
+	}
+}
+
+function checkForLastMatchUp($con,$successor_id)
+{
+	if(getSuccessorCount($con,$successor_id) == 1)
+	{
+		$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+		$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			$match_id = getMatchId($con,$successor_id);
+			$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
+			if(mysqli_query($con,$sql))
+			{
+				$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+				if(mysqli_query($con,$sql))
+				{
+					return "SUC_ENTER_RESULT";
+				} else {
+					return "ERR_DB";
+				}
+			} else {
+				return "ERR_DB";
+			}
+		} else {
+			return "ERR_DB";
+		}
+	} else {
+		return "SUC_ENTER_RESULT";
 	}
 }
 

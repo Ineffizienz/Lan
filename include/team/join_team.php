@@ -31,7 +31,7 @@
 		if (!($my_team == NULL))
 		{
 			$message->getMessageCode("ERR_STILL_MEMBER");
-			$achievement->-getTrigger($con,$player_id,"Sir Brummel");
+			$achievement->getTrigger($con,$player_id,"Sir Brummel");
 			echo json_encode(array("message" => $message->displayMessage(), "achievement" => $achievement->showAchievement()));
 
 		} else {

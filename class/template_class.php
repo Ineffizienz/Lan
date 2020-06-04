@@ -23,7 +23,7 @@ class template {
 	 */
 	public function __construct(string $path = "") {
 		if(endsWith($path, '.html'))
-			$this->load ($path);
+			$this->load($path);
 		elseif(!empty($path))
 			$this->templateDir = $path;
 	}
