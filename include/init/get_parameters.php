@@ -1215,6 +1215,13 @@ function getTournaments($con)
 
 function getTournamentEndRegister($con,$tm_id)
 {
+	/* Used in:
+		:User
+		- function.php/displayTournamentParticipants
+
+		:Admin
+		- join_tm.php
+	*/
 	$result = mysqli_query($con,"SELECT DATE_FORMAT(`tm_end_register`, '%d.%m.%Y %H:%i') AS tm_end_register FROM tm WHERE ID = '$tm_id'");
 	while($row=mysqli_fetch_array($result))
 	{

@@ -17,22 +17,30 @@ if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
 
     $player_count = getPlayerCountTm($con,$tm_id);
 
-    $sql = "INSERT INTO tm_gamerslist (tm_id,player_id) VALUES ('$tm_id','$player_id')";
-    if(mysqli_query($con,$sql))
+    $end_register = strtotime(getTournamentEndRegister($con,$tm_id));
+
+    if(time() <= $end_register)
     {
-        $player_count++;
-        $sql = "UPDATE tm SET player_count = '$player_count' WHERE ID = '$tm_id'";
+        $sql = "INSERT INTO tm_gamerslist (tm_id,player_id) VALUES ('$tm_id','$player_id')";
         if(mysqli_query($con,$sql))
         {
-            $message->getMessageCode("SUC_JOIN_TM");
-            echo json_encode(array("message"=>$message->displayMessage()));
+            $player_count++;
+            $sql = "UPDATE tm SET player_count = '$player_count' WHERE ID = '$tm_id'";
+            if(mysqli_query($con,$sql))
+            {
+                $message->getMessageCode("SUC_JOIN_TM");
+                echo json_encode(array("message"=>$message->displayMessage()));
+            } else {
+                $message->getMessageCode("ERR_DB");
+                echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
+            }
         } else {
             $message->getMessageCode("ERR_DB");
             echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
         }
     } else {
-        $message->getMessageCode("ERR_DB");
-        echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));
+        $message->getMessageCode("ERR_TM_TIME_UP");
+        echo json_encode(array("message"=>$message->displayMessage()));
     }
 }
 
