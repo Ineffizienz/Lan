@@ -1213,6 +1213,17 @@ function getTournaments($con)
 	return $tms;
 }
 
+function getTournamentEndRegister($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT DATE_FORMAT(`tm_end_register`, '%d.%m.%Y %H:%i') AS tm_end_register FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$end_register = $row["tm_end_register"];
+	}
+
+	return $end_register;
+}
+
 function getTournamentBanner($con,$tm_id)
 {
 	/* Used in:

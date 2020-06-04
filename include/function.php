@@ -552,11 +552,13 @@ function displayTournamentParticipants($con,$tm_id)
 	
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
 	$tm_banner = getTournamentBanner($con,$tm_id);
+	$tm_register = getTournamentEndRegister($con,$tm_id);
 
 	$player_list = implode(", ",$tm_player);
 
 	$tpl->assign("player_list",$player_list);
 	$tpl->assign("tm_banner",$tm_banner);
+	$tpl->assign("end_register",$tm_register);
 	
 	return $tpl->r_display();
 }
