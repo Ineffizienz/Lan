@@ -521,19 +521,17 @@ function generateVoteOption($con)
 
 function displayRunningVotes($con)
 {
+	$tpl = new template("part/running_vote.html");
+
 	$votes = getVotedTournamentsUser($con);
 
-	$tpl = new template("part/running_vote.html");
-	$tpl->assign_array($votes);
-
-	return $tpl->r_display();
-
-	// Rework required
-	/*if(empty($votes))
+	if(empty($votes))
 	{
-		$output = "Es gibt gegenwärtig keine Abstimmungen.";
+		return "Es gibt gegenwärtig keine Abstimmungen.";
+	} else {
+		$tpl->assign_array($votes);
+		return $tpl->r_display();
 	}
-	return $output;*/
 }
 
 function displayTournaments($con)
@@ -647,10 +645,10 @@ function displayResultPopup()
 	return $tpl->r_display();;
 }
 
-function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2)
+function matchResultHandling($con,$pair_id,$match_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
-	$successor_match = getMatchId($con,$successor_matches);
+	$successor_match = getMatchId($con,$successor_id);
 	$successor_result = getResultFromMatch($con,$successor_match);
 
 	if(!empty($successor_result["result_team1"]) || ($successor_result["result_team1"] >= "0"))
@@ -678,141 +676,9 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 						$second_pair = getSecondPairId($con,$pair_id,$successor_id);
 						if($result_1 > $result_2)
 						{
-							if($pair_id < $second_pair)
-							{
-								$sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchId($con,$successor_id);
-											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							} else {
-								$sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchId($con,$successor_id);
-											$sql = "DELETE FROM tm_match WHERE match_id = '$match_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									} 
-								}
-							}       	                    
+							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
 						} else {
-							if($pair_id < $second_pair)
-							{
-								$sql = "UPDATE tm_paarung SET team_1 = '$team_2' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchId($con,$successor_id);
-											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							} else {
-								$sql = "UPDATE tm_paarung SET team_2 = '$team_2' WHERE ID = '$successor_id'";
-								if(mysqli_query($con,$sql))
-								{
-									if(getSuccessorCount($con,$successor_id) == 1)
-									{
-										$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-										$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-										if(mysqli_query($con,$sql))
-										{
-											$match_id = getMatchId($con,$successor_id);
-											$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
-											if(mysqli_query($con,$sql))
-											{
-												$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-												if(mysqli_query($con,$sql))
-												{
-													return "SUC_ENTER_RESULT";
-												} else {
-													return "ERR_DB";
-												}
-											} else {
-												return "ERR_DB";
-											}
-										} else {
-											return "ERR_DB";
-										}
-									} else {
-										return "SUC_ENTER_RESULT";
-									}
-								} else {
-									return "ERR_DB";
-								}
-							}
+							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
 						} 
 					} else {
 						return "ERR_DB";
@@ -822,6 +688,58 @@ function matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$resu
 				}
 			}
 		}
+	}
+}
+
+function buildNexMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
+{
+	if($pair_id < $second_pair)
+	{
+		$sql = "UPDATE tm_paarung SET team_1 = '$team' WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			return checkForLastMatchUp($con,$successor_id);
+		} else {
+			return "ERR_DB";
+		}
+	} else {
+		$sql = "UPDATE tm_paarung SET team_2 = '$team' WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			return checkForLastMatchUp($con,$successor_id);
+		} else {
+			return "ERR_DB";
+		}
+	}
+}
+
+function checkForLastMatchUp($con,$successor_id)
+{
+	if(getSuccessorCount($con,$successor_id) == 1)
+	{
+		$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
+		$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
+		if(mysqli_query($con,$sql))
+		{
+			$match_id = getMatchId($con,$successor_id);
+			$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
+			if(mysqli_query($con,$sql))
+			{
+				$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
+				if(mysqli_query($con,$sql))
+				{
+					return "SUC_ENTER_RESULT";
+				} else {
+					return "ERR_DB";
+				}
+			} else {
+				return "ERR_DB";
+			}
+		} else {
+			return "ERR_DB";
+		}
+	} else {
+		return "SUC_ENTER_RESULT";
 	}
 }
 

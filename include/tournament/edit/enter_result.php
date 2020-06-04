@@ -31,7 +31,7 @@
                 echo json_encode(array("message"=>$message->displayMessage()));
             } elseif (empty($lock_time) || ($lock_time > $current_time)) {
 
-                $message_code = matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2);
+                $message_code = matchResultHandling($con,$pair_id,$match_id,$result_1,$result_2);
                 $message->getMessageCode($message_code);
                 echo json_encode(array("message"=>$message->displayMessage()));
             }
