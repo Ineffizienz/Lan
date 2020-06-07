@@ -34,7 +34,7 @@
                     $stage_count = 1;
                     while(($pair_count/2) > 1)
                     {
-                        if(($pair_count % 2) == 1) // Wenn die es mehr weniger Spieler als Paarungen gibt, dann wird trotzdem eine Paarung für einen Wildcard-Spieler erstellt.
+                        if(($pair_count % 2) == 1) // Wenn es weniger Spieler als Paarungen gibt, dann wird trotzdem eine Paarung für einen Wildcard-Spieler erstellt.
                         {
                             $rounded_count = round(($pair_count/2), 0, PHP_ROUND_HALF_UP);
                         } else {
@@ -44,7 +44,7 @@
                         for ($i=1;$i<=$rounded_count;$i++)
                         {
                             $next_stage = $stage_count + 1;
-                            $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES (NULL, NULL, '$tm_id', '$next_stage')";
+                            $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES ('0', '0', '$tm_id', '$next_stage')";
                             if(mysqli_query($con,$sql))
                             {
                                 $last_pair_id = getLastPairId($con,$tm_id);
@@ -91,6 +91,7 @@
                                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                             }
                         }
+                        handlingWildcard($con,$tm_id,$pair_count,$next_stage);
                         $stage_count++;
                         $pair_count = getPairCount($con,$tm_id); // setzt den neuen Wert für die Anzahl der Paarungen
                     }
@@ -98,7 +99,7 @@
                     if(getPairCount($con,$tm_id) == 2) // Sollten nach dem letzten Schleifendurchlauf zwei Paarungen ohne Nachfolger sein, wird eine weitere Paarung hinzugefügt. Hierbei handelt es sich dann um das Finale.
                     {
                         $stage_count++;
-                        $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES (NULL, NULL, '$tm_id', '$stage_count')";
+                        $sql = "INSERT INTO tm_paarung (team_1, team_2, tournament, stage) VALUES ('0', '0', '$tm_id', '$stage_count')";
                         if(mysqli_query($con,$sql))
                         {
                             $last_pair_id = getLastPairId($con,$tm_id);
@@ -114,46 +115,8 @@
                                     if(mysqli_query($con,$sql))
                                     {
                                         $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (ID != '$last_pair_id')";
-                                        if(mysqli_query($con,$sql))
+                                        if(!(mysqli_query($con,$sql)))
                                         {
-                                            $first_level_wildcard = getFirstLevelWildcard($con,$tm_id);
-                                            if(isset($first_level_wildcard))
-                                            {
-                                                $pair_data = getGamerslistIdAndSuccessor($con,$first_level_wildcard);
-                                                $successor = $pair_data["successor"];
-                                                $team_1 = $pair_data["team_1"];
-                                                $sql = "UPDATE tm_paarung SET team_1 = '$team_1' WHERE ID = '$successor'";
-                                                if(mysqli_query($con,$sql))
-                                                {
-                                                    $first_level_wildcard = getFirstLevelWildcard($con,$tm_id);
-                                                    if(isset($first_level_wildcard))
-                                                    {
-                                                        $pair_data = getGamerslistIdAndSuccessor($con,$first_level_wildcard);
-                                                        $pair_data = array_shift($pair_data);
-                                                        $successor = $pair_data["successor"];
-                                                        $team_1 = $pair_data["team_1"];
-                                                        $sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor'";
-                                                        if(mysqli_query($con,$sql))
-                                                        {
-                                                            $message->getMessageCode("SUC_ADMIN_START_TM");
-                                                            echo buildJSONOutput($message->displayMessage());
-                                                        } else {
-                                                            $message->getMessageCode("ERR_ADMIN_DB");
-                                                            echo buildJSONOutput($message->displayMessage());
-                                                        }
-                                                    } else {
-                                                        $message->getMessageCode("SUC_ADMIN_START_TM");
-                                                        echo buildJSONOutput($message->displayMessage());
-                                                    }
-                                                } else {
-                                                    $message->getMessageCode("ERR_ADMIN_DB");
-                                                    echo buildJSONOutput($message->displayMessage());
-                                                }
-                                            } else {
-                                                $message->getMessageCode("SUC_ADMIN_START_TM");
-                                                echo buildJSONOutput($message->displayMessage());
-                                            }
-                                        } else {
                                             $message->getMessageCode("ERR_ADMIN_DB");
                                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                                         }
@@ -173,27 +136,6 @@
                         } else {
                             $message->getMessageCode("ERR_ADMIN_DB");
                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                        }
-                    } else {
-                        $first_level_wildcard = getFirstLevelWildcard($con,$tm_id);
-                        if(isset($first_level_wildcard))
-                        {
-                            $pair_data = getGamerslistIdAndSuccessor($con,$first_level_wildcard);
-                            $pair_data = array_shift($pair_data);
-                            $successor = $pair_data["successor"];
-                            $team_1 = $pair_data["team_1"];
-                            $sql = "UPDATE tm_paarung SET team_2 = '$team_1' WHERE ID = '$successor'";
-                            if(mysqli_query($con,$sql))
-                            {
-                                $message->getMessageCode("SUC_ADMIN_START_TM");
-                                echo buildJSONOutput($message->displayMessage());
-                            } else {
-                                $message->getMessageCode("ERR_ADMIN_DB");
-                                echo buildJSONOutput($message->displayMessage());
-                            }
-                        } else {
-                            $message->getMessageCode("SUC_ADMIN_START_TM");
-                            echo buildJSONOutput($message->displayMessage());
                         }
                     }
                 }

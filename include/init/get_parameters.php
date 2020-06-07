@@ -1797,4 +1797,15 @@ function getMatchLockTime($con,$match_id)
 
 	return $lock_time;
 }
+
+function getTournamentLastPairFromStage($con,$tm_id,$stage)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_stage_pair = $row["ID"];
+	}
+
+	return $last_stage_pair;
+}
 ?>

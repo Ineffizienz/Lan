@@ -408,4 +408,18 @@ function displayDefineTmPopup($con)
 	return $part;
 }
 
+function handlingWildcard($con,$tm_id,$pair_count,$next_stage)
+{
+    if(!($pair_count <= 2))
+    {
+        if(!(($pair_count % 2) == 0))
+        {
+            $last_stage_pair = getTournamentLastPairFromStage($con,$tm_id,$next_stage);
+
+            $sql = "UPDATE tm_paarung SET team_2 = '-1' WHERE ID = '$last_stage_pair'";
+            mysqli_query($con,$sql);
+        }
+    }
+}
+
 ?>
