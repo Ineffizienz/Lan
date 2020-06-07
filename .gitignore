@@ -1,4 +1,3 @@
-admin\test\testfile.php
 include\connect.php
 bugs
 connect.php
@@ -20,3 +19,4 @@ banner
 download
 .vscode
 /nbproject/private/
+admin/test/testfile.php
