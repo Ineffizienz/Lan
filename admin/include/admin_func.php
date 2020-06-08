@@ -425,12 +425,18 @@ function handlingWildcard($con,$tm_id,$pair_count,$stage,$next_stage)
 				{
 					$sql = "UPDATE tm_paarung SET team_1 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
 					mysqli_query($con,$sql);
+					return true;
 				}
 			} else {
 				$sql = "UPDATE tm_paarung SET team_2 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
 				mysqli_query($con,$sql);
+				return false;
 			}
+		} else {
+			return false;
 		}
+	} else {
+		return false;
 	}
 }
 
