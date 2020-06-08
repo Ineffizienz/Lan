@@ -1800,12 +1800,23 @@ function getMatchLockTime($con,$match_id)
 
 function getTournamentLastPairFromStage($con,$tm_id,$stage)
 {
-	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage'");
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage' ORDER BY ID DESC LIMIT 1");
 	while($row=mysqli_fetch_array($result))
 	{
 		$last_stage_pair = $row["ID"];
 	}
 
 	return $last_stage_pair;
+}
+
+function getTournamentWildcardPlayer($con,$tm_id,$stage)
+{
+	$result = mysqli_query($con,"SELECT team_1 FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage' AND team_2 = '-1' ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$wildcard_player = $row["team_1"];
+	}
+
+	return $wildcard_player;
 }
 ?>

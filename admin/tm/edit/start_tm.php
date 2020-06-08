@@ -91,7 +91,7 @@
                                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
                             }
                         }
-                        handlingWildcard($con,$tm_id,$pair_count,$next_stage);
+                        handlingWildcard($con,$tm_id,$pair_count,$stage_count,$next_stage);
                         $stage_count++;
                         $pair_count = getPairCount($con,$tm_id); // setzt den neuen Wert für die Anzahl der Paarungen
                     }
