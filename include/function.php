@@ -648,7 +648,7 @@ function displayResultPopup()
 {
 	$tpl = new template("part/popup/result_popup.html");
 
-	return $tpl->r_display();;
+	return $tpl->r_display();
 }
 
 function matchResultHandling($con,$pair_id,$result_1,$result_2)
@@ -696,7 +696,7 @@ function matchResultHandling($con,$pair_id,$result_1,$result_2)
 	}
 }
 
-function buildNexMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
+function buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
 {
 	if($pair_id < $second_pair)
 	{
