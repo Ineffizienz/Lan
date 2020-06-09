@@ -593,18 +593,14 @@ function displayTournamentLocked($con,$tm_id)
 				$player_2 = getUsernameFromGamerslist($con,$player_2);
 			}
 
-			$match_id = getMatchId($con,$pair_id);
-			if(!empty($match_id))
+			$match_result = getResultFromMatch($con,$pair_id);
+			if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
 			{
-				$match_result = getResultFromMatch($con,$match_id);
-				if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
-				{
-					$result_team1 = "0";
-					$result_team2 = "0";
-				} else {
-					$result_team1 = $match_result["result_team1"];
-					$result_team2 = $match_result["result_team2"];
-				}
+				$result_team1 = "0";
+				$result_team2 = "0";
+			} else {
+				$result_team1 = $match_result["result_team1"];
+				$result_team2 = $match_result["result_team2"];
 			}
 
 			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
