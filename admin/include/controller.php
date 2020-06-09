@@ -1,47 +1,71 @@
 <?php
-	if (isset($_REQUEST["aa"]))
+	function run_admin_controller(template $tpl)
 	{
-		switch($_REQUEST["aa"]) {
-			case "home":
-				$content = buildContent("../template/admin/overview.html");
-			break;
-			case "player":
-				$content = buildContent("../template/admin/settings_player.html");
-			break;
-			case "games":
-				$content = buildContent("../template/admin/game_settings.html");
-			break;
-			case "keys":
-				$content = buildContent("../template/admin/keys.html");
-			break;
-			case "team":
-				$content = buildContent("../template/admin/team.html");
-			break;
-			case "turnier":
-				$content = buildContent("../template/admin/tm.html");
-			break;
-			case "achieve":
-				$content = buildContent("../template/admin/achievement_settings.html");
-			break;
-			case "ticket":
-				$content = buildContent("../template/admin/ticket_status.html");
-			break;
-			default:
-				$content = buildContent("../template/admin/overview.html");
-		}
-	} else {
-		$content = buildContent("../template/admin/overview.html");
-	}
-	
-
-	if(isset($_REQUEST["subaa"])) {
-		switch($_REQUEST["subaa"]) {
-			case "action":
-				$content = buildContent("../template/admin/ac_action.html");
-			break;
-			case "vote_tm":
-				$content = buildContent("../template/admin/vote_tm.html");
-			break;
+		global $con;
+		if (isset($_REQUEST["aa"]))
+		{
+			switch($_REQUEST["aa"]) {
+				case "home":
+					include("admin/overview/key_status.php");
+					include("admin/overview/team_status.php");
+					$tpl->assign_subtemplate("content","admin/overview.html");
+					$tpl->assign("key_status",$key_status);
+					$tpl->assign("team_status",$team_status);
+				break;
+				case "player":
+					include("admin/player/view/player_settings_view.php");
+					$tpl->assign_subtemplate("content","admin/settings_player.html");
+					$tpl->assign("player",$player);
+					$tpl->assign("username",addUsername($con));
+				break;
+				case "games":
+					$tpl->assign_subtemplate("content","admin/game_settings.html");
+					$tpl->assign("admin_games",displaySingleGame($con));
+				break;
+				case "keys":
+					include("admin/overview/key_status.php");
+					$tpl->assign_subtemplate("content","admin/keys.html");
+					$tpl->assign("keys",$key_status);
+				break;
+				case "team":
+					$tpl->assign_subtemplate("content","admin/team.html");
+					$tpl->assign("exist_teams",displayTeams($con));
+				break;
+				case "turnier":
+					$tpl->assign_subtemplate("content","admin/tm.html");
+					$tpl->assign("games",displayTmGames($con));
+					$tpl->assign("tournaments",displayTournaments($con));
+					$tpl->assign("votes",displayVotedTournaments($con));
+					$tpl->assign("define_tm_popup",displayDefineTmPopup($con));
+				break;
+				case "vote_tm":
+					$tpl->assign_subtemplate("content","admin/vote_tm.html");
+				case "achieve":
+					$tpl->assign_subtemplate("content","admin/achievement_settings.html");
+					$tpl->assign("achievements",displayAchievements($con));
+					$tpl->assign("ac_cat",displayAcCategories($con));
+					$tpl->assign("ac_trigger",displayAcTrigger($con));
+				break;
+				case "ac_action":
+					$tpl->assign_subtemplate("content","admin/ac_action.html");
+				break;
+				case "ticket":
+					$tpl->assign_subtemplate("content","admin/ticket_status.html");
+					$tpl->assign("ticket_status",displayTicketStatus($con));
+				break;
+				default:
+					include("admin/overview/key_status.php");
+					include("admin/overview/team_status.php");
+					$tpl->assign_subtemplate("content","admin/overview.html");
+					$tpl->assign("key_status",$key_status);
+					$tpl->assign("team_status",$team_status);
+			}
+		} else {
+			include("admin/overview/key_status.php");
+			include("admin/overview/team_status.php");
+			$tpl->assign_subtemplate("content","admin/overview.html");
+			$tpl->assign("key_status",$key_status);
+			$tpl->assign("team_status",$team_status);
 		}
 	}
 ?>
