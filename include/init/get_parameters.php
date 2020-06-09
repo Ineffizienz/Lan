@@ -1729,7 +1729,7 @@ function getSuccessorCount($con,$successor_id)
 	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
 }
 
-function getResultFromMatch($con,$match_id)
+function getResultFromMatch($con,$pair_id)
 {
 	/* Used in:
 		:User
@@ -1737,7 +1737,7 @@ function getResultFromMatch($con,$match_id)
 		- function.php/matchResultHandling
 	*/
 
-	$result = mysqli_query($con,"SELECT result_team1, result_team2 FROM tm_match WHERE ID = '$match_id'");
+	$result = mysqli_query($con,"SELECT result_team1, result_team2 FROM tm_paarung WHERE ID = '$pair_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$result_match = $row;

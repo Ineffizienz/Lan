@@ -655,11 +655,10 @@ function displayResultPopup()
 	return $tpl->r_display();;
 }
 
-function matchResultHandling($con,$pair_id,$match_id,$result_1,$result_2)
+function matchResultHandling($con,$pair_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
-	$successor_match = getMatchId($con,$successor_id);
-	$successor_result = getResultFromMatch($con,$successor_match);
+	$successor_result = getResultFromMatch($con,$pair_id);
 
 	if(!empty($successor_result["result_team1"]) || ($successor_result["result_team1"] >= "0"))
 	{
