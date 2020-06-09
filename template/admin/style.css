@@ -15,17 +15,15 @@ BODY
 {
 	width: 100%;
 }
-#menu
+#admin_main_window
 {
-	float:left;
-	width:20%;
+	display:grid;
+	grid-template-columns: 20% 80%;
 }
 #content
 {
-	float:left;
 	margin: 0;
 	padding: 0;
-	width: 80%;
 }
 
 /* ---------------------- MENÜ --------------------------- 
