@@ -53,38 +53,8 @@
                                 $match_count = 1;
                                 foreach ($first_pair_id as $pair_id)
                                 {
-                                    if($match_count > 1)
-                                    {
-                                        $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE ID = '$pair_id'";
-                                        mysqli_query($con,$sql);
-                                    } else {
-                                        $sql = "INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL)";
-                                        if (mysqli_query($con,$sql))
-                                        {
-                                            $new_match_id = getNewMatchId($con);
-                                            $sql = "INSERT INTO tm_matches (match_id) VALUES ('$new_match_id')";
-                                            if(mysqli_query($con,$sql))
-                                            {
-                                                $new_matches_id = getNewMatchesId($con);
-                                                $sql = "UPDATE tm_paarung SET matches_id = '$new_matches_id' WHERE (ID = '$last_pair_id') AND (successor IS NULL)";
-                                                if(mysqli_query($con,$sql))
-                                                {
-                                                    $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE ID = '$pair_id'";
-                                                    mysqli_query($con,$sql);
-                                                } else {
-                                                    $message->getMessageCode("ERR_ADMIN_DB");
-                                                    echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                                }
-                                            } else {
-                                                $message->getMessageCode("ERR_ADMIN_DB");
-                                                echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                            }
-                                        } else {
-                                            $message->getMessageCode("ERR_ADMIN_DB");
-                                            echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                        }
-                                    }
-                                    $match_count++;
+                                    $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE ID = '$pair_id'";
+                                    mysqli_query($con,$sql);
                                 }
                             } else {
                                 $message->getMessageCode("ERR_ADMIN_DB");
@@ -103,36 +73,12 @@
                         if(mysqli_query($con,$sql))
                         {
                             $last_pair_id = getLastPairId($con,$tm_id);
-                            $sql = "INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL)";
-                            if(mysqli_query($con,$sql))
+                            $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (ID != '$last_pair_id')";
+                            if(!(mysqli_query($con,$sql)))
                             {
-                                $new_match_id = getNewMatchId($con);
-                                $sql = "INSERT INTO tm_matches (match_id) VALUES ('$new_match_id')";
-                                if(mysqli_query($con,$sql))
-                                {
-                                    $new_matches_id = getNewMatchesId($con);
-                                    $sql = "UPDATE tm_paarung SET matches_id = '$new_matches_id' WHERE ID = '$last_pair_id'";
-                                    if(mysqli_query($con,$sql))
-                                    {
-                                        $sql = "UPDATE tm_paarung SET successor = '$last_pair_id' WHERE (tournament = '$tm_id') AND (successor IS NULL) AND (ID != '$last_pair_id')";
-                                        if(!(mysqli_query($con,$sql)))
-                                        {
-                                            $message->getMessageCode("ERR_ADMIN_DB");
-                                            echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                        }
-                                    } else {
-                                        $message->getMessageCode("ERR_ADMIN_DB");
-                                        echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                    }
-                                } else {
-                                    $message->getMessageCode("ERR_ADMIN_DB");
-                                    echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                                }
-                            } else {
                                 $message->getMessageCode("ERR_ADMIN_DB");
                                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                            }
-                            
+                            }                     
                         } else {
                             $message->getMessageCode("ERR_ADMIN_DB");
                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
