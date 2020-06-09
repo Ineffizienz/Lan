@@ -673,11 +673,11 @@ function matchResultHandling($con,$pair_id,$match_id,$result_1,$result_2)
 			{
 				return "ERR_NO_DRAW";
 			} else {
-				$sql = "UPDATE tm_match SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$match_id'";
+				$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$pair_id'";
 				if(mysqli_query($con,$sql))
 				{
 					$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
-					$sql = "UPDATE tm_matches SET match_locked = '$match_lock' WHERE match_id = '$match_id'";
+					$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
 					if(mysqli_query($con,$sql))
 					{
 						$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
@@ -708,7 +708,7 @@ function buildNexMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
 		$sql = "UPDATE tm_paarung SET team_1 = '$team' WHERE ID = '$successor_id'";
 		if(mysqli_query($con,$sql))
 		{
-			return checkForLastMatchUp($con,$successor_id);
+			return "SUC_ENTER_RESULT";
 		} else {
 			return "ERR_DB";
 		}
@@ -716,40 +716,10 @@ function buildNexMatchUp($con,$pair_id,$second_pair,$successor_id,$team)
 		$sql = "UPDATE tm_paarung SET team_2 = '$team' WHERE ID = '$successor_id'";
 		if(mysqli_query($con,$sql))
 		{
-			return checkForLastMatchUp($con,$successor_id);
+			return "SUC_ENTER_RESULT";
 		} else {
 			return "ERR_DB";
 		}
-	}
-}
-
-function checkForLastMatchUp($con,$successor_id)
-{
-	if(getSuccessorCount($con,$successor_id) == 1)
-	{
-		$matches_id = getSingleMatchesIdFromPaarung($con,$successor_id);
-		$sql = "UPDATE tm_paarung SET matches_id = NULL WHERE ID = '$successor_id'";
-		if(mysqli_query($con,$sql))
-		{
-			$match_id = getMatchId($con,$successor_id);
-			$sql = "DELETE FROM tm_matches WHERE match_id = '$match_id'";
-			if(mysqli_query($con,$sql))
-			{
-				$sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-				if(mysqli_query($con,$sql))
-				{
-					return "SUC_ENTER_RESULT";
-				} else {
-					return "ERR_DB";
-				}
-			} else {
-				return "ERR_DB";
-			}
-		} else {
-			return "ERR_DB";
-		}
-	} else {
-		return "SUC_ENTER_RESULT";
 	}
 }
 
