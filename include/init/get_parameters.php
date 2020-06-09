@@ -1213,6 +1213,24 @@ function getTournaments($con)
 	return $tms;
 }
 
+function getTournamentEndRegister($con,$tm_id)
+{
+	/* Used in:
+		:User
+		- function.php/displayTournamentParticipants
+
+		:Admin
+		- join_tm.php
+	*/
+	$result = mysqli_query($con,"SELECT DATE_FORMAT(`tm_end_register`, '%d.%m.%Y %H:%i') AS tm_end_register FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$end_register = $row["tm_end_register"];
+	}
+
+	return $end_register;
+}
+
 function getTournamentBanner($con,$tm_id)
 {
 	/* Used in:
@@ -1255,65 +1273,6 @@ function getLastTmId($con)
 	}
 
 	return $last_tm_id;
-}
-
-function getMatchesIdFromPaarung($con,$tm_id)
-{
-	/* Used in:
-		:Admin
-		- delete_tm.php
-	*/
-
-	$result = mysqli_query($con,"SELECT matches_id FROM tm_paarung WHERE tournament = '$tm_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$matches_id[] = $row["matches_id"];
-	}
-
-	return $matches_id;
-}
-
-function getMatchId($con,$pair_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayTournamentLocked
-		- function.php/matchResultHandling
-		- enter_result.php
-	*/
-	$result = mysqli_query($con,"SELECT tm_matches.match_id FROM tm_matches INNER JOIN tm_paarung ON tm_paarung.matches_id = tm_matches.ID WHERE tm_paarung.ID = '$pair_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$match_id = $row["match_id"];
-	}
-	
-	if(empty($match_id))
-	{
-		$match_id = "";
-	}
-
-	return $match_id;
-}
-
-function getMatchIdFromMatches($con,$matches_id)
-{
-	/* Used in:
-		:Admin
-		- delete_tm.php
-	*/
-
-	$result = mysqli_query($con,"SELECT match_id FROM tm_matches WHERE ID = '$matches_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$match_id = $row["match_id"];
-	}
-
-	if(empty($match_id))
-	{
-		$match_id = "";
-	}
-
-	return $match_id;
 }
 
 function getPlayerIdFromGamerslist($con,$tm_id)
@@ -1525,38 +1484,6 @@ function getGamerslistIdFromPair($con,$gamerslist_id,$pair_id)
 	return mysqli_num_rows(mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$pair_id' AND ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id'))")) > 0;
 }
 
-function getNewMatchId($con)
-{
-	/* Used in:
-		:Admin
-		- start_tm.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ID FROM tm_match ORDER BY ID DESC LIMIT 1");
-	while($row=mysqli_fetch_array($result))
-	{
-		$new_match_id = $row["ID"];
-	}
-
-	return $new_match_id;
-}
-
-function getNewMatchesId($con)
-{
-	/* Used in:
-		:Admin
-		- start_tm.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ID FROM tm_matches ORDER BY ID DESC LIMIT 1");
-	while($row=mysqli_fetch_array($result))
-	{
-		$new_matches_id = $row["ID"];
-	}
-
-	return $new_matches_id;
-}
-
 function getPairCount($con,$tm_id)
 {
 	/* Used in:
@@ -1711,7 +1638,7 @@ function getSuccessorCount($con,$successor_id)
 	mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE successor = '$successor_id'"));
 }
 
-function getResultFromMatch($con,$match_id)
+function getResultFromMatch($con,$pair_id)
 {
 	/* Used in:
 		:User
@@ -1719,7 +1646,7 @@ function getResultFromMatch($con,$match_id)
 		- function.php/matchResultHandling
 	*/
 
-	$result = mysqli_query($con,"SELECT result_team1, result_team2 FROM tm_match WHERE ID = '$match_id'");
+	$result = mysqli_query($con,"SELECT result_team1, result_team2 FROM tm_paarung WHERE ID = '$pair_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$result_match = $row;
@@ -1759,14 +1686,14 @@ function getSecondPairId($con,$pair_id,$successor_id)
 	return $second_pair;
 }
 
-function getMatchLockTime($con,$match_id)
+function getMatchLockTime($con,$pair_id)
 {
 	/* Used in:
 		:User
 		- enter_result.php
 	*/
 
-	$result = mysqli_query($con,"SELECT match_locked FROM tm_matches WHERE match_id = '$match_id'");
+	$result = mysqli_query($con,"SELECT match_locked FROM tm_paarung WHERE ID = '$pair_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$lock_time = $row["match_locked"];
@@ -1778,5 +1705,37 @@ function getMatchLockTime($con,$match_id)
 	}
 
 	return $lock_time;
+}
+
+function getTournamentLastPairFromStage($con,$tm_id,$stage)
+{
+	/* Used in:
+		:Admin
+		- admin_func.php/handlingWildcard
+	*/
+
+	$result = mysqli_query($con,"SELECT ID FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage' ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_stage_pair = $row["ID"];
+	}
+
+	return $last_stage_pair;
+}
+
+function getTournamentWildcardPlayer($con,$tm_id,$stage)
+{
+	/* Used in:
+		:Admin
+		- admin_func.php/handlingWildcard
+	*/
+	
+	$result = mysqli_query($con,"SELECT team_1 FROM tm_paarung WHERE tournament = '$tm_id' AND stage = '$stage' AND team_2 = '-1' ORDER BY ID DESC LIMIT 1");
+	while($row=mysqli_fetch_array($result))
+	{
+		$wildcard_player = $row["team_1"];
+	}
+
+	return $wildcard_player;
 }
 ?>

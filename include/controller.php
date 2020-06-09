@@ -25,11 +25,11 @@ function run_controller(template $tpl)
 				$tpl->assign("vote_option",generateVoteOption($con));
 				$tpl->assign("running_votes",displayRunningVotes($con));
 				$tpl->assign("tournaments",displayTournaments($con));
-				$tpl->assign("result_popup",displayResultPopup());
 			break;
 			case 'single_tm':
 				$tpl->assign_subtemplate('content', "tournament_view.html");
 				$tpl->assign("tournament_view",displayTournamentTree($con));
+				$tpl->assign_subtemplate("result_popup","part/popup/result_popup.html");
 			break;
 			case 'conf':
 				$tpl->assign_subtemplate('content', "settings.html");
