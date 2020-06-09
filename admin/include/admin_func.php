@@ -408,4 +408,36 @@ function displayDefineTmPopup($con)
 	return $part;
 }
 
+function handlingWildcard($con,$tm_id,$pair_count,$stage,$next_stage)
+{
+	$wildcard_player = getTournamentWildcardPlayer($con,$tm_id,$stage);
+
+	if(!empty($wildcard_player))
+	{
+		if(!($pair_count <= 2))
+		{
+			$last_stage_pair = getTournamentLastPairFromStage($con,$tm_id,$next_stage);
+			
+			if(!(($pair_count % 2) == 0))
+			{
+				$sql = "UPDATE tm_paarung SET team_2 = '-1' WHERE ID = '$last_stage_pair'";
+				if(mysqli_query($con,$sql))
+				{
+					$sql = "UPDATE tm_paarung SET team_1 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
+					mysqli_query($con,$sql);
+					return true;
+				}
+			} else {
+				$sql = "UPDATE tm_paarung SET team_2 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
+				mysqli_query($con,$sql);
+				return false;
+			}
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
 ?>
