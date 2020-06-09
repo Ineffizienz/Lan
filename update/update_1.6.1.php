@@ -8,4 +8,5 @@ addMatchResultToPaarung($con);
 transferMatchData($con);
 deleteTmMatches($con);
 deleteTmMatch($con);
+addMatchLockedToPaarung($con);
 ?>

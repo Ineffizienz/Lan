@@ -132,5 +132,20 @@ function deleteTmMatch($con)
     }
 }
 
+function addMatchLockedToPaarung($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW COLUMNS FROM `tm_paarung` LIKE 'match_locked';")) == 1)
+    {
+        echo "Die Spalte <i>match_locked</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"ALTER TABLE `tm_paarung` ADD `match_locked` DATETIME NULL AFTER `result_team2`"))
+        {
+            echo "Die Spalte <i>match_locked</i> wurde erfolgreich hinzugefügt.<br>";
+        } else {
+            echo mysqli_error($con);
+        }
+    }
+}
+
 
 ?>
