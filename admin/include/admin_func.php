@@ -430,4 +430,69 @@ function handlingWildcard($con,$tm_id,$pair_count,$stage,$next_stage)
 	}
 }
 
+function setUpNewTournament($con,$vote_id,$game_id,$tm_from,$tm_to,$mode,$mode_details)
+{
+	
+	$tm_from = date("Y-m-d H:i:s", strtotime($tm_from));
+	$tm_to = date("Y-m-d H:i:s", strtotime($tm_to));
+	
+	$sql = "INSERT INTO tm_period (time_from,time_to) VALUES ('$tm_from','$tm_to')";
+	if(mysqli_query($con,$sql))
+	{
+		$tm_period_id = getTournamentPeriodId($con);
+		$end_register = date("Y-m-d H:i:s", strtotime("+30 minutes"));
+		
+		if($vote_id == '0')
+		{
+			$sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,tm_locked,lan_id) VALUES ('$game_id','$mode','$mode_details','0','$tm_period_id','$end_register','0','0')";
+			if(mysqli_query($con,$sql))
+			{
+				return "SUC_ADMIN_CREATE_TM";
+			} else {
+				return "ERR_ADMIN_DB";
+			}
+		} else {
+			$vote_count = getVotedPlayers($con,$vote_id);
+
+			$sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,tm_locked,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$tm_period_id','$end_register','0','0')";
+            if(mysqli_query($con,$sql))
+            {
+                $tm_id = getLastTmId($con);
+                $player_ids = getPlayerIdsFromVote($con,$vote_id);
+                
+                foreach ($player_ids as $player_id)
+                {
+					$sql = "INSERT INTO tm_gamerslist (tm_id, player_id) VALUES ('$tm_id','$player_id')";
+					if(!mysqli_query($con,$sql))
+					{
+						return "ERR_ADMIN_DB";
+					}
+                }
+
+                $sql = "DELETE FROM tm_vote_player WHERE tm_vote_id = '$vote_id'";
+                if(mysqli_query($con,$sql))
+                {
+                    $sql = "DELETE FROM tm_vote WHERE ID = '$vote_id'";
+                    if(mysqli_query($con,$sql))
+                    {
+                        $sql = "CREATE EVENT IF NOT EXISTS start_tm" . $tm_id . " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 MINUTE ENABLE DO UPDATE tm SET tm_locked = 1 WHERE ID = '$tm_id'";
+                        if(mysqli_query($con,$sql))
+                        {
+                            return "SUC_ADMIN_CREATE_TM_FROM_VOTE";
+                        } else {
+                            return "ERR_ADMIN_DB";
+                        }
+                    } else {
+                        return "ERR_ADMIN_DB";
+                    }
+                } else {
+                    return "ERR_ADMIN_DB";
+                }
+            } else {
+                return "ERR_ADMIN_DB";
+            }
+		}
+	}
+}
+
 ?>

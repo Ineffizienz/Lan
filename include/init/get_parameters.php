@@ -991,7 +991,7 @@ function getPlayerIdsFromVote($con,$vote_id)
 		- create_tm.php
 	*/
 
-	$result = mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'");
+	$result = mysqli_query($con,"SELECT tm_gamerslist.ID FROM tm_gamerslist INNER JOIN tm_vote_player ON tm_gamerslist.player_id = tm_vote_player.player_id WHERE tm_vot_player.tm_vote_id = '$vote_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$votedPlayerIds[] = $row["player_id"];
