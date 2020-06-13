@@ -22,7 +22,7 @@ if(isset($_REQUEST["game_id"]))
     $message_text = setUpNewTournament($con,$vote_id,$_REQUEST["game_id"],$_REQUEST["tm_time_from"],$_REQUEST["tm_time_to"],$_REQUEST["mode"],$_REQUEST["mode_details"]);
     
     $message->getMessageCode($message_text);
-    echo buildJSONOutput($message->displayMessage());
+    echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
 } else {
     $message->getMessageCode("ERR_ADMIN_EMPTY_PARAM");
     echo buildJSONOutput($message->displayMessage());
