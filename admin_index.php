@@ -10,27 +10,13 @@ include("admin/files.php");
 if(IP == "::1" || "192.168.0.89")
 {
 	$tpl = new template();
-	$tpl->load("admin/home.html");
+	$tpl->load("admin/admin_skeleton.html");
 
-	$tpl->assign("menu",buildContent("admin/admin_menu.html"));
-	$tpl->assign("content",$content);
-	$tpl->assign("key_status",$key_status);
-	$tpl->assign("team_status",$team_status);
-	$tpl->assign("player",$player);
-	$tpl->assign("keys",$key_status);
-	$tpl->assign("exist_teams",displayTeams($con));
-	$tpl->assign("achievements",displayAchievements($con));
-	$tpl->assign("username",addUsername($con));
-	$tpl->assign("ticket_status",displayTicketStatus($con));
-	$tpl->assign("ac_cat",displayAcCategories($con));
-	$tpl->assign("ac_trigger",displayAcTrigger($con));
-	$tpl->assign("admin_games",displaySingleGame($con));
+	$tpl->assign_subtemplate("content","admin/home.html");
+	$tpl->assign_subtemplate("menu","admin/admin_menu.html");
 
-	// Turniere
-	$tpl->assign("games",displayTmGames($con));
-	$tpl->assign("tournaments",displayTournaments($con));
-	$tpl->assign("votes",displayVotedTournaments($con));
-	$tpl->assign("define_tm_popup",displayDefineTmPopup($con));
+	require_once("admin/include/controller.php");
+	run_admin_controller($tpl);	
 
 	$tpl->display();
 } else {

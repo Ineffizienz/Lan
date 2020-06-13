@@ -78,19 +78,9 @@ function t_setUpMatches($con)
 				
 				IF ((count_var % 2) = 0) THEN # Nur, wenn die zweite team_id nicht vergeben ist, sollen entsprechende Spiele etc. aufgesetzt werden
 					UPDATE tm_paarung SET tm_paarung.team_2 = player_id_gl WHERE tm_paarung.ID = last_paarung_id;
-					
-					INSERT INTO tm_match (result_team1, result_team2) VALUES (NULL, NULL);
-
-					SET match_id = (SELECT ID FROM tm_match ORDER BY tm_match.ID DESC LIMIT 1);
-
-					INSERT INTO tm_matches (match_id) VALUES (match_id);
-
-					SET matches_id = (SELECT ID FROM tm_matches WHERE tm_matches.match_id = match_id);
-
-					UPDATE tm_paarung SET tm_paarung.matches_id = matches_id WHERE tm_paarung.ID = last_paarung_id;
 
 				ELSE # ansonsten erfolgt nur die Anlage einer neuen Paarung mit der ersten team_id
-					INSERT INTO tm_paarung (team_1, tournament, stage) VALUES (player_id_gl, tm_id, '1');
+					INSERT INTO tm_paarung (team_1, tournament, stage) VALUES (player_id_gl, '-1', tm_id, '1');
 				END IF;
 
                 SET count_var = count_var + 1;

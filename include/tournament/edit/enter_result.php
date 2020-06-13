@@ -13,29 +13,21 @@
     $gamerslist_id = getGamerslistIdByPlayerId($con,$player_id,$tm_id);
     if(getGamerslistIdFromPair($con,$gamerslist_id,$pair_id))
     {
-        $matches_id = getSingleMatchesIdFromPaarung($con,$pair_id);
-        $match_id = getMatchIdFromMatches($con,$matches_id);
         $result_1 = $_REQUEST["result_1"];
         $result_2 = $_REQUEST["result_2"];
         
-        if(empty($match_id))
+        $lock_time = getMatchLockTime($con,$pair_id);
+        $current_time = date("Y-m-d H:i:s", strtotime("now"));
+
+        if(!(empty($lock_time)) && (strtotime($current_time) > strtotime($lock_time)))
         {
-            $message->getMessageCode("ERR_NO_MATCH");
+            $message->getMessageCode("ERR_MATCH_LOCKED");
             echo json_encode(array("message"=>$message->displayMessage()));
-        } else {
-            $lock_time = getMatchLockTime($con,$match_id);
-            $current_time = date("Y-m-d H:i:s", strtotime("now"));
+        } elseif (empty($lock_time) || ($lock_time > $current_time)) {
 
-            if(!(empty($lock_time)) && (strtotime($current_time) > strtotime($lock_time)))
-            {
-                $message->getMessageCode("ERR_MATCH_LOCKED");
-                echo json_encode(array("message"=>$message->displayMessage()));
-            } elseif (empty($lock_time) || ($lock_time > $current_time)) {
-
-                $message_code = matchResultHandling($con,$pair_id,$matches_id,$match_id,$result_1,$result_2);
-                $message->getMessageCode($message_code);
-                echo json_encode(array("message"=>$message->displayMessage()));
-            }
+            $message_code = matchResultHandling($con,$pair_id,$result_1,$result_2);
+            $message->getMessageCode($message_code);
+            echo json_encode(array("message"=>$message->displayMessage()));
         }
                
     } else {

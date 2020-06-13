@@ -331,20 +331,13 @@ function displayTmGames($con)
 function displayTournaments($con)
 {
 	$tournaments = getTournaments($con);
+	$tournament_array = array();
 
 	foreach ($tournaments as $tournament)
 	{
+		$tpl = new template("admin/part/tm_table.html");
 		$game_name = getGameInfoById($con,$tournament["game_id"]);
 		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
-
-		$part = file_get_contents(TMP . "admin/part/tm_table.html");
-
-		if(empty($tournament["player_count"]))
-		{
-			$player_count = 0;
-		} else {
-			$player_count = $tournament["player_count"];
-		}
 
 		$game_mode = translateGameMode($tournament["mode"]);
 		$game_mode_details = translateGameModeDetails($tournament["mode_details"]);
@@ -356,15 +349,12 @@ function displayTournaments($con)
 			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "'>Turnier starten</button>";
 		}
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
-		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
-		}
+		$line = array("id"=>$tournament["ID"],"game"=>$game_name["name"],"mode"=>$game_mode,"mode_details"=>$game_mode_details,"time_from"=>$tm_period["time_from"],"time_to"=>$tm_period["time_to"],"participants"=>$tournament["player_count"],"startbutton"=>$startbutton);
+		array_push($tournament_array,$line);
 	}
+	$tpl->assign_array($tournament_array);
 
-	return $output;
+	return $tpl->r_display();
 }
 
 function displayVotedTournaments($con)
@@ -406,6 +396,38 @@ function displayDefineTmPopup($con)
 	$part = file_get_contents(TMP . "admin/part/popup/define_tm_popup.html");
 
 	return $part;
+}
+
+function handlingWildcard($con,$tm_id,$pair_count,$stage,$next_stage)
+{
+	$wildcard_player = getTournamentWildcardPlayer($con,$tm_id,$stage);
+
+	if(!empty($wildcard_player))
+	{
+		if(!($pair_count <= 2))
+		{
+			$last_stage_pair = getTournamentLastPairFromStage($con,$tm_id,$next_stage);
+			
+			if(!(($pair_count % 2) == 0))
+			{
+				$sql = "UPDATE tm_paarung SET team_2 = '-1' WHERE ID = '$last_stage_pair'";
+				if(mysqli_query($con,$sql))
+				{
+					$sql = "UPDATE tm_paarung SET team_1 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
+					mysqli_query($con,$sql);
+					return true;
+				}
+			} else {
+				$sql = "UPDATE tm_paarung SET team_2 = '$wildcard_player' WHERE ID = '$last_stage_pair'";
+				mysqli_query($con,$sql);
+				return false;
+			}
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
 }
 
 ?>
