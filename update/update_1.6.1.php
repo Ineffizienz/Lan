@@ -9,4 +9,5 @@ transferMatchData($con);
 deleteTmMatches($con);
 deleteTmMatch($con);
 addMatchLockedToPaarung($con);
+setTournamentPlayerIdUnique($con);
 ?>
