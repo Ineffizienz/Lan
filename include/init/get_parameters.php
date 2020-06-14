@@ -328,7 +328,6 @@ function getGameInfoById($con,$game_id)
 		- function.php/displayTournaments
 
 		:Admin
-		- admin_func.php/displayVotedTournaments
 		- admin_func.php/displayTournaments
 	*/
 
@@ -1031,7 +1030,7 @@ function getVotedTournaments($con)
 		- admin_func.php/displayVotedTournaments
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote ORDER BY endtime DESC");
+	$result = mysqli_query($con,"SELECT tm_vote.ID, games.name, tm_vote.game_id, tm_vote.vote_count, tm_vote.starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, tm_vote.vote_closed FROM tm_vote INNER JOIN games ON games.ID = tm_vote.game_id ORDER BY endtime DESC");
 	if(!empty($result))
 	{
 		while($row=mysqli_fetch_assoc($result))

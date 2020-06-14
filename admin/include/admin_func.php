@@ -365,7 +365,6 @@ function displayVotedTournaments($con)
 	foreach ($voted_tm as $tournament)
 	{
 		$tpl = new template("admin/part/voted_tm_tpl.html");
-		$game_name = getGameInfoById($con,$tournament["game_id"]);
 
 		if($tournament["vote_closed"] == "0")
 		{
@@ -374,7 +373,7 @@ function displayVotedTournaments($con)
 			$closed = "Ja";
 		}
 
-		$vote = array("game_id"=>$tournament["game_id"],"game_name"=>$game_name["name"],"starttime"=>$tournament["starttime"],"endtime"=>$tournament["endtime"],"votes"=>$tournament["vote_count"],"closed"=>$closed,"vote_id"=>$tournament["ID"]);
+		$vote = array("game_id"=>$tournament["game_id"],"game_name"=>$tournament["name"],"starttime"=>$tournament["starttime"],"endtime"=>$tournament["endtime"],"votes"=>$tournament["vote_count"],"closed"=>$closed,"vote_id"=>$tournament["ID"]);
 		array_push($votes,$vote);
 	}
 
