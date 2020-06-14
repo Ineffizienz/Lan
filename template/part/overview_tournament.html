@@ -1,16 +1,16 @@
-<a href="index.php?page=single_tm&id=--TM_ID--">
-    <div class="tm_single" data-tm-id="--TM_ID--">
+<a href="index.php?page=single_tm&id={$ID}">
+    <div class="tm_single" data-tm-id="{$ID}">
         <div class="tm_container_img">
-            <img src="images/banner/--BANNER--">
+            <img src="images/banner/{$banner}">
         </div>
         <div class="tm_container_details">
             <div>
                 <span style="font-weight:bold;">Startzeit:</span>
-                <span>--TIME_FROM--</span>
+                <span>{$time_from}</span>
             </div>
             <div>
                 <span style="font-weight:bold;">Teilnehmerzahl:</span>
-                <span>--PLAYER_COUNT--</span>
+                <span>{$player_count}</span>
             </div>
         </div>
     </div>

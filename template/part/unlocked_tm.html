@@ -1,23 +1,23 @@
 <div id="tm_unlocked">
     <div id="tm_unlocked_banner_container">
-        <img src="images/banner/--BANNER--">
+        <img src="images/banner/{$tm_banner}">
     </div>
     <div style="text-align:right;font-weight:bold;">
         Anmeldeschluss:
     </div>
     <div>
-        --END_REGISTER--
+        {$end_register}
     </div>
     <div style="text-align:right;font-weight:bold;">
         Bereits registrierte Spieler:
     </div>
     <div id="player_list_container">
         <div id="tm_player_list" style="text-align:left;">
-            --PLAYER_LIST--
+            {$player_list}
         </div>
     </div>
     <div id="tm_unlocked_button_container">
-        <button name="join_tm" id="join_tm" data-tm-id="--TM_ID--">Turnier beitreten</button>
-        <button name="leave_tm" id="leave_tm" data-tm-id="--TM_ID--">Turnier verlassen</button>
+        <button name="join_tm" id="join_tm" data-tm-id="{$tm_id}">Turnier beitreten</button>
+        <button name="leave_tm" id="leave_tm" data-tm-id="{$tm_id}">Turnier verlassen</button>
     </div>
 </div>

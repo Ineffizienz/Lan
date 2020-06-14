@@ -24,34 +24,22 @@
                 $sql = "DELETE FROM tm_gamerslist WHERE tm_id = '$tm_id'";
                 if(mysqli_query($con,$sql))
                 {
-                    $matches_ids = getMatchesIdFromPaarung($con,$tm_id);
-                    foreach ($matches_ids as $matches_id)
-                    {
-                        $match_id = getMatchIdFromMatches($con,$matches_id);
-                        $sql = "DELETE FROM tm_match WHERE ID = '$match_id'";
-                        if(mysqli_query($con,$sql))
-                        {
-                            $sql = "DELETE FROM tm_paarung WHERE tournament = '$tm_id' AND tm_matches_id = '$matches_id'";
-                            if(!mysqli_query($con,$sql))
-                            {
-                                $message->getMessageCode("ERR_ADMIN_DB");
-                                echo buildJSONOutput(array($message->displayMessage() . mysqli_error($con)));
-                            }
-                        } else {
-                            $message->getMessageCode("ERR_ADMIN_DB");
-                            echo buildJSONOutput(array($message->displayMessage() . mysqli_error($con)));
-                        }
-                    }
-                    $sql = "DELETE FROM tm WHERE ID = '$tm_id'";
+                    $sql = "DELETE FROM tm_paarung WHERE tournament = '$tm_id'";
                     if(mysqli_query($con,$sql))
                     {
-                        $message->getMessageCode("SUC_ADMIN_DELETE_TM");
-                        echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                        $sql = "DELETE FROM tm WHERE ID = '$tm_id'";
+                        if(mysqli_query($con,$sql))
+                        {
+                            $message->getMessageCode("SUC_ADMIN_DELETE_TM");
+                            echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                        } else {
+                            $message->getMessageCode("ERR_ADMIN_INTERN_#4");
+                            echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
+                        }
                     } else {
-                        $message->getMessageCode("ERR_ADMIN_INTERN_#4");
-                        echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-                    }
-    
+                        $message->getMessageCode("ERR_ADMIN_DB");
+                        echo buildJSONOutput(array($message->displayMessage() . mysqli_error($con)));
+                    }    
                 } else {
                     $message->getMessageCode("ERR_ADMIN_DB");
                     echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

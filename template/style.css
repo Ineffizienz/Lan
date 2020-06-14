@@ -959,6 +959,10 @@ h4
 {
 	overflow-x:auto;
 }
+#wow_account_name
+{
+	margin-bottom:5px;
+}
 #wow_characters
 {
 	font-family: Calibri;
