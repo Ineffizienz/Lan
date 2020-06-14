@@ -339,11 +339,16 @@ $(document).ready(function(){
 		var game_id = $("#tm_game").find("option:selected").attr("value");
 		var mode = $("#tm_mode").find("option:selected").attr("value");
 		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
-		var tm_date = $("#tm_date").val();
-		var tm_time_hour = $("#tm_time_hour").val();
-		var tm_time_minute = $("#tm_time_minute").val();
-		var tm_time_from = tm_date + tm_time_hour + tm_time_minute;
-		var tm_time_to = 0;
+		
+		var date_from = $("#tm_date_from").val();
+		var time_hour_from = $("#tm_time_hour_from").val();
+		var time_minute_from = $("#tm_time_minute_from").val();
+		var tm_time_from = date_from + time_hour_from + time_minute_from;
+		
+		var date_to = $("#tm_date_to").val();
+		var time_hour_to = $("#tm_time_hour_to").val();
+		var time_minute_to = $("#tm_time_minute_to").val(); 
+		var tm_time_to = date_to + time_hour_to + time_minute_to;
 
 		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to}
 		
