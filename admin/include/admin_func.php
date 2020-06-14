@@ -360,11 +360,11 @@ function displayTournaments($con)
 function displayVotedTournaments($con)
 {
 	$voted_tm = getVotedTournaments($con);
-
-	$part = file_get_contents(TMP . "admin/part/voted_tm_tpl.html");
+	$votes = array();
 
 	foreach ($voted_tm as $tournament)
 	{
+		$tpl = new template("admin/part/voted_tm_tpl.html");
 		$game_name = getGameInfoById($con,$tournament["game_id"]);
 
 		if($tournament["vote_closed"] == "0")
@@ -374,21 +374,17 @@ function displayVotedTournaments($con)
 			$closed = "Ja";
 		}
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
-		} else {
-			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
-		}
+		$vote = array("game_id"=>$tournament["game_id"],"game_name"=>$game_name["name"],"starttime"=>$tournament["starttime"],"endtime"=>$tournament["endtime"],"votes"=>$tournament["vote_count"],"closed"=>$closed,"vote_id"=>$tournament["ID"]);
+		array_push($votes,$vote);
 	}
 
-	if(!isset($output) || empty($output))
+	if(empty($votes))
 	{
-		$output = "Es sind bisher keine Votes vorhanden.";
+		return "Es sind bisher keine Votes vorhanden.";
+	} else {
+		$tpl->assign_array($votes);
+		return $tpl->r_display();
 	}
-
-	return $output;
-
 }
 
 function displayDefineTmPopup($con)

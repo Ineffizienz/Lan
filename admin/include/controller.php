@@ -35,11 +35,11 @@
 					$tpl->assign_subtemplate("content","admin/tm.html");
 					$tpl->assign("games",displayTmGames($con));
 					$tpl->assign("tournaments",displayTournaments($con));
-					$tpl->assign("votes",displayVotedTournaments($con));
-					$tpl->assign("define_tm_popup",displayDefineTmPopup($con));
 				break;
 				case "vote_tm":
 					$tpl->assign_subtemplate("content","admin/vote_tm.html");
+					$tpl->assign("votes",displayVotedTournaments($con));
+					$tpl->assign("define_tm_popup",displayDefineTmPopup($con));
 				case "achieve":
 					$tpl->assign_subtemplate("content","admin/achievement_settings.html");
 					$tpl->assign("achievements",displayAchievements($con));
