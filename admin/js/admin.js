@@ -334,40 +334,25 @@ $(document).ready(function(){
 
 	function getTmGame(event)
 	{
-		event.stopPropagation();
 		event.preventDefault();
 
-		var tm_game = $("#tm_game").find("option:selected").attr("value");
-		var tm_mode = $("#tm_mode").find("option:selected").attr("value");
-		var tm_mode_details = $("#tm_mode_details").find("option:selected").attr("value");
-		var tm_min_player = $("#tm_min_player").find("option:selected").attr("value");
-		var tm_date = $("#tm_date").val();
-		var tm_time_hour = $("#tm_time_hour").val();
-		var tm_time_minute = $("#tm_time_minute").val();
-		var tm_datetime = tm_date + tm_time_hour + tm_time_minute;
-
-		var input_id = "#tm_banner";
-
-		var image = $(input_id).prop('files')[0];
-		var form_data = new FormData();
-
-		form_data.append("tm_game",tm_game);
-		form_data.append("tm_mode",tm_mode);
-		form_data.append("tm_mode_details",tm_mode_details);
-		form_data.append("tm_min_player",tm_min_player);
-		form_data.append("tm_date",tm_date);
-		form_data.append("tm_time_hour",tm_time_hour);
-		form_data.append("tm_time_minute",tm_time_minute);
-		form_data.append("tm_datetime",tm_datetime);
+		var game_id = $("#tm_game").find("option:selected").attr("value");
+		var mode = $("#tm_mode").find("option:selected").attr("value");
+		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
 		
-		if($(input_id).get(0).files.length == 0)
-		{
-			form_data.append("file","0");
-		} else {
-			form_data.append("file",image);
-		}
+		var date_from = $("#tm_date_from").val();
+		var time_hour_from = $("#tm_time_hour_from").val();
+		var time_minute_from = $("#tm_time_minute_from").val();
+		var tm_time_from = date_from + time_hour_from + time_minute_from;
+		
+		var date_to = $("#tm_date_to").val();
+		var time_hour_to = $("#tm_time_hour_to").val();
+		var time_minute_to = $("#tm_time_minute_to").val(); 
+		var tm_time_to = date_to + time_hour_to + time_minute_to;
 
-		postFileAjax(form_data,getEndpoint("create_tournament"),setResult);
+		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to}
+		
+		postAjax(obj,getEndpoint("create_tournament"),setResult);
 	}
 
 	function getDelTmData(event)
@@ -407,12 +392,11 @@ $(document).ready(function(){
 		var game_id = $("#game_id").val();
 		var mode = $("#tm_mode").find("option:selected").attr("value");
 		var mode_details = $("#tm_mode_details").find("option:selected").attr("value");
-		var max_player = $("#tm_max_player").val();
 		var tm_time_from = $("#tm_time_from").val(); //Fehlermeldung wenn nicht vollständig!
 		var tm_time_to = $("#tm_time_to").val(); //Fehlermeldung wenn nicht vollständig!
 		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, mode, mode_details, max_player, tm_time_from, tm_time_to, vote_id};
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
 
 		$("#tm_create_popup").hide();
 
