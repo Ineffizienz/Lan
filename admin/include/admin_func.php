@@ -572,4 +572,26 @@ function archivTmPeriod($con,$period_id)
 	return true;
 }
 
+function displayLans($con)
+{
+	$lans = getLans($con);
+	$lan_array = array();
+
+	foreach ($lans as $lan)
+	{
+		$tpl = new template("admin/part/lan_table.html");
+
+		$single_lan = array("id"=>$lan["ID"],"lan_title"=>$lan["title"],"lan_from"=>$lan["date_from"],"lan_to"=>$lan["date_to"]);
+		array_push($lan_array,$single_lan);
+	}
+
+	if(empty($lan_array))
+	{
+		return "Es sind bisher keine Lans angelegt worden.";
+	} else {
+		$tpl->assign_array($lan_array);
+		return $tpl->r_display();
+	}
+}
+
 ?>

@@ -225,7 +225,22 @@ function createTmPeriodArchivTable($con)
         {
             echo "Die Tabelle <i>archiv_tm_period</i> wurde erfolgreich erstellt.<br>";
         } else {
-            echo myslqi_error($con) . "<br>";
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+}
+
+function createLanTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `lan`;")) == 1)
+    {
+        echo "Die Tabelle <i>lan</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE lan (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, date_from DATETIME NOT NULL, date_to DATETIME NOT NULL)"))
+        {
+            echo "Die Tabelle <i>lan</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
         }
     }
 }

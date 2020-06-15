@@ -426,6 +426,24 @@ $(document).ready(function(){
 	}
 
 
+/*#############################################################################################
+#################################### Lan ######################################################
+###############################################################################################*/
+
+	function getLanData(event)
+	{
+		event.preventDefault();
+
+		var lan_title = $("#lan_title").val();
+		var date_from = $("#lan_date_from").val();
+		var date_to = $("#lan_date_to").val();
+
+		obj = {lan_title,date_from,date_to};
+
+		postAjax(obj,getEndpoint("create_lan"),setResult);
+	}
+
+
 //########################### Send Data ##################################################################
 	
 	function getAjax(obj, endpoint, fn){
@@ -605,5 +623,6 @@ function refreshVotes()
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
+	$(document).on("click","#create_lan",getLanData);
 
 });

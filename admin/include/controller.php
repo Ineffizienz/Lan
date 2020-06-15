@@ -53,6 +53,10 @@
 					$tpl->assign_subtemplate("content","admin/ticket_status.html");
 					$tpl->assign("ticket_status",displayTicketStatus($con));
 				break;
+				case "lan":
+					$tpl->assign_subtemplate("content","admin/lan_tpl.html");
+					$tpl->assign("lans",displayLans($con));
+				break;
 				default:
 					include("admin/overview/key_status.php");
 					include("admin/overview/team_status.php");

@@ -14,4 +14,5 @@ createTournamentArchivTable($con);
 createTmPaarungArchivTable($con);
 createTmGamerslistArchivTable($con);
 createTmPeriodArchivTable($con);
+createLanTable($con);
 ?>

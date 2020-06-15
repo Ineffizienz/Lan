@@ -1792,4 +1792,26 @@ function getTournamentRawPeriod($con,$period_id)
 
 	return $period_data;
 }
+
+/*
+###########################################################
+######################## Lan ##############################
+###########################################################
+*/
+
+function getLans($con)
+{
+	$result = mysqli_query($con,"SELECT ID, title, DATE_FORMAT(`date_from`, '%d.%m.%Y') as date_from, DATE_FORMAT(`date_to`, '%d.%m.%Y') as date_to FROM lan");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$lan_partys[] = $row;
+	}
+
+	if(empty($lan_partys))
+	{
+		$lan_partys = array();
+	}
+
+	return $lan_partys;
+}
 ?>
