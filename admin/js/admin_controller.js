@@ -39,6 +39,9 @@ function getEndpoint(param)
         case "start_tournament":
             endpoint = "admin/tm/edit/start_tm.php";
             break;
+        case "archiv_tournament":
+            endpoint = "admin/tm/edit/archiv_tm.php";
+            break;
         case "create_new_game":
             endpoint = "admin/game/edit/add_game.php";
             break;

@@ -1185,6 +1185,17 @@ function getTournamentsOverview($con)
 
 }
 
+function getSingleTournamentData($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT game_id, mode, mode_details, player_count, tm_period_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$single_tournament = $row;
+	}
+
+	return $single_tournament;
+}
+
 function getTournaments($con)
 {
 	/* Used in:
@@ -1736,5 +1747,49 @@ function getTournamentWildcardPlayer($con,$tm_id,$stage)
 	}
 
 	return $wildcard_player;
+}
+
+/*
+###########################################################
+######################## Archivierung #####################
+###########################################################
+*/
+
+function checkForTournament($con,$tm_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'")) > 0;
+}
+
+function getAllPairsFromTournament($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID, team_1, team_2, stage, successor, result_team1, result_team2 FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pairs[] = $row;
+	}
+
+	return $pairs;
+}
+
+function getAllGamerslistDataFromTournament($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID, player_id FROM tm_gamerslist WHERE tm_id = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gamerslist_data[] = $row;
+	}
+
+	return $gamerslist_data;
+}
+
+function getTournamentRawPeriod($con,$period_id)
+{
+	$result = mysqli_query($con,"SELECT time_from, time_to FROM tm_period WHERE ID = '$period_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$period_data = $row;
+	}
+
+	return $period_data;
 }
 ?>

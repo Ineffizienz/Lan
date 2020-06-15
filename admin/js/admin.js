@@ -385,6 +385,17 @@ $(document).ready(function(){
 
 	}
 
+	function getArchivData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("name");
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("archiv_tournament"),setResult);
+	}
+
 	function getTournamentParam(event)
 	{
 		event.preventDefault();
@@ -586,6 +597,7 @@ function refreshVotes()
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
+	$(document).on("click",".archiv_tm",getArchivData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
 	$("#start_tm").on("click",getTournamentParam);
 	$(document).on("click",".delete_vote",getVoteParam);

@@ -490,4 +490,86 @@ function setUpNewTournament($con,$vote_id,$game_id,$tm_from,$tm_to,$mode,$mode_d
 	}
 }
 
+function archivTmPaarung($con,$tm_id)
+{
+	$pairs = getAllPairsFromTournament($con,$tm_id);
+
+	foreach ($pairs as $pair)
+	{
+		$pair_id = $pair["ID"];
+		$team_1 = $pair["team_1"];
+		$team_2 = $pair["team_2"];
+		$stage = $pair["stage"];
+		$successor = $pair["successor"];
+		$result_team1 = $pair["result_team1"];
+		$result_team2 = $pair["result_team2"];
+
+		$sql = "INSERT INTO archiv_tm_paarung VALUES ('$pair_id','$team_1','$team_2','$stage','$tm_id','$successor','$result_team1','$result_team2')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_paarung WHERE ID = '$pair_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+function archivTmGamerslist($con,$tm_id)
+{
+	$gamerslist_data = getAllGamerslistDataFromTournament($con,$tm_id);
+
+	foreach ($gamerslist_data as $player)
+	{
+		$gl_id = $player["ID"];
+		$player_id = $player["player_id"];
+
+		$sql = "INSERT INTO archiv_tm_gamerslist VALUES ('$gl_id','$tm_id','$player_id')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_gamerslist WHERE ID = '$gl_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+		
+	}
+
+	return true;
+}
+
+function archivTmPeriod($con,$period_id)
+{
+	$period = getTournamentRawPeriod($con,$period_id);
+
+	$time_from = $period["time_from"];
+	$time_to = $period["time_to"];
+
+	$sql = "INSERT INTO archiv_tm_period VALUES ('$period_id','$time_from','$time_to')";
+	if(!(mysqli_query($con,$sql)))
+	{
+		return false;
+	} else {
+		$sql = "DELETE FROM tm_period WHERE ID = '$period_id'";
+		if(!(mysqli_query($con,$sql)))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 ?>
