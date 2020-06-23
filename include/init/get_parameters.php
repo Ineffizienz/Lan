@@ -1308,6 +1308,11 @@ function getPlayerFromGamerslist($con,$tm_id)
 		$player_name[] = $row["name"];
 	}
 
+	if(empty($player_name))
+	{
+		$player_name = array();
+	}
+
 	return $player_name;
 }
 

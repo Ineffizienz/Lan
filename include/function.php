@@ -554,7 +554,12 @@ function displayTournamentParticipants($con,$tm_id)
 	$tm_banner = getTournamentBanner($con,$tm_id);
 	$tm_register = getTournamentEndRegister($con,$tm_id);
 
-	$player_list = implode(", ",$tm_player);
+	if(empty($tm_player))
+	{
+		$player_list = "Es sind keine Spieler registriert.";
+	} else {
+		$player_list = implode(", ",$tm_player);
+	}
 
 	$tpl->assign("tm_id",$tm_id);
 	$tpl->assign("player_list",$player_list);
