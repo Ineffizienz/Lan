@@ -331,20 +331,13 @@ function displayTmGames($con)
 function displayTournaments($con)
 {
 	$tournaments = getTournaments($con);
+	$tournament_array = array();
 
 	foreach ($tournaments as $tournament)
 	{
+		$tpl = new template("admin/part/tm_table.html");
 		$game_name = getGameInfoById($con,$tournament["game_id"]);
 		$tm_period = getTournamentPeriod($con,$tournament["tm_period_id"]);
-
-		$part = file_get_contents(TMP . "admin/part/tm_table.html");
-
-		if(empty($tournament["player_count"]))
-		{
-			$player_count = 0;
-		} else {
-			$player_count = $tournament["player_count"];
-		}
 
 		$game_mode = translateGameMode($tournament["mode"]);
 		$game_mode_details = translateGameModeDetails($tournament["mode_details"]);
@@ -356,26 +349,22 @@ function displayTournaments($con)
 			$startbutton = "<button class='start_tm' name='" . $tournament["ID"] . "'>Turnier starten</button>";
 		}
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
-		} else {
-			$output .= str_replace(array("--ID--","--GAME--","--MODE--","--MODE_DETAILS--","--TIME_FROM--","--TIME_TO--","--PARTICIPANTS--","--STARTBUTTON--"),array($tournament["ID"],$game_name["name"],$game_mode,$game_mode_details,$tm_period["time_from"],$tm_period["time_to"],$player_count,$startbutton),$part);
-		}
+		$line = array("id"=>$tournament["ID"],"game"=>$game_name["name"],"mode"=>$game_mode,"mode_details"=>$game_mode_details,"time_from"=>$tm_period["time_from"],"time_to"=>$tm_period["time_to"],"participants"=>$tournament["player_count"],"startbutton"=>$startbutton);
+		array_push($tournament_array,$line);
 	}
+	$tpl->assign_array($tournament_array);
 
-	return $output;
+	return $tpl->r_display();
 }
 
 function displayVotedTournaments($con)
 {
 	$voted_tm = getVotedTournaments($con);
-
-	$part = file_get_contents(TMP . "admin/part/voted_tm_tpl.html");
+	$votes = array();
 
 	foreach ($voted_tm as $tournament)
 	{
-		$game_name = getGameInfoById($con,$tournament["game_id"]);
+		$tpl = new template("admin/part/voted_tm_tpl.html");
 
 		if($tournament["vote_closed"] == "0")
 		{
@@ -384,21 +373,17 @@ function displayVotedTournaments($con)
 			$closed = "Ja";
 		}
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
-		} else {
-			$output .= str_replace(array("--GAME_ID--","--GAME_NAME--","--STARTTIME--","--ENDTIME--","--VOTES--","--CLOSED--","--VOTE_ID--"),array($tournament["game_id"],$game_name["name"],$tournament["starttime"],$tournament["endtime"],$tournament["vote_count"],$closed,$tournament["ID"]),$part);
-		}
+		$vote = array("game_id"=>$tournament["game_id"],"game_name"=>$tournament["name"],"starttime"=>$tournament["starttime"],"endtime"=>$tournament["endtime"],"votes"=>$tournament["vote_count"],"closed"=>$closed,"vote_id"=>$tournament["ID"]);
+		array_push($votes,$vote);
 	}
 
-	if(!isset($output) || empty($output))
+	if(empty($votes))
 	{
-		$output = "Es sind bisher keine Votes vorhanden.";
+		return "Es sind bisher keine Votes vorhanden.";
+	} else {
+		$tpl->assign_array($votes);
+		return $tpl->r_display();
 	}
-
-	return $output;
-
 }
 
 function displayDefineTmPopup($con)
@@ -437,6 +422,71 @@ function handlingWildcard($con,$tm_id,$pair_count,$stage,$next_stage)
 		}
 	} else {
 		return false;
+	}
+}
+
+function setUpNewTournament($con,$vote_id,$game_id,$tm_from,$tm_to,$mode,$mode_details)
+{
+	
+	$tm_from = date("Y-m-d H:i:s", strtotime($tm_from));
+	$tm_to = date("Y-m-d H:i:s", strtotime($tm_to));
+	
+	$sql = "INSERT INTO tm_period (time_from,time_to) VALUES ('$tm_from','$tm_to')";
+	if(mysqli_query($con,$sql))
+	{
+		$tm_period_id = getTournamentPeriodId($con);
+		$end_register = date("Y-m-d H:i:s", strtotime("+30 minutes"));
+		
+		if($vote_id == '0')
+		{
+			$sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,tm_locked,lan_id) VALUES ('$game_id','$mode','$mode_details','0','$tm_period_id','$end_register','0','0')";
+			if(mysqli_query($con,$sql))
+			{
+				return "SUC_ADMIN_CREATE_TM";
+			} else {
+				return "ERR_ADMIN_DB";
+			}
+		} else {
+			$vote_count = getVotedPlayers($con,$vote_id);
+
+			$sql = "INSERT INTO tm (game_id,mode,mode_details,player_count,tm_period_id,tm_end_register,tm_locked,lan_id) VALUES ('$game_id','$mode','$mode_details','$vote_count','$tm_period_id','$end_register','0','0')";
+            if(mysqli_query($con,$sql))
+            {
+                $tm_id = getLastTmId($con);
+                $player_ids = getPlayerIdsFromVote($con,$vote_id);
+                
+                foreach ($player_ids as $player_id)
+                {
+					$sql = "INSERT INTO tm_gamerslist (tm_id, player_id) VALUES ('$tm_id','$player_id')";
+					if(!mysqli_query($con,$sql))
+					{
+						return "ERR_ADMIN_DB";
+					}
+                }
+
+                $sql = "DELETE FROM tm_vote_player WHERE tm_vote_id = '$vote_id'";
+                if(mysqli_query($con,$sql))
+                {
+                    $sql = "DELETE FROM tm_vote WHERE ID = '$vote_id'";
+                    if(mysqli_query($con,$sql))
+                    {
+                        $sql = "CREATE EVENT IF NOT EXISTS start_tm" . $tm_id . " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 MINUTE ENABLE DO UPDATE tm SET tm_locked = 1 WHERE ID = '$tm_id'";
+                        if(mysqli_query($con,$sql))
+                        {
+                            return "SUC_ADMIN_CREATE_TM_FROM_VOTE";
+                        } else {
+                            return "ERR_ADMIN_DB";
+                        }
+                    } else {
+                        return "ERR_ADMIN_DB";
+                    }
+                } else {
+                    return "ERR_ADMIN_DB";
+                }
+            } else {
+                return "ERR_ADMIN_DB";
+            }
+		}
 	}
 }
 
