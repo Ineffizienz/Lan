@@ -174,15 +174,13 @@
 		} 
 	}
 
-	function displayProfilImage(mysqli $con, $player_id): template
+	function displayProfilImage(mysqli $con, $player): template
 	{
-		$image_path = getUserImage($con,$player_id);
-
-		if (empty($image_path))
+		if (empty($player->image))
 			return new template("part/empty_image.html");
 		else {
 			$tpl = new template("part/profil_image.html");
-			return $tpl->assign('image_path', $image_path);
+			return $tpl->assign('image_path', $player->image);
 		}
 	}
 	

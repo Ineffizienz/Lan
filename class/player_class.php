@@ -10,6 +10,7 @@ class Player {
 	public 	$ip;
 	public  $username;
 	public  $realname;
+	public 	$profil_image;
 	public	$pref = array();
 
 	public function __construct ($con, int $player_id)
@@ -22,13 +23,13 @@ class Player {
 
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, profil_image FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
 			$this->username = $this->validatePlayerData($row["name"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
-
+			$this->image = $row["profil_image"];
 		}
 		
 		$this->getPlayerPreferences();
