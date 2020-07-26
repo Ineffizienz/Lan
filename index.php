@@ -13,6 +13,7 @@ require_once INC . 'session.php';
 require_once(CL . "template_class.php");
 require_once(CL . "message_class.php");
 require_once(CL . "achievement_class.php");
+require_once(CL . "player_class.php");
 
 require_once(INC . "connect.php");
 require_once(INC . "function.php");
@@ -62,7 +63,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 	}
 	
 	if(!$display_name_reg || $success)
-	{
+	{		
 		$player_id = $_SESSION["player_id"];
 
 		$tpl->assign_subtemplate('content', 'index.html');

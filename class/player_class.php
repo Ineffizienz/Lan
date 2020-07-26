@@ -1,61 +1,61 @@
 <?php
+/*
+	TODO
+		- validate if output IP is an IP
+*/
 class Player {
-	// Output-Parameter
-	private $user = "";
-	
-	// User-Data
-	private $id = "";
-	private $name = "";
-	private $profil_image = "";
-	
-	// Queried User-Data
-	private $user_data = array();
-	
-	// Template
-	private $template = "";
-	
-	//Replacement-Arrays
-	private $rSettingsArr = array("--USERNAME--","--IMAGE--");
-	
-	
-	private $team_id = "";
+	private $db_con;
+	private $player;
+	public  $id;
+	public 	$ip;
+	public  $username;
+	public  $realname;
 
-	public function getUserData($con,$ip)
+	public function __construct ($con, int $player_id)
 	{
-		$this->queryUserData();
+		$this->db_con = $con;
+		$this->id = $player_id;
 		
-		$this->id = $this->user_data["ID"];
-		$this->name = $this->user_data["name"];
-		$this->profil_image = $this->user_data["profil_image"];
-		
-		$this->buildUserData();
-
-		
+		$this->getPlayerBasicData();
 	}
-	
-	public function queryUserData()
+
+	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($con,"SELECT ID, name, profil_image FROM player WHERE ip = '$ip'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->user_data = $row;
+			$this->ip = $row["IP"];
+			$this->username = $this->validatePlayerData($row["name"]);
+			$this->realname = $this->validatePlayerData($row["real_name"]);
+
+			$this->returnPlayer();
 		}
-		
-		return $this->user_data;
 	}
-	
-	public function buildUserSettingsPage()
+
+	private function validatePlayerData($output)
 	{
-		$this->template = file_get_contents("template/own_settings.html");
-		
-		$this->user = str_replace($this->rSettingsArr,array($this->name,$this->profil_image),$this->template);
-		
-		$this->displayUserSettingsPage();
+		if(empty($output) || $output == "")
+		{
+			return "";
+		} else {
+			return $output;
+		}
 	}
-	
-	public function displayUserSettingsPage()
+
+	public function setNewUsername($new_username)
 	{
-		return $this->user;
+		$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_CHANGE_USERNAME";
+		} else {
+			return "ERR_CHANGE_USERNAME";
+		}
+	}
+
+	public function returnPlayer()
+	{
+		return $this->player;
 	}
 	
 }

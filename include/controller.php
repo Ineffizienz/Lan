@@ -2,6 +2,7 @@
 function run_controller(template $tpl)
 {
 	global $con;
+	$player = new Player($con, $_SESSION["player_id"]);
 	$player_id = $_SESSION["player_id"];
 	if (isset($_REQUEST["page"]))
 	{
@@ -57,8 +58,10 @@ function run_controller(template $tpl)
 			break;
 			case 'own':
 				$tpl->assign_subtemplate('settings', "own_settings.html");
-				$tpl->assign("ip",IP);
-				$tpl->assign_array(getSingleUsername($con, $player_id));
+				$tpl->assign("ip",$player->ip);
+				$tpl->assign("name",$player->username);
+				$tpl->assign("real_name",$player->realname);
+				//$tpl->assign(getSingleUsername($con, $player_id));
 				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player_id));
 				$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
 				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player_id));
