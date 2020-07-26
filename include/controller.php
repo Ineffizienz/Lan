@@ -61,9 +61,8 @@ function run_controller(template $tpl)
 				$tpl->assign("ip",$player->ip);
 				$tpl->assign("name",$player->username);
 				$tpl->assign("real_name",$player->realname);
-				//$tpl->assign(getSingleUsername($con, $player_id));
 				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player_id));
-				$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
+				$tpl->assign("pref",displayPlayerPrefs($con, $player));
 				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player_id));
 			break;
 			case 'achieve':

@@ -239,20 +239,12 @@
 		return $output;
 	}
 
-	function displayPlayerPrefs($con, $player_id)
+	function displayPlayerPrefs($con, $player)
 	{
-		$player_pref = getSinglePlayerPref($con, $player_id);
+		$tpl = new template("part/single_pref.html");
+		$tpl->assign_array($player->pref);
 
-		if(empty($player_pref))
-		{
-			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
-		} else {
-			
-			$tpl = new template("part/single_pref.html");
-			$tpl->assign_array($player_pref);
-
-			return $tpl->r_display();
-		}
+		return $tpl->r_display();
 	}
 	
 	function createCheckbox($con, $player_id)

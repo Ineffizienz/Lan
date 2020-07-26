@@ -10,6 +10,7 @@ class Player {
 	public 	$ip;
 	public  $username;
 	public  $realname;
+	public	$pref = array();
 
 	public function __construct ($con, int $player_id)
 	{
@@ -28,8 +29,25 @@ class Player {
 			$this->username = $this->validatePlayerData($row["name"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
 
-			$this->returnPlayer();
 		}
+		
+		$this->getPlayerPreferences();
+		$this->returnPlayer();
+	}
+
+	private function getPlayerPreferences()
+	{
+		$result = mysqli_query($this->db_con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$this->id'");
+		while($row=mysqli_fetch_array($result))
+		{
+			if(!empty($row))
+			{
+				array_push($this->pref,$row);
+			} else {
+				array_push($this->pref,"Du hast noch keine gesetzt.");
+			}
+		}
+
 	}
 
 	private function validatePlayerData($output)
