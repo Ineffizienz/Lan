@@ -58,9 +58,9 @@ function run_controller(template $tpl)
 			break;
 			case 'own':
 				$tpl->assign_subtemplate('settings', "own_settings.html");
-				$tpl->assign("ip",$player->ip);
-				$tpl->assign("name",$player->username);
-				$tpl->assign("real_name",$player->realname);
+				$tpl->assign("ip",$player->getPlayerIp());
+				$tpl->assign("name",$player->getPlayerUsername());
+				$tpl->assign("real_name",$player->getPlayerRealname());
 				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player));
 				$tpl->assign("pref",displayPlayerPrefs($con, $player));
 				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player_id));

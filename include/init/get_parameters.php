@@ -207,26 +207,7 @@ function getSinglePlayerTeam($con, $player_id)
 
 	return $team;
 }
-function getSinglePlayerPref($con, $player_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerPrefs
-	*/
-	$result = mysqli_query($con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$player_id'");
-	while ($row=mysqli_fetch_assoc($result))
-	{
-		$player_pref[] = $row;
-	}
 
-	if(empty($player_pref))
-	{
-		$player_pref = array();
-	}
-
-	return $player_pref;
-
-}
 
 function getPlayerPrefs($con,$player_id)
 {

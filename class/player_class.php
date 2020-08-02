@@ -6,12 +6,12 @@
 class Player {
 	private $db_con;
 	private $player;
-	public  $id;
-	public 	$ip;
-	public  $username;
-	public  $realname;
-	public 	$profil_image;
-	public	$pref = array();
+	private $id;
+	private $ip;
+	private $username;
+	private $realname;
+	private	$profil_image;
+	private	$pref = array();
 
 	public function __construct ($con, int $player_id)
 	{
@@ -19,6 +19,7 @@ class Player {
 		$this->id = $player_id;
 		
 		$this->getPlayerBasicData();
+		$this->getPlayerDataPreferences();
 	}
 
 	private function getPlayerBasicData()
@@ -31,15 +32,12 @@ class Player {
 			$this->realname = $this->validatePlayerData($row["real_name"]);
 			$this->image = $row["profil_image"];
 		}
-		
-		$this->getPlayerPreferences();
-		$this->returnPlayer();
 	}
 
-	private function getPlayerPreferences()
+	private function getPlayerDataPreferences()
 	{
 		$result = mysqli_query($this->db_con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$this->id'");
-		while($row=mysqli_fetch_array($result))
+		while($row=mysqli_fetch_assoc($result))
 		{
 			if(!empty($row))
 			{
@@ -72,10 +70,51 @@ class Player {
 		}
 	}
 
-	public function returnPlayer()
+	public function setNewPreference($new_preference)
 	{
-		return $this->player;
+		$sql = "INSERT pref (player_id,game_id) VALUES ('$this->id','$new_preference')";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADD_PREF";
+		} else {
+			return "ERR_ADD_PREF";
+		}
+	}
+
+	public function removePreference($pref)
+	{
+		$sql = "DELETE FROM pref WHERE player_id = '$player->id' AND game_id = '$pref'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_DELETE_PREF";
+		} else {
+			return "ERR_DELETE_PREF";
+		}
 	}
 	
+	public function getPlayerIp()
+	{
+		return $this->ip;
+	}
+
+	public function getPlayerUsername()
+	{
+		return $this->username;
+	}
+
+	public function getPlayerRealname()
+	{
+		return $this->realname;
+	}
+
+	public function getPlayerProfilImage()
+	{
+		return $this->image;
+	}
+
+	public function getPlayerPreferences()
+	{
+		return $this->pref;
+	}
 }
 ?>

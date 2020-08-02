@@ -240,7 +240,7 @@
 	function displayPlayerPrefs($con, $player)
 	{
 		$tpl = new template("part/single_pref.html");
-		$tpl->assign_array($player->pref);
+		$tpl->assign_array($player->getPlayerPreferences());
 
 		return $tpl->r_display();
 	}
