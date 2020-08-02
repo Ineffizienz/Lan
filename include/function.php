@@ -245,7 +245,7 @@
 		return $tpl->r_display();
 	}
 	
-	function createCheckbox($con, $player_id)
+	function createCheckbox($con, $player)
 	{
 		$games = getGameData($con);
 
@@ -254,14 +254,12 @@
 			$output = "<i>Keine Spiele vorhanden</i>";
 			return $output;
 		} else {
-
-			$userPrefs = getPlayerPrefs($con, $player_id);
 			$options = array();
 			$checkbox = new template("part/checkbox_container.html");
 			
 			foreach ($games as $game)
 			{
-				if(in_array($game["ID"],$userPrefs))
+				if(in_array($game["ID"],array_column($player->getPlayerPreferences(),"ID")))
 				{
 					$checkbox_checked = new template("part/checkbox_checked.html");
 					$checkbox_checked->assign("game_id",$game["ID"]);

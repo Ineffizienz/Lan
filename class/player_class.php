@@ -36,7 +36,7 @@ class Player {
 
 	private function getPlayerDataPreferences()
 	{
-		$result = mysqli_query($this->db_con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT games.ID, games.name, games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$this->id'");
 		while($row=mysqli_fetch_assoc($result))
 		{
 			if(!empty($row))
@@ -92,6 +92,11 @@ class Player {
 		}
 	}
 	
+	public function getPlayerId()
+	{
+		return $this->id;
+	}
+
 	public function getPlayerIp()
 	{
 		return $this->ip;
