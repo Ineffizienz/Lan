@@ -12,6 +12,7 @@ class Player {
 	private $realname;
 	private	$profil_image;
 	private	$pref = array();
+	private $wow_account;
 
 	public function __construct ($con, int $player_id)
 	{
@@ -20,6 +21,7 @@ class Player {
 		
 		$this->getPlayerBasicData();
 		$this->getPlayerDataPreferences();
+		$this->getPlayerDataWowAccount();
 	}
 
 	private function getPlayerBasicData()
@@ -47,6 +49,15 @@ class Player {
 			}
 		}
 
+	}
+
+	private function getPlayerDataWoWAccount()
+	{
+		$result = mysqli_query($this->db_con,"SELECT wow_account FROM player WHERE ID = '$this->id'");
+		while($row=mysqli_fetch_array($result))
+		{
+			$this->wow_account = $row["wow_account"];
+		}
 	}
 
 	private function validatePlayerData($output)
@@ -120,6 +131,11 @@ class Player {
 	public function getPlayerPreferences()
 	{
 		return $this->pref;
+	}
+
+	public function getPlayerWowAccount()
+	{
+		return $this->wow_account;
 	}
 }
 ?>

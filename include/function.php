@@ -280,11 +280,9 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$con_wow,$con_char,$player_id)
+function selectWowAccount($con,$con_wow,$con_char,$player)
 {
-	$wow_account = getWowAccount($con,$player_id);
-
-	if(empty($wow_account))
+	if(empty($player->getPlayerWowAccount()))
 	{
 		$tpl = new template();
 		$tpl->load("wow_server/create_wow_account.html");
@@ -292,14 +290,14 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 
 		return $template;
 	} else {
-		$wow_id = getWowId($con_wow,$wow_account);
+		$wow_id = getWowId($con_wow,$player->getPlayerWowAccount());
 		$wow_account_chars = getChars($con_char,$wow_id);
 
 		if(empty($wow_account_chars))
 		{
 			$tpl = new template();
 			$tpl->load("wow_server/character_table_empty.html");
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		} else {
@@ -323,7 +321,7 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 				$output->assign_array($character_list);
 			
 			$tpl->assign_subtemplate("characters",$output);
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		}

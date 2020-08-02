@@ -10,7 +10,7 @@ function run_controller(template $tpl)
 			case 'wow_server':
 				global $con_wow, $con_char;
 				$tpl->assign_subtemplate('content', "wow_server.html");
-				$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player_id));
+				$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player));
 				$tpl->assign("realm",getRealmName($con_wow));
 				$tpl->assign("server_on",displayServerStatus($con_wow));
 			break;
