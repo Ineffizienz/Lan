@@ -83,7 +83,7 @@ class Player {
 
 	public function removePreference($pref)
 	{
-		$sql = "DELETE FROM pref WHERE player_id = '$player->id' AND game_id = '$pref'";
+		$sql = "DELETE FROM pref WHERE player_id = '$this->id' AND game_id = '$pref'";
 		if(mysqli_query($this->db_con,$sql))
 		{
 			return "SUC_DELETE_PREF";

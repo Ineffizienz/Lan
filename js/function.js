@@ -269,7 +269,14 @@ $(document).ready(function(){
 
 		var checkedGame = $(this).attr("id");
 
-		obj = {checkedGame};
+		if($(this).is(":checked"))
+		{
+			var state = "checked";
+		} else {
+			var state = "unchecked";
+		}
+
+		obj = {state, checkedGame};
 		
 		postAjax(obj,getEndpoint("add_pref"),reactToChange);
 	}

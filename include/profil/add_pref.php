@@ -5,29 +5,20 @@
     include(INIT . "get_parameters.php");
     include(CL . "message_class.php");
     include(CL . "progress_class.php");
+    include(CL . "player_class.php");
 
     $message = new message();
     $achievement = new Progress();
+    $player = new Player($con, $_SESSION["player_id"]);
     $game_id = $_REQUEST["checkedGame"];
 
-    $player_id = $_SESSION["player_id"];
-
-    if(isset($_REQUEST["checkedGame"]))
+    if($_REQUEST["state"] == "checked")
     {
-         //INSERT new value
-        $sql = "INSERT INTO pref (player_id,game_id) VALUES ('$player_id','$game_id')";
-        if(mysqli_query($con,$sql))
-        {
-            echo json_encode(array("message" => "Inserted"));
-        } else {
-            $sql = "DELETE FROM pref WHERE player_id = '$player_id' AND game_id = '$game_id'";
-            if(mysqli_query($con,$sql))
-            {
-                echo json_encode(array("message" => "Updated"));
-            } else {
-                $message->getMessageCode("ERR_DB");
-                echo json_encode(array("message" => $message->displayMessage()));
-            }
-        }
+        //INSERT new value
+        $message->getMessageCode($player->setNewPreference($game_id));
+        echo json_encode(array("message" => $message->displayMessage()));
+    } else {
+        $message->getMessageCode($player->removePreference($game_id));
+        echo json_encode(array("message" => $message->displayMessage()));
     }
 ?>
