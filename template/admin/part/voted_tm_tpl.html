@@ -1,15 +1,15 @@
 <tr>
-    <td>--GAME_NAME--</td>
-    <td>--STARTTIME--</td>
-    <td>--ENDTIME--</td>
+    <td>{$game_name}</td>
+    <td>{$starttime}</td>
+    <td>{$endtime}</td>
     <td class="running_votes" style="text-align:center;">
-        <span class="origin_votes">--VOTES--</span>
+        <span class="origin_votes">{$votes}</span>
     </td>
-    <td style="text-align:center;">--CLOSED--</td>
+    <td style="text-align:center;">{$closed}</td>
     <td>
-        <button class="define_tm" data-tm-vote="--VOTE_ID--" data-tm-game="--GAME_ID--" data-tm-game-name="--GAME_NAME--">Turnier starten</button>
+        <button class="define_tm" data-tm-vote="{$vote_id}" data-tm-game="{$game_id}" data-tm-game-name="{$game_name}">Turnier starten</button>
     </td>
     <td>
-        <button class="delete_vote" data-tm-vote="--VOTE_ID--" data-tm-game="--GAME_ID--">Abstimmung löschen</button>
+        <button class="delete_vote" data-tm-vote="{$vote_id}" data-tm-game="{$game_id}">Abstimmung löschen</button>
     </td>
 </tr>
