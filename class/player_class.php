@@ -12,6 +12,7 @@ class Player {
 	private $realname;
 	private	$profil_image;
 	private	$pref = array();
+	private $achievement = array();
 	private $wow_account;
 
 	public function __construct ($con, int $player_id)
@@ -22,6 +23,7 @@ class Player {
 		$this->getPlayerBasicData();
 		$this->getPlayerDataPreferences();
 		$this->getPlayerDataWowAccount();
+		$this->getPlayerDataAchievements();
 	}
 
 	private function getPlayerBasicData()
@@ -49,6 +51,20 @@ class Player {
 			}
 		}
 
+	}
+
+	private function getPlayerDataAchievements()
+	{
+		$result = mysqli_query($this->db_con,"SELECT ac_id FROM ac_player WHERE player_id = '$this->id'");
+		while($row=mysqli_fetch_assoc($result))
+		{
+			if(!empty($row))
+			{
+				array_push($this->achievement,$row["ac_id"]);
+			} else {
+				array_push($this->achievement,"Du hast noch keine Achievements erhalten.");
+			}
+		}
 	}
 
 	private function getPlayerDataWoWAccount()
@@ -131,6 +147,11 @@ class Player {
 	public function getPlayerPreferences()
 	{
 		return $this->pref;
+	}
+
+	public function getPlayerAchievements()
+	{
+		return $this->achievement;
 	}
 
 	public function getPlayerWowAccount()

@@ -440,33 +440,26 @@ function displayServerStatus($con_wow)
 
 /******************************* ACHIEVEMENTS ************************************/
 
-function displayPlayerAchievements($con, $player_id)
+function displayPlayerAchievements($con, $player)
 {
-	$achievement_id = getUserAchievements($con, $player_id);
-
 	$ac = new Achievement();
-	if (empty($achievement_id))
+	foreach ($player->getPlayerAchievements() as $id)
 	{
-		$output = "Du hast bisher keine Achievements erworben.";
-	} else {
-		foreach ($achievement_id as $id)
-		{
-			$achievement_details = getAchievementById($con, $id);
+		$achievement_details = getAchievementById($con, $id);
 
-			foreach ($achievement_details as $achievement)
+		foreach ($achievement_details as $achievement)
+		{
+			$ac->getDetails($achievement);
+		
+			if (!isset($output))
 			{
-				$ac->getDetails($achievement);
-			
-				if (!isset($output))
-				{
-					$output = $ac->displayAchievement();
-				} else {
-					$output .= $ac->displayAchievement();
-				}
+				$output = $ac->displayAchievement();
+			} else {
+				$output .= $ac->displayAchievement();
 			}
 		}
-		return $output;
 	}
+	return $output;
 
 }
 

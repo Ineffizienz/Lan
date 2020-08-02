@@ -67,7 +67,7 @@ function run_controller(template $tpl)
 			break;
 			case 'achieve':
 				$tpl->assign_subtemplate('settings', "achievement_list.html");
-				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player_id));
+				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player));
 				$tpl->assign("ac_small",displayAvailableAchievements($con, $player_id));
 			break;
 		}
