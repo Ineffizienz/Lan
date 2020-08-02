@@ -328,7 +328,6 @@ function getGameInfoById($con,$game_id)
 		- function.php/displayTournaments
 
 		:Admin
-		- admin_func.php/displayVotedTournaments
 		- admin_func.php/displayTournaments
 	*/
 
@@ -991,7 +990,7 @@ function getPlayerIdsFromVote($con,$vote_id)
 		- create_tm.php
 	*/
 
-	$result = mysqli_query($con,"SELECT player_id FROM tm_vote_player WHERE tm_vote_id = '$vote_id'");
+	$result = mysqli_query($con,"SELECT tm_gamerslist.ID FROM tm_gamerslist INNER JOIN tm_vote_player ON tm_gamerslist.player_id = tm_vote_player.player_id WHERE tm_vot_player.tm_vote_id = '$vote_id'");
 	while($row=mysqli_fetch_array($result))
 	{
 		$votedPlayerIds[] = $row["player_id"];
@@ -1031,7 +1030,7 @@ function getVotedTournaments($con)
 		- admin_func.php/displayVotedTournaments
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, game_id, vote_count, starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, vote_closed FROM tm_vote ORDER BY endtime DESC");
+	$result = mysqli_query($con,"SELECT tm_vote.ID, games.name, tm_vote.game_id, tm_vote.vote_count, tm_vote.starttime, DATE_FORMAT(`endtime`, '%d.%m.%Y %H:%i') AS endtime, tm_vote.vote_closed FROM tm_vote INNER JOIN games ON games.ID = tm_vote.game_id ORDER BY endtime DESC");
 	if(!empty($result))
 	{
 		while($row=mysqli_fetch_assoc($result))

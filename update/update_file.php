@@ -147,5 +147,25 @@ function addMatchLockedToPaarung($con)
     }
 }
 
+function setTournamentPlayerIdUnique($con)
+{
+    if(mysqli_query($con,"ALTER TABLE tm_gamerslist CHANGE `tm_id` `tm_id` INT(11) NOT NULL"))
+    {
+        echo "Die Spalte <i>tm_id</i> kann nicht mehr NULL gesetzt werden.<br>";
+        if(mysqli_query($con,"DELETE FROM tm_gamerslist WHERE ID = '15'"))
+        {
+            if(mysqli_query($con,"ALTER TABLE tm_gamerslist ADD CONSTRAINT UC_Gamer UNIQUE (tm_id,player_id)"))
+            {
+                echo "Die Spalten <i>tm_id</i> und <i>player_id</i> sind jetzt UNIQUE.<br>";
+            } else {
+                echo mysqli_error($con);
+            }
+        }
+        
+    } else {
+        echo mysqli_error($con);
+    }
+}
+
 
 ?>
