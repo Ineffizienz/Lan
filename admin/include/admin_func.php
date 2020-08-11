@@ -134,17 +134,15 @@ function displayTeams($con) // Teamverwaltung --> Team löschen
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
+	$output = new template("admin/part/ac_table_content.html");
+	
 	$userlist = getBasicUserData($con);
 	$ac_option = getAllAchievementByName($con);
-	
-	$selectable_option = buildOption($ac_option);
-	$selectable_user = buildOption($userlist);
 
-	$tm_part = file_get_contents("template/admin/part/ac_table_content.html");
-	
-	$output = str_replace(array("--USER--","--AC_NAME--"),array($selectable_user,$selectable_option),$tm_part);
+	$output->assign("user",buildOption($userlist));
+	$output->assign("ac_name",buildOption($ac_option));
 
-	return $output;
+	return $output->r_display();
 }
 
 function displayAcCategories($con)
