@@ -26,31 +26,6 @@ function getFirstLoginById($con,$id)
 
 /*
 ###########################################################
-######################## TICKET #############################
-###########################################################
-*/
-
-	// ###### TICKET-ADMIN ######
-	
-	function getUserTicketRelation($con)
-	{
-		/* Used in:
-			:Admin
-			- admin_func.php/displayTicketStatus
-		*/
-
-		$result = mysqli_query($con,"SELECT name, ticket_active FROM player");
-		while($row=mysqli_fetch_assoc($result))
-		{
-			$ticketStatus[] = $row;
-		}
-
-		return $ticketStatus;
-	}
-
-
-/*
-###########################################################
 ######################## USER #############################
 ###########################################################
 */

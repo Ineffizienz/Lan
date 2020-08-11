@@ -167,28 +167,20 @@ function displayAcTrigger($con)
 
 function displayTicketStatus($con)
 {
-	$ticket_status = getUserTicketRelation($con);
+	$output = new template("admin/part/ticket_status_table.html");
+	$player_ids = getAllUserIDs($con);
+	$ticket_data = array();
 	
-	foreach ($ticket_status as $status)
+	foreach ($player_ids as $id)
 	{
-		if (empty($status["ticket_active"]))
-		{
-			$param = "Inaktiv";
-		} else {
-			$param = "Aktiv";
-		}
-		
-		$table_template = file_get_contents("template/part/basic_table.html");
-		
-		if(!isset($output))
-		{
-			$output = str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		} else {
-			$output .= str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		}
+		$player = new Player($con,$id);
+
+		array_push($ticket_data,array("username" => $player->getPlayerUsername(),"ticket_active" => $player->getPlayerTicketActive()));
 	}
+
+	$output->assign_array($ticket_data);
 	
-	return $output;
+	return $output->r_display();
 }
 
 function displaySingleGame($con)

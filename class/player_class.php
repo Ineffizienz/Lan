@@ -15,6 +15,7 @@ class Player {
 	private $team_captain;
 	private	$profil_image;
 	private $first_login;
+	private $ticket_active;
 	private	$pref = array();
 	private $achievement = array();
 	private $wow_account;
@@ -36,7 +37,7 @@ class Player {
 
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
@@ -46,6 +47,7 @@ class Player {
 			$this->team_captain = $this->validatePlayerData($row["team_captain"]);
 			$this->image = $row["profil_image"];
 			$this->first_login = $row["first_login"];
+			$this->ticket_active = $this->translateTicketStatus($row["ticket_active"]);
 		}
 	}
 
@@ -118,6 +120,16 @@ class Player {
 			return "";
 		} else {
 			return $output;
+		}
+	}
+
+	private function translateTicketStatus($t_status)
+	{
+		if(empty($t_status))
+		{
+			return "Inaktiv";
+		} else {
+			return "Aktiv";
 		}
 	}
 
@@ -202,6 +214,11 @@ class Player {
 	public function getPlayerFirstLogin()
 	{
 		return $this->first_login;
+	}
+
+	public function getPlayerTicketActive()
+	{
+		return $this->ticket_active;
 	}
 
 	public function getPlayerPreferences()
