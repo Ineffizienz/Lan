@@ -4,27 +4,10 @@ require_once dirname(__DIR__).'../../include/init/get_parameters.php';
 
 function buildOption($optionArr)
 {
-	foreach ($optionArr as $option)
-	{
-		// get first key = $id, get new first key = $name --> Wie heißt die Funktion dafür?
-		$part = file_get_contents("template/admin/part/option.html");
+	$tpl = new template("admin/part/option.html");
+	$tpl->assign_array($optionArr);
 
-		if(array_key_exists("title",$option))
-		{
-			$key = "title";
-		} elseif (array_key_exists("name",$option)) {
-			$key = "name";
-		}
-
-		if(!isset($output_option))
-		{
-			$output_option = str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		} else {
-			$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		}
-	}
-
-	return $output_option;
+	return $tpl->r_display();
 }
 
 function buildJSONOutput($elements)
@@ -173,9 +156,9 @@ function displaySingleGame($con)
 	{
 		if($game["has_table"] == "1")
 		{
-			$selected_option = array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein"));
+			$selected_option = array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein"));
 		} else {
-			$selected_option = array(array("ID"=>"0","name"=>"Nein"),array("ID"=>"1","name"=>"Ja"));
+			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
 		$has_table = buildOption($selected_option);
@@ -196,9 +179,9 @@ function displaySingleGame($con)
 
 		if(empty($game["addon"]))
 		{
-			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		} else {
-			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
 		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);

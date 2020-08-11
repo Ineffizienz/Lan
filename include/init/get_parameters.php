@@ -66,7 +66,7 @@ function getBasicUserData($con)
 		:Admin
 		- admin_func.php/addUsername
 	*/
-	$result = mysqli_query($con, "SELECT ID,name FROM player");
+	$result = mysqli_query($con, "SELECT ID AS id,name FROM player");
 	while($row = mysqli_fetch_assoc($result))
 	{
 		$basic_user[] = $row;
@@ -193,7 +193,7 @@ function getFullGameData($con)
 		- admin_func.php/displayTmGames
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
+	$result = mysqli_query($con,"SELECT ID AS id, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -704,7 +704,7 @@ function getAllAchievementByName($con)
 		- admin_func.php/addUsername
 	*/
 
-	$result = mysqli_query($con,"SELECT ID,title FROM ac");
+	$result = mysqli_query($con,"SELECT ID AS id,title AS name FROM ac");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$ac_option[] = $row;
