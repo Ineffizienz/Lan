@@ -64,15 +64,15 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 	
 	if(!$display_name_reg || $success)
 	{		
-		$player_id = $_SESSION["player_id"];
+		$player = new Player($con,$_SESSION["player_id"]);
 
 		$tpl->assign_subtemplate('content', 'index.html');
 		$tpl->assign("lantitle",$title);
 		$tpl->assign("sir_brummel",$message->displayMessage());
 		
 		$tpl->assign_subtemplate('menu', 'menu.html');
-		$tpl->assign("status",getUserRelatedStatusColor($con,$player_id));
-		$tpl->assign("status_option",getUserStatusOption($con,$player_id));
+		$tpl->assign("status",getUserRelatedStatusColor($con,$player));
+		$tpl->assign("status_option",getUserStatusOption($con,$player));
 		
 		include(INC . "controller.php");
 		run_controller($tpl);

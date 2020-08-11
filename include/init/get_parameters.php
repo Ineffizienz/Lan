@@ -655,22 +655,6 @@ function getCaptainStatus($con, $player_id)
 ###########################################################
 */
 
-function getStatus($con,$id)
-{
-	/* Used in:
-		:User
-		- function.php/getUserRelatedStatusColor
-		- function.php/getUserStatusOption
-	*/
-
-	$result = mysqli_query($con,"SELECT status.status AS id, status_name.status_name FROM status INNER JOIN status_name ON status_name.status_id = status.status WHERE user_id = '$id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$status = $row;
-	}
-
-	return $status;
-}
 function getStatusColor($con,$status)
 {
 	/* Used in:
@@ -745,9 +729,6 @@ function getAchievementById($con,$ac_id)
 function getUserAchievements($con,$player_id)
 {
 	/* Used in:
-		:User
-		- function.php/displayPlayerAchievements
-
 		:Admin
 		- assign_achievement.php
 	*/

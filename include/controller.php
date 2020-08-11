@@ -3,7 +3,6 @@ function run_controller(template $tpl)
 {
 	global $con;
 	$player = new Player($con, $_SESSION["player_id"]);
-	$player_id = $_SESSION["player_id"];
 	if (isset($_REQUEST["page"]))
 	{
 		switch ($_REQUEST["page"]) {
@@ -68,7 +67,7 @@ function run_controller(template $tpl)
 			case 'achieve':
 				$tpl->assign_subtemplate('settings', "achievement_list.html");
 				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player));
-				$tpl->assign("ac_small",displayAvailableAchievements($con, $player_id));
+				$tpl->assign("ac_small",displayAvailableAchievements($con, $player));
 			break;
 		}
 	}

@@ -132,24 +132,22 @@
 		return $tpl->r_display();
 	}
 	
-	function getUserRelatedStatusColor($con,$player_id)
+	function getUserRelatedStatusColor($con,$player)
 	{
-		$status = getStatus($con,$player_id);
-		$status_color = getStatusColor($con,$status["id"]);
+		$status_color = getStatusColor($con,$player->getPlayerStatusId());
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
 
 		return $circle;
 	}
 
-	function getUserStatusOption($con,$player_id)
+	function getUserStatusOption($con,$player)
 	{
-		$user_status = getStatus($con,$player_id);
-		$status_data = getStatusData($con, $user_status["id"]);
+		$status_data = getStatusData($con, $player->getPlayerStatusId());
 
 		$option = build_option_new($status_data);
 		
-		return "<option value='" . $user_status["id"] . "' selected>" . $user_status["status_name"] . $option;
+		return "<option value='" . $player->getPlayerStatusId() . "' selected>" . $player->getPlayerStatusName() . $option;
 
 	}
 
@@ -463,9 +461,9 @@ function displayPlayerAchievements($con, $player)
 
 }
 
-function displayAvailableAchievements($con, $player_id)
+function displayAvailableAchievements($con, $player)
 {
-	$basic_ac = getAvailableAchievements($con, $player_id);
+	$basic_ac = getAvailableAchievements($con, $player->getPlayerId());
 	
 	$ac = new Achievement();
 	if(!empty($basic_ac))

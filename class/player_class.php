@@ -14,6 +14,8 @@ class Player {
 	private	$pref = array();
 	private $achievement = array();
 	private $wow_account;
+	private $status_id;
+	private $status_name;
 
 	public function __construct ($con, int $player_id)
 	{
@@ -24,6 +26,7 @@ class Player {
 		$this->getPlayerDataPreferences();
 		$this->getPlayerDataWowAccount();
 		$this->getPlayerDataAchievements();
+		$this->getPlayerStatusData();
 	}
 
 	private function getPlayerBasicData()
@@ -64,6 +67,16 @@ class Player {
 			} else {
 				array_push($this->achievement,"Du hast noch keine Achievements erhalten.");
 			}
+		}
+	}
+
+	private function getPlayerStatusData()
+	{
+		$result = mysqli_query($this->db_con,"SELECT status.status AS id, status_name.status_name FROM status INNER JOIN status_name ON status_name.status_id = status.status WHERE user_id = '$this->id'");
+		while($row=mysqli_fetch_array($result))
+		{
+			$this->status_id = $row["id"];
+			$this->status_name = $row["status_name"];
 		}
 	}
 
@@ -157,6 +170,16 @@ class Player {
 	public function getPlayerWowAccount()
 	{
 		return $this->wow_account;
+	}
+
+	public function getPlayerStatusId()
+	{
+		return $this->status_id;
+	}
+
+	public function getPlayerStatusName()
+	{
+		return $this->status_name;
 	}
 }
 ?>
