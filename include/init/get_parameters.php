@@ -10,9 +10,6 @@
 function getFirstLoginById($con,$id)
 {
 	/* Used in:
-		:User
-		- index.php
-
 		:Admin
 		- delete_player.php
 	*/
@@ -107,7 +104,6 @@ function getSingleUsername($con, $player_id): array
 {
 	/* Used in:
 		:User
-		- index.php
 		- profil_image.php
 		- index.php
 	*/

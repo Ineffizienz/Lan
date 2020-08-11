@@ -11,6 +11,7 @@ class Player {
 	private $username;
 	private $realname;
 	private	$profil_image;
+	private $first_login;
 	private	$pref = array();
 	private $achievement = array();
 	private $wow_account;
@@ -31,13 +32,14 @@ class Player {
 
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, profil_image FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, profil_image, first_login FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
 			$this->username = $this->validatePlayerData($row["name"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
 			$this->image = $row["profil_image"];
+			$this->first_login = $row["first_login"];
 		}
 	}
 
@@ -155,6 +157,11 @@ class Player {
 	public function getPlayerProfilImage()
 	{
 		return $this->image;
+	}
+
+	public function getPlayerFirstLogin()
+	{
+		return $this->first_login;
 	}
 
 	public function getPlayerPreferences()
