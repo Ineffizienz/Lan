@@ -366,6 +366,21 @@ class Player {
 	}
 
 	/************************************************************************************
+	 *	WOW-ACCOUNT HANDLING
+	*************************************************************************************/
+
+	public function setNewWowAccount($account_name)
+	{
+		$sql = "UPDATE player SET wow_account = '$account_name' WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ACC_CREATE";
+		} else {
+			return "ERR_ACC_CREATE";
+		}
+	}
+
+	/************************************************************************************
 	 *	GET DATA
 	*************************************************************************************/
 	
