@@ -9,7 +9,7 @@
 					include("admin/overview/key_status.php");
 					include("admin/overview/team_status.php");
 					$tpl->assign_subtemplate("content","admin/overview.html");
-					$tpl->assign("key_status",$key_status);
+					$tpl->assign_subtemplate("key_status",$output);
 					$tpl->assign("team_status",$team_status);
 				break;
 				case "player":
@@ -25,7 +25,7 @@
 				case "keys":
 					include("admin/overview/key_status.php");
 					$tpl->assign_subtemplate("content","admin/keys.html");
-					$tpl->assign("keys",$key_status);
+					$tpl->assign_subtemplate("keys",$output);
 				break;
 				case "team":
 					$tpl->assign_subtemplate("content","admin/team.html");
