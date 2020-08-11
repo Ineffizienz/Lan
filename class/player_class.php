@@ -35,6 +35,9 @@ class Player {
 		$this->getPlayerStatusData();
 	}
 
+	/************************************************************************************
+	 *	QUERY DATA
+	*************************************************************************************/
 	private function getPlayerBasicData()
 	{
 		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
@@ -113,6 +116,10 @@ class Player {
 		}
 	}
 
+	/************************************************************************************
+	 *	DATA VALIDATION
+	*************************************************************************************/
+
 	private function validatePlayerData($output)
 	{
 		if(empty($output) || $output == "")
@@ -187,6 +194,11 @@ class Player {
 	 *	KEYS
 	*************************************************************************************/
 
+	public function setKey($key,$game_id)
+	{
+		mysqli_query($this->db_con,"UPDATE gamekeys SET player_id = '$this->id' WHERE gamekey = '$key' AND game_id = '$game_id'");
+	}
+	
 	private function resetKeys()
 	{
 		$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = '$this->id'";
@@ -270,6 +282,10 @@ class Player {
 			}
 		}
 	}
+
+	/************************************************************************************
+	 *	GET DATA
+	*************************************************************************************/
 	
 	public function getFullBasicData()
 	{

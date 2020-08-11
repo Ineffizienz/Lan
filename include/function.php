@@ -151,9 +151,9 @@
 
 	}
 
-	function generateGameKey($con, int $player_id, int $game_id)
+	function generateGameKey($con, $player, int $game_id)
 	{
-		$key = getPlayerGameKey($con, $player_id, $game_id);
+		$key = getPlayerGameKey($con, $player->getPlayerId(), $game_id);
 
 		if ($key === false)
 		{
@@ -164,7 +164,7 @@
 				$message_code = "ERR_NO_KEY";
 				return $message_code;
 			} else {
-				mysqli_query($con,"UPDATE gamekeys SET player_id = '$player_id' WHERE (gamekey = '$first_key') AND (game_id = '$game_id');");
+				$player->setKey($first_key,$game_id);
 				return $first_key;
 			}
 		} else {
