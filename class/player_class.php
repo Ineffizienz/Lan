@@ -133,6 +133,20 @@ class Player {
 		}
 	}
 
+	/************************************************************************************
+	 *	SET NEW USER/USER-DATA
+	*************************************************************************************/
+	public function setNewUser($new_name,$new_ip)
+	{
+		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADMIN_NEW_PLAYER";
+		} else {
+			return "ERR_ADMIN_DB";
+		}
+	}
+
 	public function setNewUsername($new_username)
 	{
 		$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$this->id'";
