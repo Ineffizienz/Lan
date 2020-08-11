@@ -278,6 +278,11 @@ class Player {
 	 *	STATUS HANDLING
 	*************************************************************************************/
 
+	public function setNewStatus($status)
+	{
+		mysqli_query($this->db_con,"UPDATE status SET status = '$status' WHERE user_id = '$this->id'");
+	}
+	
 	private function deleteStatus()
 	{
 		$sql = "DELETE FROM status WHERE user_id = '$this->id'";
