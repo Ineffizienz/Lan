@@ -2,25 +2,6 @@
 
 require_once dirname(__DIR__).'../../include/init/get_parameters.php';
 
-function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
-{
-	if (file_exists("template/" . $file))
-	{
-		$data = fopen("template/" . $file, "r");
-		while (!feof($data))
-		{
-			if (!isset($content))
-			{
-				$content = fgets($data);
-			} else {	
-				$content .= fgets($data);
-			}
-		}
-		fclose($data);
-		return ($content);
-	}
-}
-
 function buildOption($optionArr)
 {
 	foreach ($optionArr as $option)
@@ -183,12 +164,13 @@ function displayTicketStatus($con)
 
 function displaySingleGame($con)
 {
+	$output = new template("admin/part/game_table.html");
+	$game_output = array();
+
 	$game_data = getGameData($con);
 
 	foreach ($game_data as $game)
 	{
-		$singleGame_template = file_get_contents("template/admin/part/game_table.html");
-
 		if($game["has_table"] == "1")
 		{
 			$selected_option = array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein"));
@@ -218,16 +200,15 @@ function displaySingleGame($con)
 		} else {
 			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
 		}
+		
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		array_push($game_output,$transfer);
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		}
 	}
+	
+	$output->assign_array($game_output);
 
-	return $output;
+	return $output->r_display();
 }
 
 function validateInput($new_game)

@@ -16,7 +16,6 @@
 					include("admin/player/view/player_settings_view.php");
 					$tpl->assign_subtemplate("content","admin/settings_player.html");
 					$tpl->assign_subtemplate("player",$output);
-					$tpl->assign("username",addUsername($con));
 				break;
 				case "games":
 					$tpl->assign_subtemplate("content","admin/game_settings.html");
@@ -71,7 +70,7 @@
 			include("admin/overview/key_status.php");
 			include("admin/overview/team_status.php");
 			$tpl->assign_subtemplate("content","admin/overview.html");
-			$tpl->assign("key_status",$key_status);
+			$tpl->assign_subtemplate("key_status",$output);
 			$tpl->assign("team_status",$team_status);
 		}
 	}
