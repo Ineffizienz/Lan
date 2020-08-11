@@ -680,27 +680,6 @@ function getAchievementById($con,$ac_id)
 	return $achievement;
 }
 
-function getUserAchievements($con,$player_id)
-{
-	/* Used in:
-		:Admin
-		- assign_achievement.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE player_id = '$player_id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_id[] = $row["ac_id"];
-	}
-
-	if (empty($ac_id))
-	{
-		$ac_id = array();
-	}
-
-	return $ac_id;
-}
-
 function getAvailableAchievements($con, $player_id)
 {
 	/* Used in:

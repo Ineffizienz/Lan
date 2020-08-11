@@ -144,6 +144,10 @@ class Player {
 		}
 	}
 
+	/************************************************************************************
+	 *	PREFRENCES
+	*************************************************************************************/
+
 	public function setNewPreference($new_preference)
 	{
 		$sql = "INSERT pref (player_id,game_id) VALUES ('$this->id','$new_preference')";
@@ -163,6 +167,21 @@ class Player {
 			return "SUC_DELETE_PREF";
 		} else {
 			return "ERR_DELETE_PREF";
+		}
+	}
+
+	/************************************************************************************
+	 *	ACHIEVEMENTS
+	*************************************************************************************/
+
+	public function setNewAchievementAdmin($new_achievement)
+	{
+		$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$this->id','$new_achievement')";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADMIN_ASSIGN_AC";
+		} else {
+			return "ERR_ADMIN_DB";
 		}
 	}
 	
