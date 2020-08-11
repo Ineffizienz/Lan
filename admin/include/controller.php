@@ -49,6 +49,8 @@
 				case "ac_action":
 					$tpl->assign_subtemplate("content","admin/ac_action.html");
 					$tpl->assign("username",addUsername($con));
+					$tpl->assign("ac_cat",displayAcCategories($con));
+					$tpl->assign("ac_trigger",displayAcTrigger($con));
 				break;
 				case "ticket":
 					$tpl->assign_subtemplate("content","admin/ticket_status.html");
