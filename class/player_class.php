@@ -143,6 +143,61 @@ class Player {
 	/************************************************************************************
 	 *	SET NEW USER/USER-DATA
 	*************************************************************************************/
+	private function setPlayerNames($nick,$real_name)
+	{
+		$sql = "UPADTE player SET username = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private function setFirstLogin()
+	{
+		if($this->first_login != "0")
+		{
+			$sql = "UPDATE player SET first_login = '0' WHERE ID = '$this->id'";
+			if(!mysqli_query($this->db_con,$sql))
+			{
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	private function setStatusValue()
+	{
+		$sql = "INSERT INTO status (user_id, status) VALUES ('$this->id','1')";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public function setUpPlayer($nick, $real_name)
+	{
+		if($this->setPlayerNick($nick))
+		{
+			if($this->setFirstLogin())
+			{
+				if($this->setStatusValue())
+				{
+					return true;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		
+	}
+
 	public function setNewUser($new_name,$new_ip)
 	{
 		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
@@ -178,7 +233,7 @@ class Player {
 			$this->removePlayer();
 		}
 	}
-	
+
 	private function removePlayer()
 	{
 		$sql = "DELETE FROM player WHERE ID = '$this->id'";
