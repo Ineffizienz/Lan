@@ -87,7 +87,7 @@ function transferMatchData($con)
             {
                 echo "Daten des Matches " . $matches_id . " erfolgreich eingetragen.<br>";
             } else {
-                echo mysqli_error($con);
+                echo mysqli_error($con) . "<br>";
             }
         }
 
@@ -95,10 +95,10 @@ function transferMatchData($con)
         {
             echo "Spalte <i>matches_id</i> erfolgreich gelöscht.<br>";
         } else {
-            echo mysqli_error($con);
+            echo mysqli_error($con) . "<br>";
         }
     } else {
-        echo mysqli_error($con);
+        echo mysqli_error($con) . "<br>";
     }
 }
 
@@ -110,7 +110,7 @@ function deleteTmMatches($con)
         {
             echo "Tabelle <i>tm_matches</i> erfolgreich gelöscht.<br>";
         } else {
-            echo mysqli_error($con);
+            echo mysqli_error($con) . "<br>";
         }
     } else {
         echo "Tabelle bereits gelöscht.<br>";
@@ -125,7 +125,7 @@ function deleteTmMatch($con)
         {
             echo "Tabelle <i>tm_match</i> erfolgreich gelöscht.<br>";
         } else {
-            echo mysqli_error($con);
+            echo mysqli_error($con) . "<br>";
         }
     } else {
         echo "Tabelle bereits gelöscht.<br>";
@@ -142,7 +142,7 @@ function addMatchLockedToPaarung($con)
         {
             echo "Die Spalte <i>match_locked</i> wurde erfolgreich hinzugefügt.<br>";
         } else {
-            echo mysqli_error($con);
+            echo mysqli_error($con) . "<br>";
         }
     }
 }
@@ -158,14 +158,90 @@ function setTournamentPlayerIdUnique($con)
             {
                 echo "Die Spalten <i>tm_id</i> und <i>player_id</i> sind jetzt UNIQUE.<br>";
             } else {
-                echo mysqli_error($con);
+                echo mysqli_error($con) . "<br>";
             }
         }
         
     } else {
-        echo mysqli_error($con);
+        echo mysqli_error($con) . "<br>";
     }
 }
 
+function createTournamentArchivTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm`;")) == 1)
+    {
+        echo "Die Tabelle <i>archiv_tm</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE archiv_tm (ID INT(11) PRIMARY KEY NOT NULL, game_id INT(11) NOT NULL, mode INT(11) NOT NULL, mode_details INT(11) NULL, player_count INT (11) NULL, tm_period_id INT(11) NOT NULL)"))
+        {
+            echo "Die Tabelle <i>archiv_tm</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+    
+}
 
+function createTmPaarungArchivTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm_paarung`;")) == 1)
+    {
+        echo "Die Tabelle <i>archiv_tm_paarung</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE archiv_tm_paarung (ID INT(11) PRIMARY KEY NOT NULL, team_1 INT(11) NULL, team_2 INT(11) NULL, stage INT(11) NULL, tournament INT(11) NOT NULL, successor INT(11) NULL, result_team1 INT(11) NULL, result_team2 INT(11) NULL)"))
+        {
+            echo "Die Tabelle <i>archiv_tm_paarung</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+    
+}
+
+function createTmGamerslistArchivTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm_gamerslist`;")) == 1)
+    {
+        echo "Die Tabelle <i>archiv_tm_gamerslist</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE archiv_tm_gamerslist (ID INT(11) PRIMARY KEY NOT NULL, tm_id INT(11) NOT NULL, player_id INT(11) NOT NULL)"))
+        {
+            echo "Die Tabelle <i>archiv_tm_gamerslist</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+    
+}
+
+function createTmPeriodArchivTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHWO TABLES LIKE `archiv_tm_period`;")) == 1)
+    {
+        echo "Die Tabelle <i>archiv_tm_period</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE archiv_tm_period (ID INT(11) PRIMARY KEY NOT NULL, time_from DATETIME NOT NULL, time_to DATETIME NOT NULL)"))
+        {
+            echo "Die Tabelle <i>archiv_tm_period</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+}
+
+function createLanTable($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `lan`;")) == 1)
+    {
+        echo "Die Tabelle <i>lan</i> existiert bereits.<br>";
+    } else {
+        if(mysqli_query($con,"CREATE TABLE lan (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, date_from DATETIME NOT NULL, date_to DATETIME NOT NULL)"))
+        {
+            echo "Die Tabelle <i>lan</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    }
+}
 ?>

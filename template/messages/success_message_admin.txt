@@ -20,3 +20,5 @@ SUC_ADMIN_DELETE_VOTE: Die Abstimmung wurde erfolgreich gelöscht.
 SUC_ADMIN_CREATE_TM_FROM_VOTE: Turnier erfolgreich aus einer Abstimmung erstellt.
 SUC_ADMIN_BANNER_CHANGED: Das Banner wurde erfolgreich geändert.
 SUC_ADMIN_CREATE_TICKET_ID: Ticket-ID erfolgreich erstellt.
+SUC_ADMIN_ARCHIV_TM: Das Turnier wurde vollständig archiviert.
+SUC_ADMIN_CREATE_LAN: Die Lan wurde erfolgreich angelegt.

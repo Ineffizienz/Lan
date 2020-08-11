@@ -10,4 +10,9 @@ deleteTmMatches($con);
 deleteTmMatch($con);
 addMatchLockedToPaarung($con);
 setTournamentPlayerIdUnique($con);
+createTournamentArchivTable($con);
+createTmPaarungArchivTable($con);
+createTmGamerslistArchivTable($con);
+createTmPeriodArchivTable($con);
+createLanTable($con);
 ?>

@@ -25,4 +25,9 @@ ERR_ADMIN_TM_CANNOT_BE_STARTED: Das Turnier kann nicht gestartet werden. Es läu
 ERR_ADMIN_EMPTY_PARAM: Es wurde ein leerer Parameter übergeben.
 ERR_ADMIN_KEYLIST_MOVE: Fehler beim Verschieben der Keyliste
 ERR_ADMIN_MISSING_PAIR: Es wurden keine Paarungen erstellt.
-
+ERR_ADMIN_ARCHIV_TOURNAMENT: Beim Archivieren des Turniers ist ein Fehler aufgetreten.
+ERR_ADMIN_ARCHIV_DATA: Beim Archivieren der turnierbezogenen Daten ist ein Fehler aufgtreten.
+ERR_ADMIN_DEL_TM_ENTRY: Beim Löschen des Turniereintrages ist ein Fehler aufgetreten.
+ERR_ADMIN_MISSING_LAN_TITLE: Es wurde kein Titel für die Lan angegeben.
+ERR_ADMIN_MISSING_DATE_FROM: Es wurde kein Startdatum der Lan angegeben.
+ERR_ADMIN_MISSING_DATE_TO: Es wurde kein Enddatum für die Lan angegeben.
