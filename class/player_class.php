@@ -253,6 +253,17 @@ class Player {
 	{
 		mysqli_query($this->db_con,"UPDATE gamekeys SET player_id = '$this->id' WHERE gamekey = '$key' AND game_id = '$game_id'");
 	}
+
+	public function setRejectKey($game_id)
+	{
+		$sql = "UPDATE gamekeys SET rejected = '1' WHERE (player_id = '$this->id') AND (game_id = '$game_id') LIMIT 1";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	private function resetKeys()
 	{
