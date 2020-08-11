@@ -158,6 +158,57 @@ class Player {
 		}
 	}
 
+	public function removePlayerFromSystem()
+	{
+		if($this->first_login == "1")
+		{
+			$this->removePlayer();
+		} else {
+			$this->deleteStatus();
+			$this->resetKeys();
+			$this->removePreferences();
+			$this->removePlayerAchievements();
+			$this->removePlayer();
+		}
+	}
+	
+	private function removePlayer()
+	{
+		$sql = "DELETE FROM player WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADMIN_DELETE_USER";
+		} else {
+			return "ERR_ADMIN_DB";
+		}
+	}
+
+	/************************************************************************************
+	 *	KEYS
+	*************************************************************************************/
+
+	private function resetKeys()
+	{
+		$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = '$this->id'";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return "ERR_ADMIN_DB";
+		}
+	}
+
+	/************************************************************************************
+	 *	STATUS
+	*************************************************************************************/
+
+	private function deleteStatus()
+	{
+		$sql = "DELETE FROM status WHERE user_id = '$this->id'";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return "ERR_ADMIN_DB";
+		}
+	}
+
 	/************************************************************************************
 	 *	PREFRENCES
 	*************************************************************************************/
@@ -184,6 +235,15 @@ class Player {
 		}
 	}
 
+	private function removePreferences()
+	{
+		$sql = "DELETE FROM pref WHERE player_id = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "ERR_ADMIN_DB";
+		}
+	}
+
 	/************************************************************************************
 	 *	ACHIEVEMENTS
 	*************************************************************************************/
@@ -196,6 +256,18 @@ class Player {
 			return "SUC_ADMIN_ASSIGN_AC";
 		} else {
 			return "ERR_ADMIN_DB";
+		}
+	}
+
+	private function removePlayerAchievements()
+	{
+		if(!empty($this->achievement))
+		{
+			$sql = "DELETE FROM ac_player WHERE player_id = '$this->id'";
+			if(!mysqli_query($this->db_con,$sql))
+			{
+				return "ERR_ADMIN_DB";
+			}
 		}
 	}
 	
