@@ -132,24 +132,22 @@
 		return $tpl->r_display();
 	}
 	
-	function getUserRelatedStatusColor($con,$player_id)
+	function getUserRelatedStatusColor($con,$player)
 	{
-		$status = getStatus($con,$player_id);
-		$status_color = getStatusColor($con,$status["id"]);
+		$status_color = getStatusColor($con,$player->getPlayerStatusId());
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
 
 		return $circle;
 	}
 
-	function getUserStatusOption($con,$player_id)
+	function getUserStatusOption($con,$player)
 	{
-		$user_status = getStatus($con,$player_id);
-		$status_data = getStatusData($con, $user_status["id"]);
+		$status_data = getStatusData($con, $player->getPlayerStatusId());
 
 		$option = build_option_new($status_data);
 		
-		return "<option value='" . $user_status["id"] . "' selected>" . $user_status["status_name"] . $option;
+		return "<option value='" . $player->getPlayerStatusId() . "' selected>" . $player->getPlayerStatusName() . $option;
 
 	}
 
@@ -174,15 +172,13 @@
 		} 
 	}
 
-	function displayProfilImage(mysqli $con, $player_id): template
+	function displayProfilImage(mysqli $con, $player): template
 	{
-		$image_path = getUserImage($con,$player_id);
-
-		if (empty($image_path))
+		if (empty($player->image))
 			return new template("part/empty_image.html");
 		else {
 			$tpl = new template("part/profil_image.html");
-			return $tpl->assign('image_path', $image_path);
+			return $tpl->assign('image_path', $player->image);
 		}
 	}
 	
@@ -239,23 +235,15 @@
 		return $output;
 	}
 
-	function displayPlayerPrefs($con, $player_id)
+	function displayPlayerPrefs($con, $player)
 	{
-		$player_pref = getSinglePlayerPref($con, $player_id);
+		$tpl = new template("part/single_pref.html");
+		$tpl->assign_array($player->getPlayerPreferences());
 
-		if(empty($player_pref))
-		{
-			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
-		} else {
-			
-			$tpl = new template("part/single_pref.html");
-			$tpl->assign_array($player_pref);
-
-			return $tpl->r_display();
-		}
+		return $tpl->r_display();
 	}
 	
-	function createCheckbox($con, $player_id)
+	function createCheckbox($con, $player)
 	{
 		$games = getGameData($con);
 
@@ -264,14 +252,12 @@
 			$output = "<i>Keine Spiele vorhanden</i>";
 			return $output;
 		} else {
-
-			$userPrefs = getPlayerPrefs($con, $player_id);
 			$options = array();
 			$checkbox = new template("part/checkbox_container.html");
 			
 			foreach ($games as $game)
 			{
-				if(in_array($game["ID"],$userPrefs))
+				if(in_array($game["ID"],array_column($player->getPlayerPreferences(),"ID")))
 				{
 					$checkbox_checked = new template("part/checkbox_checked.html");
 					$checkbox_checked->assign("game_id",$game["ID"]);
@@ -292,11 +278,9 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$con_wow,$con_char,$player_id)
+function selectWowAccount($con,$con_wow,$con_char,$player)
 {
-	$wow_account = getWowAccount($con,$player_id);
-
-	if(empty($wow_account))
+	if(empty($player->getPlayerWowAccount()))
 	{
 		$tpl = new template();
 		$tpl->load("wow_server/create_wow_account.html");
@@ -304,14 +288,14 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 
 		return $template;
 	} else {
-		$wow_id = getWowId($con_wow,$wow_account);
+		$wow_id = getWowId($con_wow,$player->getPlayerWowAccount());
 		$wow_account_chars = getChars($con_char,$wow_id);
 
 		if(empty($wow_account_chars))
 		{
 			$tpl = new template();
 			$tpl->load("wow_server/character_table_empty.html");
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		} else {
@@ -335,7 +319,7 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 				$output->assign_array($character_list);
 			
 			$tpl->assign_subtemplate("characters",$output);
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		}
@@ -454,39 +438,32 @@ function displayServerStatus($con_wow)
 
 /******************************* ACHIEVEMENTS ************************************/
 
-function displayPlayerAchievements($con, $player_id)
+function displayPlayerAchievements($con, $player)
 {
-	$achievement_id = getUserAchievements($con, $player_id);
-
 	$ac = new Achievement();
-	if (empty($achievement_id))
+	foreach ($player->getPlayerAchievements() as $id)
 	{
-		$output = "Du hast bisher keine Achievements erworben.";
-	} else {
-		foreach ($achievement_id as $id)
-		{
-			$achievement_details = getAchievementById($con, $id);
+		$achievement_details = getAchievementById($con, $id);
 
-			foreach ($achievement_details as $achievement)
+		foreach ($achievement_details as $achievement)
+		{
+			$ac->getDetails($achievement);
+		
+			if (!isset($output))
 			{
-				$ac->getDetails($achievement);
-			
-				if (!isset($output))
-				{
-					$output = $ac->displayAchievement();
-				} else {
-					$output .= $ac->displayAchievement();
-				}
+				$output = $ac->displayAchievement();
+			} else {
+				$output .= $ac->displayAchievement();
 			}
 		}
-		return $output;
 	}
+	return $output;
 
 }
 
-function displayAvailableAchievements($con, $player_id)
+function displayAvailableAchievements($con, $player)
 {
-	$basic_ac = getAvailableAchievements($con, $player_id);
+	$basic_ac = getAvailableAchievements($con, $player->getPlayerId());
 	
 	$ac = new Achievement();
 	if(!empty($basic_ac))

@@ -10,9 +10,6 @@
 function getFirstLoginById($con,$id)
 {
 	/* Used in:
-		:User
-		- index.php
-
 		:Admin
 		- delete_player.php
 	*/
@@ -107,7 +104,6 @@ function getSingleUsername($con, $player_id): array
 {
 	/* Used in:
 		:User
-		- index.php
 		- profil_image.php
 		- index.php
 	*/
@@ -206,46 +202,6 @@ function getSinglePlayerTeam($con, $player_id)
 	$team = getTeamName($con,$team_id);
 
 	return $team;
-}
-function getSinglePlayerPref($con, $player_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerPrefs
-	*/
-	$result = mysqli_query($con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$player_id'");
-	while ($row=mysqli_fetch_assoc($result))
-	{
-		$player_pref[] = $row;
-	}
-
-	if(empty($player_pref))
-	{
-		$player_pref = array();
-	}
-
-	return $player_pref;
-
-}
-
-function getPlayerPrefs($con,$player_id)
-{
-	/* Used in:
-		:User
-		- function.php/createCheckbox
-	*/
-	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$prefs[] = $row["game_id"];
-	}
-
-	if(empty($prefs))
-	{
-		$prefs = array();
-	}
-
-	return $prefs;
 }
 
 /*
@@ -695,22 +651,6 @@ function getCaptainStatus($con, $player_id)
 ###########################################################
 */
 
-function getStatus($con,$id)
-{
-	/* Used in:
-		:User
-		- function.php/getUserRelatedStatusColor
-		- function.php/getUserStatusOption
-	*/
-
-	$result = mysqli_query($con,"SELECT status.status AS id, status_name.status_name FROM status INNER JOIN status_name ON status_name.status_id = status.status WHERE user_id = '$id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$status = $row;
-	}
-
-	return $status;
-}
 function getStatusColor($con,$status)
 {
 	/* Used in:
@@ -785,9 +725,6 @@ function getAchievementById($con,$ac_id)
 function getUserAchievements($con,$player_id)
 {
 	/* Used in:
-		:User
-		- function.php/displayPlayerAchievements
-
 		:Admin
 		- assign_achievement.php
 	*/
