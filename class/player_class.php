@@ -220,6 +220,17 @@ class Player {
 		}
 	}
 
+	public function setNewProfilImage($image)
+	{
+		$sql = "UPDATE player SET profil_image = '$image' WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_UPLOADED_IMAGE";
+		} else {
+			return "ERR_DB";
+		}
+	}
+
 	public function removePlayerFromSystem()
 	{
 		if($this->first_login == "1")
