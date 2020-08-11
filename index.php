@@ -75,7 +75,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		$tpl->assign("status_option",getUserStatusOption($con,$player));
 		
 		include(INC . "controller.php");
-		run_controller($tpl);
+		run_controller($tpl, $player);
 		
 		$tpl->display();
 	}

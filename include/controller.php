@@ -1,8 +1,7 @@
 <?php
-function run_controller(template $tpl)
+function run_controller(template $tpl, $player)
 {
 	global $con;
-	$player = new Player($con, $_SESSION["player_id"]);
 	if (isset($_REQUEST["page"]))
 	{
 		switch ($_REQUEST["page"]) {
