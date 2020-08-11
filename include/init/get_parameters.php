@@ -171,23 +171,6 @@ function getAllUserIDs($con)
 ###########################################################
 */
 
-
-function getPlayerData($con)
-{
-	/* Used in:
-		:Admin
-		- player_settings_view.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ID, name, ip, wow_account, team_id, team_captain FROM player");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$player[] = $row;
-	}
-
-	return $player;
-}
-
 function getSinglePlayerTeam($con, $player_id)
 {
 	/* Used in:

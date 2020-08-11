@@ -10,6 +10,9 @@ class Player {
 	private $ip;
 	private $username;
 	private $realname;
+	private $team_id;
+	private $team_name;
+	private $team_captain;
 	private	$profil_image;
 	private $first_login;
 	private	$pref = array();
@@ -24,6 +27,7 @@ class Player {
 		$this->id = $player_id;
 		
 		$this->getPlayerBasicData();
+		$this->getPlayerDataTeam();
 		$this->getPlayerDataPreferences();
 		$this->getPlayerDataWowAccount();
 		$this->getPlayerDataAchievements();
@@ -32,14 +36,30 @@ class Player {
 
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, profil_image, first_login FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
 			$this->username = $this->validatePlayerData($row["name"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
+			$this->team_id = $this->validatePlayerData($row["team_id"]);
+			$this->team_captain = $this->validatePlayerData($row["team_captain"]);
 			$this->image = $row["profil_image"];
 			$this->first_login = $row["first_login"];
+		}
+	}
+
+	private function getPlayerDataTeam()
+	{
+		if(!($this->team_id == ""))
+		{
+			$result = mysqli_query($this->db_con,"SELECT name FROM tm_teamname WHERE ID = '$this->team_id'");
+			while($row=mysqli_fetch_array($result))
+			{
+				$this->team_name = $this->validatePlayerData($row["name"]);
+			}
+		} else {
+			$this->team_name = "";
 		}
 	}
 
@@ -87,7 +107,7 @@ class Player {
 		$result = mysqli_query($this->db_con,"SELECT wow_account FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->wow_account = $row["wow_account"];
+			$this->wow_account = $this->validatePlayerData($row["wow_account"]);
 		}
 	}
 
@@ -134,6 +154,11 @@ class Player {
 		}
 	}
 	
+	public function getFullBasicData()
+	{
+		return array("ID" => $this->id,"IP" => $this->ip,"username" => $this->username,"realname" => $this->realname,"team_id" => $this->team_id,"team_name" => $this->team_name,"team_captain" => $this->team_captain,"wow_account" => $this->wow_account);
+	}
+	
 	public function getPlayerId()
 	{
 		return $this->id;
@@ -152,6 +177,21 @@ class Player {
 	public function getPlayerRealname()
 	{
 		return $this->realname;
+	}
+
+	public function getPlayerTeamId()
+	{
+		return $this->team_id;
+	}
+
+	public function getPlayerTeamName()
+	{
+		return $this->team_name;
+	}
+
+	public function getPlayerTeamCaptain()
+	{
+		return $this->team_captain;
 	}
 
 	public function getPlayerProfilImage()

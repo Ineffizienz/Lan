@@ -1,25 +1,15 @@
 <?php
 	
-	$players = getPlayerData($con);
+	$output = new template("/admin/part/player_table.html");
 
-	foreach ($players as $data)
+	$players = getAllUserIDs($con);
+
+	$player_data = array();
+
+	foreach ($players as $id)
 	{
-		$team_data = emptyText($data["team_id"]);
-		if($team_data == "-")
-		{
-			$t_name = "-";
-		} else {
-			$t_name = getTeamName($con,$data["team_id"]);
-		}
-
-		$t_captain = emptyText($data["team_captain"]);
-
-		$table_template = file_get_contents("template/admin/part/player_table.html");
-		if (!isset($player))
-		{
-			$player = str_replace(array("--ID--","--NAME--","--IP--","--WoW--","--TEAM--","--T_NAME--","--CAPTAIN--","--ID--"),array($data["ID"],$data["name"],$data["ip"],$data["wow_account"],$team_data,$t_name,$t_captain,$data["ID"]),$table_template);
-		} else {
-			$player .= str_replace(array("--ID--","--NAME--","--IP--","--WoW--","--TEAM--","--T_NAME--","--CAPTAIN--","--ID--"),array($data["ID"],$data["name"],$data["ip"],$data["wow_account"],$team_data,$t_name,$t_captain,$data["ID"]),$table_template);
-		}
+		$player = new Player($con,$id);
+		array_push($player_data,$player->getFullBasicData());
 	}
+	$output->assign_array($player_data);
 ?>
