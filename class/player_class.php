@@ -10,8 +10,12 @@ class Player {
 	private $ip;
 	private $username;
 	private $realname;
+	private $team_id;
+	private $team_name;
+	private $team_captain;
 	private	$profil_image;
 	private $first_login;
+	private $ticket_active;
 	private	$pref = array();
 	private $achievement = array();
 	private $wow_account;
@@ -24,6 +28,7 @@ class Player {
 		$this->id = $player_id;
 		
 		$this->getPlayerBasicData();
+		$this->getPlayerDataTeam();
 		$this->getPlayerDataPreferences();
 		$this->getPlayerDataWowAccount();
 		$this->getPlayerDataAchievements();
@@ -32,14 +37,31 @@ class Player {
 
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, profil_image, first_login FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
 			$this->username = $this->validatePlayerData($row["name"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
+			$this->team_id = $this->validatePlayerData($row["team_id"]);
+			$this->team_captain = $this->validatePlayerData($row["team_captain"]);
 			$this->image = $row["profil_image"];
 			$this->first_login = $row["first_login"];
+			$this->ticket_active = $this->translateTicketStatus($row["ticket_active"]);
+		}
+	}
+
+	private function getPlayerDataTeam()
+	{
+		if(!($this->team_id == ""))
+		{
+			$result = mysqli_query($this->db_con,"SELECT name FROM tm_teamname WHERE ID = '$this->team_id'");
+			while($row=mysqli_fetch_array($result))
+			{
+				$this->team_name = $this->validatePlayerData($row["name"]);
+			}
+		} else {
+			$this->team_name = "";
 		}
 	}
 
@@ -87,7 +109,7 @@ class Player {
 		$result = mysqli_query($this->db_con,"SELECT wow_account FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
-			$this->wow_account = $row["wow_account"];
+			$this->wow_account = $this->validatePlayerData($row["wow_account"]);
 		}
 	}
 
@@ -101,6 +123,16 @@ class Player {
 		}
 	}
 
+	private function translateTicketStatus($t_status)
+	{
+		if(empty($t_status))
+		{
+			return "Inaktiv";
+		} else {
+			return "Aktiv";
+		}
+	}
+
 	public function setNewUsername($new_username)
 	{
 		$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$this->id'";
@@ -111,6 +143,10 @@ class Player {
 			return "ERR_CHANGE_USERNAME";
 		}
 	}
+
+	/************************************************************************************
+	 *	PREFRENCES
+	*************************************************************************************/
 
 	public function setNewPreference($new_preference)
 	{
@@ -133,6 +169,26 @@ class Player {
 			return "ERR_DELETE_PREF";
 		}
 	}
+
+	/************************************************************************************
+	 *	ACHIEVEMENTS
+	*************************************************************************************/
+
+	public function setNewAchievementAdmin($new_achievement)
+	{
+		$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$this->id','$new_achievement')";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADMIN_ASSIGN_AC";
+		} else {
+			return "ERR_ADMIN_DB";
+		}
+	}
+	
+	public function getFullBasicData()
+	{
+		return array("ID" => $this->id,"IP" => $this->ip,"username" => $this->username,"realname" => $this->realname,"team_id" => $this->team_id,"team_name" => $this->team_name,"team_captain" => $this->team_captain,"wow_account" => $this->wow_account);
+	}
 	
 	public function getPlayerId()
 	{
@@ -154,6 +210,21 @@ class Player {
 		return $this->realname;
 	}
 
+	public function getPlayerTeamId()
+	{
+		return $this->team_id;
+	}
+
+	public function getPlayerTeamName()
+	{
+		return $this->team_name;
+	}
+
+	public function getPlayerTeamCaptain()
+	{
+		return $this->team_captain;
+	}
+
 	public function getPlayerProfilImage()
 	{
 		return $this->image;
@@ -162,6 +233,11 @@ class Player {
 	public function getPlayerFirstLogin()
 	{
 		return $this->first_login;
+	}
+
+	public function getPlayerTicketActive()
+	{
+		return $this->ticket_active;
 	}
 
 	public function getPlayerPreferences()

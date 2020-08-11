@@ -40,7 +40,7 @@ class Achievement {
 
 		return $this->imagePath;
 	}
-	
+
 	public function getDetails($single_details)
 	{
 		$this->title = $single_details["title"];

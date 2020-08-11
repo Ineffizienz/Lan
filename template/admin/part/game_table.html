@@ -1,7 +1,7 @@
 <tr class="admin_game_data">
-	<td class="game_id">--ID--</td>
+	<td class="game_id">{$id}</td>
 	<td>
-		<span id="--NAME--">--NAME-- </span>
+		<span id="{$name}">{$name}</span>
 		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
 		<span class="settings_gn">
 			<input type="text" name="game_name" class="game_name">
@@ -9,7 +9,7 @@
 		</span>
 	</td>
 	<td>
-		<span id="--RAW_NAME--">--RAW_NAME--</span>
+		<span id="{$raw_name}">{$raw_name}</span>
 		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
 		<span class="settings_grn">
 			<input type="text" name="game_raw_name" class="game_raw_name">
@@ -18,20 +18,20 @@
 	</td>
 	<td>
 		<select class="sec_is_addon">
-			--ADDON--
+			{$addon}
 		</select>
 	</td>
 	<td class="game_icon">
-		<label for="sec_icon_upload_--ID--" id="lbl_sec_icon_upload_--ID--">--ICON--</label>
-		<input type="file" name="sec_icon_upload" id="sec_icon_upload_--ID--" class="sec_icon_upload">
+		<label for="sec_icon_upload_{$id}" id="lbl_sec_icon_upload_{$id}">{$icon}</label>
+		<input type="file" name="sec_icon_upload" id="sec_icon_upload_{$id}" class="sec_icon_upload">
 	</td>
 	<td class="game_banner">
-		<label for="sec_banner_upload_--ID--" id="lbl_sec_banner_upload_--ID--">--BANNER--</label>
-		<input type="file" name="sec_banner_upload" id="sec_banner_upload_--ID--" class="sec_banner_upload">
+		<label for="sec_banner_upload_{$id}" id="lbl_sec_banner_upload_{$id}">{$banner}</label>
+		<input type="file" name="sec_banner_upload" id="sec_banner_upload_{$id}" class="sec_banner_upload">
 	</td>
 	<td>
 		<select class="sec_has_table">
-			--HAS_TABLE--
+			{$has_table}
 		</select>
 	</td>
 </tr>

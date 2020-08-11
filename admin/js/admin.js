@@ -385,6 +385,17 @@ $(document).ready(function(){
 
 	}
 
+	function getArchivData(event)
+	{
+		event.preventDefault();
+
+		var tm_id = $(this).attr("name");
+
+		obj = {tm_id};
+
+		postAjax(obj,getEndpoint("archiv_tournament"),setResult);
+	}
+
 	function getTournamentParam(event)
 	{
 		event.preventDefault();
@@ -412,6 +423,24 @@ $(document).ready(function(){
 		obj = {vote_id};
 
 		postAjax(obj,getEndpoint("delete_vote"),setResult);
+	}
+
+
+/*#############################################################################################
+#################################### Lan ######################################################
+###############################################################################################*/
+
+	function getLanData(event)
+	{
+		event.preventDefault();
+
+		var lan_title = $("#lan_title").val();
+		var date_from = $("#lan_date_from").val();
+		var date_to = $("#lan_date_to").val();
+
+		obj = {lan_title,date_from,date_to};
+
+		postAjax(obj,getEndpoint("create_lan"),setResult);
 	}
 
 
@@ -586,6 +615,7 @@ function refreshVotes()
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
+	$(document).on("click",".archiv_tm",getArchivData);
 	$(document).on("click","#create_new_trigger",getNewTrigger);
 	$("#start_tm").on("click",getTournamentParam);
 	$(document).on("click",".delete_vote",getVoteParam);
@@ -593,5 +623,6 @@ function refreshVotes()
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
+	$(document).on("click","#create_lan",getLanData);
 
 });

@@ -2,48 +2,12 @@
 
 require_once dirname(__DIR__).'../../include/init/get_parameters.php';
 
-function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
-{
-	if (file_exists("template/" . $file))
-	{
-		$data = fopen("template/" . $file, "r");
-		while (!feof($data))
-		{
-			if (!isset($content))
-			{
-				$content = fgets($data);
-			} else {	
-				$content .= fgets($data);
-			}
-		}
-		fclose($data);
-		return ($content);
-	}
-}
-
 function buildOption($optionArr)
 {
-	foreach ($optionArr as $option)
-	{
-		// get first key = $id, get new first key = $name --> Wie heißt die Funktion dafür?
-		$part = file_get_contents("template/admin/part/option.html");
+	$tpl = new template("admin/part/option.html");
+	$tpl->assign_array($optionArr);
 
-		if(array_key_exists("title",$option))
-		{
-			$key = "title";
-		} elseif (array_key_exists("name",$option)) {
-			$key = "name";
-		}
-
-		if(!isset($output_option))
-		{
-			$output_option = str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		} else {
-			$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		}
-	}
-
-	return $output_option;
+	return $tpl->r_display();
 }
 
 function buildJSONOutput($elements)
@@ -134,17 +98,15 @@ function displayTeams($con) // Teamverwaltung --> Team löschen
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
+	$output = new template("admin/part/ac_table_content.html");
+	
 	$userlist = getBasicUserData($con);
 	$ac_option = getAllAchievementByName($con);
-	
-	$selectable_option = buildOption($ac_option);
-	$selectable_user = buildOption($userlist);
 
-	$tm_part = file_get_contents("template/admin/part/ac_table_content.html");
-	
-	$output = str_replace(array("--USER--","--AC_NAME--"),array($selectable_user,$selectable_option),$tm_part);
+	$output->assign("user",buildOption($userlist));
+	$output->assign("ac_name",buildOption($ac_option));
 
-	return $output;
+	return $output->r_display();
 }
 
 function displayAcCategories($con)
@@ -167,43 +129,36 @@ function displayAcTrigger($con)
 
 function displayTicketStatus($con)
 {
-	$ticket_status = getUserTicketRelation($con);
+	$output = new template("admin/part/ticket_status_table.html");
+	$player_ids = getAllUserIDs($con);
+	$ticket_data = array();
 	
-	foreach ($ticket_status as $status)
+	foreach ($player_ids as $id)
 	{
-		if (empty($status["ticket_active"]))
-		{
-			$param = "Inaktiv";
-		} else {
-			$param = "Aktiv";
-		}
-		
-		$table_template = file_get_contents("template/part/basic_table.html");
-		
-		if(!isset($output))
-		{
-			$output = str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		} else {
-			$output .= str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		}
+		$player = new Player($con,$id);
+
+		array_push($ticket_data,array("username" => $player->getPlayerUsername(),"ticket_active" => $player->getPlayerTicketActive()));
 	}
+
+	$output->assign_array($ticket_data);
 	
-	return $output;
+	return $output->r_display();
 }
 
 function displaySingleGame($con)
 {
+	$output = new template("admin/part/game_table.html");
+	$game_output = array();
+
 	$game_data = getGameData($con);
 
 	foreach ($game_data as $game)
 	{
-		$singleGame_template = file_get_contents("template/admin/part/game_table.html");
-
 		if($game["has_table"] == "1")
 		{
-			$selected_option = array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein"));
+			$selected_option = array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein"));
 		} else {
-			$selected_option = array(array("ID"=>"0","name"=>"Nein"),array("ID"=>"1","name"=>"Ja"));
+			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
 		$has_table = buildOption($selected_option);
@@ -224,20 +179,19 @@ function displaySingleGame($con)
 
 		if(empty($game["addon"]))
 		{
-			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		} else {
-			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
+		
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		array_push($game_output,$transfer);
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		}
 	}
+	
+	$output->assign_array($game_output);
 
-	return $output;
+	return $output->r_display();
 }
 
 function validateInput($new_game)
@@ -487,6 +441,110 @@ function setUpNewTournament($con,$vote_id,$game_id,$tm_from,$tm_to,$mode,$mode_d
                 return "ERR_ADMIN_DB";
             }
 		}
+	}
+}
+
+function archivTmPaarung($con,$tm_id)
+{
+	$pairs = getAllPairsFromTournament($con,$tm_id);
+
+	foreach ($pairs as $pair)
+	{
+		$pair_id = $pair["ID"];
+		$team_1 = $pair["team_1"];
+		$team_2 = $pair["team_2"];
+		$stage = $pair["stage"];
+		$successor = $pair["successor"];
+		$result_team1 = $pair["result_team1"];
+		$result_team2 = $pair["result_team2"];
+
+		$sql = "INSERT INTO archiv_tm_paarung VALUES ('$pair_id','$team_1','$team_2','$stage','$tm_id','$successor','$result_team1','$result_team2')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_paarung WHERE ID = '$pair_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+function archivTmGamerslist($con,$tm_id)
+{
+	$gamerslist_data = getAllGamerslistDataFromTournament($con,$tm_id);
+
+	foreach ($gamerslist_data as $player)
+	{
+		$gl_id = $player["ID"];
+		$player_id = $player["player_id"];
+
+		$sql = "INSERT INTO archiv_tm_gamerslist VALUES ('$gl_id','$tm_id','$player_id')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_gamerslist WHERE ID = '$gl_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+		
+	}
+
+	return true;
+}
+
+function archivTmPeriod($con,$period_id)
+{
+	$period = getTournamentRawPeriod($con,$period_id);
+
+	$time_from = $period["time_from"];
+	$time_to = $period["time_to"];
+
+	$sql = "INSERT INTO archiv_tm_period VALUES ('$period_id','$time_from','$time_to')";
+	if(!(mysqli_query($con,$sql)))
+	{
+		return false;
+	} else {
+		$sql = "DELETE FROM tm_period WHERE ID = '$period_id'";
+		if(!(mysqli_query($con,$sql)))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function displayLans($con)
+{
+	$lans = getLans($con);
+	$lan_array = array();
+
+	foreach ($lans as $lan)
+	{
+		$tpl = new template("admin/part/lan_table.html");
+
+		$single_lan = array("id"=>$lan["ID"],"lan_title"=>$lan["title"],"lan_from"=>$lan["date_from"],"lan_to"=>$lan["date_to"]);
+		array_push($lan_array,$single_lan);
+	}
+
+	if(empty($lan_array))
+	{
+		return "Es sind bisher keine Lans angelegt worden.";
+	} else {
+		$tpl->assign_array($lan_array);
+		return $tpl->r_display();
 	}
 }
 
