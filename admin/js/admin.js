@@ -92,27 +92,35 @@ $(document).ready(function(){
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
 
-		var image = $("#new_game_icon").prop('files')[0];
+		var image_icon = $("#new_game_icon").prop('files')[0];
+		var image_banner = $("#new_game_banner").prop('files')[0];
+
 		var form_data = new FormData();
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
 
-		if($("#new_game_icon").get(0).files.length == 0)
+		
+		if(!fileValidation(image_icon) || !fileValidation(image_banner))
 		{
-			form_data.append("game_icon","0");
+			console.log("File error");
 		} else {
-			form_data.append("game_icon",image);
-		}
+			if(image_icon.length == 0)
+			{
+				form_data.append("game_icon","0");
+			} else {
+				form_data.append("game_icon",image_icon);
+			}
 
-		if($("#new_game_banner").get(0).files.length == 0)
-		{
-			form_data.append("game_banner","0");
-		} else {
-			form_data.append("game_banner",image);
+			if(image_banner.length == 0)
+			{
+				form_data.append("game_banner","0");
+			} else {
+				form_data.append("game_banner",image_banner);
+			}
+			
+			postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 		}
-
-		postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 	}
 
 	function getNewRawName(event)
