@@ -654,12 +654,12 @@ function getAllAchievements($con)
 		- admin_func.php/displayAchievements
 	*/
 
-	$sql = "SELECT ac.ID, ac.title, ac.image_url, ac.message, ac_category.ID AS catID, ac_category.c_name, ac_trigger.ID AS trigID, ac_trigger.trigger_title, ac.ac_visibility FROM ac LEFT JOIN ac_category ON ac.ac_category = ac_category.ID LEFT JOIN ac_trigger ON ac.ac_trigger = ac_trigger.ID";
+	$sql = "SELECT ID FROM ac";
 
 	$result = mysqli_query($con,$sql);
 	while ($row=mysqli_fetch_assoc($result))
 	{
-		$all_achievements[] = $row;
+		$all_achievements[] = $row["ID"];
 	}
 
 	return $all_achievements;

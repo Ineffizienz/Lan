@@ -55,29 +55,21 @@ function translateGameModeDetails($mode_details)
 
 function displayAchievements($con)
 {
-
+	$output = new template("admin/part/ac_list.html");
+	$ac = new Achievement($con);
+	$ac_array = array();
 	$achievements = getAllAchievements($con);
-
-	$all_categories = getAchievementCategories($con);
-	$all_trigger = getAchievementTrigger($con);
-	//$all_visib = buildVisibilityOption($con);
 
 	foreach ($achievements as $achievement)
 	{
-		$ac = new Achievement;
-		
-		$ac->getAdminDetails($con,$achievement,$all_categories,$all_trigger);
-
-		if(!isset($output))
-		{
-			$output = $ac->displayAchievement();
-		} else {
-			$output .= $ac->displayAchievement();
-		}
-		
+		$cat_array = array("category"=>buildOption($ac->getAcCategories()));
+		$trig_array = array("trigger"=>buildOption($ac->getAcTrigger()));
+		array_push($ac_array,array_merge($ac->getAdminAchievement($achievement),$cat_array,$trig_array));
 	}
 
-	return $output;
+	$output->assign_array($ac_array);
+
+	return $output->r_display();
 }
 
 function displayTeams($con) // Teamverwaltung --> Team löschen
