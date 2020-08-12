@@ -92,27 +92,34 @@ $(document).ready(function(){
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
 
-		var image = $("#new_game_icon").prop('files')[0];
+		var image_icon = $("#new_game_icon").prop('files')[0];
+		var image_banner = $("#new_game_banner").prop('files')[0];
+
 		var form_data = new FormData();
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
 
-		if($("#new_game_icon").get(0).files.length == 0)
+		if(!fileValidation(image_icon) || !fileValidation(image_banner))
 		{
-			form_data.append("game_icon","0");
+			displayResult("Dateifehler.");
 		} else {
-			form_data.append("game_icon",image);
-		}
+			if(image_icon.length == 0)
+			{
+				form_data.append("game_icon","0");
+			} else {
+				form_data.append("game_icon",image_icon);
+			}
 
-		if($("#new_game_banner").get(0).files.length == 0)
-		{
-			form_data.append("game_banner","0");
-		} else {
-			form_data.append("game_banner",image);
+			if(image_banner.length == 0)
+			{
+				form_data.append("game_banner","0");
+			} else {
+				form_data.append("game_banner",image_banner);
+			}
+			
+			postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 		}
-
-		postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 	}
 
 	function getNewRawName(event)
@@ -178,14 +185,18 @@ $(document).ready(function(){
 
 		form_data.append("game_id",game_id);
 
-		if($(icon_id).get(0).files.length == 0)
+		if(!fileValidation(image))
 		{
-			form_data.append("file","0");
+			displayResult("Dateifehler.");
 		} else {
-			form_data.append("file",image);
+			if(image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",image);
+			}
+			postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
 		}
-
-		postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
 	}
 
 	function getBannerData(event)
@@ -202,14 +213,18 @@ $(document).ready(function(){
 
 		form_data.append("game_id",game_id);
 
-		if($(banner_id).get(0).files.length == 0)
+		if(!fileValidation(image))
 		{
-			form_data.append("file","0");
+			displayResult("Dateifehler.");
 		} else {
-			form_data.append("file",image);
+			if(image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",image);
+			}
+			postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 		}
-
-		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 	}
 
 	function getFile(event) //Upload for new Keys
@@ -260,14 +275,18 @@ $(document).ready(function(){
 		form_data.append("ac_visible",ac_visible);
 		form_data.append("ac_message",ac_message);
 		
-		if($(image_id).get(0).files.length == 0)
+		if(!fileValidation(image))
 		{
-			form_data.append("file","0");
+			console.log("File error");
 		} else {
-			form_data.append("file",image);
+			if(image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",image);
+			}
+			postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
 		}
-
-		postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
 	}
 
 	function getSelectedItems(event)
@@ -306,15 +325,15 @@ $(document).ready(function(){
 		var form_data = new FormData();
 
 		form_data.append("ac_id",ac_id);
-		
-		if($(image_id).get(0).files.length == 0)
+
+		if(fileValidation(image))
 		{
-			form_data.append("file","0");
-		} else {
 			form_data.append("file",image);
+			postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+		} else {
+			console.log("File error");
 		}
-	
-		postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+		
 	}
 
 	function getNewTrigger(event)

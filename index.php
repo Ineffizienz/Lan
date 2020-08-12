@@ -50,7 +50,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 	{
 		include 'include/auth/reg_name.php';
 	
-		list($success, $message) = reg_name($con, $message);
+		list($success, $message) = reg_name($con, $message, $player);
 		if(!$success)
 		{
 			$tpl->assign_subtemplate('content', 'reg_name.html');
@@ -75,7 +75,7 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 		$tpl->assign("status_option",getUserStatusOption($con,$player));
 		
 		include(INC . "controller.php");
-		run_controller($tpl);
+		run_controller($tpl, $player);
 		
 		$tpl->display();
 	}

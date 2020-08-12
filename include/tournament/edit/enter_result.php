@@ -4,13 +4,14 @@
     include(INC. "connect.php");
     include(INC. "function.php");
     include(CL . "message_class.php");
+    include(CL . "player_class.php");
 
     $message = new message();
-    $player_id = $_SESSION["player_id"];
+    $player = new Player($con,$_SESSION["player_id"]);
     $tm_id = $_REQUEST["tm_id"];
     $pair_id = $_REQUEST["pair_id"];
 
-    $gamerslist_id = getGamerslistIdByPlayerId($con,$player_id,$tm_id);
+    $gamerslist_id = getGamerslistIdByPlayerId($con,$player->getPlayerId(),$tm_id);
     if(getGamerslistIdFromPair($con,$gamerslist_id,$pair_id))
     {
         $result_1 = $_REQUEST["result_1"];

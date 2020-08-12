@@ -17,63 +17,6 @@
 
 		return $tpl->r_display();
 	}
-
-	/**
-	 * 
-	 * @param mysqli $con
-	 * @param string $nick
-	 * @param string $real_name
-	 * @param int $player_id
-	 * @return boolean true on success
-	 */
-	function initializePlayer(mysqli $con, string $nick, string $real_name, int $player_id)
-	{
-		$sql_user = "UPDATE player SET name='$nick', real_name='$real_name' WHERE ID='$player_id'";
-		if (mysqli_query($con,$sql_user))
-		{
-			$sql_fl_check = "SELECT first_login FROM player WHERE ID='$player_id';";
-			if(mysqli_fetch_assoc(mysqli_query($con, $sql_fl_check))['first_login'] != '0')
-			{
-				$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
-				if(mysqli_query($con,$sql_fl))
-				{
-					$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
-					if(mysqli_query($con,$sql_status))
-					{
-						return true;
-					}
-				}
-			}
-			else
-				return true;
-		}
-		return false;
-	}
-	
-	function validateImage($filesize,$filetype)
-	{
-		if (isset($filesize) && ($filesize != 0))
-		{
-			if($filesize < 5242880)
-			{
-				if($filesize < 5)
-				{
-					return "ERR_FILE_TO_SMALL";
-				} else {
-					if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-					{
-						return "ERR_NO_IMAGE_TYPE";
-					} else {
-						return 1;
-					}	
-				}	
-			} else {
-				return "ERR_FILE_TO_HUGE";
-			}
-		} else {
-			return "ERR_NO_IMAGE";
-		}
-	}
 	
 	function ownTeam($con,$ip) //maybe not used anymore
 	{
@@ -151,9 +94,9 @@
 
 	}
 
-	function generateGameKey($con, int $player_id, int $game_id)
+	function generateGameKey($con, $player, int $game_id)
 	{
-		$key = getPlayerGameKey($con, $player_id, $game_id);
+		$key = getPlayerGameKey($con, $player->getPlayerId(), $game_id);
 
 		if ($key === false)
 		{
@@ -164,8 +107,11 @@
 				$message_code = "ERR_NO_KEY";
 				return $message_code;
 			} else {
-				mysqli_query($con,"UPDATE gamekeys SET player_id = '$player_id' WHERE (gamekey = '$first_key') AND (game_id = '$game_id');");
-				return $first_key;
+				$sql = "UPDATE gamekeys SET player_id = '$player->getPlayerId()' WHERE gamekey = '$first_key' AND game_id = '$game_id'";
+				if(mysqli_query($con,$sql))
+				{
+					return $first_key;
+				}
 			}
 		} else {
 			return $key;
@@ -440,46 +386,36 @@ function displayServerStatus($con_wow)
 
 function displayPlayerAchievements($con, $player)
 {
-	$ac = new Achievement();
+	$tpl = new template("part/single_achievement.html");
+	$ac = new Achievement($con);
+	$player_achievements = array();
+	
 	foreach ($player->getPlayerAchievements() as $id)
 	{
-		$achievement_details = getAchievementById($con, $id);
-
-		foreach ($achievement_details as $achievement)
-		{
-			$ac->getDetails($achievement);
-		
-			if (!isset($output))
-			{
-				$output = $ac->displayAchievement();
-			} else {
-				$output .= $ac->displayAchievement();
-			}
-		}
+		array_push($player_achievements,$ac->getPlayerAchievement($id));
 	}
-	return $output;
+
+	$tpl->assign_array($player_achievements);
+	return $tpl->r_display();
 
 }
 
 function displayAvailableAchievements($con, $player)
 {
+	$tpl = new template("part/ac_small.html");
+	$ac = new Achievement($con);
+	$achievements = array();
 	$basic_ac = getAvailableAchievements($con, $player->getPlayerId());
 	
-	$ac = new Achievement();
 	if(!empty($basic_ac))
 	{
 		foreach ($basic_ac as $basic)
 		{
-			$ac->getBasicDetails($basic);
-			
-			if(!isset($output))
-			{
-				$output = $ac->displayAchievement();
-			} else {
-				$output .= $ac->displayAchievement();
-			}
+			array_push($achievements,$ac->getAvailableAchievement($basic));
 		}
-		return $output;
+		
+		$tpl->assign_array($achievements);
+		return $tpl->r_display();
 	}
 }
 

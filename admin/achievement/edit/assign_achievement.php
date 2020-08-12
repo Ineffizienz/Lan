@@ -1,11 +1,13 @@
 <?php
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
 	include(dirname(__FILE__,3) . "/include/admin_func.php");
+	include(CL . "achievement_class.php");
 	include(CL . "message_class.php");
 	include(CL . "player_class.php");
 	include(INC . "connect.php");
 
 	$message = new message();
+	$ac = new Achievement($con);
 
 	if(isset($_REQUEST["ac_id"]))
 	{
@@ -19,7 +21,7 @@
 				$message->getMessageCode("ERR_ADMIN_AC_ALLREADY_GIVEN");
 				echo buildJSONOutput($message->displayMessage());
 			} else {
-				$message->getMessageCode($player->setNewAchievementAdmin($ac_id));
+				$message->getMessageCode($ac->assignNewAchievementAdmin($player->getPlayerId(),$ac_id));
 			}
 
 		} else {

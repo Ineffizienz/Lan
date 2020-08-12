@@ -35,6 +35,9 @@ class Player {
 		$this->getPlayerStatusData();
 	}
 
+	/************************************************************************************
+	 *	QUERY DATA
+	*************************************************************************************/
 	private function getPlayerBasicData()
 	{
 		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
@@ -113,6 +116,10 @@ class Player {
 		}
 	}
 
+	/************************************************************************************
+	 *	DATA VALIDATION
+	*************************************************************************************/
+
 	private function validatePlayerData($output)
 	{
 		if(empty($output) || $output == "")
@@ -136,6 +143,61 @@ class Player {
 	/************************************************************************************
 	 *	SET NEW USER/USER-DATA
 	*************************************************************************************/
+	private function setPlayerNames($nick,$real_name)
+	{
+		$sql = "UPADTE player SET username = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private function setFirstLogin()
+	{
+		if($this->first_login != "0")
+		{
+			$sql = "UPDATE player SET first_login = '0' WHERE ID = '$this->id'";
+			if(!mysqli_query($this->db_con,$sql))
+			{
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	private function setStatusValue()
+	{
+		$sql = "INSERT INTO status (user_id, status) VALUES ('$this->id','1')";
+		if(!mysqli_query($this->db_con,$sql))
+		{
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public function setUpPlayer($nick, $real_name)
+	{
+		if($this->setPlayerNick($nick))
+		{
+			if($this->setFirstLogin())
+			{
+				if($this->setStatusValue())
+				{
+					return true;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		
+	}
+
 	public function setNewUser($new_name,$new_ip)
 	{
 		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
@@ -158,6 +220,17 @@ class Player {
 		}
 	}
 
+	public function setNewProfilImage($image)
+	{
+		$sql = "UPDATE player SET profil_image = '$image' WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_UPLOADED_IMAGE";
+		} else {
+			return "ERR_DB";
+		}
+	}
+
 	public function removePlayerFromSystem()
 	{
 		if($this->first_login == "1")
@@ -165,13 +238,12 @@ class Player {
 			$this->removePlayer();
 		} else {
 			$this->deleteStatus();
-			$this->resetKeys();
 			$this->removePreferences();
 			$this->removePlayerAchievements();
 			$this->removePlayer();
 		}
 	}
-	
+
 	private function removePlayer()
 	{
 		$sql = "DELETE FROM player WHERE ID = '$this->id'";
@@ -184,22 +256,14 @@ class Player {
 	}
 
 	/************************************************************************************
-	 *	KEYS
+	 *	STATUS HANDLING
 	*************************************************************************************/
 
-	private function resetKeys()
+	public function setNewStatus($status)
 	{
-		$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = '$this->id'";
-		if(!mysqli_query($this->db_con,$sql))
-		{
-			return "ERR_ADMIN_DB";
-		}
+		mysqli_query($this->db_con,"UPDATE status SET status = '$status' WHERE user_id = '$this->id'");
 	}
-
-	/************************************************************************************
-	 *	STATUS
-	*************************************************************************************/
-
+	
 	private function deleteStatus()
 	{
 		$sql = "DELETE FROM status WHERE user_id = '$this->id'";
@@ -210,7 +274,7 @@ class Player {
 	}
 
 	/************************************************************************************
-	 *	PREFRENCES
+	 *	PREFRENCE HANDLING
 	*************************************************************************************/
 
 	public function setNewPreference($new_preference)
@@ -245,19 +309,8 @@ class Player {
 	}
 
 	/************************************************************************************
-	 *	ACHIEVEMENTS
+	 *	ACHIEVEMENT HANDLING
 	*************************************************************************************/
-
-	public function setNewAchievementAdmin($new_achievement)
-	{
-		$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$this->id','$new_achievement')";
-		if(mysqli_query($this->db_con,$sql))
-		{
-			return "SUC_ADMIN_ASSIGN_AC";
-		} else {
-			return "ERR_ADMIN_DB";
-		}
-	}
 
 	private function removePlayerAchievements()
 	{
@@ -270,6 +323,25 @@ class Player {
 			}
 		}
 	}
+
+	/************************************************************************************
+	 *	WOW-ACCOUNT HANDLING
+	*************************************************************************************/
+
+	public function setNewWowAccount($account_name)
+	{
+		$sql = "UPDATE player SET wow_account = '$account_name' WHERE ID = '$this->id'";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ACC_CREATE";
+		} else {
+			return "ERR_ACC_CREATE";
+		}
+	}
+
+	/************************************************************************************
+	 *	GET DATA
+	*************************************************************************************/
 	
 	public function getFullBasicData()
 	{

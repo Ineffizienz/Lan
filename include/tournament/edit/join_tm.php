@@ -4,11 +4,12 @@ require_once INC . 'session.php';
 include(INC . "connect.php");
 include(INC . "function.php");
 include(CL . "message_class.php");
+include(CL . "player_class.php");
 
-$player_id = $_SESSION["player_id"];
 $message = new message();
+$player = new Player($con,$_SESSION["player_id"]);
 
-if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
+if(getJointPlayer($con,$_REQUEST["tm_id"],$player->getPlayerId()))
 {
     $message->getMessageCode("ERR_ALLREADY_JOINT_TM");
     echo json_encode(array("message"=>$message->displayMessage()));
@@ -21,7 +22,7 @@ if(getJointPlayer($con,$_REQUEST["tm_id"],$player_id))
 
     if(time() <= $end_register)
     {
-        $sql = "INSERT INTO tm_gamerslist (tm_id,player_id) VALUES ('$tm_id','$player_id')";
+        $sql = "INSERT INTO tm_gamerslist (tm_id,player_id) VALUES ('$tm_id','$player->getPlayerId()')";
         if(mysqli_query($con,$sql))
         {
             $player_count++;

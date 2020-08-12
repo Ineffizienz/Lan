@@ -55,29 +55,21 @@ function translateGameModeDetails($mode_details)
 
 function displayAchievements($con)
 {
-
+	$output = new template("admin/part/ac_list.html");
+	$ac = new Achievement($con);
+	$ac_array = array();
 	$achievements = getAllAchievements($con);
-
-	$all_categories = getAchievementCategories($con);
-	$all_trigger = getAchievementTrigger($con);
-	//$all_visib = buildVisibilityOption($con);
 
 	foreach ($achievements as $achievement)
 	{
-		$ac = new Achievement;
-		
-		$ac->getAdminDetails($con,$achievement,$all_categories,$all_trigger);
-
-		if(!isset($output))
-		{
-			$output = $ac->displayAchievement();
-		} else {
-			$output .= $ac->displayAchievement();
-		}
-		
+		$cat_array = array("category"=>buildOption($ac->getAcCategories()));
+		$trig_array = array("trigger"=>buildOption($ac->getAcTrigger()));
+		array_push($ac_array,array_merge($ac->getAdminAchievement($achievement),$cat_array,$trig_array));
 	}
 
-	return $output;
+	$output->assign_array($ac_array);
+
+	return $output->r_display();
 }
 
 function displayTeams($con) // Teamverwaltung --> Team löschen
@@ -98,31 +90,31 @@ function displayTeams($con) // Teamverwaltung --> Team löschen
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
+	$ac = new Achievement($con);
 	$output = new template("admin/part/ac_table_content.html");
 	
 	$userlist = getBasicUserData($con);
-	$ac_option = getAllAchievementByName($con);
 
 	$output->assign("user",buildOption($userlist));
-	$output->assign("ac_name",buildOption($ac_option));
+	$output->assign("ac_name",buildOption($ac->getAllAchievementByName()));
 
 	return $output->r_display();
 }
 
 function displayAcCategories($con)
 {
-	$categories  = getAchievementCategories($con);
+	$ac = new Achievement($con);
 
-	$selectable_categories = buildOption($categories);
+	$selectable_categories = buildOption($ac->getAcCategories());
 
 	return $selectable_categories;
 }
 
 function displayAcTrigger($con)
 {
-	$trigger = getAchievementTrigger($con);
+	$ac = new Achievement($con);
 
-	$selectable_trigger = buildOption($trigger);
+	$selectable_trigger = buildOption($ac->getAcTrigger());
 
 	return $selectable_trigger;
 }
@@ -241,26 +233,6 @@ function emptyText($data)
 	}
 
 	return $text;
-}
-
-function validateImageFile($filesize,$filetype)
-{
-	if(isset($filesize) && ($filesize != 0))
-	{
-		if($filesize > 5000000)
-		{
-			return "ERR_ADMIN_FILE_TO_HUGE";
-		} else {
-			if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-			{
-				return "ERR_ADMIN_NO_IMAGE_TYPE";
-			} else {
-				return "1";
-			}
-		}
-	} else {
-		return "ERR_ADMIN_NO_IMAGE";
-	}
 }
 
 function createGame($con,$new_game,$new_raw_name)

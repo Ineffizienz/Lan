@@ -6,10 +6,11 @@
 	include(INC . "connect.php");
 	include(INC . "function.php");
 	include(CL . "message_class.php");
+	include(CL . "player_class.php");
 
 	$message = new message();
 
-	$player_id = $_SESSION["player_id"];
+	$player = new Player($con, $_SESSION["player_id"]);
 	
 	$game_id = $_REQUEST["game"];
 
@@ -19,7 +20,7 @@
 		echo $not;
 	} else {
 			
-			$game_key = generateGameKey($con, $player_id, $game_id);
+			$game_key = generateGameKey($con, $player, $game_id);
 
 			if(substr($game_key,0,3) == "ERR")
 			{
