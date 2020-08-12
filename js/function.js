@@ -254,9 +254,14 @@ $(document).ready(function(){
 		var image = $(this).prop('files')[0];
 		var image_data = new FormData();
 
-		image_data.append("file",image);
+		if(!fileValidation(image))
+		{
+			console.log("File error");
+		} else {
+			image_data.append("file",image);
 
-		postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
+			postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
+		}
 	}
 
 /*#############################################################################################

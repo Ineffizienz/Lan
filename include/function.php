@@ -17,31 +17,6 @@
 
 		return $tpl->r_display();
 	}
-
-	function validateImage($filesize,$filetype)
-	{
-		if (isset($filesize) && ($filesize != 0))
-		{
-			if($filesize < 5242880)
-			{
-				if($filesize < 5)
-				{
-					return "ERR_FILE_TO_SMALL";
-				} else {
-					if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-					{
-						return "ERR_NO_IMAGE_TYPE";
-					} else {
-						return 1;
-					}	
-				}	
-			} else {
-				return "ERR_FILE_TO_HUGE";
-			}
-		} else {
-			return "ERR_NO_IMAGE";
-		}
-	}
 	
 	function ownTeam($con,$ip) //maybe not used anymore
 	{

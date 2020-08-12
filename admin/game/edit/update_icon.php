@@ -28,28 +28,19 @@
 				echo mysqli_error($con);
 			}
 		}
-	}
 	
-	$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
-	if($result_validate == "1")
+	
+	}
+	move_uploaded_file($_FILES["file"]["tmp_name"], ICON . $_FILES["file"]["name"]);
+	$path = $_FILES["file"]["name"];
+	
+	$sql = "UPDATE games SET icon = '$path' WHERE ID = '$game_id'";
+	if(mysqli_query($con,$sql))
 	{
-		move_uploaded_file($_FILES["file"]["tmp_name"], ICON . $_FILES["file"]["name"]);
-		$path = $_FILES["file"]["name"];
-		
-		$sql = "UPDATE games SET icon = '$path' WHERE ID = '$game_id'";
-		if(mysqli_query($con,$sql))
-		{
-			$messageText = "SUC_ADMIN_ICON_CHANGED";
-			echo substr($messageText,10);
-			$message->getMessageCode("SUC_ADMIN_ICON_CHANGED");
-			echo $message->displayMessage();
-		} else {
-			$message->getMessageCode("ERR_ADMIN_DB");
-			echo $message->displayMessage();
-		}
-		
+		$message->getMessageCode("SUC_ADMIN_ICON_CHANGED");
+		echo $message->displayMessage();
 	} else {
-		$message->getMessageCode($result_validate);
+		$message->getMessageCode("ERR_ADMIN_DB");
 		echo $message->displayMessage();
 	}
 ?>

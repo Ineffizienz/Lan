@@ -235,26 +235,6 @@ function emptyText($data)
 	return $text;
 }
 
-function validateImageFile($filesize,$filetype)
-{
-	if(isset($filesize) && ($filesize != 0))
-	{
-		if($filesize > 5000000)
-		{
-			return "ERR_ADMIN_FILE_TO_HUGE";
-		} else {
-			if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-			{
-				return "ERR_ADMIN_NO_IMAGE_TYPE";
-			} else {
-				return "1";
-			}
-		}
-	} else {
-		return "ERR_ADMIN_NO_IMAGE";
-	}
-}
-
 function createGame($con,$new_game,$new_raw_name)
 {
     mysqli_query($con,"INSERT INTO games (name,raw_name) VALUES ('$new_game','$new_raw_name');");
