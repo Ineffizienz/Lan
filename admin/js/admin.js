@@ -102,7 +102,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image_icon) || !fileValidation(image_banner))
 		{
-			console.log("File error");
+			displayResult("Dateifehler.");
 		} else {
 			if(image_icon.length == 0)
 			{
@@ -187,7 +187,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			console.log("File error");
+			displayResult("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -215,7 +215,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			console.log("File error");
+			displayResult("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
