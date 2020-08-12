@@ -100,7 +100,6 @@ $(document).ready(function(){
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
 
-		
 		if(!fileValidation(image_icon) || !fileValidation(image_banner))
 		{
 			console.log("File error");
