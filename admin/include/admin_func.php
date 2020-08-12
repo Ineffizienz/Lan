@@ -90,31 +90,31 @@ function displayTeams($con) // Teamverwaltung --> Team löschen
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
+	$ac = new Achievement($con);
 	$output = new template("admin/part/ac_table_content.html");
 	
 	$userlist = getBasicUserData($con);
-	$ac_option = getAllAchievementByName($con);
 
 	$output->assign("user",buildOption($userlist));
-	$output->assign("ac_name",buildOption($ac_option));
+	$output->assign("ac_name",buildOption($ac->getAllAchievementByName()));
 
 	return $output->r_display();
 }
 
 function displayAcCategories($con)
 {
-	$categories  = getAchievementCategories($con);
+	$ac = new Achievement($con);
 
-	$selectable_categories = buildOption($categories);
+	$selectable_categories = buildOption($ac->getAcCategories());
 
 	return $selectable_categories;
 }
 
 function displayAcTrigger($con)
 {
-	$trigger = getAchievementTrigger($con);
+	$ac = new Achievement($con);
 
-	$selectable_trigger = buildOption($trigger);
+	$selectable_trigger = buildOption($ac->getAcTrigger());
 
 	return $selectable_trigger;
 }

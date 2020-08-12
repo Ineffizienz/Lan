@@ -664,21 +664,6 @@ function getAllAchievements($con)
 
 	return $all_achievements;
 }
-function getAchievementById($con,$ac_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerAchievements
-	*/
-
-	$result = mysqli_query($con,"SELECT * FROM ac WHERE ID = '$ac_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$achievement[] = $row;
-	}
-
-	return $achievement;
-}
 
 function getAvailableAchievements($con, $player_id)
 {
@@ -687,64 +672,14 @@ function getAvailableAchievements($con, $player_id)
 		- function.php/displayAvailableAchievements
 	*/
 
-	$sql = "SELECT ac.ID, ac.title FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
+	$sql = "SELECT ac.ID FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
 	$result = mysqli_query($con,$sql);
 	while($row=mysqli_fetch_assoc($result))
 	{
-		$basic_ac[] = $row;
+		$basic_ac[] = $row["ID"];
 	}
 
 	return $basic_ac;
-}
-
-function getAllAchievementByName($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/addUsername
-	*/
-
-	$result = mysqli_query($con,"SELECT ID AS id,title AS name FROM ac");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_option[] = $row;
-	}
-	
-	return $ac_option;
-}
-
-function getAchievementCategories($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/displayAchievements
-		- admin_func.php/displayCategories
-	*/
-
-	$result = mysqli_query($con,"SELECT ID, c_name AS name FROM ac_category");
-	while($row=mysqli_fetch_assoc($result))
-	{ 
-		$ac_categories[] = $row;
-	}
-
-	return $ac_categories;
-}
-
-function getAchievementTrigger($con) // admin/admin_func.php/displayTrigger
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/displayAchievements
-		- admin_func.php/displayAcTrigger
-	*/
-
-	$result = mysqli_query($con,"SELECT ID,trigger_title AS name FROM ac_trigger");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_trigger[] = $row;
-	}
-
-	return $ac_trigger;
 }
 
 function getParamByAcID($con,$ac_id)

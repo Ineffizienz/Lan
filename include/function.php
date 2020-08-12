@@ -411,46 +411,36 @@ function displayServerStatus($con_wow)
 
 function displayPlayerAchievements($con, $player)
 {
-	$ac = new Achievement();
+	$tpl = new template("part/single_achievement.html");
+	$ac = new Achievement($con);
+	$player_achievements = array();
+	
 	foreach ($player->getPlayerAchievements() as $id)
 	{
-		$achievement_details = getAchievementById($con, $id);
-
-		foreach ($achievement_details as $achievement)
-		{
-			$ac->getDetails($achievement);
-		
-			if (!isset($output))
-			{
-				$output = $ac->displayAchievement();
-			} else {
-				$output .= $ac->displayAchievement();
-			}
-		}
+		array_push($player_achievements,$ac->getPlayerAchievement($id));
 	}
-	return $output;
+
+	$tpl->assign_array($player_achievements);
+	return $tpl->r_display();
 
 }
 
 function displayAvailableAchievements($con, $player)
 {
+	$tpl = new template("part/ac_small.html");
+	$ac = new Achievement($con);
+	$achievements = array();
 	$basic_ac = getAvailableAchievements($con, $player->getPlayerId());
 	
-	$ac = new Achievement();
 	if(!empty($basic_ac))
 	{
 		foreach ($basic_ac as $basic)
 		{
-			$ac->getBasicDetails($basic);
-			
-			if(!isset($output))
-			{
-				$output = $ac->displayAchievement();
-			} else {
-				$output .= $ac->displayAchievement();
-			}
+			array_push($achievements,$ac->getAvailableAchievement($basic));
 		}
-		return $output;
+		
+		$tpl->assign_array($achievements);
+		return $tpl->r_display();
 	}
 }
 
