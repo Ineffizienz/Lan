@@ -238,7 +238,6 @@ class Player {
 			$this->removePlayer();
 		} else {
 			$this->deleteStatus();
-			$this->resetKeys();
 			$this->removePreferences();
 			$this->removePlayerAchievements();
 			$this->removePlayer();
@@ -252,35 +251,6 @@ class Player {
 		{
 			return "SUC_ADMIN_DELETE_USER";
 		} else {
-			return "ERR_ADMIN_DB";
-		}
-	}
-
-	/************************************************************************************
-	 *	KEY HANDLING
-	*************************************************************************************/
-
-	public function setKey($key,$game_id)
-	{
-		mysqli_query($this->db_con,"UPDATE gamekeys SET player_id = '$this->id' WHERE gamekey = '$key' AND game_id = '$game_id'");
-	}
-
-	public function setRejectKey($game_id)
-	{
-		$sql = "UPDATE gamekeys SET rejected = '1' WHERE (player_id = '$this->id') AND (game_id = '$game_id') LIMIT 1";
-		if(!mysqli_query($this->db_con,$sql))
-		{
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private function resetKeys()
-	{
-		$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = '$this->id'";
-		if(!mysqli_query($this->db_con,$sql))
-		{
 			return "ERR_ADMIN_DB";
 		}
 	}

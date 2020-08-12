@@ -10,7 +10,7 @@
 	$player = new Player($con, $_SESSION["player_id"]);
 
 	$game_id = $_REQUEST["game"];
-	if($player->setRejectKey($game_id))
+	if(mysqli_query($con,"UPDATE gamekeys SET rejected='1' WHERE player_id='$player->getPlayerId()' AND game_id='$game_id' LIMIT 1"))
 	{
 		$new_key = generateGameKey($con, $player, $game_id);
 		if(substr($new_key,0,3) == "ERR")
