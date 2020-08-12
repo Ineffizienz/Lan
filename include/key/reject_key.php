@@ -4,14 +4,15 @@
 	include(INC . "connect.php");
 	include(INC . "function.php");
 	include(CL . "message_class.php");
+	include(CL . "player_class.php");
 
 	$message = new message();
+	$player = new Player($con, $_SESSION["player_id"]);
 
-	$player_id = $_SESSION["player_id"];
 	$game_id = $_REQUEST["game"];
-	if(mysqli_query($con,"UPDATE gamekeys SET rejected = '1' WHERE (player_id = '$player_id') AND (game_id = '$game_id') LIMIT 1;"))
+	if(mysqli_query($con,"UPDATE gamekeys SET rejected='1' WHERE player_id='$player->getPlayerId()' AND game_id='$game_id' LIMIT 1"))
 	{
-		$new_key = generateGameKey($con, $player_id, $game_id);
+		$new_key = generateGameKey($con, $player, $game_id);
 		if(substr($new_key,0,3) == "ERR")
 		{
 			$message->getMessageCode($new_key);

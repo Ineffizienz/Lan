@@ -15,8 +15,17 @@
 		if(in_array($player_id,$user_ids))
 		{
 			$player = new Player($con,$player_id);
-			$message->getMessageCode($player->removePlayerFromSystem());
-			echo $message->displayMessage();
+			$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id ='$player->getPlayerId()'";
+			
+			if(mysqli_query($con,$sql))
+			{
+				$message->getMessageCode($player->removePlayerFromSystem());
+				echo $message->displayMessage();
+			} else {
+				$message->getMessageCode("ERR_ADMIN_DB");
+				echo $message->displayMessage();
+			}
+			
 		} else {
 			$message->getMessageCode("ERR_ADMIN_USER_DOES_NOT_EXISTS");
 			echo $message->displayMessage();
