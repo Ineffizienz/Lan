@@ -3,16 +3,17 @@
 	require_once INC . 'session.php';
     include(INC . "connect.php");
     include(CL . "message_class.php");
+    include(CL . "player_class.php");
     include(INC . "function.php");
 
-    $player_id = $_SESSION["player_id"];
     $message = new message();
+    $player = new Player($con,$_SESSION["player_id"]);
 
     if(isset($_REQUEST["game_id"]))
     {
         $game_id = $_REQUEST["game_id"];
         $votedGames = getVotedGames($con,$game_id);
-        $tournamentVotes = getVotedGamesByPlayerId($con,$player_id);
+        $tournamentVotes = getVotedGamesByPlayerId($con,$player->getPlayerId());
         $start = date("Y-m-d H:i:s", strtotime("now"));
         $end = date("Y-m-d H:i:s", strtotime("+30 minutes"));
 
@@ -31,7 +32,7 @@
                     $sql = "CREATE EVENT IF NOT EXISTS close_vote_" . $tm_vote_id . " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 MINUTE ENABLE DO UPDATE tm_vote SET vote_closed = 1 WHERE ID = '$tm_vote_id'";
                     if (mysqli_query($con,$sql))
                     {
-                        $sql = "INSERT INTO tm_vote_player (tm_vote_id, player_id) VALUES ('$tm_vote_id','$player_id')";
+                        $sql = "INSERT INTO tm_vote_player (tm_vote_id, player_id) VALUES ('$tm_vote_id','$player->getPlayerId()')";
                         if(mysqli_query($con,$sql))
                         {
                             $message->getMessageCode("SUC_TM_VOTED_FOR");
