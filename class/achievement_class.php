@@ -1,172 +1,180 @@
 <?php
 class Achievement {
 	
-	private $DBC = "";
-	private $id = "";
-	private $title = "";
-	private $message = "";
-	private $image = "";
-	private $trigger = "";
-	private $category = "";
-	private $s_cat = array();
-	private $visib = "";
-	private $ac_template = "";
-	private $ac = "";
-	private $imagePath = "";
-	private $templatePath = "";
-	private $templateAdminPath = "";
-	private $adminArr = array("--ID--","--NAME--","--IMAGE_URL--","--MESSAGE--","--TRIGGER--","--CATEGORY--","--VISIBILITY--");
-	private $singleArr = array("--IMAGE--","--HEADLINE--","--TEXT--");
-	private $basicArr = array("--ID--","--HEADLINE--");
+	private $db_con;
+	private $id;
+	private $name;
+	private $name_array = array();
+	private $message;
+	private $image;
+	private $trigger;
+	private $trig_array = array();
+	private $category;
+	private $cat_array = array();
+	private $visibility;
+	private $available_ac = array();
 
-
-	public function templateFolder()
+	public function __construct($con)
 	{
-		$this->templatePath = "template/part/";
+		$this->db_con = $con;
 
-		return $this->templatePath;
+		$this->getAchievementTriggerData();
+		$this->getAchievementCategoriesData();
+		$this->getAchievementNameData();
 	}
 
-	public function templateAdminFolder()
+	/************************************************************************************
+	 *	QUERY DATA
+	*************************************************************************************/
+
+	private function getAchievementData()
 	{
-		$this->templateAdminPath = "template/admin/part/";
-
-		return $this->templateAdminPath;
-	}
-
-	public function imageFolder()
-	{
-		$this->imagePath = "images/achievements/";
-
-		return $this->imagePath;
-	}
-
-	public function getDetails($single_details)
-	{
-		$this->title = $single_details["title"];
-		$this->message = $single_details["message"];
-
-		if(empty($single_details["image_url"]))
+		$result = mysqli_query($this->db_con,"SELECT title, image_url, message, ac_trigger, ac_category, ac_visibility FROM ac WHERE ID = '$this->id'");
+		while($row=mysqli_fetch_array($result))
 		{
-			$this->image = "NULL";
-		} else {
-			$this->image = $this->imageFolder() . $single_details["image_url"];
+			$this->name = $row["title"];
+			$this->image = $this->validateData($row["image_url"]);
+			$this->message = $row["message"];
+			$this->trigger = $row["ac_trigger"];
+			$this->category = $row["ac_category"];
+			$this->visibility = $this->validateData($row["ac_visibility"]);
 		}
-
-		$this->buildAchievement();
 	}
 
-	public function getAdminDetails($con,$admin_achievements,$catArray,$trigArray)
+	private function getAchievementNameData()
 	{
-		if (empty($admin_achievements))
+		$result = mysqli_query($this->db_con,"SELECT ID, title FROM ac");
+		while($row=mysqli_fetch_array($result))
 		{
-			$this->ac = "File not Found.";
+			if(!empty($row))
+			{
+				array_push($this->name_array,array("id"=>$row["ID"],"name"=>$row["title"]));
+			}
+		}
+	}
+
+	private function getAchievementCategoriesData()
+	{
+		$result = mysqli_query($this->db_con,"SELECT ID, c_name FROM ac_category");
+		while($row=mysqli_fetch_assoc($result))
+		{
+			if(!empty($row))
+			{
+				array_push($this->cat_array,array("id" => $row["ID"], "name" => $row["c_name"]));
+			} else {
+				array_push($this->cat_array,"Es sind keine Kategorien hinterlegt.");
+			}
+		}
+	}
+
+	private function getAchievementTriggerData()
+	{
+		$result = mysqli_query($this->db_con,"SELECT ID, trigger_title FROM ac_trigger");
+		while($row=mysqli_fetch_assoc($result))
+		{
+			if(!empty($row))
+			{
+				array_push($this->trig_array,array("id" => $row["ID"], "name" => $row["trigger_title"]));
+			} else {
+				array_push($this->trig_array,"Es sind keine Trigger hinterlegt");
+			}
+		}
+	}
+
+	/************************************************************************************
+	 *	DATA VALIDATION
+	*************************************************************************************/
+
+	private function validateData($input)
+	{
+		if(empty($input) || $input == "")
+		{
+			return "";
 		} else {
-			$this->DBC = $con;
-			$this->id = $admin_achievements["ID"];
-			$this->title = $admin_achievements["title"];
-			$this->message = $admin_achievements["message"];
-			$this->trigger = $this->buildOption($trigArray,$admin_achievements["trigID"],$admin_achievements["trigger_title"]);
-			$this->category = $this->buildOption($catArray,$admin_achievements["catID"],$admin_achievements["c_name"]);
-			
-			if (empty($admin_achievements["image_url"]))
-			{
-				$this->image = "NULL";
-			} else {
-				$this->image = $admin_achievements["image_url"];
-			}
+			return $input;
+		}
+	}
 
-			$this->opt_visib = array(array("ID"=>"Unsichtbar","name"=>"Unsichtbar"),array("ID"=>"Sichtbar","name"=>"Sichtbar"));
+	/************************************************************************************
+	 *	SET ACHIEVEMENTS/COMPONENTS
+	*************************************************************************************/
 
-			if($admin_achievements["ac_visibility"] == "Sichtbar")
-			{
-				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Sichtbar");
-			} elseif ($admin_achievements["ac_visibility"] == "Unsichtbar") {
-				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Unsichtbar");
-			} else {
-				$this->visib = $this->buildOption($this->opt_visib,$admin_achievements["ac_visibility"],"Wird gelöscht");
-			}
-			
-			$this->buildAdminAchievement();
+	public function setNewAchievement($title, $path, $category, $trigger, $visibility)
+	{
+		$sql = "INSERT INTO ac (title,image_url,message,ac_category,ac_trigger,ac_visibility) VALUES ('$title','$path','$text','$category','$trigger','$visibility')";
+		if(mysqli_query($this->db_con,$sql))
+		{
+			return "SUC_ADMIN_CREATE_AC";
+		} else {
+			return "ERR_ADMIN_DB";
 		}
 	}
 	
-	public function getBasicDetails($basic)
+	public function assignNewAchievementAdmin($player_id,$new_achievement)
 	{
-		$this->id = $basic["ID"];
-		$this->title = $basic["title"];
-		
-		$this->buildBasicAchievement();
-	}
-
-	public function buildOption($optArr,$selected_id,$selected_name)
-	{
-		$optGUI = file_get_contents($this->templateAdminFolder() . "option.html");
-
-		if(empty($selected_id))
+		$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$player_id','$new_achievement')";
+		if(mysqli_query($this->db_con,$sql))
 		{
-			$output = "<option value='default' selected>Kein Angabe";
+			return "SUC_ADMIN_ASSIGN_AC";
 		} else {
-			$output = "<option value='" . $selected_id . "' selected>" . $selected_name;
-		}
-
-		foreach ($optArr as $option)
-		{
-			if($option["ID"] !== $selected_id)
-			{
-				$output .= str_replace(array("--VALUE--","--NAME--"), array($option["ID"],$option["name"]),$optGUI);
-			}
-		}
-
-		return $output;
-	}
-
-	public function buildAchievement()
-	{
-		$this->ac_template = file_get_contents($this->templateFolder() . "single_achievement.html");
-
-		if($this->image == "NULL")
-		{
-			$this->ac = str_replace($this->singleArr, array($this->imageFolder() . "keinbild.jpg",$this->title,$this->message),$this->ac_template);
-		} else {	
-			if(file_exists($this->image))
-			{
-				$this->ac = str_replace($this->singleArr, array($this->image,$this->title,$this->message), $this->ac_template);
-			} else {
-				echo $this->ac = $this->image;
-				$this->ac = str_replace($this->singleArr, array("Hier oder?",$this->title,$this->message), $this->ac_template);
-			}
+			return "ERR_ADMIN_DB";
 		}
 	}
 
-	public function buildAdminAchievement()
+	public function setNewAcImage($id,$path)
 	{
-		$this->ac_template = file_get_contents($this->templateAdminFolder() . "ac_list.html");
-
-		if($this->image == "NULL")
+		$sql = "UPDATE ac SET image_url = '$path' WHERE ID = '$acid'";
+		if(mysqli_query($this->db_con,$sql))
 		{
-			$this->ac .= str_replace($this->adminArr, array($this->id,$this->title,"KeinBild",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
+			return "SUC_ADMIN_CHANGE_AC_IMAGE";
 		} else {
-			if(file_exists($this->imageFolder() . $this->image))
-			{
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,$this->image,$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
-			} else {
-				$this->ac = str_replace($this->adminArr, array($this->id,$this->title,"Error",$this->message,$this->trigger,$this->category,$this->visib), $this->ac_template);
-			}
+			return "ERR_ADMIN_DB";
 		}
 	}
 	
-	public function buildBasicAchievement()
+
+	/************************************************************************************
+	 *	GET DATA
+	*************************************************************************************/
+
+	public function getAdminAchievement($id)
 	{
-		$this->ac_template = file_get_contents($this->templateFolder() . "ac_small.html");
+		$this->id = $id;
+		$this->getAchievementData();
 		
-		$this->ac = str_replace($this->basicArr,array($this->id,$this->title),$this->ac_template);
+		return array("id" => $this->id, "name" => $this->name, "image" => $this->image, "message" => $this->message, "trigger" => $this->trigger, "category" => $this->category, "visibility" => $this->visibility);
 	}
 
-	public function displayAchievement()
+	public function getAllAchievementByName()
 	{
-		return $this->ac;
-	}	
+		return $this->name_array;
+	}
+
+	public function getAcCategories()
+	{
+		return $this->cat_array;
+	}
+
+	public function getAcTrigger()
+	{
+		return $this->trig_array;
+	}
+
+	public function getPlayerAchievement($id)
+	{
+		$this->id = $id;
+		$this->getAchievementData();
+
+		return array("name"=>$this->name,"image"=>$this->image,"message"=>$this->message);
+	}
+
+	public function getAvailableAchievement($id)
+	{
+		$this->id = $id;
+		$this->getAchievementData();
+
+		return array("id"=>$this->id,"name"=>$this->name);
+	}
 }
 	
 ?>

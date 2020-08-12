@@ -312,17 +312,6 @@ class Player {
 	 *	ACHIEVEMENT HANDLING
 	*************************************************************************************/
 
-	public function setNewAchievementAdmin($new_achievement)
-	{
-		$sql = "INSERT ac_player (player_id,ac_id) VALUES ('$this->id','$new_achievement')";
-		if(mysqli_query($this->db_con,$sql))
-		{
-			return "SUC_ADMIN_ASSIGN_AC";
-		} else {
-			return "ERR_ADMIN_DB";
-		}
-	}
-
 	private function removePlayerAchievements()
 	{
 		if(!empty($this->achievement))
