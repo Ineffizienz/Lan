@@ -206,14 +206,18 @@ $(document).ready(function(){
 
 		form_data.append("game_id",game_id);
 
-		if($(banner_id).get(0).files.length == 0)
+		if(!fileValidation(image))
 		{
-			form_data.append("file","0");
+			console.log("File error");
 		} else {
-			form_data.append("file",image);
+			if(image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",image);
+			}
+			postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 		}
-
-		postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
 	}
 
 	function getFile(event) //Upload for new Keys
