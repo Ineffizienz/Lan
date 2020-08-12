@@ -23,34 +23,19 @@
 		
 		if(isset($_FILES["file"]["size"]) && !empty($_FILES["file"]["size"]))
 		{
-			$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
-			if($result_validate == "1")
-			{
-				move_uploaded_file($_FILES["file"]["tmp_name"], AC . $_FILES["file"]["name"]);
-				$path = $_FILES["file"]["name"];
-				
-				$title = $_REQUEST["ac_name"];
-				$category = $_REQUEST["ac_cat"];
-				$trigger = $_REQUEST["ac_trigger"];
-				$text = $_REQUEST["ac_message"];
-
-				$message->getMessageCode($ac->setNewAchievement($title,$path,$text,$category,$trigger,$visiblity));
-				echo buildJSONOutput($message->displayMessage());
-				
-			} else {
-				$message->getMessageCode($result_validate);
-				echo buildJSONOutput($message->displayMessage());
-			}	
+			move_uploaded_file($_FILES["file"]["tmp_name"], AC . $_FILES["file"]["name"]);
+			$path = $_FILES["file"]["name"];				
 		} else {
+			$path = NULL;
+		}
 
-			$title = $_REQUEST["ac_name"];
-			$categorie = $_REQUEST["ac_cat"];
-			$trigger = $_REQUEST["ac_trigger"];
-			$text = $_REQUEST["ac_message"];
-			
-			$message->getMessageCode($ac->setNewAchievement($title,NULL,$text,$trigger,$category,$visibility));
-			echo buildJSONOutput($message->displayMessage());		
-		}		
+		$title = $_REQUEST["ac_name"];
+		$categorie = $_REQUEST["ac_cat"];
+		$trigger = $_REQUEST["ac_trigger"];
+		$text = $_REQUEST["ac_message"];
+		
+		$message->getMessageCode($ac->setNewAchievement($title,$path,$text,$trigger,$category,$visibility));
+		echo buildJSONOutput($message->displayMessage());
 
 	}
 

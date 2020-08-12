@@ -260,14 +260,18 @@ $(document).ready(function(){
 		form_data.append("ac_visible",ac_visible);
 		form_data.append("ac_message",ac_message);
 		
-		if($(image_id).get(0).files.length == 0)
+		if(!fileValidation(image))
 		{
-			form_data.append("file","0");
+			console.log("File error");
 		} else {
-			form_data.append("file",image);
+			if(image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",image);
+			}
+			postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
 		}
-
-		postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
 	}
 
 	function getSelectedItems(event)
@@ -306,15 +310,15 @@ $(document).ready(function(){
 		var form_data = new FormData();
 
 		form_data.append("ac_id",ac_id);
-		
-		if($(image_id).get(0).files.length == 0)
+
+		if(fileValidation(image))
 		{
-			form_data.append("file","0");
-		} else {
 			form_data.append("file",image);
+			postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+		} else {
+			console.log("File error");
 		}
-	
-		postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+		
 	}
 
 	function getNewTrigger(event)
