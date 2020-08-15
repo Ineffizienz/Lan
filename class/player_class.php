@@ -21,6 +21,7 @@ class Player {
 	private $wow_account;
 	private $status_id;
 	private $status_name;
+	private $message_code;
 
 	public function __construct ($con, int $player_id)
 	{
@@ -198,14 +199,16 @@ class Player {
 		
 	}
 
-	public function setNewUser($new_name,$new_ip)
+	public function setNewPlayer($new_name,$new_ip)
 	{
-		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
+		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$new_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_ADMIN_NEW_PLAYER";
+			$this->message_code = "SUC_ADMIN_NEW_PLAYER";
+			return $this->message_code;
 		} else {
-			return "ERR_ADMIN_DB";
+			$this->message_code = "ERR_ADMIN_DB";
+			return $this->message_code;
 		}
 	}
 
@@ -214,9 +217,11 @@ class Player {
 		$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_CHANGE_USERNAME";
+			$this->message_code = "SUC_CHANGE_USERNAME";
+			return $this->message_code;
 		} else {
-			return "ERR_CHANGE_USERNAME";
+			$this->message_code = "ERR_CHANGE_USERNAME";
+			return $this->message_code;
 		}
 	}
 
@@ -225,9 +230,11 @@ class Player {
 		$sql = "UPDATE player SET profil_image = '$image' WHERE ID = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_UPLOADED_IMAGE";
+			$this->message_code = "SUC_UPLOADED_IMAGE";
+			return $this->message_code;
 		} else {
-			return "ERR_DB";
+			$this->message_code = "ERR_DB";
+			return $this->message_code;
 		}
 	}
 
@@ -236,11 +243,13 @@ class Player {
 		if($this->first_login == "1")
 		{
 			$this->removePlayer();
+			return $this->message_code;
 		} else {
 			$this->deleteStatus();
 			$this->removePreferences();
 			$this->removePlayerAchievements();
 			$this->removePlayer();
+			return $this->message_code;
 		}
 	}
 
@@ -249,9 +258,11 @@ class Player {
 		$sql = "DELETE FROM player WHERE ID = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_ADMIN_DELETE_USER";
+			$this->message_code = "SUC_ADMIN_DELETE_USER";
+			return $this->message_code;
 		} else {
-			return "ERR_ADMIN_DB";
+			$this->message_code = "ERR_ADMIN_DB";
+			return $this->message_code;
 		}
 	}
 
@@ -269,7 +280,8 @@ class Player {
 		$sql = "DELETE FROM status WHERE user_id = '$this->id'";
 		if(!mysqli_query($this->db_con,$sql))
 		{
-			return "ERR_ADMIN_DB";
+			$this->message_code = "ERR_ADMIN_DB";
+			return $this->message_code;
 		}
 	}
 
@@ -282,9 +294,11 @@ class Player {
 		$sql = "INSERT pref (player_id,game_id) VALUES ('$this->id','$new_preference')";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_ADD_PREF";
+			$this->message_code = "SUC_ADD_PREF";
+			return $this->message_code;
 		} else {
-			return "ERR_ADD_PREF";
+			$this->message_code = "ERR_ADD_PREF";
+			return $this->message_code;
 		}
 	}
 
@@ -293,9 +307,11 @@ class Player {
 		$sql = "DELETE FROM pref WHERE player_id = '$this->id' AND game_id = '$pref'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_DELETE_PREF";
+			$this->message_code = "SUC_DELETE_PREF";
+			return $this->message_code;
 		} else {
-			return "ERR_DELETE_PREF";
+			$this->message_code = "ERR_DELETE_PREF";
+			return $this->message_code;
 		}
 	}
 
@@ -304,7 +320,8 @@ class Player {
 		$sql = "DELETE FROM pref WHERE player_id = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "ERR_ADMIN_DB";
+			$this->message_code = "ERR_ADMIN_DB";
+			return $this->message_code;
 		}
 	}
 
@@ -319,7 +336,8 @@ class Player {
 			$sql = "DELETE FROM ac_player WHERE player_id = '$this->id'";
 			if(!mysqli_query($this->db_con,$sql))
 			{
-				return "ERR_ADMIN_DB";
+				$this->message_code = "ERR_ADMIN_DB";
+				return $this->message_code;
 			}
 		}
 	}
@@ -333,9 +351,11 @@ class Player {
 		$sql = "UPDATE player SET wow_account = '$account_name' WHERE ID = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
-			return "SUC_ACC_CREATE";
+			$this->message_code = "SUC_ACC_CREATE";
+			return $this->message_code;
 		} else {
-			return "ERR_ACC_CREATE";
+			$this->message_code = "ERR_ACC_CREATE";
+			return $this->message_code;
 		}
 	}
 

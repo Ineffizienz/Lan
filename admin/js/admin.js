@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 		obj = {c_name};
 
-		postAjax(obj,getEndpoint("create_new_account"),displayResult);
+		postAjax(obj,getEndpoint("create_new_account"),showMessage);
 	}
 
 	function getId(event)
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 		obj = {player};
 
-		postAjax(obj,getEndpoint("delete_player"),displayResult);
+		postAjax(obj,getEndpoint("delete_player"),showMessage);
 
 	}
 
@@ -503,6 +503,8 @@ $(document).ready(function(){
 	function displayResult(err)
 	{
 		$("#result").show();
+		$("#result").css("position","sticky");
+		$("#result").css("top","75%");
 		$("#result").html(err);
 		$("#result").fadeOut(3000);
 	}
