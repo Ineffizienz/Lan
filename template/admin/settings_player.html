@@ -1,19 +1,21 @@
 <h2>Spielerverwaltung</h2>
-<table class="ov_table p_view" cellspacing="0" cellpadding="0">
-	<tr>
-		<th>ID</th>
-		<th>Name</th>
-		<th>IP</th>
-		<th>WoW-Account</th>
-		<th>Team ID</th>
-		<th>Team</th>
-		<th>Team Captain</th>
-		<th>Ticket ID</th>
-		<th>Ticket erstellen</th>
-		<th>Actions</th>
-	</tr>
-	{$player}
-</table>
+<div id="player_data_div">
+	<table class="ov_table p_view" id="player_data_table" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>IP</th>
+			<th>WoW-Account</th>
+			<th>Team ID</th>
+			<th>Team</th>
+			<th>Team Captain</th>
+			<th>Ticket ID</th>
+			<th>Ticket erstellen</th>
+			<th>Actions</th>
+		</tr>
+		{$player}
+	</table>
+</div>
 <div style="margin-top:2%;text-align:center;height:5%;">
 	<form>
 		<label for="cover_name">Übergangsname:</label>

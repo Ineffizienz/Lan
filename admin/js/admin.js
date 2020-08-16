@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 		obj = {c_name};
 
-		postAjax(obj,getEndpoint("create_new_account"),showMessage);
+		postAjax(obj,getEndpoint("create_new_account"),setResult);
 	}
 
 	function getId(event)
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 		obj = {player};
 
-		postAjax(obj,getEndpoint("delete_player"),showMessage);
+		postAjax(obj,getEndpoint("delete_player"),setResult);
 
 	}
 

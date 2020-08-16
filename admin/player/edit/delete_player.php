@@ -20,7 +20,7 @@
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode($player->removePlayerFromSystem());
-				echo buildJSONOutput($message->displayMessage());
+				echo buildJSONOutput(array($message->displayMessage(),"#player_data_div","#player_data_table"));
 			} else {
 				$message->getMessageCode("ERR_ADMIN_DB");
 				echo buildJSONOutput($message->displayMessage());
