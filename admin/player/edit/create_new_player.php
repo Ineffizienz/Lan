@@ -26,7 +26,7 @@
 		if (isset($new_ip))
 		{
 			$message->getMessageCode($player->setNewPlayer($c_name,$new_ip));
-			echo buildJSONOutput(array($message->displayMessage(),"#player_data_div","#player_data_table"));	
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));	
 		} else {
 			$message->getMessageCode("ERR_ADMIN_INTERN_#1");
 			echo buildJSONOutput($message->displayMessage());

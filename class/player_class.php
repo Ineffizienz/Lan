@@ -144,9 +144,9 @@ class Player {
 	/************************************************************************************
 	 *	SET NEW USER/USER-DATA
 	*************************************************************************************/
-	private function setPlayerNames($nick,$real_name)
+	private function setPlayerNames($nick,$real_name) //TODO: Funktion separieren
 	{
-		$sql = "UPADTE player SET username = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
+		$sql = "UPDATE player SET username = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
 		if(!mysqli_query($this->db_con,$sql))
 		{
 			return false;

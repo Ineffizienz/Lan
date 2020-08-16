@@ -14,7 +14,8 @@
 				break;
 				case "player":
 					include("admin/player/view/player_settings_view.php");
-					$tpl->assign_subtemplate("content","admin/settings_player.html");
+					$tpl->assign_subtemplate("content","admin/skeleton/skeleton_player_settings.html");
+					$tpl->assign_subtemplate("player_content","admin/settings_player.html");
 					$tpl->assign_subtemplate("player",$output);
 				break;
 				case "games":

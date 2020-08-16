@@ -27,6 +27,16 @@ $(document).ready(function(){
 		return game_id;
 	}
 
+	function getParentElement(button)
+	{
+		return "#" + $(button).attr("data-reload-parent");
+	}
+
+	function getChildElement(button)
+	{
+		return "#" + $(button).attr("data-reload-child");
+	}
+
 /*#############################################################################################
 #################################### User ##################################################### 
 ###############################################################################################*/
@@ -37,7 +47,10 @@ $(document).ready(function(){
 
 		var c_name = $("#cover_name").val();
 
-		obj = {c_name};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {c_name,p_element,c_element};
 
 		postAjax(obj,getEndpoint("create_new_account"),setResult);
 	}
@@ -48,7 +61,10 @@ $(document).ready(function(){
 
 		var player = $(this).closest("tr").attr("id");
 
-		obj = {player};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {player,p_element,c_element};
 
 		postAjax(obj,getEndpoint("delete_player"),setResult);
 
@@ -532,8 +548,6 @@ $(document).ready(function(){
 		if(result.hasOwnProperty("parent_element"))
 		{
 			reloadContent(result.parent_element,result.child_element);
-		} else {
-			console.log("nö");
 		}
 	}
 
