@@ -107,35 +107,46 @@ $(document).ready(function(){
 		
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
-
-		var image_icon = $("#new_game_icon").prop('files')[0];
-		var image_banner = $("#new_game_banner").prop('files')[0];
+		
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
 		var form_data = new FormData();
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
-		if(!fileValidation(image_icon) || !fileValidation(image_banner))
+		if(!$("#new_game_icon").val())
 		{
-			displayResult("Dateifehler.");
+			form_data.append("game_icon","0");
 		} else {
-			if(image_icon.length == 0)
+			var image_icon = $("#new_game_icon").prop('files')[0];
+			if(!fileValidation(image_icon))
 			{
 				form_data.append("game_icon","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_icon",image_icon);
 			}
+		}
 
-			if(image_banner.length == 0)
+		if(!$("#new_game_banner").val())
+		{
+			form_data.append("game_banner","0");
+		} else {
+			var image_banner = $("#new_game_banner").prop('files')[0];
+			if(!fileValidation(image_banner))
 			{
 				form_data.append("game_banner","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_banner",image_banner);
 			}
-			
-			postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 		}
+			
+		postFileAjax(form_data,getEndpoint("create_new_game"),setResult);
 	}
 
 	function getNewRawName(event)

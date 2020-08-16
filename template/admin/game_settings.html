@@ -39,7 +39,7 @@
 					</td>
 				</tr>
 			</table>
-			<button id="b_add_game">Spiel hinzufügen</button>
+			<button id="b_add_game" data-reload-parent="game-data-form" data-reload-child="admin_game_list">Spiel hinzufügen</button>
 		</form>
 	</div>	
 </div>
@@ -49,7 +49,7 @@
 		<h3>Spiele bearbeiten</h3>
 	</div>
 	<p class="line">&nbsp;</p>
-	<form enctype="multipart/form-data">
+	<form enctype="multipart/form-data" id="game-data-form">
 		<table id="admin_game_list" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
 			<tr>
 				<th>Game-ID</th>

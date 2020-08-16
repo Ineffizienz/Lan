@@ -52,10 +52,10 @@
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode("SUC_ADMIN_CREATE_NEW_GAME");
-				echo $message->displayMessage();
+				echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
 			} else {
 				$message->getMessageCode("ERR_ADMIN_DB");
-				echo $message->displayMessage() . mysqli_error($con);
+				echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
 			}
 		}
 	}
