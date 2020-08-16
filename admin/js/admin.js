@@ -628,9 +628,9 @@ function refreshVotes()
 	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
-	$("#create").on("click", getNumber);
+	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
-	$(".p_button_delete").on("click", getId);
+	$(document).on("click",".p_button_delete", getId);
 	$("#b_del_team").on("click", getTeamId);
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
