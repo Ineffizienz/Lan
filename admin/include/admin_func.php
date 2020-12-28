@@ -170,6 +170,13 @@ function displaySingleGame($con)
 			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
 		}
 
+		if(empty($game["short_title"]))
+		{
+			$gst = "";
+		} else {
+			$gst = $game["short_title"];
+		}
+
 		if(empty($game["addon"]))
 		{
 			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
@@ -177,7 +184,7 @@ function displaySingleGame($con)
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"raw_name"=>$game["raw_name"],"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
 		array_push($game_output,$transfer);
 
 	}

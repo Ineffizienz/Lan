@@ -17,6 +17,14 @@
 		</span>
 	</td>
 	<td>
+		<span id="{$short_title}">{$short_title}</span>
+		<i id="edit_settings" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
+		<span class="settings_gst">
+			<input type="text" name="game_short_title" class="game_short_title">
+			<button class="send_st" data-reload-parent="id_game_{$id}" data-reload-child="id_{$short_title}">Absenden</button>
+		</span>
+	</td>
+	<td>
 		<select class="sec_is_addon">
 			{$addon}
 		</select>

@@ -194,6 +194,21 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("update_gamename"),setSpanResult);
 	}
 
+	function getNewShortTitle(event)
+	{
+		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		var game_short_title = $(this).siblings(".game_short_title").val();
+		var game_id = retrieveGameID(this);
+
+		obj = {game_id,game_short_title,p_element,c_element};
+
+		postAjax(obj,getEndpoint("update_shorttitle"),setSpanResult);
+	}
+
 	function getHasTable(event)
 	{
 		event.preventDefault();
@@ -623,6 +638,12 @@ $(document).ready(function(){
 		$(this).siblings(".settings_grn").slideToggle();
 	}
 
+	function showGSTInputField(event)
+	{
+		event.preventDefault();
+		$(this).siblings(".settings_gst").slideToggle();
+	}
+
 	function displayPopup(event)
 	{
 		event.preventDefault();
@@ -686,8 +707,10 @@ function refreshVotes()
 	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
+	$(document).on("click",".send_gst",getNewShortTitle);
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
+	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
