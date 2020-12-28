@@ -168,7 +168,7 @@ $(document).ready(function(){
 		event.preventDefault();
 		
 		var n_raw = $(this).siblings(".game_raw_name").val();
-		var game_id = retrieveGameId(this);
+		var game_id = retrieveGameID(this);
 
 		obj = {game_id,n_raw};
 
@@ -560,7 +560,7 @@ $(document).ready(function(){
 
 	function displayTicketID(result)
 	{
-		displayResult(result.message);
+		displayResult(result.message["messageText"]);
 
 		if(result.hasOwnProperty("ticket_id"))
 		{
@@ -571,19 +571,19 @@ $(document).ready(function(){
 
 	function setResult(result)
 	{
-		displayResult(result.message);
+		displayResult(result.message["messageText"]);
 
-		if(result.hasOwnProperty("parent_element"))
+		if(result.hasOwnProperty("reloadProp"))
 		{
-			reloadContent(result.parent_element,result.child_element);
+			reloadContent(result.reloadProp["parent_element"],result.reloadProp["child_element"]);
 		}
 	}
 
 	function setSpanResult(result)
 	{
-		displayResult(result.message);
+		displayResult(result.message["messageText"]);
 
-		$(result.parent_element).text(result.child_element);
+		$(result.reloadProp["parent_element"]).text(result.reloadProp["child_element"]);
 
 		$(".settings_gn").slideUp();
 	}
@@ -602,8 +602,7 @@ $(document).ready(function(){
 	
 	function showResult(result,reloadID)
 	{
-		displayResult(result.message);
-		console.log(result.message);
+		displayResult(result.message["messageText"]);
 		$("" + reloadID + "").html(result.new_value);
 	}
 
