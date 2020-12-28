@@ -17,18 +17,17 @@
 		if(mysqli_query($con,$sql))
 		{
 			$message->getMessageCode("SUC_ADMIN_UPDATE_RAWNAME");
-			echo buildJSONOutput($message->displayMessage());
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],$n_rawname));
 		} else {
 			$message->getMessageCode("ERR_ADMIN_DB");
 			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
-		$old_rawname = getRawNameByID($con,$game_id);
 		$sql = "UPDATE games SET raw_name = '$n_rawname' WHERE ID = '$game_id'";
 		if(mysqli_query($con,$sql))
 		{
 			$message->getMessageCode("SUC_ADMIN_UPDATE_RAWNAME");
-			echo buildJSONOutput($message->displayMessage());
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],$n_rawname));
 		} else {
 			$message->getMessageCode("ERR_ADMIN_DB");
 			echo buildJSONOutput($message->displayMessage());
