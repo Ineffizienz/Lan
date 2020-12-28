@@ -7,7 +7,7 @@
 	include(CL . "player_class.php");
 
 	$message = new message();
-	$player = new Player();
+	$player = new Player($con,0);
 	$last_ip = getLastIp($con);
 	$c_name = $_REQUEST["c_name"];
 
@@ -26,14 +26,14 @@
 		if (isset($new_ip))
 		{
 			$message->getMessageCode($player->setNewPlayer($c_name,$new_ip));
-			echo $message->displayMessage();	
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));	
 		} else {
 			$message->getMessageCode("ERR_ADMIN_INTERN_#1");
-			echo $message->displayMessage();
+			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
 		$message->getMessageCode("ERR_ADMIN_NO_COVERNAME");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	}
 
 ?>

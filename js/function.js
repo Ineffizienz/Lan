@@ -428,6 +428,8 @@ $(document).ready(function(){
 
 	function displayMessage(message) {
 		$("#result").show();
+		$("#result").css("position","sticky");
+		$("#result").css("top","75%");
 		$("#result").html(message);
 		$("#result").fadeOut(7000);
 	}

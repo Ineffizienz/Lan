@@ -178,7 +178,7 @@ function getGameData($con) // function.php/createCheckbox, admin_func.php/displa
 		- admin_func.php/displaySingleGame
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, banner, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, raw_name, short_title, icon, banner, has_table FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -334,24 +334,11 @@ function getHasTableByGameID($con,$game_id)
 		:Admin
 		- change_rawname.php
 	*/
-	$result = mysqli_query($con,"SELECT has_table FROM games WHERE game_id = '$game_id'");
+	$result = mysqli_query($con,"SELECT has_table FROM games WHERE ID = '$game_id'");
 	$row = mysqli_fetch_array($result);
 	$has_table = $row["has_table"];
 	
 	return $has_table;
-}
-
-function getRawNameByID($con,$game_id)
-{
-	/* Used in:
-		:Admin
-		- change_rawname.php
-	*/
-	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE game_id = '$game_id'");
-	$row = mysqli_fetch_array($result);
-	$o_rawname = $row["raw_name"];
-	
-	return $o_rawname;
 }
 
 

@@ -27,6 +27,30 @@ $(document).ready(function(){
 		return game_id;
 	}
 
+	function getParentElement(button)
+	{
+		var substr = $(button).attr("data-reload-parent").substr(0,3);
+
+		if(substr == "id_")
+		{	
+			return "#" + $(button).attr("data-reload-parent").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-parent").substr(3);
+		}
+	}
+
+	function getChildElement(button)
+	{
+		var substr = $(button).attr("data-reload-child").substr(0,3);
+		if(substr == "id_")
+		{
+			return "#" + $(button).attr("data-reload-child").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-child").substr(3);
+		}
+		
+	}
+
 /*#############################################################################################
 #################################### User ##################################################### 
 ###############################################################################################*/
@@ -37,9 +61,12 @@ $(document).ready(function(){
 
 		var c_name = $("#cover_name").val();
 
-		obj = {c_name};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("create_new_account"),displayResult);
+		obj = {c_name,p_element,c_element};
+
+		postAjax(obj,getEndpoint("create_new_account"),setResult);
 	}
 
 	function getId(event)
@@ -48,9 +75,12 @@ $(document).ready(function(){
 
 		var player = $(this).closest("tr").attr("id");
 
-		obj = {player};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("delete_player"),displayResult);
+		obj = {player,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_player"),setResult);
 
 	}
 
@@ -91,60 +121,92 @@ $(document).ready(function(){
 		
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
-
-		var image_icon = $("#new_game_icon").prop('files')[0];
-		var image_banner = $("#new_game_banner").prop('files')[0];
+		
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
 		var form_data = new FormData();
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
-		if(!fileValidation(image_icon) || !fileValidation(image_banner))
+		if(!$("#new_game_icon").val())
 		{
-			displayResult("Dateifehler.");
+			form_data.append("game_icon","0");
 		} else {
-			if(image_icon.length == 0)
+			var image_icon = $("#new_game_icon").prop('files')[0];
+			if(!fileValidation(image_icon))
 			{
 				form_data.append("game_icon","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_icon",image_icon);
 			}
+		}
 
-			if(image_banner.length == 0)
+		if(!$("#new_game_banner").val())
+		{
+			form_data.append("game_banner","0");
+		} else {
+			var image_banner = $("#new_game_banner").prop('files')[0];
+			if(!fileValidation(image_banner))
 			{
 				form_data.append("game_banner","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_banner",image_banner);
 			}
-			
-			postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 		}
+			
+		postFileAjax(form_data,getEndpoint("create_new_game"),setResult);
 	}
 
 	function getNewRawName(event)
 	{
 		event.preventDefault();
+
+		p_element = getParentElement(this);
+		c_element = getChildElement(this);
 		
 		var n_raw = $(this).siblings(".game_raw_name").val();
-		var game_id = retrieveGameId(this);
+		var game_id = retrieveGameID(this);
 
-		obj = {game_id,n_raw};
+		obj = {game_id,n_raw,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_rawname"),showResult);
+		postAjax(obj,getEndpoint("update_rawname"),setSpanResult);
 	}
 
 	function getNewGameName(event)
 	{
 		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 		
 		var game_name = $(this).siblings(".game_name").val();
 		var reloadID = $(this).closest("td").children("span").attr("id");
 		var game_id = retrieveGameID(this);
 
-		obj = {game_id,game_name};
+		obj = {game_id,game_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_gamename"),showResult(reloadID));
+		postAjax(obj,getEndpoint("update_gamename"),setSpanResult);
+	}
+
+	function getNewShortTitle(event)
+	{
+		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		var game_short_title = $(this).siblings(".game_short_title").val();
+		var game_id = retrieveGameID(this);
+
+		obj = {game_id,game_short_title,p_element,c_element};
+
+		postAjax(obj,getEndpoint("update_shorttitle"),setSpanResult);
 	}
 
 	function getHasTable(event)
@@ -503,6 +565,8 @@ $(document).ready(function(){
 	function displayResult(err)
 	{
 		$("#result").show();
+		$("#result").css("position","sticky");
+		$("#result").css("top","75%");
 		$("#result").html(err);
 		$("#result").fadeOut(3000);
 	}
@@ -514,7 +578,7 @@ $(document).ready(function(){
 
 	function displayTicketID(result)
 	{
-		displayResult(result.message);
+		displayResult(result.message["messageText"]);
 
 		if(result.hasOwnProperty("ticket_id"))
 		{
@@ -525,14 +589,23 @@ $(document).ready(function(){
 
 	function setResult(result)
 	{
-		displayResult(result.message);
+		displayResult(result.message["messageText"]);
 
-		if(result.hasOwnProperty("parent_element"))
+		if(result.hasOwnProperty("reloadProp"))
 		{
-			reloadContent(result.parent_element,result.child_element);
-		} else {
-			console.log("nö");
+			reloadContent(result.reloadProp["parent_element"],result.reloadProp["child_element"]);
 		}
+	}
+
+	function setSpanResult(result)
+	{
+		displayResult(result.message["messageText"]);
+
+		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).text(result.reloadProp["new_item"]);
+		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).attr("id",result.reloadProp["new_item"]);
+
+		$(".settings_gn").slideUp();
+		$(".settings_grn").slideUp();
 	}
 
 	function reloadContent(parent_element,child_element)
@@ -549,8 +622,7 @@ $(document).ready(function(){
 	
 	function showResult(result,reloadID)
 	{
-		displayResult(result.message);
-		console.log(result.message);
+		displayResult(result.message["messageText"]);
 		$("" + reloadID + "").html(result.new_value);
 	}
 
@@ -564,6 +636,12 @@ $(document).ready(function(){
 	{
 		event.preventDefault();
 		$(this).siblings(".settings_grn").slideToggle();
+	}
+
+	function showGSTInputField(event)
+	{
+		event.preventDefault();
+		$(this).siblings(".settings_gst").slideToggle();
 	}
 
 	function displayPopup(event)
@@ -612,9 +690,9 @@ function refreshVotes()
 	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
-	$("#create").on("click", getNumber);
+	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
-	$(".p_button_delete").on("click", getId);
+	$(document).on("click",".p_button_delete", getId);
 	$("#b_del_team").on("click", getTeamId);
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
@@ -629,8 +707,10 @@ function refreshVotes()
 	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
+	$(document).on("click",".send_gst",getNewShortTitle);
 	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGRNInputField);
+	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
+	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);

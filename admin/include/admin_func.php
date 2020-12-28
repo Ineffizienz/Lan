@@ -14,9 +14,9 @@ function buildJSONOutput($elements)
 {
 	if(is_array($elements))
 	{
-		$jsonOutput = json_encode(array("message" => $elements[0], "parent_element" => $elements[1], "child_element" => $elements[2]));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements[0]), "reloadProp" => array("parent_element" => $elements[1], "child_element" => $elements[2], "new_item" => $elements[3])));
 	} else {
-		$jsonOutput = json_encode(array("message" => $elements));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements)));
 	}
 
 	return $jsonOutput;
@@ -153,6 +153,7 @@ function displaySingleGame($con)
 			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
+		$t_name = str_replace(" ", "", $game["name"]);
 		$has_table = buildOption($selected_option);
 
 		if(empty($game["icon"]))
@@ -169,6 +170,13 @@ function displaySingleGame($con)
 			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
 		}
 
+		if(empty($game["short_title"]))
+		{
+			$gst = "";
+		} else {
+			$gst = $game["short_title"];
+		}
+
 		if(empty($game["addon"]))
 		{
 			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
@@ -176,7 +184,7 @@ function displaySingleGame($con)
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"raw_name"=>$game["raw_name"],"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
 		array_push($game_output,$transfer);
 
 	}
