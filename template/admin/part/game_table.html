@@ -1,11 +1,11 @@
 <tr class="admin_game_data">
 	<td class="game_id">{$id}</td>
-	<td>
-		<span id="{$name}">{$name}</span>
+	<td id="game_name_{$id}">
+		<span id="{$trimed_name}">{$name}</span>
 		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
 		<span class="settings_gn">
 			<input type="text" name="game_name" class="game_name">
-			<button class="send_gn">Absenden</button>
+			<button class="send_gn" data-reload-parent="id_game_name_{$id}" data-reload-child="id_{$trimed_name}">Absenden</button>
 		</span>
 	</td>
 	<td>

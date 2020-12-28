@@ -29,12 +29,26 @@ $(document).ready(function(){
 
 	function getParentElement(button)
 	{
-		return "#" + $(button).attr("data-reload-parent");
+		var substr = $(button).attr("data-reload-parent").substr(0,3);
+
+		if(substr == "id_")
+		{	
+			return "#" + $(button).attr("data-reload-parent").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-parent").substr(3);
+		}
 	}
 
 	function getChildElement(button)
 	{
-		return "#" + $(button).attr("data-reload-child");
+		var substr = $(button).attr("data-reload-child").substr(0,3);
+		if(substr == "id_")
+		{
+			return "#" + $(button).attr("data-reload-child").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-child").substr(3);
+		}
+		
 	}
 
 /*#############################################################################################
@@ -164,14 +178,17 @@ $(document).ready(function(){
 	function getNewGameName(event)
 	{
 		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 		
 		var game_name = $(this).siblings(".game_name").val();
 		var reloadID = $(this).closest("td").children("span").attr("id");
 		var game_id = retrieveGameID(this);
 
-		obj = {game_id,game_name};
+		obj = {game_id,game_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_gamename"),showResult(reloadID));
+		postAjax(obj,getEndpoint("update_gamename"),setSpanResult);
 	}
 
 	function getHasTable(event)
@@ -562,6 +579,15 @@ $(document).ready(function(){
 		}
 	}
 
+	function setSpanResult(result)
+	{
+		displayResult(result.message);
+
+		$(result.parent_element).text(result.child_element);
+
+		$(".settings_gn").slideUp();
+	}
+
 	function reloadContent(parent_element,child_element)
 	{
 		if($.isArray(parent_element))
@@ -657,7 +683,7 @@ function refreshVotes()
 	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGRNInputField);
+	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);

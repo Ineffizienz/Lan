@@ -153,6 +153,7 @@ function displaySingleGame($con)
 			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
+		$t_name = str_replace(" ", "", $game["name"]);
 		$has_table = buildOption($selected_option);
 
 		if(empty($game["icon"]))
@@ -176,7 +177,7 @@ function displaySingleGame($con)
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
 		array_push($game_output,$transfer);
 
 	}
