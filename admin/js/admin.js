@@ -166,13 +166,16 @@ $(document).ready(function(){
 	function getNewRawName(event)
 	{
 		event.preventDefault();
+
+		p_element = getParentElement(this);
+		c_element = getChildElement(this);
 		
 		var n_raw = $(this).siblings(".game_raw_name").val();
 		var game_id = retrieveGameID(this);
 
-		obj = {game_id,n_raw};
+		obj = {game_id,n_raw,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_rawname"),showResult);
+		postAjax(obj,getEndpoint("update_rawname"),setSpanResult);
 	}
 
 	function getNewGameName(event)
@@ -583,9 +586,11 @@ $(document).ready(function(){
 	{
 		displayResult(result.message["messageText"]);
 
-		$(result.reloadProp["parent_element"]).text(result.reloadProp["child_element"]);
+		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).text(result.reloadProp["new_item"]);
+		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).attr("id",result.reloadProp["new_item"]);
 
 		$(".settings_gn").slideUp();
+		$(".settings_grn").slideUp();
 	}
 
 	function reloadContent(parent_element,child_element)

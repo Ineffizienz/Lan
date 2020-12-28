@@ -341,19 +341,6 @@ function getHasTableByGameID($con,$game_id)
 	return $has_table;
 }
 
-function getRawNameByID($con,$game_id)
-{
-	/* Used in:
-		:Admin
-		- change_rawname.php
-	*/
-	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE ID = '$game_id'");
-	$row = mysqli_fetch_array($result);
-	$o_rawname = $row["raw_name"];
-	
-	return $o_rawname;
-}
-
 
 /*
 ###########################################################

@@ -14,7 +14,7 @@ function buildJSONOutput($elements)
 {
 	if(is_array($elements))
 	{
-		$jsonOutput = json_encode(array("message" => array("messageText" => $elements[0]), "reloadProp" => array("parent_element" => $elements[1], "child_element" => $elements[2])));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements[0]), "reloadProp" => array("parent_element" => $elements[1], "child_element" => $elements[2], "new_item" => $elements[3])));
 	} else {
 		$jsonOutput = json_encode(array("message" => array("messageText" => $elements)));
 	}

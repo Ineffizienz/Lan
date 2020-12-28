@@ -15,7 +15,7 @@
 		if(mysqli_query($con,$sql))
 		{
 			$message->getMessageCode("SUC_ADMIN_UPDATE_GAME_NAME");
-			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],$g_name));
 		} else {
 			$message->getMessageCode("ERR_ADMIN_DB");
 			echo buildJSONOutput($message->displayMessage());
