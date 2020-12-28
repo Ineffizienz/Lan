@@ -2,7 +2,7 @@
 	<td class="game_id">{$id}</td>
 	<td id="game_name_{$id}">
 		<span id="{$trimed_name}">{$name}</span>
-		<i id="edit_settings" class='fa fa-pencil icon_edit' aria-hidden='true'></i><br>
+		<i id="edit_settings" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
 		<span class="settings_gn">
 			<input type="text" name="game_name" class="game_name">
 			<button class="send_gn" data-reload-parent="id_game_{$id}" data-reload-child="id_{$trimed_name}">Absenden</button>
@@ -10,7 +10,7 @@
 	</td>
 	<td>
 		<span id="{$raw_name}">{$raw_name}</span>
-		<i id="edit_settings" class='fa fa-pencil icon_edit' aria-hidden='true'></i><br>
+		<i id="edit_settings" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
 		<span class="settings_grn">
 			<input type="text" name="game_raw_name" class="game_raw_name">
 			<button class="send_grn" data-reload-parent="id_game_{$id}" data-reload-child="id_{$raw_name}">Absenden</button>
@@ -22,11 +22,15 @@
 		</select>
 	</td>
 	<td class="game_icon">
-		<label for="sec_icon_upload_{$id}" id="lbl_sec_icon_upload_{$id}">{$icon}</label>
+		<label for="sec_icon_upload_{$id}" id="lbl_sec_icon_upload_{$id}">
+			{$icon}
+		</label>
 		<input type="file" name="sec_icon_upload" id="sec_icon_upload_{$id}" class="sec_icon_upload">
 	</td>
 	<td class="game_banner">
-		<label for="sec_banner_upload_{$id}" id="lbl_sec_banner_upload_{$id}">{$banner}</label>
+		<label for="sec_banner_upload_{$id}" id="lbl_sec_banner_upload_{$id}">
+			{$banner}
+		</label>
 		<input type="file" name="sec_banner_upload" id="sec_banner_upload_{$id}" class="sec_banner_upload">
 	</td>
 	<td>

@@ -38,9 +38,9 @@
 	if(mysqli_query($con,$sql))
 	{
 		$message->getMessageCode("SUC_ADMIN_ICON_CHANGED");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	} else {
 		$message->getMessageCode("ERR_ADMIN_DB");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	}
 ?>
