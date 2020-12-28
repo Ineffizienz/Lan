@@ -1,19 +1,19 @@
-<tr class="admin_game_data">
+<tr class="admin_game_data" id="game_{$id}">
 	<td class="game_id">{$id}</td>
 	<td id="game_name_{$id}">
 		<span id="{$trimed_name}">{$name}</span>
-		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
+		<i id="edit_settings" class='fa fa-pencil icon_edit' aria-hidden='true'></i><br>
 		<span class="settings_gn">
 			<input type="text" name="game_name" class="game_name">
-			<button class="send_gn" data-reload-parent="id_game_name_{$id}" data-reload-child="id_{$trimed_name}">Absenden</button>
+			<button class="send_gn" data-reload-parent="id_game_{$id}" data-reload-child="id_{$trimed_name}">Absenden</button>
 		</span>
 	</td>
 	<td>
 		<span id="{$raw_name}">{$raw_name}</span>
-		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
+		<i id="edit_settings" class='fa fa-pencil icon_edit' aria-hidden='true'></i><br>
 		<span class="settings_grn">
 			<input type="text" name="game_raw_name" class="game_raw_name">
-			<button class="send_grn">Absenden</button>
+			<button class="send_grn" data-reload-parent="id_game_{$id}" data-reload-child="id_{$raw_name}">Absenden</button>
 		</span>
 	</td>
 	<td>
