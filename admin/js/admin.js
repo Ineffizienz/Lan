@@ -191,7 +191,7 @@ $(document).ready(function(){
 
 		obj = {game_id,game_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_gamename"),setSpanResult);
+		postAjax(obj,getEndpoint("update_gamename"),OutputData);
 	}
 
 	function getNewShortTitle(event)
@@ -608,7 +608,21 @@ $(document).ready(function(){
 
 	function reloadContent(reloadProperties)
 	{
-		$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
+		if(reloadProperties["new_item"] !== 0)
+		{
+			setNewSpanResult(reloadProperties);
+		} else {
+			$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
+		}
+	}
+
+	function setNewSpanResult(reloadProperties)
+	{
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
+
+		$(".settings_gn").slideUp();
+		$(".settings_grn").slideUp();
 	}
 
 // DECAPRETATED
