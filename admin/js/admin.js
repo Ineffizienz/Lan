@@ -307,7 +307,7 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("upload_keys"),displayResult);
+		postFileAjax(form_data,getEndpoint("upload_keys"),OutputData);
 	}
 
 	function getGameIdToDelete(event)
