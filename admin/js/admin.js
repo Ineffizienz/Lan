@@ -160,7 +160,7 @@ $(document).ready(function(){
 			}
 		}
 			
-		postFileAjax(form_data,getEndpoint("create_new_game"),setResult);
+		postFileAjax(form_data,getEndpoint("create_new_game"),OutputData);
 	}
 
 	function getNewRawName(event)
@@ -580,7 +580,6 @@ $(document).ready(function(){
 
 	function OutputData(result)
 	{
-		console.log(result);
 		displaySirBrummel(result.message["messageText"]);
 
 		if(result.hasOwnProperty("reloadProp"))
