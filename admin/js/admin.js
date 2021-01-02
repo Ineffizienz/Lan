@@ -175,7 +175,7 @@ $(document).ready(function(){
 
 		obj = {game_id,n_raw,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_rawname"),setSpanResult);
+		postAjax(obj,getEndpoint("update_rawname"),OutputData);
 	}
 
 	function getNewGameName(event)
@@ -186,7 +186,6 @@ $(document).ready(function(){
 		var c_element = getChildElement(this);
 		
 		var game_name = $(this).siblings(".game_name").val();
-		var reloadID = $(this).closest("td").children("span").attr("id");
 		var game_id = retrieveGameID(this);
 
 		obj = {game_id,game_name,p_element,c_element};
