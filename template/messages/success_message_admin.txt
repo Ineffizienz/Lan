@@ -23,3 +23,4 @@ SUC_ADMIN_CREATE_TICKET_ID: Ticket-ID erfolgreich erstellt.
 SUC_ADMIN_ARCHIV_TM: Das Turnier wurde vollständig archiviert.
 SUC_ADMIN_CREATE_LAN: Die Lan wurde erfolgreich angelegt.
 SUC_ADMIN_DELETE_GAME: Spiel erfolgreich gelöscht.
+SUC_ADMIN_GAMES_HAS_TABLE: Das Spiel verfügt nun über eine Keyliste.

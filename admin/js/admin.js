@@ -205,7 +205,7 @@ $(document).ready(function(){
 
 		obj = {game_id,game_short_title,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_shorttitle"),setSpanResult);
+		postAjax(obj,getEndpoint("update_shorttitle"),OutputData);
 	}
 
 	function getHasTable(event)
@@ -217,7 +217,7 @@ $(document).ready(function(){
 
 		obj = {game_id,has_table};
 
-		postAjax(obj,getEndpoint("update_has_table"),displayResult);
+		postAjax(obj,getEndpoint("update_has_table"),OutputData);
 	}
 
 	function getAddonParam(event)
@@ -229,7 +229,7 @@ $(document).ready(function(){
 
 		obj = {game_id,addon};
 
-		postAjax(obj,getEndpoint("update_addon"),displayResult);
+		postAjax(obj,getEndpoint("update_addon"),OutputData);
 
 	}
 
@@ -256,7 +256,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
+			postFileAjax(form_data,getEndpoint("update_game_icon"),OutputData);
 		}
 	}
 
@@ -268,7 +268,6 @@ $(document).ready(function(){
 		var game_id = retrieveGameID(this);
 		var banner_id = "#" + $(this).siblings().attr("for");
 
-		console.log(banner_id);
 		var image = $(banner_id).prop('files')[0];
 		var form_data = new FormData();
 
@@ -284,7 +283,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
+			postFileAjax(form_data,getEndpoint("update_game_banner"),OutputData);
 		}
 	}
 
@@ -584,6 +583,8 @@ $(document).ready(function(){
 		if(result.hasOwnProperty("reloadProp"))
 		{
 			reloadContent(result.reloadProp);
+		} else if (result.hasOwnProperty("imageReload")) {
+			reloadImageContent(result.imageReload);
 		}
 	}
 
@@ -609,13 +610,13 @@ $(document).ready(function(){
 	{
 		if(reloadProperties["new_item"] !== 0)
 		{
-			setNewSpanResult(reloadProperties);
+			setSpanResult(reloadProperties);
 		} else {
 			$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
 		}
 	}
 
-	function setNewSpanResult(reloadProperties)
+	function setSpanResult(reloadProperties)
 	{
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
@@ -625,11 +626,6 @@ $(document).ready(function(){
 	}
 
 // DECAPRETATED
-
-	function showMessage(result)
-	{
-		displayResult(result.message);
-	}
 
 	function displayTicketID(result)
 	{
@@ -652,17 +648,6 @@ $(document).ready(function(){
 		}
 	}
 
-	function setSpanResult(result)
-	{
-		displayResult(result.message["messageText"]);
-
-		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).text(result.reloadProp["new_item"]);
-		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).attr("id",result.reloadProp["new_item"]);
-
-		$(".settings_gn").slideUp();
-		$(".settings_grn").slideUp();
-	}
-	
 	function showResult(result,reloadID)
 	{
 		displayResult(result.message["messageText"]);
