@@ -80,7 +80,7 @@ $(document).ready(function(){
 
 		obj = {player,p_element,c_element};
 
-		postAjax(obj,getEndpoint("delete_player"),setResult);
+		postAjax(obj,getEndpoint("delete_player"),OutputData);
 
 	}
 
