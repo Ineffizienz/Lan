@@ -66,7 +66,7 @@ $(document).ready(function(){
 
 		obj = {c_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("create_new_account"),setResult);
+		postAjax(obj,getEndpoint("create_new_account"),OutputData);
 	}
 
 	function getId(event)
@@ -310,6 +310,20 @@ $(document).ready(function(){
 		}
 
 		postFileAjax(form_data,getEndpoint("upload_keys"),displayResult);
+	}
+
+	function getGameIdToDelete(event)
+	{
+		event.preventDefault();
+
+		var game_id = $(this).attr("id");
+
+		var p_element = "#game-data-form";
+		var c_element = "#admin_game_list";
+
+		obj = {game_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_game"),OutputData);
 	}
 
 /*#############################################################################################
@@ -562,6 +576,28 @@ $(document).ready(function(){
 		});
 	}
 
+//########################### Output Data ##################################################################
+
+	function OutputData(result)
+	{
+		console.log(result);
+		displaySirBrummel(result.message["messageText"]);
+
+		if(result.hasOwnProperty("reloadProp"))
+		{
+			reloadContent(result.reloadProp);
+		}
+	}
+
+	function displaySirBrummel(err)
+	{
+		$("#result").show();
+		$("#result").css("position","sticky");
+		$("#result").css("top","75%");
+		$("#result").html(err);
+		$("#result").fadeOut(3000);
+	}
+
 	function displayResult(err)
 	{
 		$("#result").show();
@@ -570,6 +606,13 @@ $(document).ready(function(){
 		$("#result").html(err);
 		$("#result").fadeOut(3000);
 	}
+
+	function reloadContent(reloadProperties)
+	{
+		$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
+	}
+
+// DECAPRETATED
 
 	function showMessage(result)
 	{
@@ -606,18 +649,6 @@ $(document).ready(function(){
 
 		$(".settings_gn").slideUp();
 		$(".settings_grn").slideUp();
-	}
-
-	function reloadContent(parent_element,child_element)
-	{
-		if($.isArray(parent_element))
-		{
-			$.each(parent_element, function(key, value) {
-				$(value).load(location.href + ' ' + child_element[key]);
-			});
-		} else {
-			$(parent_element).load(location.href + ' ' + child_element);
-		}
 	}
 	
 	function showResult(result,reloadID)
@@ -711,6 +742,7 @@ function refreshVotes()
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
 	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
+	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);

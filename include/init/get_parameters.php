@@ -341,6 +341,11 @@ function getHasTableByGameID($con,$game_id)
 	return $has_table;
 }
 
+function getGameID($con,$game_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM games WHERE ID = '$game_id'")) > 0;
+}
+
 
 /*
 ###########################################################

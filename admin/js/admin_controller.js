@@ -33,6 +33,9 @@ function getEndpoint(param)
         case "update_shorttitle":
             endpoint = "admin/game/edit/change_shorttitle.php";
             break;
+        case "delete_game":
+            endpoint = "admin/game/edit/delete_game.php";
+            break;
         case "create_trigger":
             endpoint = "admin/achievement/edit/create_trigger.php";
             break;
