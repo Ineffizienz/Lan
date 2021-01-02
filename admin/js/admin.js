@@ -107,7 +107,7 @@ $(document).ready(function(){
 
 		obj = {teamId};
 
-		postAjax(obj,getEndpoint("delete_team"),showResult);
+		postAjax(obj,getEndpoint("delete_team"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -443,9 +443,12 @@ $(document).ready(function(){
 		var time_minute_to = $("#tm_time_minute_to").val(); 
 		var tm_time_to = date_to + time_hour_to + time_minute_to;
 
-		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to}
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to,p_element,c_element}
 		
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getDelTmData(event)
@@ -454,13 +457,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("id");
 		
-		// Define Elements for immediate reaction of the web-page
-		var reload_element = $(this).parents("table").attr("id");
-		var parent_reload = $(this).parents("div").attr("id");
+		var p_element = getParentElement(this);
+		var c_element = getParentElement(this);
 
-		obj = {tm_id};
+		obj = {tm_id,p_element,c_element};
 
-		postAjax(obj,getEndpoint("delete_tournament"),setResult);
+		postAjax(obj,getEndpoint("delete_tournament"),OutputData);
 		
 	}
 
@@ -474,7 +476,7 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("start_tournament"),setResult);
+		postAjax(obj,getEndpoint("start_tournament"),OutputData);
 
 	}
 
@@ -484,9 +486,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("name");
 
-		obj = {tm_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("archiv_tournament"),setResult);
+		obj = {tm_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("archiv_tournament"),OutputData);
 	}
 
 	function getTournamentParam(event)
@@ -500,11 +505,14 @@ $(document).ready(function(){
 		var tm_time_to = $("#tm_time_to").val(); //Fehlermeldung wenn nicht vollständig!
 		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id, p_element, c_element};
 
 		$("#tm_create_popup").hide();
 
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getVoteParam(event)
@@ -513,9 +521,12 @@ $(document).ready(function(){
 
 		var vote_id = $(this).attr("data-tm-vote");
 
-		obj = {vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("delete_vote"),setResult);
+		obj = {vote_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_vote"),OutputData);
 	}
 
 

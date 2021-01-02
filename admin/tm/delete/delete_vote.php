@@ -3,7 +3,6 @@
     include(dirname(__FILE__,3) . "/include/admin_func.php");
     include(CL . "message_class.php");
     include(INC . "connect.php");
-    include(INIT . "get_parameters.php");
 
     $message = new message();
 
@@ -17,7 +16,7 @@
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_DELETE_VOTE");
-                echo buildJSONOutput(array($message->displayMessage(),"#vote_page","#tm_votes"));
+                echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage());
