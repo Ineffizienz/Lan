@@ -72,22 +72,6 @@ function displayAchievements($con)
 	return $output->r_display();
 }
 
-function displayTeams($con) // Teamverwaltung --> Team löschen
-{
-	$all_teams = getAllTeams($con);
-
-	if (empty($all_teams))
-	{
-		$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
-		return $output;
-	} else {
-
-		$output = buildOption($all_teams);
-
-		return $output;
-	}
-}
-
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
 	$ac = new Achievement($con);

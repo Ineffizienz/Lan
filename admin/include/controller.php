@@ -27,10 +27,6 @@
 					$tpl->assign_subtemplate("content","admin/keys.html");
 					$tpl->assign_subtemplate("keys",$output);
 				break;
-				case "team":
-					$tpl->assign_subtemplate("content","admin/team.html");
-					$tpl->assign("exist_teams",displayTeams($con));
-				break;
 				case "turnier":
 					$tpl->assign_subtemplate("content","admin/tm.html");
 					$tpl->assign("games",displayTmGames($con));
