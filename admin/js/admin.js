@@ -163,21 +163,6 @@ $(document).ready(function(){
 		postFileAjax(form_data,getEndpoint("create_new_game"),OutputData);
 	}
 
-	function getNewRawName(event)
-	{
-		event.preventDefault();
-
-		p_element = getParentElement(this);
-		c_element = getChildElement(this);
-		
-		var n_raw = $(this).siblings(".game_raw_name").val();
-		var game_id = retrieveGameID(this);
-
-		obj = {game_id,n_raw,p_element,c_element};
-
-		postAjax(obj,getEndpoint("update_rawname"),OutputData);
-	}
-
 	function getNewGameName(event)
 	{
 		event.preventDefault();

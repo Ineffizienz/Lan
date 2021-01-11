@@ -24,9 +24,6 @@ function getEndpoint(param)
         case "update_has_table":
             endpoint = "admin/game/edit/change_hastable.php";
             break;
-        case "update_rawname":
-            endpoint = "admin/game/edit/change_rawname.php";
-            break;
         case "update_gamename":
             endpoint = "admin/game/edit/change_gamename.php";
             break;

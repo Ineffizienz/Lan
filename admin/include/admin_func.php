@@ -184,7 +184,7 @@ function displaySingleGame($con)
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"raw_name"=>$game["raw_name"],"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
 		array_push($game_output,$transfer);
 
 	}
@@ -221,9 +221,8 @@ function verifyKey($con, int $game_id, string $key)
 function verifyGame($con,$new_game,$new_raw_name)
 {
 	$games = getGames($con);
-	$raw_name = getRawName($con);
 
-	if (in_array($new_game, $games) && in_array($new_raw_name,$raw_name))
+	if (in_array($new_game, $games))
 	{
 		return true;
 	} else {

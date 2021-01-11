@@ -244,4 +244,19 @@ function createLanTable($con)
         }
     }
 }
+
+function removeRawName($con)
+{
+    if(mysqli_num_rows(mysqli_query($con,"SHOW COLUMNS FROM `games` LIKE 'raw_name';")) == 1)
+    {
+        if(mysqli_query($con,"ALTER TABLE games DROP raw_name"))
+        {
+            echo "Die Spalte <i>raw_names</i> wurde erfolgreich entfernt.<br>";
+        } else {
+            mysqli_error($con) . "<br>";
+        }
+    } else {
+        echo "Die Spalte <i>raw_names</i> existiert nicht mehr. <br>";
+    }
+}
 ?>

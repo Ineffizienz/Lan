@@ -22,8 +22,6 @@
 			$message->getMessageCode("ERR_ADMIN_GAME_EXISTS");
 			echo buildJSONOutput($message->displayMessage());
 		} else {
-			$new_game = $_REQUEST["game"];
-			$new_raw_name = strtolower(str_replace(" ","_",$new_game));
 			
 			if(empty($_REQUEST["raw_name"]))
 			{
@@ -48,7 +46,7 @@
 				$path_banner = NULL;
 			}
 			
-			$sql = "INSERT INTO games (name,raw_name,icon,banner,has_table) VALUES ('$new_game','$new_raw_name','$path_icon','$path_banner','$has_table')";
+			$sql = "INSERT INTO games (name,icon,banner,has_table) VALUES ('$new_game','$path_icon','$path_banner','$has_table')";
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode("SUC_ADMIN_CREATE_NEW_GAME");
