@@ -32,3 +32,7 @@ ERR_ADMIN_MISSING_LAN_TITLE: Es wurde kein Titel für die Lan angegeben.
 ERR_ADMIN_MISSING_DATE_FROM: Es wurde kein Startdatum der Lan angegeben.
 ERR_ADMIN_MISSING_DATE_TO: Es wurde kein Enddatum für die Lan angegeben.
 ERR_ADMIN_GAME_DOES_NOT_EXISTS: Das Spiel existiert nicht mehr.
+ERR_ADMIN_REGION_ID_EXISTS: Die Region-ID existiert bereits.
+ERR_ADMIN_REGION_NAME_EXISTS: Der Region-Name existiert bereits.
+ERR_ADMIN_NO_REGION_NAME: Es wurde kein Region-Name angegeben.
+ERR_ADMIN_NO_REGION_ID: Es wurde keine Region-ID angegeben.

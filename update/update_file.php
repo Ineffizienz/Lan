@@ -259,4 +259,19 @@ function removeRawName($con)
         echo "Die Spalte <i>raw_names</i> existiert nicht mehr. <br>";
     }
 }
+
+function createWoWRegionTable($con)
+{
+    /*if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `wow_region`;")) == 1)
+    {
+        echo "Die Tabelle <i>wow_region</i> existiert bereits.<br>";
+    } else {*/
+        if(mysqli_query($con,"CREATE TABLE wow_region (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, region_id INT(11) NOT NULL, region_name VARCHAR(255))"))
+        {
+            echo "Die Tabelle <i>wow_region</i> wurde erfolgreich erstellt.<br>";
+        } else {
+            echo mysqli_error($con) . "<br>";
+        }
+    //}
+}
 ?>

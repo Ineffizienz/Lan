@@ -519,6 +519,25 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("delete_vote"),OutputData);
 	}
 
+/*#############################################################################################
+#################################### World of Warcraft ########################################
+###############################################################################################*/
+
+
+function getWoWRegionData(event)
+{
+	event.preventDefault();
+
+	var region_id = $("#region_id").val();
+	var region_name = $("#region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,region_name,p_element,c_element};
+
+	postAjax (obj,getEndpoint("add_wow_region"),OutputData);
+}
 
 /*#############################################################################################
 #################################### Lan ######################################################
@@ -719,11 +738,9 @@ function refreshVotes()
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("change",".sec_banner_upload",getBannerData);
-	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
 	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
 	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
@@ -737,6 +754,7 @@ function refreshVotes()
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
+	$(document).on("click","#b_add_region",getWoWRegionData);
 	$(document).on("click","#create_lan",getLanData);
 
 });

@@ -1,0 +1,48 @@
+<div>
+	<div style="padding-left:5%;padding-top:1%;">
+		<h3>Region hinzufügen</h3>
+	</div>
+	<p class="line">&nbsp;</p>
+	<div style="text-align:center">
+		<form enctype="multipart/form-data">
+			<table cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<label for="region_id">Region ID:</label>
+					</td>
+					<td>
+						<input type="text" name="region_id" id="region_id">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="region_name">Name:</label>
+					</td>
+					<td>
+						<input type="text" name="region_name" id="region_name">
+					</td>
+				</tr>
+			</table>
+			<div style="margin-top:5px;">
+				<button id="b_add_region" data-reload-parent="id_admin_region_data_form" data-reload-child="id_admin_region_data_list">Region hinzufügen</button>
+			</div>
+		</form>
+	</div>	
+</div>
+<div>&nbsp;</div>
+<div>
+	<div style="padding-left:5%;padding-top:1%;">
+		<h3>Spiele bearbeiten</h3>
+	</div>
+	<p class="line">&nbsp;</p>
+	<form enctype="multipart/form-data" id="admin_region_data_form">
+		<table id="admin_region_data_list" cellspacing="0" cellpadding="0" style="margin: 0 auto;width:90%;">
+			<tr>
+				<th>Region-ID</th>
+				<th>Name</th>
+			</tr>
+			{$admin_wow_region}
+		</table>
+	</form>
+</div>
+<div>&nbsp;</div>

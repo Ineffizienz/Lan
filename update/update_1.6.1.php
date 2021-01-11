@@ -16,4 +16,5 @@ setTournamentPlayerIdUnique($con);
 //createTmPeriodArchivTable($con);
 //createLanTable($con);
 removeRawName($con);
+createWoWRegionTable($con);
 ?>

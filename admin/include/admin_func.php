@@ -489,6 +489,40 @@ function archivTmPeriod($con,$period_id)
 	return true;
 }
 
+function displayWoWRegion($con)
+{
+	$wow_regions = getWowRegions($con);
+
+	if(!empty($wow_regions))
+	{
+		$tpl = new template("admin/part/wow_region_tpl.html");
+		if(count($wow_regions) == 2)
+		{
+			$region_array = array("region_id"=>$wow_regions["region_id"],"region_name"=>$wow_regions["region_name"]);
+			//array_push($region_array,$single_region);
+
+		} else {
+			foreach ($wow_regions as $wow_region)
+			{
+
+				print_r($wow_region);
+				$single_region = array("region_id"=>$wow_region["region_id"],"region_name"=>$wow_region["region_name"]);
+				array_push($region_array,$single_region);
+			}
+		}
+				
+		$tpl->assign_array($region_array);
+		return $tpl->r_display();
+
+	} else {
+		
+		$tpl = new template("admin/part/empty_data_table_tpl.html");
+		$tpl->assign("empty_data_text","Es wurden bisher keine Regionen angelegt.");
+		return $tpl->r_display();
+
+	}
+}
+
 function displayLans($con)
 {
 	$lans = getLans($con);
