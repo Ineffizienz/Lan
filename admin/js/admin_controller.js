@@ -78,6 +78,9 @@ function getEndpoint(param)
         case "add_wow_region":
             endpoint = "admin/wow/add_region.php";
             break;
+        case "delete_wow_region":
+            endpoint = "admin/wow/delete_region.php";
+        break;
         case "create_lan":
             endpoint = "admin/lan/create/create_lan.php";
             break;

@@ -36,3 +36,4 @@ ERR_ADMIN_REGION_ID_EXISTS: Die Region-ID existiert bereits.
 ERR_ADMIN_REGION_NAME_EXISTS: Der Region-Name existiert bereits.
 ERR_ADMIN_NO_REGION_NAME: Es wurde kein Region-Name angegeben.
 ERR_ADMIN_NO_REGION_ID: Es wurde keine Region-ID angegeben.
+ERR_ADMIN_REGION_DOES_NOT_EXISTS: Die Region existiert nicht mehr.

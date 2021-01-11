@@ -536,7 +536,21 @@ function getWoWRegionData(event)
 
 	obj = {region_id,region_name,p_element,c_element};
 
-	postAjax (obj,getEndpoint("add_wow_region"),OutputData);
+	postAjax(obj,getEndpoint("add_wow_region"),OutputData);
+}
+
+function getDeleteWowRegion(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).attr("id");
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("delete_wow_region"),OutputData);
 }
 
 /*#############################################################################################
@@ -755,6 +769,7 @@ function refreshVotes()
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
 	$(document).on("click","#b_add_region",getWoWRegionData);
+	$(document).on("click",".delete_wow_region",getDeleteWowRegion);
 	$(document).on("click","#create_lan",getLanData);
 
 });
