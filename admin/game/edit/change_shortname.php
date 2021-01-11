@@ -18,10 +18,10 @@
 			echo buildJSONOutput(array($message->displayMessage(), $_REQUEST["p_element"], $_REQUEST["c_element"] ,$s_name));
 		} else {
 			$message->getMessageCode("ERR_ADMIN_DB");
-			echo json_encode(array("message" => $message->displayMessage()));
+			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
 		$message->getMessageCode("ERR_ADMIN_NO_GAME_NAME");
-		echo json_encode(array("message" => $message->displayMessage()));
+		echo buildJSONOutput($message->displayMessage());
 	}
 ?>

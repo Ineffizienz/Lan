@@ -21,7 +21,7 @@ if(isset($_REQUEST["lan_title"]))
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_CREATE_LAN");
-                echo buildJSONOutput(array($message->displayMessage(),"#lan_display","#lan_list"));
+                echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

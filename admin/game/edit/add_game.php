@@ -9,7 +9,7 @@
 	if(empty($_REQUEST["game"]))
 	{
 		$message->getMessageCode("ERR_ADMIN_NO_GAME");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	} else {
 		$result = mysqli_query($con,"SELECT name FROM games");
 		while($row=mysqli_fetch_array($result))
@@ -20,10 +20,8 @@
 		if(in_array($_REQUEST["game"],$exist_games))
 		{
 			$message->getMessageCode("ERR_ADMIN_GAME_EXISTS");
-			echo $message->displayMessage();
+			echo buildJSONOutput($message->displayMessage());
 		} else {
-			$new_game = $_REQUEST["game"];
-			$new_raw_name = strtolower(str_replace(" ","_",$new_game));
 			
 			if(empty($_REQUEST["raw_name"]))
 			{
@@ -48,11 +46,11 @@
 				$path_banner = NULL;
 			}
 			
-			$sql = "INSERT INTO games (name,raw_name,icon,banner,has_table) VALUES ('$new_game','$new_raw_name','$path_icon','$path_banner','$has_table')";
+			$sql = "INSERT INTO games (name,icon,banner,has_table) VALUES ('$new_game','$path_icon','$path_banner','$has_table')";
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode("SUC_ADMIN_CREATE_NEW_GAME");
-				echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
+				echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));
 			} else {
 				$message->getMessageCode("ERR_ADMIN_DB");
 				echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

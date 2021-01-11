@@ -28,7 +28,7 @@ if(isset($_REQUEST["tm_id"]))
                 if(mysqli_query($con,$sql))
                 {
                     $message->getMessageCode("SUC_ADMIN_ARCHIV_TM");
-                    echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                    echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
                 } else {
                     $message->getMessageCode("ERR_ADMIN_DEL_TM_ENTRY");
                     echo buildJSONOutput($message->displayMessage());

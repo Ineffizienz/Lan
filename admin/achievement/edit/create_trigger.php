@@ -15,7 +15,7 @@
             $message->getMessageCode("SUC_ADMIN_CREATE_TRIGGER");
             echo buildJSONOutput($message->displayMessage());
         } else {
-            $message->getMessageCode("ERR_DB");
+            $message->getMessageCode("ERR_ADMIN_DB");
             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
         }
     }

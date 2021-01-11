@@ -66,7 +66,7 @@ $(document).ready(function(){
 
 		obj = {c_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("create_new_account"),setResult);
+		postAjax(obj,getEndpoint("create_new_account"),OutputData);
 	}
 
 	function getId(event)
@@ -80,7 +80,7 @@ $(document).ready(function(){
 
 		obj = {player,p_element,c_element};
 
-		postAjax(obj,getEndpoint("delete_player"),setResult);
+		postAjax(obj,getEndpoint("delete_player"),OutputData);
 
 	}
 
@@ -107,7 +107,7 @@ $(document).ready(function(){
 
 		obj = {teamId};
 
-		postAjax(obj,getEndpoint("delete_team"),showResult);
+		postAjax(obj,getEndpoint("delete_team"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -160,22 +160,7 @@ $(document).ready(function(){
 			}
 		}
 			
-		postFileAjax(form_data,getEndpoint("create_new_game"),setResult);
-	}
-
-	function getNewRawName(event)
-	{
-		event.preventDefault();
-
-		p_element = getParentElement(this);
-		c_element = getChildElement(this);
-		
-		var n_raw = $(this).siblings(".game_raw_name").val();
-		var game_id = retrieveGameID(this);
-
-		obj = {game_id,n_raw,p_element,c_element};
-
-		postAjax(obj,getEndpoint("update_rawname"),setSpanResult);
+		postFileAjax(form_data,getEndpoint("create_new_game"),OutputData);
 	}
 
 	function getNewGameName(event)
@@ -186,12 +171,11 @@ $(document).ready(function(){
 		var c_element = getChildElement(this);
 		
 		var game_name = $(this).siblings(".game_name").val();
-		var reloadID = $(this).closest("td").children("span").attr("id");
 		var game_id = retrieveGameID(this);
 
 		obj = {game_id,game_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_gamename"),setSpanResult);
+		postAjax(obj,getEndpoint("update_gamename"),OutputData);
 	}
 
 	function getNewShortTitle(event)
@@ -206,7 +190,7 @@ $(document).ready(function(){
 
 		obj = {game_id,game_short_title,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_shorttitle"),setSpanResult);
+		postAjax(obj,getEndpoint("update_shorttitle"),OutputData);
 	}
 
 	function getHasTable(event)
@@ -218,7 +202,7 @@ $(document).ready(function(){
 
 		obj = {game_id,has_table};
 
-		postAjax(obj,getEndpoint("update_has_table"),displayResult);
+		postAjax(obj,getEndpoint("update_has_table"),OutputData);
 	}
 
 	function getAddonParam(event)
@@ -230,7 +214,7 @@ $(document).ready(function(){
 
 		obj = {game_id,addon};
 
-		postAjax(obj,getEndpoint("update_addon"),displayResult);
+		postAjax(obj,getEndpoint("update_addon"),OutputData);
 
 	}
 
@@ -249,7 +233,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -257,7 +241,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
+			postFileAjax(form_data,getEndpoint("update_game_icon"),OutputData);
 		}
 	}
 
@@ -269,7 +253,6 @@ $(document).ready(function(){
 		var game_id = retrieveGameID(this);
 		var banner_id = "#" + $(this).siblings().attr("for");
 
-		console.log(banner_id);
 		var image = $(banner_id).prop('files')[0];
 		var form_data = new FormData();
 
@@ -277,7 +260,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -285,7 +268,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
+			postFileAjax(form_data,getEndpoint("update_game_banner"),OutputData);
 		}
 	}
 
@@ -309,7 +292,21 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("upload_keys"),displayResult);
+		postFileAjax(form_data,getEndpoint("upload_keys"),OutputData);
+	}
+
+	function getGameIdToDelete(event)
+	{
+		event.preventDefault();
+
+		var game_id = $(this).attr("id");
+
+		var p_element = "#game-data-form";
+		var c_element = "#admin_game_list";
+
+		obj = {game_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_game"),OutputData);
 	}
 
 /*#############################################################################################
@@ -347,7 +344,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
+			postFileAjax(form_data,getEndpoint("create_achievement"),OutputData);
 		}
 	}
 
@@ -360,7 +357,7 @@ $(document).ready(function(){
 
 		obj = {u_id,ac_id};
 
-		postAjax(obj,getEndpoint("assign_achievement"),setResult);
+		postAjax(obj,getEndpoint("assign_achievement"),OutputData);
 	}
 
 	function getChangedParam(event)
@@ -373,7 +370,7 @@ $(document).ready(function(){
 
 		obj = {ac_id,param,param_val};
 
-		postAjax(obj,getEndpoint("change_achievement"),setResult);
+		postAjax(obj,getEndpoint("change_achievement"),OutputData);
 	}
 
 	function getChangedAcImage(event)
@@ -383,15 +380,20 @@ $(document).ready(function(){
 		var ac_id = $(this).attr("data-ac-id");
 		var image_id = "#ac_image_" + ac_id;
 
+		var p_element = ".ac_img_label";
+		var c_element = ".ac_image_disp";
+
 		var image = $(image_id).prop('files')[0];
 		var form_data = new FormData();
 
 		form_data.append("ac_id",ac_id);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
 		if(fileValidation(image))
 		{
 			form_data.append("file",image);
-			postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+			postAjaxFile(form_data,getEndpoint("update_achievement_image"),OutputData);
 		} else {
 			console.log("File error");
 		}
@@ -406,7 +408,7 @@ $(document).ready(function(){
 
 		obj = {n_trigger};
 
-		postAjax(obj,getEndpoint("create_trigger"),setResult);
+		postAjax(obj,getEndpoint("create_trigger"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -431,9 +433,12 @@ $(document).ready(function(){
 		var time_minute_to = $("#tm_time_minute_to").val(); 
 		var tm_time_to = date_to + time_hour_to + time_minute_to;
 
-		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to}
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to,p_element,c_element}
 		
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getDelTmData(event)
@@ -442,13 +447,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("id");
 		
-		// Define Elements for immediate reaction of the web-page
-		var reload_element = $(this).parents("table").attr("id");
-		var parent_reload = $(this).parents("div").attr("id");
+		var p_element = getParentElement(this);
+		var c_element = getParentElement(this);
 
-		obj = {tm_id};
+		obj = {tm_id,p_element,c_element};
 
-		postAjax(obj,getEndpoint("delete_tournament"),setResult);
+		postAjax(obj,getEndpoint("delete_tournament"),OutputData);
 		
 	}
 
@@ -462,7 +466,7 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("start_tournament"),setResult);
+		postAjax(obj,getEndpoint("start_tournament"),OutputData);
 
 	}
 
@@ -472,9 +476,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("name");
 
-		obj = {tm_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("archiv_tournament"),setResult);
+		obj = {tm_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("archiv_tournament"),OutputData);
 	}
 
 	function getTournamentParam(event)
@@ -488,11 +495,14 @@ $(document).ready(function(){
 		var tm_time_to = $("#tm_time_to").val(); //Fehlermeldung wenn nicht vollständig!
 		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id, p_element, c_element};
 
 		$("#tm_create_popup").hide();
 
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getVoteParam(event)
@@ -501,9 +511,12 @@ $(document).ready(function(){
 
 		var vote_id = $(this).attr("data-tm-vote");
 
-		obj = {vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("delete_vote"),setResult);
+		obj = {vote_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_vote"),OutputData);
 	}
 
 
@@ -519,9 +532,12 @@ $(document).ready(function(){
 		var date_from = $("#lan_date_from").val();
 		var date_to = $("#lan_date_to").val();
 
-		obj = {lan_title,date_from,date_to};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("create_lan"),setResult);
+		obj = {lan_title,date_from,date_to,p_element,c_element};
+
+		postAjax(obj,getEndpoint("create_lan"),OutputData);
 	}
 
 
@@ -562,7 +578,21 @@ $(document).ready(function(){
 		});
 	}
 
-	function displayResult(err)
+//########################### Output Data ##################################################################
+
+	function OutputData(result)
+	{
+		displaySirBrummel(result.message["messageText"]);
+
+		if(result.hasOwnProperty("reloadProp"))
+		{
+			reloadContent(result.reloadProp);
+		} else if (result.hasOwnProperty("imageReload")) {
+			reloadImageContent(result.imageReload);
+		}
+	}
+
+	function displaySirBrummel(err)
 	{
 		$("#result").show();
 		$("#result").css("position","sticky");
@@ -571,60 +601,44 @@ $(document).ready(function(){
 		$("#result").fadeOut(3000);
 	}
 
-	function showMessage(result)
+	function reloadContent(reloadProperties)
 	{
-		displayResult(result.message);
+		if(reloadProperties["new_item"] !== 0)
+		{
+			setSpanResult(reloadProperties);
+		} else {
+			$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
+		}
 	}
+
+	function setSpanResult(reloadProperties)
+	{
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
+
+		$(".settings_gn").slideUp();
+		$(".settings_grn").slideUp();
+	}
+
+// DECAPRETATED
+
+
+/*
+###########################################################
+######################## VISUAL EFFECTS ###################
+###########################################################
+*/
 
 	function displayTicketID(result)
 	{
-		displayResult(result.message["messageText"]);
+		displaySirBrummel(result.message["messageText"]);
 
 		if(result.hasOwnProperty("ticket_id"))
 		{
 			console.log(this);
 			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
 		}
-	}
-
-	function setResult(result)
-	{
-		displayResult(result.message["messageText"]);
-
-		if(result.hasOwnProperty("reloadProp"))
-		{
-			reloadContent(result.reloadProp["parent_element"],result.reloadProp["child_element"]);
-		}
-	}
-
-	function setSpanResult(result)
-	{
-		displayResult(result.message["messageText"]);
-
-		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).text(result.reloadProp["new_item"]);
-		$(result.reloadProp["parent_element"]).find(result.reloadProp["child_element"]).attr("id",result.reloadProp["new_item"]);
-
-		$(".settings_gn").slideUp();
-		$(".settings_grn").slideUp();
-	}
-
-	function reloadContent(parent_element,child_element)
-	{
-		if($.isArray(parent_element))
-		{
-			$.each(parent_element, function(key, value) {
-				$(value).load(location.href + ' ' + child_element[key]);
-			});
-		} else {
-			$(parent_element).load(location.href + ' ' + child_element);
-		}
-	}
-	
-	function showResult(result,reloadID)
-	{
-		displayResult(result.message["messageText"]);
-		$("" + reloadID + "").html(result.new_value);
-	}
+	}	
 
 	function showInputField(event)
 	{
@@ -711,6 +725,7 @@ function refreshVotes()
 	$(document).on("click",".settings_edit",showInputField);
 	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
 	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
+	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
