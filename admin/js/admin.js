@@ -248,7 +248,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -275,7 +275,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -359,7 +359,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
+			postFileAjax(form_data,getEndpoint("create_achievement"),OutputData);
 		}
 	}
 
@@ -372,7 +372,7 @@ $(document).ready(function(){
 
 		obj = {u_id,ac_id};
 
-		postAjax(obj,getEndpoint("assign_achievement"),setResult);
+		postAjax(obj,getEndpoint("assign_achievement"),OutputData);
 	}
 
 	function getChangedParam(event)
@@ -385,7 +385,7 @@ $(document).ready(function(){
 
 		obj = {ac_id,param,param_val};
 
-		postAjax(obj,getEndpoint("change_achievement"),setResult);
+		postAjax(obj,getEndpoint("change_achievement"),OutputData);
 	}
 
 	function getChangedAcImage(event)
@@ -395,15 +395,20 @@ $(document).ready(function(){
 		var ac_id = $(this).attr("data-ac-id");
 		var image_id = "#ac_image_" + ac_id;
 
+		var p_element = ".ac_img_label";
+		var c_element = ".ac_image_disp";
+
 		var image = $(image_id).prop('files')[0];
 		var form_data = new FormData();
 
 		form_data.append("ac_id",ac_id);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
 		if(fileValidation(image))
 		{
 			form_data.append("file",image);
-			postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+			postAjaxFile(form_data,getEndpoint("update_achievement_image"),OutputData);
 		} else {
 			console.log("File error");
 		}
@@ -418,7 +423,7 @@ $(document).ready(function(){
 
 		obj = {n_trigger};
 
-		postAjax(obj,getEndpoint("create_trigger"),setResult);
+		postAjax(obj,getEndpoint("create_trigger"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -542,9 +547,12 @@ $(document).ready(function(){
 		var date_from = $("#lan_date_from").val();
 		var date_to = $("#lan_date_to").val();
 
-		obj = {lan_title,date_from,date_to};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("create_lan"),setResult);
+		obj = {lan_title,date_from,date_to,p_element,c_element};
+
+		postAjax(obj,getEndpoint("create_lan"),OutputData);
 	}
 
 
@@ -608,15 +616,6 @@ $(document).ready(function(){
 		$("#result").fadeOut(3000);
 	}
 
-	function displayResult(err)
-	{
-		$("#result").show();
-		$("#result").css("position","sticky");
-		$("#result").css("top","75%");
-		$("#result").html(err);
-		$("#result").fadeOut(3000);
-	}
-
 	function reloadContent(reloadProperties)
 	{
 		if(reloadProperties["new_item"] !== 0)
@@ -638,32 +637,23 @@ $(document).ready(function(){
 
 // DECAPRETATED
 
+
+/*
+###########################################################
+######################## VISUAL EFFECTS ###################
+###########################################################
+*/
+
 	function displayTicketID(result)
 	{
-		displayResult(result.message["messageText"]);
+		displaySirBrummel(result.message["messageText"]);
 
 		if(result.hasOwnProperty("ticket_id"))
 		{
 			console.log(this);
 			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
 		}
-	}
-
-	function setResult(result)
-	{
-		displayResult(result.message["messageText"]);
-
-		if(result.hasOwnProperty("reloadProp"))
-		{
-			reloadContent(result.reloadProp["parent_element"],result.reloadProp["child_element"]);
-		}
-	}
-
-	function showResult(result,reloadID)
-	{
-		displayResult(result.message["messageText"]);
-		$("" + reloadID + "").html(result.new_value);
-	}
+	}	
 
 	function showInputField(event)
 	{
