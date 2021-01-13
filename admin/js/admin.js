@@ -679,8 +679,7 @@ function getDeleteWowRegion(event)
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
 
-		$(".settings_gn").slideUp();
-		$(".settings_grn").slideUp();
+		$(".settings_edit").slideUp();
 	}
 
 /*
@@ -705,19 +704,7 @@ function getDeleteWowRegion(event)
 		event.preventDefault();
 		$(this).siblings(".settings_span").slideToggle();
 	}
-
-	function showInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_gn").slideToggle();
-	}
-
-	function showGSTInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_gst").slideToggle();
-	}
-
+	
 	function displayPopup(event)
 	{
 		event.preventDefault();
@@ -780,8 +767,6 @@ function refreshVotes()
 	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
-	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
