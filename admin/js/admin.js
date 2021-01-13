@@ -539,6 +539,36 @@ function getWoWRegionData(event)
 	postAjax(obj,getEndpoint("add_wow_region"),OutputData);
 }
 
+function getNewRegionID(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_id = $(this).siblings(".new_region_id").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,new_region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_id"),OutputData);
+}
+
+function getNewRegionName(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_name = $(this).siblings(".new_region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = $(p_element).find("td:nth-child(2)");
+
+	obj = {region_id,new_region_name,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_name"),OutputData);
+}
+
 function getDeleteWowRegion(event)
 {
 	event.preventDefault();
@@ -653,9 +683,6 @@ function getDeleteWowRegion(event)
 		$(".settings_grn").slideUp();
 	}
 
-// DECAPRETATED
-
-
 /*
 ###########################################################
 ######################## VISUAL EFFECTS ###################
@@ -671,18 +698,18 @@ function getDeleteWowRegion(event)
 			console.log(this);
 			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
 		}
-	}	
+	}
+	
+	function showEditField(event)
+	{
+		event.preventDefault();
+		$(this).siblings(".settings_span").slideToggle();
+	}
 
 	function showInputField(event)
 	{
 		event.preventDefault();
 		$(this).siblings(".settings_gn").slideToggle();
-	}
-
-	function showGRNInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_grn").slideToggle();
 	}
 
 	function showGSTInputField(event)
@@ -740,7 +767,6 @@ function refreshVotes()
 	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
 	$(document).on("click",".p_button_delete", getId);
-	$("#b_del_team").on("click", getTeamId);
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
@@ -770,6 +796,9 @@ function refreshVotes()
 	$(document).on("click",".create_ticket",getTicketData);
 	$(document).on("click","#b_add_region",getWoWRegionData);
 	$(document).on("click",".delete_wow_region",getDeleteWowRegion);
+	$(document).on("click",".settings_edit",showEditField);
+	$(document).on("click",".send_region_id",getNewRegionID);
+	$(document).on("click",".send_region_name",getNewRegionName);
 	$(document).on("click","#create_lan",getLanData);
 
 });

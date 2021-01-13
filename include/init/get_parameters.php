@@ -763,7 +763,7 @@ function getServerStatus($con)
 
 function getWowRegions($con)
 {
-	$result = mysqli_query($con,"SELECT region_id, region_name FROM wow_region");
+	$result = mysqli_query($con,"SELECT region_id, region_name FROM wow_region ORDER BY region_id ASC");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$existing_regions = $row;
