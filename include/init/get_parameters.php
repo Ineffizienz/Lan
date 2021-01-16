@@ -681,6 +681,17 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
+function getAllWowAccounts($con)
+{
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE wow_account IS NOT NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$accounts[] = $row["wow_account"];
+	}
+
+	return $accounts;
+}
+
 function getWowAccount($con,$player_id)
 {
 	/* Used in:

@@ -59,6 +59,9 @@
 					$tpl->assign_subtemplate("content","admin/wow_region.html");
 					$tpl->assign("admin_wow_region",displayWowRegion($con));
 				break;
+				case "wow_accounts":
+					$tpl->assign_subtemplate("content","admin/wow_accounts.html");
+					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con));
 				case "lan":
 					$tpl->assign_subtemplate("content","admin/lan_tpl.html");
 					$tpl->assign("lans",displayLans($con));

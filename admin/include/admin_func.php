@@ -499,13 +499,9 @@ function displayWoWRegion($con)
 		if(count($wow_regions) == 2)
 		{
 			$region_array = array("region_id"=>$wow_regions["region_id"],"region_name"=>$wow_regions["region_name"]);
-			//array_push($region_array,$single_region);
-
 		} else {
 			foreach ($wow_regions as $wow_region)
 			{
-
-				print_r($wow_region);
 				$single_region = array("region_id"=>$wow_region["region_id"],"region_name"=>$wow_region["region_name"]);
 				array_push($region_array,$single_region);
 			}
@@ -520,6 +516,30 @@ function displayWoWRegion($con)
 		$tpl->assign("empty_data_text","Es wurden bisher keine Regionen angelegt.");
 		return $tpl->r_display();
 
+	}
+}
+
+function displayWoWAccounts($con)
+{
+	$wow_accounts = getAllWowAccounts($con);
+	$account_array = array();
+	
+	if(!empty($wow_accounts))
+	{
+		$tpl = new template("admin/part/wow_accounts_list.html");
+		foreach ($wow_accounts as $wow_account)
+		{
+			$single_account = array("account_name"=>$wow_account);
+			array_push($account_array,$single_account);
+		}
+		
+		$tpl->assign_array($account_array);
+		return $tpl->r_display();
+	} else {
+		
+		$tpl = new template("admin/part/empty_page.html");
+		$tpl->assign("empty_page","Es wurden bisher keine Accounts angelegt.");
+		return $tpl->r_display();
 	}
 }
 
