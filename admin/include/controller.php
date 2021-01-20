@@ -2,6 +2,7 @@
 	function run_admin_controller(template $tpl)
 	{
 		global $con;
+		global $con_wow;
 		if (isset($_REQUEST["aa"]))
 		{
 			switch($_REQUEST["aa"]) {
@@ -61,7 +62,7 @@
 				break;
 				case "wow_accounts":
 					$tpl->assign_subtemplate("content","admin/wow_accounts.html");
-					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con));
+					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con,$con_wow));
 				case "lan":
 					$tpl->assign_subtemplate("content","admin/lan_tpl.html");
 					$tpl->assign("lans",displayLans($con));

@@ -519,7 +519,7 @@ function displayWoWRegion($con)
 	}
 }
 
-function displayWoWAccounts($con)
+function displayWoWAccounts($con,$con_wow)
 {
 	$wow_accounts = getAllWowAccounts($con);
 	$account_array = array();
@@ -529,7 +529,8 @@ function displayWoWAccounts($con)
 		$tpl = new template("admin/part/wow_accounts_list.html");
 		foreach ($wow_accounts as $wow_account)
 		{
-			$single_account = array("account_name"=>$wow_account);
+			$account_id = getWowId($con_wow,$wow_account);
+			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account);
 			array_push($account_array,$single_account);
 		}
 		
