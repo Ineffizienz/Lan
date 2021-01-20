@@ -738,6 +738,14 @@ function getDeleteWowRegion(event)
 		}
 	}
 
+	function displayAccountChars(event)
+	{
+		event.preventDefault();
+
+		$(this).siblings(".char_list").slideToggle();
+
+	}
+
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
@@ -784,6 +792,7 @@ function refreshVotes()
 	$(document).on("click",".settings_edit",showEditField);
 	$(document).on("click",".send_region_id",getNewRegionID);
 	$(document).on("click",".send_region_name",getNewRegionName);
+	$(document).on("click",".show_chars",displayAccountChars);
 	$(document).on("click","#create_lan",getLanData);
 
 });

@@ -310,6 +310,25 @@ td
 	width: 85%;
 }
 
+/* ---------------------- World of Warcraft --------------------
+--------------------------------------------------------------*/
+
+#account_list
+{
+	list-style:none;
+}
+
+.show_chars
+{
+	cursor:pointer;
+}
+
+.char_list
+{
+	display:none;
+	list-style:none;
+}
+
 
 /* ---------------------- ACHIEVEMENTS -----------------------
 --------------------------------------------------------------*/
@@ -415,5 +434,5 @@ A:visited
 A:hover
 {
 	text-decoration: none;
-	color:#C0C0C0;
+	color:#293133;
 }
