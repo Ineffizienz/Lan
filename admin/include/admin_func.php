@@ -519,7 +519,7 @@ function displayWoWRegion($con)
 	}
 }
 
-function displayWoWAccounts($con,$con_wow)
+function displayWoWAccounts($con,$con_wow,$con_char)
 {
 	$wow_accounts = getAllWowAccounts($con);
 	$account_array = array();
@@ -529,12 +529,30 @@ function displayWoWAccounts($con,$con_wow)
 		$tpl = new template("admin/part/wow_accounts_list.html");
 		foreach ($wow_accounts as $wow_account)
 		{
+			$char_array = array();
 			$account_id = getWowId($con_wow,$wow_account);
-			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account);
-			array_push($account_array,$single_account);
+			$chars = getChars($con_char,$account_id);
+			$tpl_char = new template("admin/part/wow_account_chars.html");
+
+			if(!empty($chars))
+			{
+				foreach ($chars as $char)
+				{
+					$single_char = array("name"=>$char["name"]);
+					array_push($char_array,$single_char);
+				}
+
+				$tpl_char->assign_array($char_array);
+				
+			} else {
+				$char_data = "Es sind bisher keine Charaktere erstellt worden.";
+				$tpl_char->assign("name",$char_data);
+			}
+
+			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account,"character"=>$tpl_char->r_display());
+			array_push($account_array,$single_account);	
 		}
-		
-		$tpl->assign_array($account_array);
+		$tpl->assign_array($account_array);		
 		return $tpl->r_display();
 	} else {
 		

@@ -3,6 +3,7 @@
 	{
 		global $con;
 		global $con_wow;
+		global $con_char;
 		if (isset($_REQUEST["aa"]))
 		{
 			switch($_REQUEST["aa"]) {
@@ -62,7 +63,7 @@
 				break;
 				case "wow_accounts":
 					$tpl->assign_subtemplate("content","admin/wow_accounts.html");
-					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con,$con_wow));
+					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con,$con_wow,$con_char));
 				case "lan":
 					$tpl->assign_subtemplate("content","admin/lan_tpl.html");
 					$tpl->assign("lans",displayLans($con));
