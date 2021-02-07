@@ -740,6 +740,28 @@ function getChars($con_char,$wow_id)
 	return $chars;
 }
 
+function getAccountIDByGUID($con_char,$guid)
+{
+	$result = mysqli_query($con_char,"SELECT account FROM characters.characters WHERE guid = '$guid'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["account"];
+	}
+
+	return $account_id;
+}
+
+function getGUIDFromCharacters($con_char,$char_name)
+{
+	$result = mysqli_query($con_char,"SELECT guid FROM characters.characters WHERE name = '$char_name'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$guid = $row["guid"];
+	}
+
+	return $guid;
+}
+
 function getRealmName($con)
 {
 	/* Used in:

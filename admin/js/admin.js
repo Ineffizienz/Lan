@@ -583,6 +583,17 @@ function getDeleteWowRegion(event)
 	postAjax(obj,getEndpoint("delete_wow_region"),OutputData);
 }
 
+function getCharData(event)
+{
+	event.preventDefault();
+
+	var char_name = $(this).parent().attr("id");
+
+	obj = {char_name};
+
+	postAjax(obj,getEndpoint("delete_wow_char"),OutputData);
+}
+
 /*#############################################################################################
 #################################### Lan ######################################################
 ###############################################################################################*/
@@ -793,6 +804,7 @@ function refreshVotes()
 	$(document).on("click",".send_region_id",getNewRegionID);
 	$(document).on("click",".send_region_name",getNewRegionName);
 	$(document).on("click",".show_chars",displayAccountChars);
+	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);
 
 });
