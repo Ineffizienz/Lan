@@ -2,6 +2,8 @@
 	function run_admin_controller(template $tpl)
 	{
 		global $con;
+		global $con_wow;
+		global $con_char;
 		if (isset($_REQUEST["aa"]))
 		{
 			switch($_REQUEST["aa"]) {
@@ -52,6 +54,16 @@
 					$tpl->assign_subtemplate("content","admin/ticket_status.html");
 					$tpl->assign("ticket_status",displayTicketStatus($con));
 				break;
+				case "wow";
+					$tpl->assign_subtemplate("content","admin/wow.html");
+				break;
+				case "wow_region":
+					$tpl->assign_subtemplate("content","admin/wow_region.html");
+					$tpl->assign("admin_wow_region",displayWowRegion($con));
+				break;
+				case "wow_accounts":
+					$tpl->assign_subtemplate("content","admin/wow_accounts.html");
+					$tpl->assign("admin_wow_accounts",displayWoWAccounts($con,$con_wow,$con_char));
 				case "lan":
 					$tpl->assign_subtemplate("content","admin/lan_tpl.html");
 					$tpl->assign("lans",displayLans($con));

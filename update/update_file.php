@@ -169,79 +169,51 @@ function setTournamentPlayerIdUnique($con)
 
 function createTournamentArchivTable($con)
 {
-    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm`;")) == 1)
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS archiv_tm (ID INT(11) PRIMARY KEY NOT NULL, game_id INT(11) NOT NULL, mode INT(11) NOT NULL, mode_details INT(11) NULL, player_count INT (11) NULL, tm_period_id INT(11) NOT NULL)"))
     {
-        echo "Die Tabelle <i>archiv_tm</i> existiert bereits.<br>";
+        echo "Die Tabelle <i>archiv_tm</i> wurde erfolgreich erstellt.<br>";
     } else {
-        if(mysqli_query($con,"CREATE TABLE archiv_tm (ID INT(11) PRIMARY KEY NOT NULL, game_id INT(11) NOT NULL, mode INT(11) NOT NULL, mode_details INT(11) NULL, player_count INT (11) NULL, tm_period_id INT(11) NOT NULL)"))
-        {
-            echo "Die Tabelle <i>archiv_tm</i> wurde erfolgreich erstellt.<br>";
-        } else {
-            echo mysqli_error($con) . "<br>";
-        }
+        echo mysqli_error($con) . "<br>";
     }
-    
 }
 
 function createTmPaarungArchivTable($con)
 {
-    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm_paarung`;")) == 1)
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS archiv_tm_paarung (ID INT(11) PRIMARY KEY NOT NULL, team_1 INT(11) NULL, team_2 INT(11) NULL, stage INT(11) NULL, tournament INT(11) NOT NULL, successor INT(11) NULL, result_team1 INT(11) NULL, result_team2 INT(11) NULL)"))
     {
-        echo "Die Tabelle <i>archiv_tm_paarung</i> existiert bereits.<br>";
+        echo "Die Tabelle <i>archiv_tm_paarung</i> wurde erfolgreich erstellt.<br>";
     } else {
-        if(mysqli_query($con,"CREATE TABLE archiv_tm_paarung (ID INT(11) PRIMARY KEY NOT NULL, team_1 INT(11) NULL, team_2 INT(11) NULL, stage INT(11) NULL, tournament INT(11) NOT NULL, successor INT(11) NULL, result_team1 INT(11) NULL, result_team2 INT(11) NULL)"))
-        {
-            echo "Die Tabelle <i>archiv_tm_paarung</i> wurde erfolgreich erstellt.<br>";
-        } else {
-            echo mysqli_error($con) . "<br>";
-        }
+        echo mysqli_error($con) . "<br>";
     }
-    
 }
 
 function createTmGamerslistArchivTable($con)
 {
-    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `archiv_tm_gamerslist`;")) == 1)
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS archiv_tm_gamerslist (ID INT(11) PRIMARY KEY NOT NULL, tm_id INT(11) NOT NULL, player_id INT(11) NOT NULL)"))
     {
-        echo "Die Tabelle <i>archiv_tm_gamerslist</i> existiert bereits.<br>";
+        echo "Die Tabelle <i>archiv_tm_gamerslist</i> wurde erfolgreich erstellt.<br>";
     } else {
-        if(mysqli_query($con,"CREATE TABLE archiv_tm_gamerslist (ID INT(11) PRIMARY KEY NOT NULL, tm_id INT(11) NOT NULL, player_id INT(11) NOT NULL)"))
-        {
-            echo "Die Tabelle <i>archiv_tm_gamerslist</i> wurde erfolgreich erstellt.<br>";
-        } else {
-            echo mysqli_error($con) . "<br>";
-        }
-    }
-    
+        echo mysqli_error($con) . "<br>";
+    }    
 }
 
 function createTmPeriodArchivTable($con)
 {
-    if(mysqli_num_rows(mysqli_query($con,"SHWO TABLES LIKE `archiv_tm_period`;")) == 1)
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS archiv_tm_period (ID INT(11) PRIMARY KEY NOT NULL, time_from DATETIME NOT NULL, time_to DATETIME NOT NULL)"))
     {
-        echo "Die Tabelle <i>archiv_tm_period</i> existiert bereits.<br>";
+        echo "Die Tabelle <i>archiv_tm_period</i> wurde erfolgreich erstellt.<br>";
     } else {
-        if(mysqli_query($con,"CREATE TABLE archiv_tm_period (ID INT(11) PRIMARY KEY NOT NULL, time_from DATETIME NOT NULL, time_to DATETIME NOT NULL)"))
-        {
-            echo "Die Tabelle <i>archiv_tm_period</i> wurde erfolgreich erstellt.<br>";
-        } else {
-            echo mysqli_error($con) . "<br>";
-        }
+        echo mysqli_error($con) . "<br>";
     }
 }
 
 function createLanTable($con)
 {
-    if(mysqli_num_rows(mysqli_query($con,"SHOW TABLES LIKE `lan`;")) == 1)
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS lan (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, date_from DATETIME NOT NULL, date_to DATETIME NOT NULL)"))
     {
-        echo "Die Tabelle <i>lan</i> existiert bereits.<br>";
+        echo "Die Tabelle <i>lan</i> wurde erfolgreich erstellt.<br>";
     } else {
-        if(mysqli_query($con,"CREATE TABLE lan (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, date_from DATETIME NOT NULL, date_to DATETIME NOT NULL)"))
-        {
-            echo "Die Tabelle <i>lan</i> wurde erfolgreich erstellt.<br>";
-        } else {
-            echo mysqli_error($con) . "<br>";
-        }
+        echo mysqli_error($con) . "<br>";
     }
 }
 
@@ -257,6 +229,22 @@ function removeRawName($con)
         }
     } else {
         echo "Die Spalte <i>raw_names</i> existiert nicht mehr. <br>";
+    }
+}
+
+function createWoWRegionTable($con)
+{
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS wow_region (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, region_id INT(11) NOT NULL, region_name VARCHAR(255))"))
+    {
+        echo "Die Tabelle <i>wow_region</i> wurde erfolgreich erstellt.<br>";
+        if(mysqli_query($con,"CREATE INDEX IF NOT EXISTS idx_region_id ON wow_region (region_id)"))
+        {
+            echo "Der Index <i>idx_region_id</i> wurde erfolgreich erstellt.";
+        } else {
+            echo "Beim Erstellen des Indexes <i>idx_region_id</i> ist ein Fehler aufgetreten.";
+        }
+    } else {
+        echo mysqli_error($con) . "<br>";
     }
 }
 ?>

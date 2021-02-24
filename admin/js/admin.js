@@ -519,6 +519,91 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("delete_vote"),OutputData);
 	}
 
+/*#############################################################################################
+#################################### World of Warcraft ########################################
+###############################################################################################*/
+
+function getPasswordData(event)
+{
+	event.preventDefault();
+
+	var account_id = $(this).attr("id").substr(4);
+
+	obj = {account_id};
+
+	postAjax(obj,getEndpoint("reset_wow_password"),OutputData);
+}
+
+function getWoWRegionData(event)
+{
+	event.preventDefault();
+
+	var region_id = $("#region_id").val();
+	var region_name = $("#region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,region_name,p_element,c_element};
+
+	postAjax(obj,getEndpoint("add_wow_region"),OutputData);
+}
+
+function getNewRegionID(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_id = $(this).siblings(".new_region_id").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,new_region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_id"),OutputData);
+}
+
+function getNewRegionName(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_name = $(this).siblings(".new_region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = $(p_element).find("td:nth-child(2)");
+
+	obj = {region_id,new_region_name,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_name"),OutputData);
+}
+
+function getDeleteWowRegion(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).attr("id");
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("delete_wow_region"),OutputData);
+}
+
+function getCharData(event)
+{
+	event.preventDefault();
+
+	var account_id = $(this).parent().attr("class").substr(4);
+	var char_name = $(this).parent().attr("id");
+
+	obj = {account_id,char_name};
+
+	postAjax(obj,getEndpoint("delete_wow_char"),OutputData);
+}
 
 /*#############################################################################################
 #################################### Lan ######################################################
@@ -616,12 +701,8 @@ $(document).ready(function(){
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
 		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
 
-		$(".settings_gn").slideUp();
-		$(".settings_grn").slideUp();
+		$(".settings_edit").slideUp();
 	}
-
-// DECAPRETATED
-
 
 /*
 ###########################################################
@@ -638,26 +719,14 @@ $(document).ready(function(){
 			console.log(this);
 			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
 		}
-	}	
-
-	function showInputField(event)
+	}
+	
+	function showEditField(event)
 	{
 		event.preventDefault();
-		$(this).siblings(".settings_gn").slideToggle();
+		$(this).siblings(".settings_span").slideToggle();
 	}
-
-	function showGRNInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_grn").slideToggle();
-	}
-
-	function showGSTInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_gst").slideToggle();
-	}
-
+	
 	function displayPopup(event)
 	{
 		event.preventDefault();
@@ -691,6 +760,14 @@ $(document).ready(function(){
 		}
 	}
 
+	function displayAccountChars(event)
+	{
+		event.preventDefault();
+
+		$(this).siblings(".char_list").slideToggle();
+
+	}
+
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
@@ -707,7 +784,6 @@ function refreshVotes()
 	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
 	$(document).on("click",".p_button_delete", getId);
-	$("#b_del_team").on("click", getTeamId);
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
@@ -719,12 +795,8 @@ function refreshVotes()
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("change",".sec_banner_upload",getBannerData);
-	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
-	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGRNInputField); // GRN = game_raw_name
-	$(document).on("click",".settings_edit",showGSTInputField); // GST = game_short_title
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
@@ -737,6 +809,14 @@ function refreshVotes()
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
+	$(document).on("click","#b_add_region",getWoWRegionData);
+	$(document).on("click",".delete_wow_region",getDeleteWowRegion);
+	$(document).on("click",".settings_edit",showEditField);
+	$(document).on("click",".send_region_id",getNewRegionID);
+	$(document).on("click",".send_region_name",getNewRegionName);
+	$(document).on("click",".show_chars",displayAccountChars);
+	$(document).on("click",".reset_wow_password",getPasswordData);
+	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);
 
 });

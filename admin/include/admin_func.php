@@ -489,6 +489,79 @@ function archivTmPeriod($con,$period_id)
 	return true;
 }
 
+function displayWoWRegion($con)
+{
+	$wow_regions = getWowRegions($con);
+
+	if(!empty($wow_regions))
+	{
+		$tpl = new template("admin/part/wow_region_tpl.html");
+		if(count($wow_regions) == 2)
+		{
+			$region_array = array("region_id"=>$wow_regions["region_id"],"region_name"=>$wow_regions["region_name"]);
+		} else {
+			foreach ($wow_regions as $wow_region)
+			{
+				$single_region = array("region_id"=>$wow_region["region_id"],"region_name"=>$wow_region["region_name"]);
+				array_push($region_array,$single_region);
+			}
+		}
+				
+		$tpl->assign_array($region_array);
+		return $tpl->r_display();
+
+	} else {
+		
+		$tpl = new template("admin/part/empty_data_table_tpl.html");
+		$tpl->assign("empty_data_text","Es wurden bisher keine Regionen angelegt.");
+		return $tpl->r_display();
+
+	}
+}
+
+function displayWoWAccounts($con,$con_wow,$con_char)
+{
+	$wow_accounts = getAllWowAccounts($con);
+	$account_array = array();
+	
+	if(!empty($wow_accounts))
+	{
+		$tpl = new template("admin/part/wow_accounts_list.html");
+		foreach ($wow_accounts as $wow_account)
+		{
+			$char_array = array();
+			$account_id = getWowId($con_wow,$wow_account);
+			$chars = getChars($con_char,$account_id);
+			$tpl_char = new template("admin/part/wow_account_chars.html");
+
+			if(!empty($chars))
+			{
+				foreach ($chars as $char)
+				{
+					$single_char = array("name"=>$char["name"],"account_id"=>$account_id);
+					array_push($char_array,$single_char);
+				}
+
+				$tpl_char->assign_array($char_array);
+				
+			} else {
+				$char_data = "Es sind bisher keine Charaktere erstellt worden.";
+				$tpl_char->assign("name",$char_data);
+			}
+
+			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account,"character"=>$tpl_char->r_display());
+			array_push($account_array,$single_account);	
+		}
+		$tpl->assign_array($account_array);		
+		return $tpl->r_display();
+	} else {
+		
+		$tpl = new template("admin/part/empty_page.html");
+		$tpl->assign("empty_page","Es wurden bisher keine Accounts angelegt.");
+		return $tpl->r_display();
+	}
+}
+
 function displayLans($con)
 {
 	$lans = getLans($con);

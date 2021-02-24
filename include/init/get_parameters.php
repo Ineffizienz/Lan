@@ -681,6 +681,17 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
+function getAllWowAccounts($con)
+{
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE wow_account IS NOT NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$accounts[] = $row["wow_account"];
+	}
+
+	return $accounts;
+}
+
 function getWowAccount($con,$player_id)
 {
 	/* Used in:
@@ -729,6 +740,28 @@ function getChars($con_char,$wow_id)
 	return $chars;
 }
 
+function getAccountIDByGUID($con_char,$guid)
+{
+	$result = mysqli_query($con_char,"SELECT account FROM characters.characters WHERE guid = '$guid'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["account"];
+	}
+
+	return $account_id;
+}
+
+function getGUIDFromCharacters($con_char,$char_name)
+{
+	$result = mysqli_query($con_char,"SELECT guid FROM characters.characters WHERE name = '$char_name'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$guid = $row["guid"];
+	}
+
+	return $guid;
+}
+
 function getRealmName($con)
 {
 	/* Used in:
@@ -759,6 +792,17 @@ function getServerStatus($con)
 	}
 
 	return $s_status;
+}
+
+function getWowRegions($con)
+{
+	$result = mysqli_query($con,"SELECT region_id, region_name FROM wow_region ORDER BY region_id ASC");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$existing_regions = $row;
+	}
+
+	return $existing_regions;
 }
 
 

@@ -75,6 +75,24 @@ function getEndpoint(param)
         case "create_ticket":
             endpoint = "admin/player/edit/create_ticket.php";
             break;
+        case "add_wow_region":
+            endpoint = "admin/wow/add_region.php";
+            break;
+        case "update_region_id":
+            endpoint = "admin/wow/update_region_id.php";
+            break;
+        case "update_region_name":
+            endpoint = "admin/wow/update_region_name.php";
+            break;
+        case "delete_wow_region":
+            endpoint = "admin/wow/delete_region.php";
+            break;
+        case "reset_wow_password":
+            endpoint = "admin/wow/account/reset_password.php";
+            break;
+        case "delete_wow_char":
+            endpoint = "admin/wow/char/delete_char.php";
+            break;
         case "create_lan":
             endpoint = "admin/lan/create/create_lan.php";
             break;
