@@ -9,11 +9,9 @@ $message = new message();
 
 if(isset($_REQUEST["char_name"]))
 {
-    $char_name = $_REQUEST["char_name"];
-    $guid = getGUIDFromCharacters($con_char,$char_name);
-    $account_id = getAccountIDByGUID($con_char,$guid);
+    $guid = getGUIDFromCharacters($con_char,$_REQUEST["char_name"]);
 
-    $del_char = deleteWoWCharacter($con_wow,$con_char,$account_id,$guid);
+    $del_char = deleteWoWCharacter($con_wow,$con_char,$_REQUEST["account_id"],$guid);
 
     $message->getMessageCode($del_char);
     echo buildJSONOutput($message->displayMessage());

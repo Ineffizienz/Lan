@@ -538,7 +538,7 @@ function displayWoWAccounts($con,$con_wow,$con_char)
 			{
 				foreach ($chars as $char)
 				{
-					$single_char = array("name"=>$char["name"]);
+					$single_char = array("name"=>$char["name"],"account_id"=>$account_id);
 					array_push($char_array,$single_char);
 				}
 

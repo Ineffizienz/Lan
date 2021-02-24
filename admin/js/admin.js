@@ -523,6 +523,16 @@ $(document).ready(function(){
 #################################### World of Warcraft ########################################
 ###############################################################################################*/
 
+function getPasswordData(event)
+{
+	event.preventDefault();
+
+	var account_id = $(this).attr("id").substr(4);
+
+	obj = {account_id};
+
+	postAjax(obj,getEndpoint("reset_wow_password"),OutputData);
+}
 
 function getWoWRegionData(event)
 {
@@ -587,9 +597,10 @@ function getCharData(event)
 {
 	event.preventDefault();
 
+	var account_id = $(this).parent().attr("class").substr(4);
 	var char_name = $(this).parent().attr("id");
 
-	obj = {char_name};
+	obj = {account_id,char_name};
 
 	postAjax(obj,getEndpoint("delete_wow_char"),OutputData);
 }
@@ -804,6 +815,7 @@ function refreshVotes()
 	$(document).on("click",".send_region_id",getNewRegionID);
 	$(document).on("click",".send_region_name",getNewRegionName);
 	$(document).on("click",".show_chars",displayAccountChars);
+	$(document).on("click",".reset_wow_password",getPasswordData);
 	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);
 

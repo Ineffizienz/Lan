@@ -87,6 +87,9 @@ function getEndpoint(param)
         case "delete_wow_region":
             endpoint = "admin/wow/delete_region.php";
             break;
+        case "reset_wow_password":
+            endpoint = "admin/wow/account/reset_password.php";
+            break;
         case "delete_wow_char":
             endpoint = "admin/wow/char/delete_char.php";
             break;
