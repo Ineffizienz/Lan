@@ -25,8 +25,6 @@ function refreshTournamentPlayerList(response)
     $("#player_list_container").load(location.href + " #tm_player_list");
 }
 
-
-
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
