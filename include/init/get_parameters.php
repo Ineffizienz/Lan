@@ -805,6 +805,17 @@ function getWowRegions($con)
 	return $existing_regions;
 }
 
+function getWoWRegionById($con,$map)
+{
+	$result = mysqli_query($con,"SELECT region_name FROM wow_region WHERE region_id = '$map'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$loc = $row["region_name"];
+	}
+
+	return $loc;
+}
+
 
 /*
 ###########################################################
