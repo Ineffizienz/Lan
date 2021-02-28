@@ -1,5 +1,6 @@
 <?php
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
+	include(dirname(__FILE__,3). "/include/admin_func.php");
 	include(INC . "connect.php");
 	include(CL . "message_class.php");
 
@@ -14,13 +15,13 @@
 		if(mysqli_query($con,$sql))
 		{
 			$message->getMessageCode("SUC_ADMIN_UPDATE_GAME_NAME");
-			echo json_encode(array("message" => $message->displayMessage(), "new_value" => $g_name));
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],$g_name));
 		} else {
 			$message->getMessageCode("ERR_ADMIN_DB");
-			echo json_encode(array("message" => $message->displayMessage()));
+			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
 		$message->getMessageCode("ERR_ADMIN_NO_GAME_NAME");
-		echo json_encode(array("message" => $message->displayMessage()));
+		echo buildJSONOutput($message->displayMessage());
 	}
 ?>

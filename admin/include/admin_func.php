@@ -14,9 +14,9 @@ function buildJSONOutput($elements)
 {
 	if(is_array($elements))
 	{
-		$jsonOutput = json_encode(array("message" => $elements[0], "parent_element" => $elements[1], "child_element" => $elements[2]));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements[0]), "reloadProp" => array("parent_element" => $elements[1], "child_element" => $elements[2], "new_item" => $elements[3])));
 	} else {
-		$jsonOutput = json_encode(array("message" => $elements));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements)));
 	}
 
 	return $jsonOutput;
@@ -70,22 +70,6 @@ function displayAchievements($con)
 	$output->assign_array($ac_array);
 
 	return $output->r_display();
-}
-
-function displayTeams($con) // Teamverwaltung --> Team löschen
-{
-	$all_teams = getAllTeams($con);
-
-	if (empty($all_teams))
-	{
-		$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
-		return $output;
-	} else {
-
-		$output = buildOption($all_teams);
-
-		return $output;
-	}
 }
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
@@ -153,6 +137,7 @@ function displaySingleGame($con)
 			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
+		$t_name = str_replace(" ", "", $game["name"]);
 		$has_table = buildOption($selected_option);
 
 		if(empty($game["icon"]))
@@ -169,6 +154,13 @@ function displaySingleGame($con)
 			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
 		}
 
+		if(empty($game["short_title"]))
+		{
+			$gst = "";
+		} else {
+			$gst = $game["short_title"];
+		}
+
 		if(empty($game["addon"]))
 		{
 			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
@@ -176,7 +168,7 @@ function displaySingleGame($con)
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"raw_name"=>$game["raw_name"],"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
 		array_push($game_output,$transfer);
 
 	}
@@ -213,9 +205,8 @@ function verifyKey($con, int $game_id, string $key)
 function verifyGame($con,$new_game,$new_raw_name)
 {
 	$games = getGames($con);
-	$raw_name = getRawName($con);
 
-	if (in_array($new_game, $games) && in_array($new_raw_name,$raw_name))
+	if (in_array($new_game, $games))
 	{
 		return true;
 	} else {
@@ -496,6 +487,79 @@ function archivTmPeriod($con,$period_id)
 	}
 
 	return true;
+}
+
+function displayWoWRegion($con)
+{
+	$wow_regions = getWowRegions($con);
+
+	if(!empty($wow_regions))
+	{
+		$tpl = new template("admin/part/wow_region_tpl.html");
+		if(count($wow_regions) == 2)
+		{
+			$region_array = array("region_id"=>$wow_regions["region_id"],"region_name"=>$wow_regions["region_name"]);
+		} else {
+			foreach ($wow_regions as $wow_region)
+			{
+				$single_region = array("region_id"=>$wow_region["region_id"],"region_name"=>$wow_region["region_name"]);
+				array_push($region_array,$single_region);
+			}
+		}
+				
+		$tpl->assign_array($region_array);
+		return $tpl->r_display();
+
+	} else {
+		
+		$tpl = new template("admin/part/empty_data_table_tpl.html");
+		$tpl->assign("empty_data_text","Es wurden bisher keine Regionen angelegt.");
+		return $tpl->r_display();
+
+	}
+}
+
+function displayWoWAccounts($con,$con_wow,$con_char)
+{
+	$wow_accounts = getAllWowAccounts($con);
+	$account_array = array();
+	
+	if(!empty($wow_accounts))
+	{
+		$tpl = new template("admin/part/wow_accounts_list.html");
+		foreach ($wow_accounts as $wow_account)
+		{
+			$char_array = array();
+			$account_id = getWowId($con_wow,$wow_account);
+			$chars = getChars($con_char,$account_id);
+			$tpl_char = new template("admin/part/wow_account_chars.html");
+
+			if(!empty($chars))
+			{
+				foreach ($chars as $char)
+				{
+					$single_char = array("name"=>$char["name"],"account_id"=>$account_id);
+					array_push($char_array,$single_char);
+				}
+
+				$tpl_char->assign_array($char_array);
+				
+			} else {
+				$char_data = "Es sind bisher keine Charaktere erstellt worden.";
+				$tpl_char->assign("name",$char_data);
+			}
+
+			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account,"character"=>$tpl_char->r_display());
+			array_push($account_array,$single_account);	
+		}
+		$tpl->assign_array($account_array);		
+		return $tpl->r_display();
+	} else {
+		
+		$tpl = new template("admin/part/empty_page.html");
+		$tpl->assign("empty_page","Es wurden bisher keine Accounts angelegt.");
+		return $tpl->r_display();
+	}
 }
 
 function displayLans($con)

@@ -178,7 +178,7 @@ function getGameData($con) // function.php/createCheckbox, admin_func.php/displa
 		- admin_func.php/displaySingleGame
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, banner, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, short_title, icon, banner, has_table FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -193,7 +193,7 @@ function getFullGameData($con)
 		- admin_func.php/displayTmGames
 	*/
 
-	$result = mysqli_query($con,"SELECT ID AS id, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
+	$result = mysqli_query($con,"SELECT ID AS id, name, icon, has_table FROM games WHERE addon IS NULL");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -246,29 +246,13 @@ function getGameInfoById($con,$game_id)
 	*/
 
 
-	$result = mysqli_query($con,"SELECT name, raw_name, short_title, icon, banner FROM games WHERE ID = '$game_id'");
+	$result = mysqli_query($con,"SELECT name, short_title, icon, banner FROM games WHERE ID = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo = $row;
 	}
 
 	return $gameinfo;
-}
-
-function getRawName($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/verifyGame
-	*/
-
-	$result = mysqli_query($con,"SELECT raw_name FROM games ORDER BY name");
-	while($row=mysqli_fetch_array($result))
-	{
-		$raw_name[] = $row["raw_name"];
-	}
-
-	return $raw_name;
 }
 
 function getGames($con)
@@ -334,24 +318,16 @@ function getHasTableByGameID($con,$game_id)
 		:Admin
 		- change_rawname.php
 	*/
-	$result = mysqli_query($con,"SELECT has_table FROM games WHERE game_id = '$game_id'");
+	$result = mysqli_query($con,"SELECT has_table FROM games WHERE ID = '$game_id'");
 	$row = mysqli_fetch_array($result);
 	$has_table = $row["has_table"];
 	
 	return $has_table;
 }
 
-function getRawNameByID($con,$game_id)
+function getGameID($con,$game_id)
 {
-	/* Used in:
-		:Admin
-		- change_rawname.php
-	*/
-	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE game_id = '$game_id'");
-	$row = mysqli_fetch_array($result);
-	$o_rawname = $row["raw_name"];
-	
-	return $o_rawname;
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM games WHERE ID = '$game_id'")) > 0;
 }
 
 
@@ -705,6 +681,17 @@ function getParamByAcID($con,$ac_id)
 ###########################################################
 */
 
+function getAllWowAccounts($con)
+{
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE wow_account IS NOT NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$accounts[] = $row["wow_account"];
+	}
+
+	return $accounts;
+}
+
 function getWowAccount($con,$player_id)
 {
 	/* Used in:
@@ -753,6 +740,28 @@ function getChars($con_char,$wow_id)
 	return $chars;
 }
 
+function getAccountIDByGUID($con_char,$guid)
+{
+	$result = mysqli_query($con_char,"SELECT account FROM characters.characters WHERE guid = '$guid'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["account"];
+	}
+
+	return $account_id;
+}
+
+function getGUIDFromCharacters($con_char,$char_name)
+{
+	$result = mysqli_query($con_char,"SELECT guid FROM characters.characters WHERE name = '$char_name'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$guid = $row["guid"];
+	}
+
+	return $guid;
+}
+
 function getRealmName($con)
 {
 	/* Used in:
@@ -783,6 +792,28 @@ function getServerStatus($con)
 	}
 
 	return $s_status;
+}
+
+function getWowRegions($con)
+{
+	$result = mysqli_query($con,"SELECT region_id, region_name FROM wow_region ORDER BY region_id ASC");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$existing_regions = $row;
+	}
+
+	return $existing_regions;
+}
+
+function getWoWRegionById($con,$map)
+{
+	$result = mysqli_query($con,"SELECT region_name FROM wow_region WHERE region_id = '$map'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$loc = $row["region_name"];
+	}
+
+	return $loc;
 }
 
 

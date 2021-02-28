@@ -15,4 +15,6 @@ createTmPaarungArchivTable($con);
 createTmGamerslistArchivTable($con);
 createTmPeriodArchivTable($con);
 createLanTable($con);
+removeRawName($con);
+createWoWRegionTable($con);
 ?>

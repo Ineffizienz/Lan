@@ -22,6 +22,7 @@
 				echo buildJSONOutput($message->displayMessage());
 			} else {
 				$message->getMessageCode($ac->assignNewAchievementAdmin($player->getPlayerId(),$ac_id));
+				echo buildJSONOutput($message->displayMessage());
 			}
 
 		} else {

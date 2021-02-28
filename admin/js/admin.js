@@ -27,6 +27,30 @@ $(document).ready(function(){
 		return game_id;
 	}
 
+	function getParentElement(button)
+	{
+		var substr = $(button).attr("data-reload-parent").substr(0,3);
+
+		if(substr == "id_")
+		{	
+			return "#" + $(button).attr("data-reload-parent").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-parent").substr(3);
+		}
+	}
+
+	function getChildElement(button)
+	{
+		var substr = $(button).attr("data-reload-child").substr(0,3);
+		if(substr == "id_")
+		{
+			return "#" + $(button).attr("data-reload-child").substr(3);
+		} else {
+			return "." + $(button).attr("data-reload-child").substr(3);
+		}
+		
+	}
+
 /*#############################################################################################
 #################################### User ##################################################### 
 ###############################################################################################*/
@@ -37,9 +61,12 @@ $(document).ready(function(){
 
 		var c_name = $("#cover_name").val();
 
-		obj = {c_name};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("create_new_account"),displayResult);
+		obj = {c_name,p_element,c_element};
+
+		postAjax(obj,getEndpoint("create_new_account"),OutputData);
 	}
 
 	function getId(event)
@@ -48,9 +75,12 @@ $(document).ready(function(){
 
 		var player = $(this).closest("tr").attr("id");
 
-		obj = {player};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("delete_player"),displayResult);
+		obj = {player,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_player"),OutputData);
 
 	}
 
@@ -77,7 +107,7 @@ $(document).ready(function(){
 
 		obj = {teamId};
 
-		postAjax(obj,getEndpoint("delete_team"),showResult);
+		postAjax(obj,getEndpoint("delete_team"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -91,60 +121,76 @@ $(document).ready(function(){
 		
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
-
-		var image_icon = $("#new_game_icon").prop('files')[0];
-		var image_banner = $("#new_game_banner").prop('files')[0];
+		
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
 		var form_data = new FormData();
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
-		if(!fileValidation(image_icon) || !fileValidation(image_banner))
+		if(!$("#new_game_icon").val())
 		{
-			displayResult("Dateifehler.");
+			form_data.append("game_icon","0");
 		} else {
-			if(image_icon.length == 0)
+			var image_icon = $("#new_game_icon").prop('files')[0];
+			if(!fileValidation(image_icon))
 			{
 				form_data.append("game_icon","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_icon",image_icon);
 			}
+		}
 
-			if(image_banner.length == 0)
+		if(!$("#new_game_banner").val())
+		{
+			form_data.append("game_banner","0");
+		} else {
+			var image_banner = $("#new_game_banner").prop('files')[0];
+			if(!fileValidation(image_banner))
 			{
 				form_data.append("game_banner","0");
+				console.log("Dateifehler");
 			} else {
 				form_data.append("game_banner",image_banner);
 			}
-			
-			postFileAjax(form_data,getEndpoint("create_new_game"),displayResult);
 		}
-	}
-
-	function getNewRawName(event)
-	{
-		event.preventDefault();
-		
-		var n_raw = $(this).siblings(".game_raw_name").val();
-		var game_id = retrieveGameId(this);
-
-		obj = {game_id,n_raw};
-
-		postAjax(obj,getEndpoint("update_rawname"),showResult);
+			
+		postFileAjax(form_data,getEndpoint("create_new_game"),OutputData);
 	}
 
 	function getNewGameName(event)
 	{
 		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 		
 		var game_name = $(this).siblings(".game_name").val();
-		var reloadID = $(this).closest("td").children("span").attr("id");
 		var game_id = retrieveGameID(this);
 
-		obj = {game_id,game_name};
+		obj = {game_id,game_name,p_element,c_element};
 
-		postAjax(obj,getEndpoint("update_gamename"),showResult(reloadID));
+		postAjax(obj,getEndpoint("update_gamename"),OutputData);
+	}
+
+	function getNewShortTitle(event)
+	{
+		event.preventDefault();
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		var game_short_title = $(this).siblings(".game_short_title").val();
+		var game_id = retrieveGameID(this);
+
+		obj = {game_id,game_short_title,p_element,c_element};
+
+		postAjax(obj,getEndpoint("update_shorttitle"),OutputData);
 	}
 
 	function getHasTable(event)
@@ -156,7 +202,7 @@ $(document).ready(function(){
 
 		obj = {game_id,has_table};
 
-		postAjax(obj,getEndpoint("update_has_table"),displayResult);
+		postAjax(obj,getEndpoint("update_has_table"),OutputData);
 	}
 
 	function getAddonParam(event)
@@ -168,7 +214,7 @@ $(document).ready(function(){
 
 		obj = {game_id,addon};
 
-		postAjax(obj,getEndpoint("update_addon"),displayResult);
+		postAjax(obj,getEndpoint("update_addon"),OutputData);
 
 	}
 
@@ -187,7 +233,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -195,7 +241,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_icon"),showResult(icon_id));
+			postFileAjax(form_data,getEndpoint("update_game_icon"),OutputData);
 		}
 	}
 
@@ -207,7 +253,6 @@ $(document).ready(function(){
 		var game_id = retrieveGameID(this);
 		var banner_id = "#" + $(this).siblings().attr("for");
 
-		console.log(banner_id);
 		var image = $(banner_id).prop('files')[0];
 		var form_data = new FormData();
 
@@ -215,7 +260,7 @@ $(document).ready(function(){
 
 		if(!fileValidation(image))
 		{
-			displayResult("Dateifehler.");
+			displaySirBrummel("Dateifehler.");
 		} else {
 			if(image.length == 0)
 			{
@@ -223,7 +268,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("update_game_banner"),showResult(banner_id));
+			postFileAjax(form_data,getEndpoint("update_game_banner"),OutputData);
 		}
 	}
 
@@ -247,7 +292,21 @@ $(document).ready(function(){
 			form_data.append("file",image);
 		}
 
-		postFileAjax(form_data,getEndpoint("upload_keys"),displayResult);
+		postFileAjax(form_data,getEndpoint("upload_keys"),OutputData);
+	}
+
+	function getGameIdToDelete(event)
+	{
+		event.preventDefault();
+
+		var game_id = $(this).attr("id");
+
+		var p_element = "#game-data-form";
+		var c_element = "#admin_game_list";
+
+		obj = {game_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_game"),OutputData);
 	}
 
 /*#############################################################################################
@@ -285,7 +344,7 @@ $(document).ready(function(){
 			} else {
 				form_data.append("file",image);
 			}
-			postFileAjax(form_data,getEndpoint("create_achievement"),setResult);
+			postFileAjax(form_data,getEndpoint("create_achievement"),OutputData);
 		}
 	}
 
@@ -298,7 +357,7 @@ $(document).ready(function(){
 
 		obj = {u_id,ac_id};
 
-		postAjax(obj,getEndpoint("assign_achievement"),setResult);
+		postAjax(obj,getEndpoint("assign_achievement"),OutputData);
 	}
 
 	function getChangedParam(event)
@@ -311,7 +370,7 @@ $(document).ready(function(){
 
 		obj = {ac_id,param,param_val};
 
-		postAjax(obj,getEndpoint("change_achievement"),setResult);
+		postAjax(obj,getEndpoint("change_achievement"),OutputData);
 	}
 
 	function getChangedAcImage(event)
@@ -321,15 +380,20 @@ $(document).ready(function(){
 		var ac_id = $(this).attr("data-ac-id");
 		var image_id = "#ac_image_" + ac_id;
 
+		var p_element = ".ac_img_label";
+		var c_element = ".ac_image_disp";
+
 		var image = $(image_id).prop('files')[0];
 		var form_data = new FormData();
 
 		form_data.append("ac_id",ac_id);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
 
 		if(fileValidation(image))
 		{
 			form_data.append("file",image);
-			postAjaxFile(form_data,getEndpoint("update_achievement_image"),setResult);
+			postAjaxFile(form_data,getEndpoint("update_achievement_image"),OutputData);
 		} else {
 			console.log("File error");
 		}
@@ -344,7 +408,7 @@ $(document).ready(function(){
 
 		obj = {n_trigger};
 
-		postAjax(obj,getEndpoint("create_trigger"),setResult);
+		postAjax(obj,getEndpoint("create_trigger"),OutputData);
 	}
 	
 /*#############################################################################################
@@ -369,9 +433,12 @@ $(document).ready(function(){
 		var time_minute_to = $("#tm_time_minute_to").val(); 
 		var tm_time_to = date_to + time_hour_to + time_minute_to;
 
-		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to}
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id,mode,mode_details,tm_time_from,tm_time_to,p_element,c_element}
 		
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getDelTmData(event)
@@ -380,13 +447,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("id");
 		
-		// Define Elements for immediate reaction of the web-page
-		var reload_element = $(this).parents("table").attr("id");
-		var parent_reload = $(this).parents("div").attr("id");
+		var p_element = getParentElement(this);
+		var c_element = getParentElement(this);
 
-		obj = {tm_id};
+		obj = {tm_id,p_element,c_element};
 
-		postAjax(obj,getEndpoint("delete_tournament"),setResult);
+		postAjax(obj,getEndpoint("delete_tournament"),OutputData);
 		
 	}
 
@@ -400,7 +466,7 @@ $(document).ready(function(){
 
 		obj = {tm_id};
 
-		postAjax(obj,getEndpoint("start_tournament"),setResult);
+		postAjax(obj,getEndpoint("start_tournament"),OutputData);
 
 	}
 
@@ -410,9 +476,12 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("name");
 
-		obj = {tm_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("archiv_tournament"),setResult);
+		obj = {tm_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("archiv_tournament"),OutputData);
 	}
 
 	function getTournamentParam(event)
@@ -426,11 +495,14 @@ $(document).ready(function(){
 		var tm_time_to = $("#tm_time_to").val(); //Fehlermeldung wenn nicht vollständig!
 		var vote_id = $("#vote_id").val();
 
-		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		obj = {game_id, mode, mode_details, tm_time_from, tm_time_to, vote_id, p_element, c_element};
 
 		$("#tm_create_popup").hide();
 
-		postAjax(obj,getEndpoint("create_tournament"),setResult);
+		postAjax(obj,getEndpoint("create_tournament"),OutputData);
 	}
 
 	function getVoteParam(event)
@@ -439,11 +511,99 @@ $(document).ready(function(){
 
 		var vote_id = $(this).attr("data-tm-vote");
 
-		obj = {vote_id};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("delete_vote"),setResult);
+		obj = {vote_id,p_element,c_element};
+
+		postAjax(obj,getEndpoint("delete_vote"),OutputData);
 	}
 
+/*#############################################################################################
+#################################### World of Warcraft ########################################
+###############################################################################################*/
+
+function getPasswordData(event)
+{
+	event.preventDefault();
+
+	var account_id = $(this).attr("id").substr(4);
+
+	obj = {account_id};
+
+	postAjax(obj,getEndpoint("reset_wow_password"),OutputData);
+}
+
+function getWoWRegionData(event)
+{
+	event.preventDefault();
+
+	var region_id = $("#region_id").val();
+	var region_name = $("#region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,region_name,p_element,c_element};
+
+	postAjax(obj,getEndpoint("add_wow_region"),OutputData);
+}
+
+function getNewRegionID(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_id = $(this).siblings(".new_region_id").val();
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,new_region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_id"),OutputData);
+}
+
+function getNewRegionName(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).parents("tr").attr("id");
+	var new_region_name = $(this).siblings(".new_region_name").val();
+
+	var p_element = getParentElement(this);
+	var c_element = $(p_element).find("td:nth-child(2)");
+
+	obj = {region_id,new_region_name,p_element,c_element};
+
+	postAjax(obj,getEndpoint("update_region_name"),OutputData);
+}
+
+function getDeleteWowRegion(event)
+{
+	event.preventDefault();
+
+	var region_id = $(this).attr("id");
+
+	var p_element = getParentElement(this);
+	var c_element = getChildElement(this);
+
+	obj = {region_id,p_element,c_element};
+
+	postAjax(obj,getEndpoint("delete_wow_region"),OutputData);
+}
+
+function getCharData(event)
+{
+	event.preventDefault();
+
+	var account_id = $(this).parent().attr("class").substr(4);
+	var char_name = $(this).parent().attr("id");
+
+	obj = {account_id,char_name};
+
+	postAjax(obj,getEndpoint("delete_wow_char"),OutputData);
+}
 
 /*#############################################################################################
 #################################### Lan ######################################################
@@ -457,9 +617,12 @@ $(document).ready(function(){
 		var date_from = $("#lan_date_from").val();
 		var date_to = $("#lan_date_to").val();
 
-		obj = {lan_title,date_from,date_to};
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
 
-		postAjax(obj,getEndpoint("create_lan"),setResult);
+		obj = {lan_title,date_from,date_to,p_element,c_element};
+
+		postAjax(obj,getEndpoint("create_lan"),OutputData);
 	}
 
 
@@ -500,21 +663,56 @@ $(document).ready(function(){
 		});
 	}
 
-	function displayResult(err)
+//########################### Output Data ##################################################################
+
+	function OutputData(result)
+	{
+		displaySirBrummel(result.message["messageText"]);
+
+		if(result.hasOwnProperty("reloadProp"))
+		{
+			reloadContent(result.reloadProp);
+		} else if (result.hasOwnProperty("imageReload")) {
+			reloadImageContent(result.imageReload);
+		}
+	}
+
+	function displaySirBrummel(err)
 	{
 		$("#result").show();
+		$("#result").css("position","sticky");
+		$("#result").css("top","75%");
 		$("#result").html(err);
 		$("#result").fadeOut(3000);
 	}
 
-	function showMessage(result)
+	function reloadContent(reloadProperties)
 	{
-		displayResult(result.message);
+		if(reloadProperties["new_item"] !== 0)
+		{
+			setSpanResult(reloadProperties);
+		} else {
+			$(reloadProperties["parent_element"]).load(location.href + ' ' + reloadProperties["child_element"]);
+		}
 	}
+
+	function setSpanResult(reloadProperties)
+	{
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).text(reloadProperties["new_item"]);
+		$(reloadProperties["parent_element"]).find(reloadProperties["child_element"]).attr("id",reloadProperties["new_item"]);
+
+		$(".settings_edit").slideUp();
+	}
+
+/*
+###########################################################
+######################## VISUAL EFFECTS ###################
+###########################################################
+*/
 
 	function displayTicketID(result)
 	{
-		displayResult(result.message);
+		displaySirBrummel(result.message["messageText"]);
 
 		if(result.hasOwnProperty("ticket_id"))
 		{
@@ -522,50 +720,13 @@ $(document).ready(function(){
 			$("#"+result.player_id).find(".ticket_id").html(result.ticket_id);
 		}
 	}
-
-	function setResult(result)
+	
+	function showEditField(event)
 	{
-		displayResult(result.message);
-
-		if(result.hasOwnProperty("parent_element"))
-		{
-			reloadContent(result.parent_element,result.child_element);
-		} else {
-			console.log("nö");
-		}
-	}
-
-	function reloadContent(parent_element,child_element)
-	{
-		if($.isArray(parent_element))
-		{
-			$.each(parent_element, function(key, value) {
-				$(value).load(location.href + ' ' + child_element[key]);
-			});
-		} else {
-			$(parent_element).load(location.href + ' ' + child_element);
-		}
+		event.preventDefault();
+		$(this).siblings(".settings_span").slideToggle();
 	}
 	
-	function showResult(result,reloadID)
-	{
-		displayResult(result.message);
-		console.log(result.message);
-		$("" + reloadID + "").html(result.new_value);
-	}
-
-	function showInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_gn").slideToggle();
-	}
-
-	function showGRNInputField(event)
-	{
-		event.preventDefault();
-		$(this).siblings(".settings_grn").slideToggle();
-	}
-
 	function displayPopup(event)
 	{
 		event.preventDefault();
@@ -599,6 +760,14 @@ $(document).ready(function(){
 		}
 	}
 
+	function displayAccountChars(event)
+	{
+		event.preventDefault();
+
+		$(this).siblings(".char_list").slideToggle();
+
+	}
+
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
@@ -612,10 +781,9 @@ function refreshVotes()
 	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
-	$("#create").on("click", getNumber);
+	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
-	$(".p_button_delete").on("click", getId);
-	$("#b_del_team").on("click", getTeamId);
+	$(document).on("click",".p_button_delete", getId);
 	$("#b_add_game").on("click", getNewGame);
 	$(document).on("click","#activate_ac", getSelectedItems);
 	$(document).on("click","#create_ac",getAcData);
@@ -627,10 +795,9 @@ function refreshVotes()
 	$(document).on("change",".sec_has_table",getHasTable);
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("change",".sec_banner_upload",getBannerData);
-	$(document).on("click",".send_grn",getNewRawName);
 	$(document).on("click",".send_gn",getNewGameName);
-	$(document).on("click",".settings_edit",showInputField);
-	$(document).on("click",".settings_edit",showGRNInputField);
+	$(document).on("click",".send_gst",getNewShortTitle);
+	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
 	$(document).on("click",".start_tm",getStartingTmData);
@@ -642,6 +809,14 @@ function refreshVotes()
 	$(document).on("click","#tm_close_popup",closePopup);
 	$(document).on("change","#tm_mode",disableOnChange);
 	$(document).on("click",".create_ticket",getTicketData);
+	$(document).on("click","#b_add_region",getWoWRegionData);
+	$(document).on("click",".delete_wow_region",getDeleteWowRegion);
+	$(document).on("click",".settings_edit",showEditField);
+	$(document).on("click",".send_region_id",getNewRegionID);
+	$(document).on("click",".send_region_name",getNewRegionName);
+	$(document).on("click",".show_chars",displayAccountChars);
+	$(document).on("click",".reset_wow_password",getPasswordData);
+	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);
 
 });

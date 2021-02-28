@@ -42,8 +42,8 @@ if ($response === TRUE)
 			$new_raw_name = rtrim($_FILES["file"]["name"],".txt");
 			$key_list = file(KEY_FOLDER . $_FILES["file"]["name"]);
 
-			if(!verifyGame($con,$new_game,$new_raw_name))
-				createGame($con,$new_game,$new_raw_name);
+			if(!verifyGame($con,$new_game))
+				createGame($con,$new_game);
 
 			$result_game_id = mysqli_query($con, "SELECT ID FROM games WHERE (raw_name = '$new_raw_name') LIMIT 1;");
 			$game_id = mysqli_fetch_array($result_game_id)["ID"];

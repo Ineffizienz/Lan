@@ -9,7 +9,7 @@
         {$startbutton}
     </td>
     <td>
-        <button class="archiv_tm" name="{$id}">Turnier archivieren</button>
+        <button class="archiv_tm" data-reload-parent="id_tm_maintain" data-reload-child="id_tm_list" name="{$id}">Turnier archivieren</button>
     </td>
-    <td><i class="fa fa-times delete_tm" aria-hidden="true" id="{$id}" style="color:red;cursor:pointer;"></i></td>
+    <td><i class="fa fa-times delete_tm" data-reload-parent="id_tm_maintain" data-reload-child="id_tm_list" aria-hidden="true" id="{$id}" style="color:red;cursor:pointer;"></i></td>
 </tr>

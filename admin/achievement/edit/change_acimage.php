@@ -16,7 +16,7 @@
         $path = $_FILES["file"]["name"];
 
         $message->getMessageCode($ac->setNewAcImage($id,$path));
-        echo buildJSONOutput(array($message->displayMessage(),".ac_img_label",".ac_image_disp"));
+        echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));
     } else {
         $message->getMessageCode("ERR_ADMIN_NO_IMAGE");
         echo buildJSONOutput($message->displayMessage());
