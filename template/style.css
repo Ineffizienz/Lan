@@ -993,6 +993,24 @@ h4
 	text-align:center;
 	font-weight:bold;
 }
+.reset_password_popup
+{
+	display:none;
+	position: absolute;
+	top: 30%;
+	left: 40%;
+	padding: 10px;
+	background-color: #202020;
+	border: 2px solid #C0C0C0;
+	border-radius: 12px;
+	box-shadow: 0 5px 5px 0;
+	color: #fff;
+	width:20%;
+}
+#close_password_popup
+{
+	text-align:right;
+}	
 
 
 /* ---------------------- Time-Schedule ---------------------------

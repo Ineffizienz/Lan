@@ -52,3 +52,5 @@ ERR_LEAVE_TOURNAMENT: Seid nicht albern!
 ERR_MATCH_LOCKED: Haltet euch doch nicht mit Vergangenem auf!
 ERR_TM_FOR_GAME_EXISTS: Ein solches Turnier existiert bereits!
 ERR_TM_TIME_UP: Wer nicht kommt zur rechten Zeit, der muss sehen was übrig bleibt.
+ERR_MISSING_PASSWORD: Nun sagt schon das Passwort.
+ERR_SOMETHING_MISSING: Ihr müsst mir schon alles sagen, was ich wissen will!

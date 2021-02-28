@@ -40,6 +40,13 @@ function displayResultPopup(event)
 	}
 }
 
+function displayResetPasswordPopup(event)
+{
+	event.preventDefault();
+
+	$(".reset_password_popup").show();
+}
+
 function closeResultPopup(event)
 {
 	event.preventDefault();
@@ -47,6 +54,15 @@ function closeResultPopup(event)
 	$(".tm_result_popup").hide();
 	$("#result_1").val("");
 	$("#result_2").val("");
+}
+
+function closePasswordPopup(event)
+{
+	event.preventDefault();
+
+	$(".reset_password_popup").hide();
+	$("#new_password").val("");
+	$("#new_password_checkup").val("");
 }
 
 $(document).ready(function(){
@@ -141,6 +157,29 @@ $(document).ready(function(){
 			postAjax(obj,getEndpoint("reg_wow_account"),sucRegAcc);
 		} else {
 			throwError(validate);
+		}
+	}
+
+	function getNewPassword(event)
+	{
+		event.preventDefault();
+		var new_password = $("#new_password").val();
+		var new_password_checkup = $("#new_password_checkup").val();
+
+		if(new_password == new_password_checkup)
+		{
+			var account_name = $(this).attr("data-account-name");
+
+			obj = {account_name,new_password};
+
+			postAjax(obj,getEndpoint("reset_password"),displayResponse);
+			
+			$(".reset_password_popup").hide();
+			$("#new_password").val("")
+			$("new_password_checkup").val("");
+
+		} else {
+			console.log("Response");
 		}
 	}
 
@@ -627,9 +666,12 @@ function disableButton(ele, event)
 	$("#join_tm").on("click",getJointPlayerID);
 	$("#send_result").on("click",getMatchResults);
 	$("#leave_tm").on("click",getLeaveTournament);
+	$("#save_new_password").on("click",getNewPassword);
 
 	//Popup
+	$("#reset_password").on("click",displayResetPasswordPopup);
 	$(".game-spacer").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
+	$("#close_password_popup").on("click",closePasswordPopup);
 });
 

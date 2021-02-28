@@ -257,7 +257,16 @@ function selectWowAccount($con,$con_wow,$con_char,$player)
 				{
 					$race = defineRace($chars["race"]);
 					$class = defineClass($chars["class"]);
-					$loc = defineLocation($chars["map"]);
+					if($chars["map"] == 0)
+					{
+						$loc = "Nicht dem Server beigetreten.";
+					} else {
+						$loc = getWoWRegionById($con,$chars["map"]);
+						if(empty($loc))
+						{
+							$loc = "Region wurde noch nicht implementiert.";
+						}
+					}
 
 					$character = array("name" => $chars["name"], "race" => $race, "class" => $class, "level" => $chars["level"], "location" => $loc);
 					array_push($character_list,$character);
@@ -350,22 +359,6 @@ function defineClass($class_id)
 	}
 
 	return $class;
-}
-
-function defineLocation($loc_id)
-{
-	switch ($loc_id) {
-		case "0":
-			$loc = "Nicht dem Server beigetreten.";
-		break;
-		case "571":
-			$loc = "Dalaran";
-		break;
-		default:
-			$loc = "Nicht implementiert.";
-	}
-
-	return $loc;
 }
 
 function displayServerStatus($con_wow)

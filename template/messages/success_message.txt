@@ -19,3 +19,4 @@ SUC_ENTER_RESULT: Wohl gekämpft!
 SUC_LEAVE_TOURNAMENT: Wohlan so gehet Eurer Wege!
 SUC_ADD_PREF: Nun, ihr mögt dies primitive Spiel?
 SUC_DELETE_PREF: Gott sei dank. Ihr seid zu Vernunft gekommen.
+SUC_SET_NEW_PASSWORD: Ihr seid im Bilde. Ja das ist das neue Passwort!

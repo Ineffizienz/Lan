@@ -9,6 +9,9 @@ function getEndpoint(param)
 		case "reg_wow_account":
 			endpoint = "include/wow_server/register.php";
 			break;
+		case "reset_password":
+			endpoint = "include/wow_server/reset_password.php";
+			break;
 		case "get_gamekey":
 			endpoint = "include/key/generate.php";
 			break;
