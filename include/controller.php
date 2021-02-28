@@ -1,15 +1,14 @@
 <?php
-function run_controller(template $tpl)
+function run_controller(template $tpl, $player)
 {
 	global $con;
-	$player_id = $_SESSION["player_id"];
 	if (isset($_REQUEST["page"]))
 	{
 		switch ($_REQUEST["page"]) {
 			case 'wow_server':
 				global $con_wow, $con_char;
 				$tpl->assign_subtemplate('content', "wow_server.html");
-				$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player_id));
+				$tpl->assign("wow_account",selectWowAccount($con,$con_wow,$con_char,$player));
 				$tpl->assign("realm",getRealmName($con_wow));
 				$tpl->assign("server_on",displayServerStatus($con_wow));
 			break;
@@ -57,16 +56,17 @@ function run_controller(template $tpl)
 			break;
 			case 'own':
 				$tpl->assign_subtemplate('settings', "own_settings.html");
-				$tpl->assign("ip",IP);
-				$tpl->assign_array(getSingleUsername($con, $player_id));
-				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player_id));
-				$tpl->assign("pref",displayPlayerPrefs($con, $player_id));
-				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player_id));
+				$tpl->assign("ip",$player->getPlayerIp());
+				$tpl->assign("name",$player->getPlayerUsername());
+				$tpl->assign("real_name",$player->getPlayerRealname());
+				$tpl->assign_subtemplate("profil_image",displayProfilImage($con, $player));
+				$tpl->assign("pref",displayPlayerPrefs($con, $player));
+				$tpl->assign_subtemplate("checkbox_container",createCheckbox($con, $player));
 			break;
 			case 'achieve':
 				$tpl->assign_subtemplate('settings', "achievement_list.html");
-				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player_id));
-				$tpl->assign("ac_small",displayAvailableAchievements($con, $player_id));
+				$tpl->assign("player_achievements",displayPlayerAchievements($con, $player));
+				$tpl->assign("ac_small",displayAvailableAchievements($con, $player));
 			break;
 		}
 	}

@@ -1,37 +1,44 @@
-<tr class="admin_game_data">
-	<td class="game_id">--ID--</td>
-	<td>
-		<span id="--NAME--">--NAME-- </span>
-		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
-		<span class="settings_gn">
+<tr class="admin_game_data" id="game_{$id}">
+	<td class="game_id">{$id}</td>
+	<td id="game_name_{$id}">
+		<span id="{$trimed_name}">{$name}</span>
+		<i id="edit_settings" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
+		<span class="settings_span">
 			<input type="text" name="game_name" class="game_name">
-			<button class="send_gn">Absenden</button>
+			<button class="send_gn" data-reload-parent="id_game_{$id}" data-reload-child="id_{$trimed_name}">Absenden</button>
 		</span>
 	</td>
 	<td>
-		<span id="--RAW_NAME--">--RAW_NAME--</span>
-		<i id="edit_settings" class='fa fa-pencil settings_edit' aria-hidden='true'></i><br>
-		<span class="settings_grn">
-			<input type="text" name="game_raw_name" class="game_raw_name">
-			<button class="send_grn">Absenden</button>
+		<span id="{$short_title}">{$short_title}</span>
+		<i id="edit_settings" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
+		<span class="settings_span">
+			<input type="text" name="game_short_title" class="game_short_title">
+			<button class="send_st" data-reload-parent="id_game_{$id}" data-reload-child="id_{$short_title}">Absenden</button>
 		</span>
 	</td>
 	<td>
 		<select class="sec_is_addon">
-			--ADDON--
+			{$addon}
 		</select>
 	</td>
 	<td class="game_icon">
-		<label for="sec_icon_upload_--ID--" id="lbl_sec_icon_upload_--ID--">--ICON--</label>
-		<input type="file" name="sec_icon_upload" id="sec_icon_upload_--ID--" class="sec_icon_upload">
+		<label for="sec_icon_upload_{$id}" id="lbl_sec_icon_upload_{$id}">
+			{$icon}
+		</label>
+		<input type="file" name="sec_icon_upload" id="sec_icon_upload_{$id}" class="sec_icon_upload">
 	</td>
 	<td class="game_banner">
-		<label for="sec_banner_upload_--ID--" id="lbl_sec_banner_upload_--ID--">--BANNER--</label>
-		<input type="file" name="sec_banner_upload" id="sec_banner_upload_--ID--" class="sec_banner_upload">
+		<label for="sec_banner_upload_{$id}" id="lbl_sec_banner_upload_{$id}">
+			{$banner}
+		</label>
+		<input type="file" name="sec_banner_upload" id="sec_banner_upload_{$id}" class="sec_banner_upload">
 	</td>
 	<td>
 		<select class="sec_has_table">
-			--HAS_TABLE--
+			{$has_table}
 		</select>
+	</td>
+	<td>
+		<i class="fa fa-times delete_game" aria-hidden="true" id="{$id}" style="color:red;cursor:pointer;"></i>
 	</td>
 </tr>

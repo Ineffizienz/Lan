@@ -2,16 +2,17 @@
     include(dirname(__FILE__,3) . "/include/init/constant.php");
 	require_once INC . 'session.php';
     include(INC . "connect.php");
+    include("new_reg.php");
     include(CL . "message_class.php");
+    include(CL . "player_class.php");
 
     $message = new message();
-    $player_id = $_SESSION["player_id"];
+    $player = new Player($con,$_SESSION["player_id"]);
     
     if(!empty($_POST["accountname"]) && !empty($_POST["password"]) && !empty($_POST["email"]))
     {
         $post_accountname = trim(strtoupper($_POST["accountname"]));
-        $post_password = trim(strtoupper($_POST["password"]));
-        $post_password_final = sha1("" . $post_accountname . ":" . $post_password . "");
+        $post_password = trim($_POST["password"]);
         $post_email = trim($_POST["email"]);
 
         $result = mysqli_query($con_wow,"SELECT COUNT(*) FROM account WHERE username = '$post_accountname'");
@@ -21,44 +22,19 @@
             $message->getMessageCode("ERR_ACC_EXISTS");
             echo json_encode(array("message" => $message->displayMessage()));
         } else {
-            if(strlen($post_accountname) < 3)
-            {
-                $message->getMessageCode("ERR_ACC_SHORT");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (strlen($post_accountname) > 32) {
-                $message->getMessageCode("ERR_ACC_LONG");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (strlen($post_password) < 6) {
-                $message->getMessageCode("ERR_PWD_SHORT");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (strlen($post_password) > 32) {
-                $message->getMessageCode("ERR_PWD_LONG");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (strlen($post_email) < 8) {
-                $message->getMessageCode("ERR_EMAIL_SHORT");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (strlen($post_email) > 64) {
-                $message->getMessageCode("ERR_EMAIL_LONG");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif (!preg_match('/^[A-Z\d]+$/i', $post_accountname)) {
-                $message->getMessageCode("ERR_ACC_CHR");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } elseif(!preg_match('/^[A-Z\d]+$/i',$post_password)) {
-                $message->getErrorMessage("ERR_PWD_CHR");
-                echo json_encode(array("message" => $message->displayMessage()));
-            } else {
+                $new_set = GetSRP6RegistrationData($post_accountname,$post_password);
+
                 $last_ip = $_SERVER["REMOTE_ADDR"];
                 
-                $sql = "INSERT INTO account (username, sha_pass_hash, email, last_ip, expansion) VALUES ('$post_accountname', '$post_password_final', '$post_email', '$last_ip', '2')";
+                $sql = "INSERT INTO account (username, salt, verifier, email, last_ip, expansion) VALUES ('$post_accountname', '$new_set[0]', '$new_set[1]', '$post_email', '$last_ip', '2')";
                 if(mysqli_query($con_wow,$sql))
                 {
-                    $message->getMessageCode("SUC_ACC_CREATE");
+                    $message->getMessageCode($player->setNewWoWAccount($post_accountname));
                     echo json_encode(array("message" => $message->displayMessage()));
-                    
-                    $sql = "UPDATE player SET wow_account = '$post_accountname' WHERE ID = '$player_id'";
-                    mysqli_query($con,$sql);
                 }
-            }
         }
+    } else {
+        $message->getMessageCode("ERR_SOMETHING_MISSING");
+        echo json_encode(array("message" => $message->displayMessage()));
     }
 ?>

@@ -313,8 +313,6 @@ h4
 .settings_nav
 {
 	margin: 0;
-	background-color:#FFFFFF;
-	color: #000000;
 	transition: color 0.3s, background-color 0.3s;
 	box-shadow: 0 0 1px 0 #333;
 	border-radius:10px 0 0 0;
@@ -327,6 +325,16 @@ h4
 {
 	background-color:#333;
 	color: #FFFFFF;
+}
+.active_menupoint 
+{
+	background-color:#333;
+	color: #FFFFFF;
+}
+.inactive_menupoint
+{
+	background-color:#fff;
+	color: #000;
 }
 #settings_container
 {
@@ -993,6 +1001,24 @@ h4
 	text-align:center;
 	font-weight:bold;
 }
+.reset_password_popup
+{
+	display:none;
+	position: absolute;
+	top: 30%;
+	left: 40%;
+	padding: 10px;
+	background-color: #202020;
+	border: 2px solid #C0C0C0;
+	border-radius: 12px;
+	box-shadow: 0 5px 5px 0;
+	color: #fff;
+	width:20%;
+}
+#close_password_popup
+{
+	text-align:right;
+}	
 
 
 /* ---------------------- Time-Schedule ---------------------------

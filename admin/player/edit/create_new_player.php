@@ -4,8 +4,10 @@
 	include(dirname(__FILE__,3) . "/include/admin_func.php");
 	include(INC . "connect.php");
 	include(CL . "message_class.php");
+	include(CL . "player_class.php");
 
 	$message = new message();
+	$player = new Player($con,0);
 	$last_ip = getLastIp($con);
 	$c_name = $_REQUEST["c_name"];
 
@@ -23,21 +25,15 @@
 		}
 		if (isset($new_ip))
 		{
-			$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$c_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
-			if(mysqli_query($con,$sql))
-			{
-				$message->getMessageCode("SUC_ADMIN_NEW_PLAYER");
-				echo $message->displayMessage();
-			} else {
-				echo mysqli_error($con);
-			}	
+			$message->getMessageCode($player->setNewPlayer($c_name,$new_ip));
+			echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));	
 		} else {
 			$message->getMessageCode("ERR_ADMIN_INTERN_#1");
-			echo $message->displayMessage();
+			echo buildJSONOutput($message->displayMessage());
 		}
 	} else {
 		$message->getMessageCode("ERR_ADMIN_NO_COVERNAME");
-		echo $message->displayMessage();
+		echo buildJSONOutput($message->displayMessage());
 	}
 
 ?>

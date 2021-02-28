@@ -3,14 +3,15 @@
 	require_once INC . 'session.php';
 	include(INC . "connect.php");
 	include(INC . "function.php");
+	include(CL . "player_class.php");
 
-	$player_id = $_SESSION["player_id"];
+	$player = new Player($con,$_SESSION["player_id"]);
 
 	if(isset($_REQUEST["status"]))
 	{
 		$status = $_REQUEST["status"];
 
-		mysqli_query($con,"UPDATE status SET status = '$status' WHERE user_id = '$player_id'");
+		$player->setNewStatus($status);
 
 		$s_color = getStatusColor($con,$status);
 

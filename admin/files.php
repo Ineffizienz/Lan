@@ -12,11 +12,9 @@
 	require_once(ROOT_CLASS . "template_class.php");
 	require_once(ROOT_CLASS . "message_class.php");
 	require_once(ROOT_CLASS . "achievement_class.php");
+	require_once(ROOT_CLASS . "player_class.php");
 
 	// OVERVIEW
 	require_once("admin/overview/key_status.php");
 	require_once("admin/overview/team_status.php");
-
-	// PLAYER
-	require_once("admin/player/view/player_settings_view.php");
 ?>

@@ -31,7 +31,7 @@
                         if(mysqli_query($con,$sql))
                         {
                             $message->getMessageCode("SUC_ADMIN_DELETE_TM");
-                            echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                            echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
                         } else {
                             $message->getMessageCode("ERR_ADMIN_INTERN_#4");
                             echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
@@ -53,7 +53,7 @@
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_ADMIN_DELETE_TM");
-                echo buildJSONOutput(array($message->displayMessage(),"#tm_maintain","#tm_list"));
+                echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"]));
             } else {
                 $message->getMessageCode("ERR_ADMIN_DB");
                 echo buildJSONOutput($message->displayMessage() . mysqli_error($con));

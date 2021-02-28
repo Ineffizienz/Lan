@@ -1,7 +1,10 @@
 <div id="wow_account_name">
-    <span>Deine Accountname:</span>
+    <span>Accountname:</span>
     <span>
         {$player_wow_account}
+    </span>
+    <span>
+        <button id="reset_password">Passwort zurücksetzen</button>
     </span>
 </div>
 <div class="table_container">
@@ -15,4 +18,28 @@
         </tr>
         {$characters}
     </table>
+</div>
+<div class="reset_password_popup">
+    <div id="close_password_popup">
+        <i class="fa fa-times" aria-hidden="true" style="text-align:right;cursor:pointer;color:red;"></i>
+    </div>
+    <h2 style="margin-top:0;color:#fff;">Passwort zurücksetzen</h2>
+    <div style="display:grid;grid-template-columns: auto auto;row-gap:5%;">
+        <div>
+            <label for="new_password">Neues Passwort:</label>
+        </div>
+        <div>
+            <input type="password" name="new_password" id="new_password">
+        </div>
+        <div>
+            <label for="new_password_checkup">Neues Passwort bestätigen:</label>
+        </div>
+        <div>
+            <input type="password" name="new_password_checkup" id="new_password_checkup">
+        </div>
+        <div>&nbsp;</div>
+        <div>
+            <button id="save_new_password" name="save_new_password" data-account-name="{$player_wow_account}">Passwort zurücksetzen</button>
+        </div>
+    </div>
 </div>

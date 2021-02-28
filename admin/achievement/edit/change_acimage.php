@@ -3,31 +3,22 @@
     include(dirname(__FILE__,3) . "/include/admin_func.php");
     include(INC . "connect.php");
     include(CL . "message_class.php");
+    include(CL . "achievement_class.php");
 
+    $message = new message();
+    $ac = new Achievement($con);
 
     $acid = $_REQUEST["ac_id"];
-    $message = new message();
     
     if(isset($_FILES["file"]["size"]) && !empty($_FILES["file"]["size"]))
     {
-        $result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION));
-        if($result_validate == "1")
-        {
-            move_uploaded_file($_FILES["file"]["tmp_name"], AC . $_FILES["file"]["name"]);
-            $path = $_FILES["file"]["name"];
+        move_uploaded_file($_FILES["file"]["tmp_name"], AC . $_FILES["file"]["name"]);
+        $path = $_FILES["file"]["name"];
 
-            $sql = "UPDATE ac SET image_url = '$path' WHERE ID = '$acid'";
-            if(mysqli_query($con,$sql))
-            {
-                $message->getMessageCode("SUC_ADMIN_CHANGE_AC_IMAGE");
-                echo buildJSONOutput(array($message->displayMessage(),".ac_img_label",".ac_image_disp"));
-            } else {
-                $message->getMessageCode("ERR_ADMIN_DB");
-                echo buildJSONOutput($message->displayMessage() . mysqli_error($con));
-            }
-        } else {
-            $message->getMessageCode($result_validate);
-            echo buildJSONOutput($message->displayMessage());
-        }
+        $message->getMessageCode($ac->setNewAcImage($id,$path));
+        echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));
+    } else {
+        $message->getMessageCode("ERR_ADMIN_NO_IMAGE");
+        echo buildJSONOutput($message->displayMessage());
     }
 ?>

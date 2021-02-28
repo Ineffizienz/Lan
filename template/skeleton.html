@@ -6,9 +6,26 @@
 	<link rel="stylesheet" href="font_awesome/css/font-awesome.min.css">
 	<!-- ganz dringend die JQuery-Library downloaden!!!! -->
 	<script src="js/jquery-3.3.1.min.js"></script>
+	<script>
+		$(function() {
+				url = window.location.href;
+				if(url.indexOf("subpage") >= 0)
+				{
+					$("#settings_nav a").each(function() {
+						if(url == (this.href))
+						{
+							$(this).children("p").addClass("active_menupoint");
+						} else {
+							$(this).children("p").addClass("inactive_menupoint");
+						}
+					});
+				}
+			});
+	</script>
 	<script src="js/function.js" defer></script>
 	<script src="js/controller.js" defer></script>
 	<script src="js/response.js" defer></script>
+	<script src="js/file_validation.js" defer></script>
 	<script>
 		$(document).ready(function() {
 			$("#link_tournament").click(function(){

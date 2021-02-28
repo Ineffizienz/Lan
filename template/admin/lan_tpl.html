@@ -1,0 +1,52 @@
+<div>
+    <h2>Lan anlegen</h2>
+        <form method="post" enctype="multipart/form-data" accept-charset="utf-8" id="create_tm_form">
+            <div class="admin_create_tm_form" id="create_form">
+                <div>
+                    <label for="lan_title">Lan-Titel:</label>
+                </div>
+                <div>
+                    <input type="text" name="lan_title" id="lan_title">
+                </div>
+                <div>
+                    <label for="lan_date_from">Von:</label>
+                </div>
+                <div>
+                    <input type="date" name="lan_date_from" id="lan_date_from">
+                </div>
+                <div>
+                    <label for="lan_date_to">Bis</label>
+                </div>
+                <div>
+                    <input type="date" name="lan_date_to" id="lan_date_to">
+                </div>
+                <div>&nbsp;</div>
+                <div>
+                    <input type="submit" name="create_lan" id="create_lan" data-reload-parent="id_lan_display" data-reload-child="id_lan_list" value="Lan erstellen">
+                </div>
+            </div>
+        </form>
+</div>
+<div style="padding-left:5%;padding-top:1%;">
+    <h3>angelegte Lans</h3>
+</div>
+<p style="border-bottom:2px solid #000000;width:100%;">&nbsp;</p>
+<div class="admin_tm_container" id="lan_display">
+    <table cellspacing="0" cellpadding="0" id="lan_list" style="margin: 0 auto;padding-bottom:8px;width: 85%;">
+        <tr id="tm_table_headlines">
+            <th>
+                ID
+            </th>
+            <th>
+                Lan-Titel
+            </th>
+            <th>
+                Von
+            </th>
+            <th>
+                Bis
+            </th>
+        </tr>
+        {$lans}
+    </table>
+</div>
