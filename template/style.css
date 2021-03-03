@@ -104,6 +104,12 @@ h4
 {
 	text-shadow: 1px 1px rgba(0,0,0,.5);	
 }
+.close_sign
+{
+	text-align:right;
+	cursor:pointer;
+	color:red;
+}
 
 /* ---------------------- NAVIGATION --------------------------- 
 --------------------------------------------------------------*/
@@ -809,6 +815,21 @@ h4
 	font-size:16px;
 	font-weight:bold;
 }
+.error_container
+{
+	display:none;
+	background-color:#ff6961;
+	text-align:center;
+	border-radius:2px;
+}
+.error_container p
+{
+	line-height:25px;
+}
+.placeholder_container p
+{
+	line-height:25px;
+}
 
 /* ---------------------- STATUS ---------------------------
 --------------------------------------------------------------*/
@@ -1001,6 +1022,12 @@ h4
 	text-align:center;
 	font-weight:bold;
 }
+#password_headline
+{
+	margin-top:0;
+	margin-bottom:10px;
+	color:#fff;
+}
 .reset_password_popup
 {
 	display:none;
@@ -1019,6 +1046,13 @@ h4
 {
 	text-align:right;
 }	
+#password_form
+{
+	display:grid;
+	grid-template-columns: auto auto;
+	row-gap:5%;
+	margin-bottom:3%;
+}
 
 
 /* ---------------------- Time-Schedule ---------------------------
