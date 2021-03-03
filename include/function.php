@@ -442,7 +442,7 @@ function displayRunningVotes($con)
 
 function displayTournaments($con)
 {
-	$tpl = new template("part/overview_tournament.html");
+	$tpl = new template("tournament/overview_tournament.html");
 
 	$tournaments = getTournamentsOverview($con);
 
@@ -454,7 +454,7 @@ function displayTournaments($con)
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tpl = new template("part/unlocked_tm.html");
+	$tpl = new template("tournament/unlocked_tm.html");
 	
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
 	$tm_banner = getTournamentBanner($con,$tm_id);
@@ -474,14 +474,14 @@ function displayTournamentLocked($con,$tm_id)
 {
 	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
-	$part = new template("part/locked_tm.html");
-	$part_stages = new template("part/tm_section.html");
+	$part = new template("tournament/locked_tm.html");
+	$part_stages = new template("tournament/tm_section.html");
 
 	foreach ($stages as $stage)
 	{
 		$stage_array = array();
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
-		$part_pair = new template("part/player_pair.html");
+		$part_pair = new template("tournament/player_pair.html");
 
 		foreach ($pairs_by_stages as $pair)
 		{

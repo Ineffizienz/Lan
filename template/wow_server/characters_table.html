@@ -21,10 +21,16 @@
 </div>
 <div class="reset_password_popup">
     <div id="close_password_popup">
-        <i class="fa fa-times" aria-hidden="true" style="text-align:right;cursor:pointer;color:red;"></i>
+        <i class="fa fa-times close_sign" aria-hidden="true"></i>
     </div>
-    <h2 style="margin-top:0;color:#fff;">Passwort zurücksetzen</h2>
-    <div style="display:grid;grid-template-columns: auto auto;row-gap:5%;">
+    <h2 id="password_headline">Passwort zurücksetzen</h2>
+    <div class="error_container">
+        <p>Die eingegebenen Passwörter stimmen nicht überein.</p>
+    </div>
+    <div class="placeholder_container">
+        <p>&nbsp;</p>
+    </div>
+    <div id="password_form">
         <div>
             <label for="new_password">Neues Passwort:</label>
         </div>

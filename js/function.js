@@ -1,12 +1,8 @@
 function gameSpacerHover ()
 {
 	$(".game-spacer").on({mouseover: function () {
-		$(this).css("background-color","#C0C0C0");
-		$(this).css("text-align","center");
-		$(this).css("font-style","italic");
 		$(this).html("Ergebnis eingeben.");
 	}, mouseleave: function() {
-		$(this).css("background-color","#e5e5e5");
 		$(this).html("");
 	}});
 	
@@ -61,6 +57,8 @@ function closePasswordPopup(event)
 	event.preventDefault();
 
 	$(".reset_password_popup").hide();
+	$(".error_container").hide();
+	$(".placeholder_container").show();
 	$("#new_password").val("");
 	$("#new_password_checkup").val("");
 }
@@ -166,7 +164,7 @@ $(document).ready(function(){
 		var new_password = $("#new_password").val();
 		var new_password_checkup = $("#new_password_checkup").val();
 
-		if(new_password == new_password_checkup)
+		if((new_password == new_password_checkup) && !(new_password === "") && !(new_password_checkup === ""))
 		{
 			var account_name = $(this).attr("data-account-name");
 
@@ -179,7 +177,7 @@ $(document).ready(function(){
 			$("new_password_checkup").val("");
 
 		} else {
-			console.log("Response");
+			errorHandling();
 		}
 	}
 
