@@ -1147,31 +1147,6 @@ h4
 	font-weight: bold;
 	height: 35px;
 }
-#tm_locked
-{
-	display:grid;
-	grid-gap:15px;
-}
-#tm_locked_banner_container
-{
-	text-align:center;
-}
-#tm_locked_banner_container img
-{
-	margin-top:5px;
-	box-shadow: 0 2px 2px 0;
-	border-radius:8px;
-}
-.tm_locked_player_pair
-{
-	cursor:pointer;
-	padding:8px;
-	background-color:#fff;
-	border-radius:25px;
-	text-align:center;
-	box-shadow:0 2px 2px 0;
-	width:15%;
-}
 .tm_single
 {
 	cursor:pointer;
@@ -1287,10 +1262,7 @@ h4
 	margin-left:2%;
 	width: 100%;
 }
-.tm_result_popup
-{
-	display:none;
-}
+
 #tm_vote_desc_text
 {
 	margin:0 auto;
@@ -1323,6 +1295,35 @@ main
     .round .game-spacer{
       flex-grow:1;
     }
+#tm_locked
+{
+	display:grid;
+	grid-gap:15px;
+}
+#tm_locked_banner_container
+{
+	text-align:center;
+}
+#tm_locked_banner_container img
+{
+	margin-top:5px;
+	box-shadow: 0 2px 2px 0;
+	border-radius:8px;
+}
+.tm_locked_player_pair
+{
+	cursor:pointer;
+	padding:8px;
+	background-color:#fff;
+	border-radius:25px;
+	text-align:center;
+	box-shadow:0 2px 2px 0;
+	width:15%;
+}
+.tm_result_popup
+{
+	display:none;
+}
   
   /*
    *  General Styles
@@ -1330,9 +1331,6 @@ main
   
   li.game{
     padding-left:20px;
-  }
-  li.game-spacer{
-	cursor:pointer;
   }
   li.game span{
     float:right;
@@ -1351,8 +1349,15 @@ main
     li.game-spacer{
 		cursor:pointer; 
       border-right:3px solid #aaa;
-      min-height:40px;
+      height:40px;
     }
+
+	li.game-spacer:hover
+	{
+		background-color: #C0C0C0;
+		text-align:center;
+		font-style:italic;
+	}
   
     li.game-bottom{ 
 	margin-bottom: 10px;  

@@ -1,12 +1,8 @@
 function gameSpacerHover ()
 {
 	$(".game-spacer").on({mouseover: function () {
-		$(this).css("background-color","#C0C0C0");
-		$(this).css("text-align","center");
-		$(this).css("font-style","italic");
 		$(this).html("Ergebnis eingeben.");
 	}, mouseleave: function() {
-		$(this).css("background-color","#e5e5e5");
 		$(this).html("");
 	}});
 	
