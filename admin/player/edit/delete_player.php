@@ -1,8 +1,9 @@
 <?php
 	include(dirname(__FILE__,4) . "/include/init/constant.php");
+	include(dirname(__FILE__,3) . "/include/admin_func.php");
 	include(CL . "message_class.php");
+	include(CL . "player_class.php");
 	include(INC . "connect.php");
-	include(INIT . "get_parameters.php");
 	
 	$message = new message();
 	$player_id = $_REQUEST["player"];
@@ -13,69 +14,21 @@
 		
 		if(in_array($player_id,$user_ids))
 		{
-			$first_login = getFirstLoginById($con,$player_id);
+			$player = new Player($con,$player_id);
+			$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = " . $player->getPlayerId() . "";
 			
-			if ($first_login == "1")
+			if(mysqli_query($con,$sql))
 			{
-				$sql = "DELETE FROM player WHERE ID ='$player_id'";
-				if(mysqli_query($con,$sql))
-				{
-					$message->getMessageCode("SUC_ADMIN_DELETE_USER");
-					echo $message->displayMessage();
-				} else {
-					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage();
-					echo mysqli_error($con);
-				}
+				$message->getMessageCode($player->removePlayerFromSystem());
+				echo buildJSONOutput(array($message->displayMessage(),$_REQUEST["p_element"],$_REQUEST["c_element"],0));
 			} else {
-				$sql = "DELETE FROM status WHERE user_id = '$player_id'";
-				if(mysqli_query($con,$sql))
-				{
-					if(getAllPlayerKeys($con,$player_id))
-					{
-						$sql = "UPDATE gamekeys SET player_id = NULL WHERE player_id = '$player_id'";
-						if(!mysqli_query($con,$sql))
-						{
-							$message->getMessageCode("ERR_ADMIN_DB");
-							echo $message->displayMessage();
-							echo mysqli_error($con);
-						}
-					} 
-					
-					$player_achievements = getUserAchievements($con,$player_id);
-
-					if(!empty($player_achievements))
-					{
-						$sql = "DELETE FROM ac_player WHERE player_id = '$player_id'";
-						if(!mysqli_query($con,$sql))
-						{
-							$message->getMessageCode("ERR_ADMIN_DB");
-							echo $message->displayMessage();
-							echo mysqli_error($con);
-						}
-					}
-					
-					$sql = "DELETE FROM player WHERE ID = '$player_id'";
-					if(mysqli_query($con,$sql))
-					{
-						$message->getMessageCode("SUC_ADMIN_DELETE_USER");
-						echo $message->displayMessage();
-					} else {
-						$message->getMessageCode("ERR_ADMIN_DB");
-						echo $message->displayMessage();
-						echo mysqli_error($con);
-					}
-					
-					
-				} else {
-					$message->getMessageCode("ERR_ADMIN_DB");
-					echo $message->displayMessage();
-					echo mysqli_error($con);
-				}
+				$message->getMessageCode("ERR_ADMIN_DB");
+				echo buildJSONOutput($message->displayMessage());
 			}
+			
 		} else {
 			$message->getMessageCode("ERR_ADMIN_USER_DOES_NOT_EXISTS");
-			echo $message->displayMessage();
+			echo buildJSONOutput($message->displayMessage());
 		}
 	}
 ?>

@@ -17,63 +17,6 @@
 
 		return $tpl->r_display();
 	}
-
-	/**
-	 * 
-	 * @param mysqli $con
-	 * @param string $nick
-	 * @param string $real_name
-	 * @param int $player_id
-	 * @return boolean true on success
-	 */
-	function initializePlayer(mysqli $con, string $nick, string $real_name, int $player_id)
-	{
-		$sql_user = "UPDATE player SET name='$nick', real_name='$real_name' WHERE ID='$player_id'";
-		if (mysqli_query($con,$sql_user))
-		{
-			$sql_fl_check = "SELECT first_login FROM player WHERE ID='$player_id';";
-			if(mysqli_fetch_assoc(mysqli_query($con, $sql_fl_check))['first_login'] != '0')
-			{
-				$sql_fl = "UPDATE player SET first_login = '0' WHERE ID='$player_id'";
-				if(mysqli_query($con,$sql_fl))
-				{
-					$sql_status = "INSERT INTO status (user_id,status) VALUES ('$player_id','1')";
-					if(mysqli_query($con,$sql_status))
-					{
-						return true;
-					}
-				}
-			}
-			else
-				return true;
-		}
-		return false;
-	}
-	
-	function validateImage($filesize,$filetype)
-	{
-		if (isset($filesize) && ($filesize != 0))
-		{
-			if($filesize < 5242880)
-			{
-				if($filesize < 5)
-				{
-					return "ERR_FILE_TO_SMALL";
-				} else {
-					if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-					{
-						return "ERR_NO_IMAGE_TYPE";
-					} else {
-						return 1;
-					}	
-				}	
-			} else {
-				return "ERR_FILE_TO_HUGE";
-			}
-		} else {
-			return "ERR_NO_IMAGE";
-		}
-	}
 	
 	function ownTeam($con,$ip) //maybe not used anymore
 	{
@@ -132,30 +75,28 @@
 		return $tpl->r_display();
 	}
 	
-	function getUserRelatedStatusColor($con,$player_id)
+	function getUserRelatedStatusColor($con,$player)
 	{
-		$status = getStatus($con,$player_id);
-		$status_color = getStatusColor($con,$status["id"]);
+		$status_color = getStatusColor($con,$player->getPlayerStatusId());
 
 		$circle = "<div id='status_circle' style='background-color:" . $status_color . ";'>&nbsp;</div>";
 
 		return $circle;
 	}
 
-	function getUserStatusOption($con,$player_id)
+	function getUserStatusOption($con,$player)
 	{
-		$user_status = getStatus($con,$player_id);
-		$status_data = getStatusData($con, $user_status["id"]);
+		$status_data = getStatusData($con, $player->getPlayerStatusId());
 
 		$option = build_option_new($status_data);
 		
-		return "<option value='" . $user_status["id"] . "' selected>" . $user_status["status_name"] . $option;
+		return "<option value='" . $player->getPlayerStatusId() . "' selected>" . $player->getPlayerStatusName() . $option;
 
 	}
 
-	function generateGameKey($con, int $player_id, int $game_id)
+	function generateGameKey($con, $player, int $game_id)
 	{
-		$key = getPlayerGameKey($con, $player_id, $game_id);
+		$key = getPlayerGameKey($con, $player->getPlayerId(), $game_id);
 
 		if ($key === false)
 		{
@@ -166,23 +107,24 @@
 				$message_code = "ERR_NO_KEY";
 				return $message_code;
 			} else {
-				mysqli_query($con,"UPDATE gamekeys SET player_id = '$player_id' WHERE (gamekey = '$first_key') AND (game_id = '$game_id');");
-				return $first_key;
+				$sql = "UPDATE gamekeys SET player_id = '$player->getPlayerId()' WHERE gamekey = '$first_key' AND game_id = '$game_id'";
+				if(mysqli_query($con,$sql))
+				{
+					return $first_key;
+				}
 			}
 		} else {
 			return $key;
 		} 
 	}
 
-	function displayProfilImage(mysqli $con, $player_id): template
+	function displayProfilImage(mysqli $con, $player): template
 	{
-		$image_path = getUserImage($con,$player_id);
-
-		if (empty($image_path))
+		if (empty($player->image))
 			return new template("part/empty_image.html");
 		else {
 			$tpl = new template("part/profil_image.html");
-			return $tpl->assign('image_path', $image_path);
+			return $tpl->assign('image_path', $player->image);
 		}
 	}
 	
@@ -239,23 +181,15 @@
 		return $output;
 	}
 
-	function displayPlayerPrefs($con, $player_id)
+	function displayPlayerPrefs($con, $player)
 	{
-		$player_pref = getSinglePlayerPref($con, $player_id);
+		$tpl = new template("part/single_pref.html");
+		$tpl->assign_array($player->getPlayerPreferences());
 
-		if(empty($player_pref))
-		{
-			return "<i>Du hast deine Präferenzen noch nicht festgelegt.</i>";
-		} else {
-			
-			$tpl = new template("part/single_pref.html");
-			$tpl->assign_array($player_pref);
-
-			return $tpl->r_display();
-		}
+		return $tpl->r_display();
 	}
 	
-	function createCheckbox($con, $player_id)
+	function createCheckbox($con, $player)
 	{
 		$games = getGameData($con);
 
@@ -264,14 +198,12 @@
 			$output = "<i>Keine Spiele vorhanden</i>";
 			return $output;
 		} else {
-
-			$userPrefs = getPlayerPrefs($con, $player_id);
 			$options = array();
 			$checkbox = new template("part/checkbox_container.html");
 			
 			foreach ($games as $game)
 			{
-				if(in_array($game["ID"],$userPrefs))
+				if(in_array($game["ID"],array_column($player->getPlayerPreferences(),"ID")))
 				{
 					$checkbox_checked = new template("part/checkbox_checked.html");
 					$checkbox_checked->assign("game_id",$game["ID"]);
@@ -292,11 +224,9 @@
 
 /******************************* WOW-Server ************************************/
 
-function selectWowAccount($con,$con_wow,$con_char,$player_id)
+function selectWowAccount($con,$con_wow,$con_char,$player)
 {
-	$wow_account = getWowAccount($con,$player_id);
-
-	if(empty($wow_account))
+	if(empty($player->getPlayerWowAccount()))
 	{
 		$tpl = new template();
 		$tpl->load("wow_server/create_wow_account.html");
@@ -304,14 +234,14 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 
 		return $template;
 	} else {
-		$wow_id = getWowId($con_wow,$wow_account);
+		$wow_id = getWowId($con_wow,$player->getPlayerWowAccount());
 		$wow_account_chars = getChars($con_char,$wow_id);
 
 		if(empty($wow_account_chars))
 		{
 			$tpl = new template();
 			$tpl->load("wow_server/character_table_empty.html");
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		} else {
@@ -327,7 +257,16 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 				{
 					$race = defineRace($chars["race"]);
 					$class = defineClass($chars["class"]);
-					$loc = defineLocation($chars["map"]);
+					if($chars["map"] == 0)
+					{
+						$loc = "Nicht dem Server beigetreten.";
+					} else {
+						$loc = getWoWRegionById($con,$chars["map"]);
+						if(empty($loc))
+						{
+							$loc = "Region wurde noch nicht implementiert.";
+						}
+					}
 
 					$character = array("name" => $chars["name"], "race" => $race, "class" => $class, "level" => $chars["level"], "location" => $loc);
 					array_push($character_list,$character);
@@ -335,7 +274,7 @@ function selectWowAccount($con,$con_wow,$con_char,$player_id)
 				$output->assign_array($character_list);
 			
 			$tpl->assign_subtemplate("characters",$output);
-			$tpl->assign("player_wow_account",ucfirst(strtolower($wow_account)));
+			$tpl->assign("player_wow_account",ucfirst(strtolower($player->getPlayerWowAccount())));
 			$template = $tpl->r_display();
 			return $template;
 		}
@@ -422,22 +361,6 @@ function defineClass($class_id)
 	return $class;
 }
 
-function defineLocation($loc_id)
-{
-	switch ($loc_id) {
-		case "0":
-			$loc = "Nicht dem Server beigetreten.";
-		break;
-		case "571":
-			$loc = "Dalaran";
-		break;
-		default:
-			$loc = "Nicht implementiert.";
-	}
-
-	return $loc;
-}
-
 function displayServerStatus($con_wow)
 {
 	$realm_flag = getServerStatus($con_wow);
@@ -454,55 +377,38 @@ function displayServerStatus($con_wow)
 
 /******************************* ACHIEVEMENTS ************************************/
 
-function displayPlayerAchievements($con, $player_id)
+function displayPlayerAchievements($con, $player)
 {
-	$achievement_id = getUserAchievements($con, $player_id);
-
-	$ac = new Achievement();
-	if (empty($achievement_id))
+	$tpl = new template("part/single_achievement.html");
+	$ac = new Achievement($con);
+	$player_achievements = array();
+	
+	foreach ($player->getPlayerAchievements() as $id)
 	{
-		$output = "Du hast bisher keine Achievements erworben.";
-	} else {
-		foreach ($achievement_id as $id)
-		{
-			$achievement_details = getAchievementById($con, $id);
-
-			foreach ($achievement_details as $achievement)
-			{
-				$ac->getDetails($achievement);
-			
-				if (!isset($output))
-				{
-					$output = $ac->displayAchievement();
-				} else {
-					$output .= $ac->displayAchievement();
-				}
-			}
-		}
-		return $output;
+		array_push($player_achievements,$ac->getPlayerAchievement($id));
 	}
+
+	$tpl->assign_array($player_achievements);
+	return $tpl->r_display();
 
 }
 
-function displayAvailableAchievements($con, $player_id)
+function displayAvailableAchievements($con, $player)
 {
-	$basic_ac = getAvailableAchievements($con, $player_id);
+	$tpl = new template("part/ac_small.html");
+	$ac = new Achievement($con);
+	$achievements = array();
+	$basic_ac = getAvailableAchievements($con, $player->getPlayerId());
 	
-	$ac = new Achievement();
 	if(!empty($basic_ac))
 	{
 		foreach ($basic_ac as $basic)
 		{
-			$ac->getBasicDetails($basic);
-			
-			if(!isset($output))
-			{
-				$output = $ac->displayAchievement();
-			} else {
-				$output .= $ac->displayAchievement();
-			}
+			array_push($achievements,$ac->getAvailableAchievement($basic));
 		}
-		return $output;
+		
+		$tpl->assign_array($achievements);
+		return $tpl->r_display();
 	}
 }
 
@@ -536,7 +442,7 @@ function displayRunningVotes($con)
 
 function displayTournaments($con)
 {
-	$tpl = new template("part/overview_tournament.html");
+	$tpl = new template("tournament/overview_tournament.html");
 
 	$tournaments = getTournamentsOverview($con);
 
@@ -548,7 +454,7 @@ function displayTournaments($con)
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tpl = new template("part/unlocked_tm.html");
+	$tpl = new template("tournament/unlocked_tm.html");
 	
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
 	$tm_banner = getTournamentBanner($con,$tm_id);
@@ -573,14 +479,14 @@ function displayTournamentLocked($con,$tm_id)
 {
 	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
-	$part = new template("part/locked_tm.html");
-	$part_stages = new template("part/tm_section.html");
+	$part = new template("tournament/locked_tm.html");
+	$part_stages = new template("tournament/tm_section.html");
 
 	foreach ($stages as $stage)
 	{
 		$stage_array = array();
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
-		$part_pair = new template("part/player_pair.html");
+		$part_pair = new template("tournament/player_pair.html");
 
 		foreach ($pairs_by_stages as $pair)
 		{

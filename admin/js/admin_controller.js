@@ -24,11 +24,14 @@ function getEndpoint(param)
         case "update_has_table":
             endpoint = "admin/game/edit/change_hastable.php";
             break;
-        case "update_rawname":
-            endpoint = "admin/game/edit/change_rawname.php";
-            break;
         case "update_gamename":
             endpoint = "admin/game/edit/change_gamename.php";
+            break;
+        case "update_shorttitle":
+            endpoint = "admin/game/edit/change_shorttitle.php";
+            break;
+        case "delete_game":
+            endpoint = "admin/game/edit/delete_game.php";
             break;
         case "create_trigger":
             endpoint = "admin/achievement/edit/create_trigger.php";
@@ -38,6 +41,9 @@ function getEndpoint(param)
             break;
         case "start_tournament":
             endpoint = "admin/tm/edit/start_tm.php";
+            break;
+        case "archiv_tournament":
+            endpoint = "admin/tm/edit/archiv_tm.php";
             break;
         case "create_new_game":
             endpoint = "admin/game/edit/add_game.php";
@@ -68,6 +74,27 @@ function getEndpoint(param)
             break;
         case "create_ticket":
             endpoint = "admin/player/edit/create_ticket.php";
+            break;
+        case "add_wow_region":
+            endpoint = "admin/wow/add_region.php";
+            break;
+        case "update_region_id":
+            endpoint = "admin/wow/update_region_id.php";
+            break;
+        case "update_region_name":
+            endpoint = "admin/wow/update_region_name.php";
+            break;
+        case "delete_wow_region":
+            endpoint = "admin/wow/delete_region.php";
+            break;
+        case "reset_wow_password":
+            endpoint = "admin/wow/account/reset_password.php";
+            break;
+        case "delete_wow_char":
+            endpoint = "admin/wow/char/delete_char.php";
+            break;
+        case "create_lan":
+            endpoint = "admin/lan/create/create_lan.php";
             break;
 	}
 

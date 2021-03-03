@@ -4,7 +4,7 @@
  * 
  * @return returns an array consisting of a bool for success and a message to display
  */
-function reg_name(mysqli $con, $message)
+function reg_name(mysqli $con, $message, $player)
 {
 	if(!isset($_POST["username"]))
 	{
@@ -19,14 +19,14 @@ function reg_name(mysqli $con, $message)
 		return array(false, $message);
 	}
 	
-	if(checkPlayernameExists($con, $nick) != $_SESSION["player_id"])
+	if(checkPlayernameExists($con, $nick) != $player->getPlayerId())
 	{
 		//another user with this name already exists
 		$message->getMessageCode("ERR_USER_NAME");
 		return array(false, $message);
 	}
 	
-	if (initializePlayer($con, $nick, $real_name, $_SESSION["player_id"]))
+	if ($player->setUpPlayer($nick,$real_name))
 	{
 		$message->getMessageCode("SUC_REG_NAME");
 		return array(true, $message);

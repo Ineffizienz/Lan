@@ -10,9 +10,6 @@
 function getFirstLoginById($con,$id)
 {
 	/* Used in:
-		:User
-		- index.php
-
 		:Admin
 		- delete_player.php
 	*/
@@ -25,31 +22,6 @@ function getFirstLoginById($con,$id)
 	
 	return $f_login;
 }
-
-
-/*
-###########################################################
-######################## TICKET #############################
-###########################################################
-*/
-
-	// ###### TICKET-ADMIN ######
-	
-	function getUserTicketRelation($con)
-	{
-		/* Used in:
-			:Admin
-			- admin_func.php/displayTicketStatus
-		*/
-
-		$result = mysqli_query($con,"SELECT name, ticket_active FROM player");
-		while($row=mysqli_fetch_assoc($result))
-		{
-			$ticketStatus[] = $row;
-		}
-
-		return $ticketStatus;
-	}
 
 
 /*
@@ -94,7 +66,7 @@ function getBasicUserData($con)
 		:Admin
 		- admin_func.php/addUsername
 	*/
-	$result = mysqli_query($con, "SELECT ID,name FROM player");
+	$result = mysqli_query($con, "SELECT ID AS id,name FROM player");
 	while($row = mysqli_fetch_assoc($result))
 	{
 		$basic_user[] = $row;
@@ -107,7 +79,6 @@ function getSingleUsername($con, $player_id): array
 {
 	/* Used in:
 		:User
-		- index.php
 		- profil_image.php
 		- index.php
 	*/
@@ -175,23 +146,6 @@ function getAllUserIDs($con)
 ###########################################################
 */
 
-
-function getPlayerData($con)
-{
-	/* Used in:
-		:Admin
-		- player_settings_view.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ID, name, ip, wow_account, team_id, team_captain FROM player");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$player[] = $row;
-	}
-
-	return $player;
-}
-
 function getSinglePlayerTeam($con, $player_id)
 {
 	/* Used in:
@@ -206,46 +160,6 @@ function getSinglePlayerTeam($con, $player_id)
 	$team = getTeamName($con,$team_id);
 
 	return $team;
-}
-function getSinglePlayerPref($con, $player_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerPrefs
-	*/
-	$result = mysqli_query($con,"SELECT games.icon, games.short_title FROM pref LEFT JOIN games ON pref.game_id = games.ID WHERE pref.player_id = '$player_id'");
-	while ($row=mysqli_fetch_assoc($result))
-	{
-		$player_pref[] = $row;
-	}
-
-	if(empty($player_pref))
-	{
-		$player_pref = array();
-	}
-
-	return $player_pref;
-
-}
-
-function getPlayerPrefs($con,$player_id)
-{
-	/* Used in:
-		:User
-		- function.php/createCheckbox
-	*/
-	$result = mysqli_query($con,"SELECT game_id FROM pref WHERE player_id = '$player_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$prefs[] = $row["game_id"];
-	}
-
-	if(empty($prefs))
-	{
-		$prefs = array();
-	}
-
-	return $prefs;
 }
 
 /*
@@ -264,7 +178,7 @@ function getGameData($con) // function.php/createCheckbox, admin_func.php/displa
 		- admin_func.php/displaySingleGame
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, banner, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, short_title, icon, banner, has_table FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -279,7 +193,7 @@ function getFullGameData($con)
 		- admin_func.php/displayTmGames
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, raw_name, icon, has_table FROM games WHERE addon IS NULL");
+	$result = mysqli_query($con,"SELECT ID AS id, name, icon, has_table FROM games WHERE addon IS NULL");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;
@@ -332,29 +246,13 @@ function getGameInfoById($con,$game_id)
 	*/
 
 
-	$result = mysqli_query($con,"SELECT name, raw_name, short_title, icon, banner FROM games WHERE ID = '$game_id'");
+	$result = mysqli_query($con,"SELECT name, short_title, icon, banner FROM games WHERE ID = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameinfo = $row;
 	}
 
 	return $gameinfo;
-}
-
-function getRawName($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/verifyGame
-	*/
-
-	$result = mysqli_query($con,"SELECT raw_name FROM games ORDER BY name");
-	while($row=mysqli_fetch_array($result))
-	{
-		$raw_name[] = $row["raw_name"];
-	}
-
-	return $raw_name;
 }
 
 function getGames($con)
@@ -420,24 +318,16 @@ function getHasTableByGameID($con,$game_id)
 		:Admin
 		- change_rawname.php
 	*/
-	$result = mysqli_query($con,"SELECT has_table FROM games WHERE game_id = '$game_id'");
+	$result = mysqli_query($con,"SELECT has_table FROM games WHERE ID = '$game_id'");
 	$row = mysqli_fetch_array($result);
 	$has_table = $row["has_table"];
 	
 	return $has_table;
 }
 
-function getRawNameByID($con,$game_id)
+function getGameID($con,$game_id)
 {
-	/* Used in:
-		:Admin
-		- change_rawname.php
-	*/
-	$result = mysqli_query($con,"SELECT raw_name FROM games WHERE game_id = '$game_id'");
-	$row = mysqli_fetch_array($result);
-	$o_rawname = $row["raw_name"];
-	
-	return $o_rawname;
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM games WHERE ID = '$game_id'")) > 0;
 }
 
 
@@ -695,22 +585,6 @@ function getCaptainStatus($con, $player_id)
 ###########################################################
 */
 
-function getStatus($con,$id)
-{
-	/* Used in:
-		:User
-		- function.php/getUserRelatedStatusColor
-		- function.php/getUserStatusOption
-	*/
-
-	$result = mysqli_query($con,"SELECT status.status AS id, status_name.status_name FROM status INNER JOIN status_name ON status_name.status_id = status.status WHERE user_id = '$id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$status = $row;
-	}
-
-	return $status;
-}
 function getStatusColor($con,$status)
 {
 	/* Used in:
@@ -756,54 +630,15 @@ function getAllAchievements($con)
 		- admin_func.php/displayAchievements
 	*/
 
-	$sql = "SELECT ac.ID, ac.title, ac.image_url, ac.message, ac_category.ID AS catID, ac_category.c_name, ac_trigger.ID AS trigID, ac_trigger.trigger_title, ac.ac_visibility FROM ac LEFT JOIN ac_category ON ac.ac_category = ac_category.ID LEFT JOIN ac_trigger ON ac.ac_trigger = ac_trigger.ID";
+	$sql = "SELECT ID FROM ac";
 
 	$result = mysqli_query($con,$sql);
 	while ($row=mysqli_fetch_assoc($result))
 	{
-		$all_achievements[] = $row;
+		$all_achievements[] = $row["ID"];
 	}
 
 	return $all_achievements;
-}
-function getAchievementById($con,$ac_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerAchievements
-	*/
-
-	$result = mysqli_query($con,"SELECT * FROM ac WHERE ID = '$ac_id'");
-	while($row=mysqli_fetch_array($result))
-	{
-		$achievement[] = $row;
-	}
-
-	return $achievement;
-}
-
-function getUserAchievements($con,$player_id)
-{
-	/* Used in:
-		:User
-		- function.php/displayPlayerAchievements
-
-		:Admin
-		- assign_achievement.php
-	*/
-
-	$result = mysqli_query($con,"SELECT ac_id FROM ac_player WHERE player_id = '$player_id'");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_id[] = $row["ac_id"];
-	}
-
-	if (empty($ac_id))
-	{
-		$ac_id = array();
-	}
-
-	return $ac_id;
 }
 
 function getAvailableAchievements($con, $player_id)
@@ -813,64 +648,14 @@ function getAvailableAchievements($con, $player_id)
 		- function.php/displayAvailableAchievements
 	*/
 
-	$sql = "SELECT ac.ID, ac.title FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
+	$sql = "SELECT ac.ID FROM ac WHERE ac.ac_visibility = 'Sichtbar' AND NOT EXISTS (SELECT null FROM ac_player WHERE ac_player.player_id = '$player_id' AND ac_player.ac_id = ac.ID)";
 	$result = mysqli_query($con,$sql);
 	while($row=mysqli_fetch_assoc($result))
 	{
-		$basic_ac[] = $row;
+		$basic_ac[] = $row["ID"];
 	}
 
 	return $basic_ac;
-}
-
-function getAllAchievementByName($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/addUsername
-	*/
-
-	$result = mysqli_query($con,"SELECT ID,title FROM ac");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_option[] = $row;
-	}
-	
-	return $ac_option;
-}
-
-function getAchievementCategories($con)
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/displayAchievements
-		- admin_func.php/displayCategories
-	*/
-
-	$result = mysqli_query($con,"SELECT ID, c_name AS name FROM ac_category");
-	while($row=mysqli_fetch_assoc($result))
-	{ 
-		$ac_categories[] = $row;
-	}
-
-	return $ac_categories;
-}
-
-function getAchievementTrigger($con) // admin/admin_func.php/displayTrigger
-{
-	/* Used in:
-		:Admin
-		- admin_func.php/displayAchievements
-		- admin_func.php/displayAcTrigger
-	*/
-
-	$result = mysqli_query($con,"SELECT ID,trigger_title AS name FROM ac_trigger");
-	while($row=mysqli_fetch_assoc($result))
-	{
-		$ac_trigger[] = $row;
-	}
-
-	return $ac_trigger;
 }
 
 function getParamByAcID($con,$ac_id)
@@ -895,6 +680,17 @@ function getParamByAcID($con,$ac_id)
 ######################## WOW-Server #######################
 ###########################################################
 */
+
+function getAllWowAccounts($con)
+{
+	$result = mysqli_query($con,"SELECT wow_account FROM player WHERE wow_account IS NOT NULL");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$accounts[] = $row["wow_account"];
+	}
+
+	return $accounts;
+}
 
 function getWowAccount($con,$player_id)
 {
@@ -944,6 +740,28 @@ function getChars($con_char,$wow_id)
 	return $chars;
 }
 
+function getAccountIDByGUID($con_char,$guid)
+{
+	$result = mysqli_query($con_char,"SELECT account FROM characters.characters WHERE guid = '$guid'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$account_id = $row["account"];
+	}
+
+	return $account_id;
+}
+
+function getGUIDFromCharacters($con_char,$char_name)
+{
+	$result = mysqli_query($con_char,"SELECT guid FROM characters.characters WHERE name = '$char_name'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$guid = $row["guid"];
+	}
+
+	return $guid;
+}
+
 function getRealmName($con)
 {
 	/* Used in:
@@ -974,6 +792,28 @@ function getServerStatus($con)
 	}
 
 	return $s_status;
+}
+
+function getWowRegions($con)
+{
+	$result = mysqli_query($con,"SELECT region_id, region_name FROM wow_region ORDER BY region_id ASC");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$existing_regions = $row;
+	}
+
+	return $existing_regions;
+}
+
+function getWoWRegionById($con,$map)
+{
+	$result = mysqli_query($con,"SELECT region_name FROM wow_region WHERE region_id = '$map'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$loc = $row["region_name"];
+	}
+
+	return $loc;
 }
 
 
@@ -1183,6 +1023,17 @@ function getTournamentsOverview($con)
 
 	return $tm_data;
 
+}
+
+function getSingleTournamentData($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT game_id, mode, mode_details, player_count, tm_period_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$single_tournament = $row;
+	}
+
+	return $single_tournament;
 }
 
 function getTournaments($con)
@@ -1741,5 +1592,71 @@ function getTournamentWildcardPlayer($con,$tm_id,$stage)
 	}
 
 	return $wildcard_player;
+}
+
+/*
+###########################################################
+######################## Archivierung #####################
+###########################################################
+*/
+
+function checkForTournament($con,$tm_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm WHERE ID = '$tm_id'")) > 0;
+}
+
+function getAllPairsFromTournament($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID, team_1, team_2, stage, successor, result_team1, result_team2 FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$pairs[] = $row;
+	}
+
+	return $pairs;
+}
+
+function getAllGamerslistDataFromTournament($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT ID, player_id FROM tm_gamerslist WHERE tm_id = '$tm_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$gamerslist_data[] = $row;
+	}
+
+	return $gamerslist_data;
+}
+
+function getTournamentRawPeriod($con,$period_id)
+{
+	$result = mysqli_query($con,"SELECT time_from, time_to FROM tm_period WHERE ID = '$period_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$period_data = $row;
+	}
+
+	return $period_data;
+}
+
+/*
+###########################################################
+######################## Lan ##############################
+###########################################################
+*/
+
+function getLans($con)
+{
+	$result = mysqli_query($con,"SELECT ID, title, DATE_FORMAT(`date_from`, '%d.%m.%Y') as date_from, DATE_FORMAT(`date_to`, '%d.%m.%Y') as date_to FROM lan");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$lan_partys[] = $row;
+	}
+
+	if(empty($lan_partys))
+	{
+		$lan_partys = array();
+	}
+
+	return $lan_partys;
 }
 ?>

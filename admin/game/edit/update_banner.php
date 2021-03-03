@@ -29,24 +29,16 @@
 		}
 	}
 	
-	$result_validate = validateImageFile($_FILES["file"]["size"],pathinfo($_FILES["file"]["name"],PATHINFO_EXTENSION)); //validates the ImageFile for its size and Imagetype
-	if($result_validate == "1")
+	move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
+	$path = $_FILES["file"]["name"];
+	
+	$sql = "UPDATE games SET banner = '$path' WHERE ID = '$game_id'";
+	if(mysqli_query($con,$sql))
 	{
-		move_uploaded_file($_FILES["file"]["tmp_name"], BANNER . $_FILES["file"]["name"]);
-		$path = $_FILES["file"]["name"];
-		
-		$sql = "UPDATE games SET banner = '$path' WHERE ID = '$game_id'";
-		if(mysqli_query($con,$sql))
-		{
-			$message->getMessageCode("SUC_ADMIN_BANNER_CHANGED");
-			echo $message->displayMessage();
-		} else {
-			$message->getMessageCode("ERR_ADMIN_DB");
-			echo $message->displayMessage();
-		}
-		
+		$message->getMessageCode("SUC_ADMIN_BANNER_CHANGED");
+		echo buildJSONOutput($message->displayMessage());
 	} else {
-		$message->getMessageCode($result_validate);
-		echo $message->displayMessage();
+		$message->getMessageCode("ERR_ADMIN_DB");
+		echo buildJSONOutput($message->displayMessage());
 	}
 ?>

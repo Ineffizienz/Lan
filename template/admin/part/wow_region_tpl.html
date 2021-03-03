@@ -1,0 +1,21 @@
+<tr id="{$region_id}">
+    <td>
+        <span id="span_{$region_id}">{$region_id}</span>
+        <i id="edit_region_id" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
+		<span class="settings_span">
+			<input type="text" name="new_region_id" class="new_region_id">
+			<button class="send_region_id" data-reload-parent="id_{$region_id}" data-reload-child="id_span_{$region_id}">Absenden</button>
+		</span>
+    </td>
+    <td>
+        <span id="span_{$region_name}">{$region_name}</span>
+        <i id="edit_region_name" class='fa fa-pencil settings_edit icon_edit' aria-hidden='true'></i><br>
+		<span class="settings_span">
+			<input type="text" name="new_region_name" class="new_region_name">
+			<button class="send_region_name" data-reload-parent="id_{$region_id}" data-reload-child="id_span_{$region_id}">Absenden</button>
+		</span>
+    </td>
+    <td>
+        <i class="fa fa-times delete_wow_region" data-reload-parent="id_admin_region_data_form" data-reload-child="id_admin_region_data_list" aria-hidden="true" id="{$region_id}" style="color:red;cursor:pointer;"></i>
+    </td>
+</tr>

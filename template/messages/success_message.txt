@@ -17,3 +17,6 @@ SUC_TM_VOTED_FOR: Ihr habt euren Hut erfolgreich in den Ring geworfen. Bravo.
 SUC_JOIN_TM: Sehr wohl. Ihr seid nun Teil dieses jämmerlichen Haufens.
 SUC_ENTER_RESULT: Wohl gekämpft!
 SUC_LEAVE_TOURNAMENT: Wohlan so gehet Eurer Wege!
+SUC_ADD_PREF: Nun, ihr mögt dies primitive Spiel?
+SUC_DELETE_PREF: Gott sei dank. Ihr seid zu Vernunft gekommen.
+SUC_SET_NEW_PASSWORD: Ihr seid im Bilde. Ja das ist das neue Passwort!

@@ -2,57 +2,21 @@
 
 require_once dirname(__DIR__).'../../include/init/get_parameters.php';
 
-function buildContent($file) // liest HTML-Fragmente ein und fügt sie an der entsprechenden Stelle ein
-{
-	if (file_exists("template/" . $file))
-	{
-		$data = fopen("template/" . $file, "r");
-		while (!feof($data))
-		{
-			if (!isset($content))
-			{
-				$content = fgets($data);
-			} else {	
-				$content .= fgets($data);
-			}
-		}
-		fclose($data);
-		return ($content);
-	}
-}
-
 function buildOption($optionArr)
 {
-	foreach ($optionArr as $option)
-	{
-		// get first key = $id, get new first key = $name --> Wie heißt die Funktion dafür?
-		$part = file_get_contents("template/admin/part/option.html");
+	$tpl = new template("admin/part/option.html");
+	$tpl->assign_array($optionArr);
 
-		if(array_key_exists("title",$option))
-		{
-			$key = "title";
-		} elseif (array_key_exists("name",$option)) {
-			$key = "name";
-		}
-
-		if(!isset($output_option))
-		{
-			$output_option = str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		} else {
-			$output_option .= str_replace(array("--VALUE--","--NAME--"),array($option["ID"],$option[$key]),$part);
-		}
-	}
-
-	return $output_option;
+	return $tpl->r_display();
 }
 
 function buildJSONOutput($elements)
 {
 	if(is_array($elements))
 	{
-		$jsonOutput = json_encode(array("message" => $elements[0], "parent_element" => $elements[1], "child_element" => $elements[2]));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements[0]), "reloadProp" => array("parent_element" => $elements[1], "child_element" => $elements[2], "new_item" => $elements[3])));
 	} else {
-		$jsonOutput = json_encode(array("message" => $elements));
+		$jsonOutput = json_encode(array("message" => array("messageText" => $elements)));
 	}
 
 	return $jsonOutput;
@@ -91,121 +55,89 @@ function translateGameModeDetails($mode_details)
 
 function displayAchievements($con)
 {
-
+	$output = new template("admin/part/ac_list.html");
+	$ac = new Achievement($con);
+	$ac_array = array();
 	$achievements = getAllAchievements($con);
-
-	$all_categories = getAchievementCategories($con);
-	$all_trigger = getAchievementTrigger($con);
-	//$all_visib = buildVisibilityOption($con);
 
 	foreach ($achievements as $achievement)
 	{
-		$ac = new Achievement;
-		
-		$ac->getAdminDetails($con,$achievement,$all_categories,$all_trigger);
-
-		if(!isset($output))
-		{
-			$output = $ac->displayAchievement();
-		} else {
-			$output .= $ac->displayAchievement();
-		}
-		
+		$cat_array = array("category"=>buildOption($ac->getAcCategories()));
+		$trig_array = array("trigger"=>buildOption($ac->getAcTrigger()));
+		array_push($ac_array,array_merge($ac->getAdminAchievement($achievement),$cat_array,$trig_array));
 	}
 
-	return $output;
-}
+	$output->assign_array($ac_array);
 
-function displayTeams($con) // Teamverwaltung --> Team löschen
-{
-	$all_teams = getAllTeams($con);
-
-	if (empty($all_teams))
-	{
-		$output = "<p style='font-size:16pt;font-weight:bold;'>Keine Teams vorhanden</p>";
-		return $output;
-	} else {
-
-		$output = buildOption($all_teams);
-
-		return $output;
-	}
+	return $output->r_display();
 }
 
 function addUsername($con) // Achievementverwaltung --> Achievements zuweisen
 {
+	$ac = new Achievement($con);
+	$output = new template("admin/part/ac_table_content.html");
+	
 	$userlist = getBasicUserData($con);
-	$ac_option = getAllAchievementByName($con);
-	
-	$selectable_option = buildOption($ac_option);
-	$selectable_user = buildOption($userlist);
 
-	$tm_part = file_get_contents("template/admin/part/ac_table_content.html");
-	
-	$output = str_replace(array("--USER--","--AC_NAME--"),array($selectable_user,$selectable_option),$tm_part);
+	$output->assign("user",buildOption($userlist));
+	$output->assign("ac_name",buildOption($ac->getAllAchievementByName()));
 
-	return $output;
+	return $output->r_display();
 }
 
 function displayAcCategories($con)
 {
-	$categories  = getAchievementCategories($con);
+	$ac = new Achievement($con);
 
-	$selectable_categories = buildOption($categories);
+	$selectable_categories = buildOption($ac->getAcCategories());
 
 	return $selectable_categories;
 }
 
 function displayAcTrigger($con)
 {
-	$trigger = getAchievementTrigger($con);
+	$ac = new Achievement($con);
 
-	$selectable_trigger = buildOption($trigger);
+	$selectable_trigger = buildOption($ac->getAcTrigger());
 
 	return $selectable_trigger;
 }
 
 function displayTicketStatus($con)
 {
-	$ticket_status = getUserTicketRelation($con);
+	$output = new template("admin/part/ticket_status_table.html");
+	$player_ids = getAllUserIDs($con);
+	$ticket_data = array();
 	
-	foreach ($ticket_status as $status)
+	foreach ($player_ids as $id)
 	{
-		if (empty($status["ticket_active"]))
-		{
-			$param = "Inaktiv";
-		} else {
-			$param = "Aktiv";
-		}
-		
-		$table_template = file_get_contents("template/part/basic_table.html");
-		
-		if(!isset($output))
-		{
-			$output = str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		} else {
-			$output .= str_replace(array("--VALUE_1--","--VALUE_2--"),array($status["name"],$param),$table_template);
-		}
+		$player = new Player($con,$id);
+
+		array_push($ticket_data,array("username" => $player->getPlayerUsername(),"ticket_active" => $player->getPlayerTicketActive()));
 	}
+
+	$output->assign_array($ticket_data);
 	
-	return $output;
+	return $output->r_display();
 }
 
 function displaySingleGame($con)
 {
+	$output = new template("admin/part/game_table.html");
+	$game_output = array();
+
 	$game_data = getGameData($con);
 
 	foreach ($game_data as $game)
 	{
-		$singleGame_template = file_get_contents("template/admin/part/game_table.html");
-
 		if($game["has_table"] == "1")
 		{
-			$selected_option = array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein"));
+			$selected_option = array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein"));
 		} else {
-			$selected_option = array(array("ID"=>"0","name"=>"Nein"),array("ID"=>"1","name"=>"Ja"));
+			$selected_option = array(array("id"=>"0","name"=>"Nein"),array("id"=>"1","name"=>"Ja"));
 		}
 
+		$t_name = str_replace(" ", "", $game["name"]);
 		$has_table = buildOption($selected_option);
 
 		if(empty($game["icon"]))
@@ -222,22 +154,28 @@ function displaySingleGame($con)
 			$banner = "<img src='images/banner/" . $game["banner"] . "' height='64'>";
 		}
 
+		if(empty($game["short_title"]))
+		{
+			$gst = "";
+		} else {
+			$gst = $game["short_title"];
+		}
+
 		if(empty($game["addon"]))
 		{
-			$addon = buildOption(array(array("ID"=>"NULL","name"=>"Keine Angaben"),array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"NULL","name"=>"Keine Angaben"),array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		} else {
-			$addon = buildOption(array(array("ID"=>"1","name"=>"Ja"),array("ID"=>"0","name"=>"Nein")));
+			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
+		
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		array_push($game_output,$transfer);
 
-		if(!isset($output))
-		{
-			$output = str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		} else {
-			$output .= str_replace(array("--ID--","--NAME--","--RAW_NAME--","--ADDON--","--ICON--","--BANNER--","--HAS_TABLE--"), array($game["ID"],$game["name"],$game["raw_name"],$addon,$icon,$banner,$has_table),$singleGame_template);
-		}
 	}
+	
+	$output->assign_array($game_output);
 
-	return $output;
+	return $output->r_display();
 }
 
 function validateInput($new_game)
@@ -267,9 +205,8 @@ function verifyKey($con, int $game_id, string $key)
 function verifyGame($con,$new_game,$new_raw_name)
 {
 	$games = getGames($con);
-	$raw_name = getRawName($con);
 
-	if (in_array($new_game, $games) && in_array($new_raw_name,$raw_name))
+	if (in_array($new_game, $games))
 	{
 		return true;
 	} else {
@@ -287,26 +224,6 @@ function emptyText($data)
 	}
 
 	return $text;
-}
-
-function validateImageFile($filesize,$filetype)
-{
-	if(isset($filesize) && ($filesize != 0))
-	{
-		if($filesize > 5000000)
-		{
-			return "ERR_ADMIN_FILE_TO_HUGE";
-		} else {
-			if(($filetype !== "jpg") && ($filetype !== "png") && ($filetype !== "jpeg") && ($filetype !== "gif"))
-			{
-				return "ERR_ADMIN_NO_IMAGE_TYPE";
-			} else {
-				return "1";
-			}
-		}
-	} else {
-		return "ERR_ADMIN_NO_IMAGE";
-	}
 }
 
 function createGame($con,$new_game,$new_raw_name)
@@ -487,6 +404,183 @@ function setUpNewTournament($con,$vote_id,$game_id,$tm_from,$tm_to,$mode,$mode_d
                 return "ERR_ADMIN_DB";
             }
 		}
+	}
+}
+
+function archivTmPaarung($con,$tm_id)
+{
+	$pairs = getAllPairsFromTournament($con,$tm_id);
+
+	foreach ($pairs as $pair)
+	{
+		$pair_id = $pair["ID"];
+		$team_1 = $pair["team_1"];
+		$team_2 = $pair["team_2"];
+		$stage = $pair["stage"];
+		$successor = $pair["successor"];
+		$result_team1 = $pair["result_team1"];
+		$result_team2 = $pair["result_team2"];
+
+		$sql = "INSERT INTO archiv_tm_paarung VALUES ('$pair_id','$team_1','$team_2','$stage','$tm_id','$successor','$result_team1','$result_team2')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_paarung WHERE ID = '$pair_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+function archivTmGamerslist($con,$tm_id)
+{
+	$gamerslist_data = getAllGamerslistDataFromTournament($con,$tm_id);
+
+	foreach ($gamerslist_data as $player)
+	{
+		$gl_id = $player["ID"];
+		$player_id = $player["player_id"];
+
+		$sql = "INSERT INTO archiv_tm_gamerslist VALUES ('$gl_id','$tm_id','$player_id')";
+		if(!(mysqli_query($con,$sql)))
+		{
+			break;
+			return false;
+		} else {
+			$sql = "DELETE FROM tm_gamerslist WHERE ID = '$gl_id'";
+			if(!(mysqli_query($con,$sql)))
+			{
+				break;
+				return false;
+			}
+		}
+		
+	}
+
+	return true;
+}
+
+function archivTmPeriod($con,$period_id)
+{
+	$period = getTournamentRawPeriod($con,$period_id);
+
+	$time_from = $period["time_from"];
+	$time_to = $period["time_to"];
+
+	$sql = "INSERT INTO archiv_tm_period VALUES ('$period_id','$time_from','$time_to')";
+	if(!(mysqli_query($con,$sql)))
+	{
+		return false;
+	} else {
+		$sql = "DELETE FROM tm_period WHERE ID = '$period_id'";
+		if(!(mysqli_query($con,$sql)))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function displayWoWRegion($con)
+{
+	$wow_regions = getWowRegions($con);
+
+	if(!empty($wow_regions))
+	{
+		$tpl = new template("admin/part/wow_region_tpl.html");
+		if(count($wow_regions) == 2)
+		{
+			$region_array = array("region_id"=>$wow_regions["region_id"],"region_name"=>$wow_regions["region_name"]);
+		} else {
+			foreach ($wow_regions as $wow_region)
+			{
+				$single_region = array("region_id"=>$wow_region["region_id"],"region_name"=>$wow_region["region_name"]);
+				array_push($region_array,$single_region);
+			}
+		}
+				
+		$tpl->assign_array($region_array);
+		return $tpl->r_display();
+
+	} else {
+		
+		$tpl = new template("admin/part/empty_data_table_tpl.html");
+		$tpl->assign("empty_data_text","Es wurden bisher keine Regionen angelegt.");
+		return $tpl->r_display();
+
+	}
+}
+
+function displayWoWAccounts($con,$con_wow,$con_char)
+{
+	$wow_accounts = getAllWowAccounts($con);
+	$account_array = array();
+	
+	if(!empty($wow_accounts))
+	{
+		$tpl = new template("admin/part/wow_accounts_list.html");
+		foreach ($wow_accounts as $wow_account)
+		{
+			$char_array = array();
+			$account_id = getWowId($con_wow,$wow_account);
+			$chars = getChars($con_char,$account_id);
+			$tpl_char = new template("admin/part/wow_account_chars.html");
+
+			if(!empty($chars))
+			{
+				foreach ($chars as $char)
+				{
+					$single_char = array("name"=>$char["name"],"account_id"=>$account_id);
+					array_push($char_array,$single_char);
+				}
+
+				$tpl_char->assign_array($char_array);
+				
+			} else {
+				$char_data = "Es sind bisher keine Charaktere erstellt worden.";
+				$tpl_char->assign("name",$char_data);
+			}
+
+			$single_account = array("account_id"=>$account_id,"account_name"=>$wow_account,"character"=>$tpl_char->r_display());
+			array_push($account_array,$single_account);	
+		}
+		$tpl->assign_array($account_array);		
+		return $tpl->r_display();
+	} else {
+		
+		$tpl = new template("admin/part/empty_page.html");
+		$tpl->assign("empty_page","Es wurden bisher keine Accounts angelegt.");
+		return $tpl->r_display();
+	}
+}
+
+function displayLans($con)
+{
+	$lans = getLans($con);
+	$lan_array = array();
+
+	foreach ($lans as $lan)
+	{
+		$tpl = new template("admin/part/lan_table.html");
+
+		$single_lan = array("id"=>$lan["ID"],"lan_title"=>$lan["title"],"lan_from"=>$lan["date_from"],"lan_to"=>$lan["date_to"]);
+		array_push($lan_array,$single_lan);
+	}
+
+	if(empty($lan_array))
+	{
+		return "Es sind bisher keine Lans angelegt worden.";
+	} else {
+		$tpl->assign_array($lan_array);
+		return $tpl->r_display();
 	}
 }
 
