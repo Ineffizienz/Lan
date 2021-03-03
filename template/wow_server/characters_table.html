@@ -23,8 +23,14 @@
     <div id="close_password_popup">
         <i class="fa fa-times" aria-hidden="true" style="text-align:right;cursor:pointer;color:red;"></i>
     </div>
-    <h2 style="margin-top:0;color:#fff;">Passwort zurücksetzen</h2>
-    <div style="display:grid;grid-template-columns: auto auto;row-gap:5%;">
+    <h2 style="margin-top:0;margin-bottom:10px;color:#fff;">Passwort zurücksetzen</h2>
+    <div class="error_container" style="display:none;background-color:#ff6961;text-align:center;border-radius:2px;">
+        <p style="line-height:25px;">Die eingegebenen Passwörter stimmen nicht überein.</p>
+    </div>
+    <div class="placeholder_container">
+        <p style="line-height:25px;">&nbsp;</p>
+    </div>
+    <div style="display:grid;grid-template-columns: auto auto;row-gap:5%;margin-bottom:3%;">
         <div>
             <label for="new_password">Neues Passwort:</label>
         </div>
