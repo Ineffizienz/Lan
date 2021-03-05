@@ -1003,6 +1003,17 @@ function getVoteById($con,$vote_id)
 	return $tm_vote;
 }
 
+function getMaxStagePerTm($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT MAX(stage) AS stage FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_stage = $row["stage"];
+	}
+
+	return $last_stage;
+}
+
 /*
 ###########################################################
 ######################## Tournaments ######################

@@ -479,6 +479,7 @@ function displayTournamentLocked($con,$tm_id)
 {
 	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
+	$last_stage = getMaxStagePerTm($con,$tm_id);
 	$part = new template("tournament/locked_tm.html");
 	$part_stages = new template("tournament/tm_section.html");
 
@@ -488,37 +489,55 @@ function displayTournamentLocked($con,$tm_id)
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
 		$part_pair = new template("tournament/player_pair.html");
 
-		foreach ($pairs_by_stages as $pair)
+		if($stage == $last_stage)
 		{
-			$pair_id = $pair["ID"];
-			$player_1 = $pair["team_1"];
-			$player_2 = $pair["team_2"];
-
-			$successor = getSuccessorFromPair($con,$pair_id);
-
-			$player_1 = getUsernameFromGamerslist($con,$player_1);
-			if($player_2 == "-1")
+			$final = TournamentFinalHandling($con,$pairs_by_stages);
+			break;
+		} else {
+			foreach ($pairs_by_stages as $pair)
 			{
-				$player_2 = "<i>Wildcard</i>";
-			} else {
-				$player_2 = getUsernameFromGamerslist($con,$player_2);
-			}
+				$pair_id = $pair["ID"];
+				$player_1 = $pair["team_1"];
+				$player_2 = $pair["team_2"];
+				$match_result = getResultFromMatch($con,$pair_id);
 
-			$match_result = getResultFromMatch($con,$pair_id);
-			if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
-			{
-				$result_team1 = "0";
-				$result_team2 = "0";
-			} else {
-				$result_team1 = $match_result["result_team1"];
-				$result_team2 = $match_result["result_team2"];
-			}
+				if($player_1 == "0" || ($player_2 == "0" || $player_2 == "-1"))
+				{
+					$matchup_status = "";
+				} elseif (($match_result["result_team1"] !== NULL) && ($match_result["result_team2"] !== NULL)) {
+					$matchup_status = "";
+				} else {
+					$matchup_status = "current";
+				}
 
-			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
-			array_push($stage_array,$pair_array);
+				if(($stage > "1") && ($player_2 == "-1"))
+				{
+					break;
+				} else {
+					$player_1 = getUsernameFromGamerslist($con,$player_1);
+					if(($player_2 == "-1") && ($stage == "1"))
+					{
+						$player_2 = "<i>Wildcard</i>";
+					} else {
+						$player_2 = getUsernameFromGamerslist($con,$player_2);
+					}
+
+					if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
+					{
+						$result_team1 = "0";
+						$result_team2 = "0";
+					} else {
+						$result_team1 = $match_result["result_team1"];
+						$result_team2 = $match_result["result_team2"];
+					}
+
+					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
+					array_push($stage_array,$pair_array);
+				}	
+			}
 		}
 		$part_pair->assign_array($stage_array);
-		$step = array("player_pair" => $part_pair->r_display());
+		$step = array("stage" => $stage, "player_pair" => $part_pair->r_display());
 		array_push($tournament_array,$step);
 
 	}
@@ -527,9 +546,35 @@ function displayTournamentLocked($con,$tm_id)
 
 	$part_stages->assign_array($tournament_array);
 	$part->assign("banner",$tm_banner);
+	$part->assign_array($final);
 	$part->assign("section",$part_stages->r_display());
 
 	return $part->r_display();
+}
+
+function TournamentFinalHandling($con,$pairs_by_stages)
+{
+	$pairs_by_stages = array_shift($pairs_by_stages);
+	$final_player_1 = getUsernameFromGamerslist($con,$pairs_by_stages["team_1"]);
+	$final_player_2 = getUsernameFromGamerslist($con,$pairs_by_stages["team_2"]);
+	$final_match_result = getResultFromMatch($con,$pairs_by_stages["ID"]);
+	if(empty($final_match_result["result_team1"]) && empty($final_match_result["result_team2"]))
+	{
+		$final_result_team1 = "0";
+		$final_result_team2 = "0";
+	} else {
+		$final_result_team1 = $final_match_result["result_team1"];
+		$final_result_team2 = $final_match_result["result_team2"];
+	}
+
+	if($final_result_team1 > $final_result_team2)
+	{
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "win", "winner_2" => "");		
+	} else {
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_2" => "win", "winner_1" => "");
+	}
+
+	return $final;
 }
 
 function displayTournamentTree($con):string
