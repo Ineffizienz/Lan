@@ -668,7 +668,7 @@ function disableButton(ele, event)
 
 	//Popup
 	$("#reset_password").on("click",displayResetPasswordPopup);
-	$(".game-spacer").on("click",displayResultPopup);
+	$(".matchup").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
 	$("#close_password_popup").on("click",closePasswordPopup);
 });

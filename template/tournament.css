@@ -10,7 +10,7 @@
 .round-2 .matchup {margin:0; height: 85px;padding: 29% 0;}
 .round-3 .matchup {margin:0; height: 85px; padding: 40% 0;}
 .round-details {font-family: 'Roboto Condensed', sans-serif; font-size: 13px; color: #2C7399;text-transform: uppercase;text-align: center;height: 40px;}
-.matchup {margin:0;width: 100%;padding: 10px 0;height:85px;-webkit-transition: all 0.2s;transition: all 0.2s;font-size:1.2em;list-style: none;}
+.matchup {margin:0;width: 100%;padding: 10px 0;height:85px;-webkit-transition: all 0.2s;transition: all 0.2s;font-size:1.2em;list-style: none;cursor:pointer;}
 .opponent {padding: 0 5px;margin: 3px 0;height: 35px; line-height: 35px;white-space: nowrap; overflow: hidden;position: relative;}
 .score {font-size: 11px;text-transform: uppercase;float: right;color: #2C7399;font-weight: bold;font-family: 'Verdana', sans-serif;position: absolute;right: 5px;}
 .champion li.win {background-color: gold;}
