@@ -1308,49 +1308,6 @@ main
 {
 	display:none;
 }
-  
-  /*
-   *  General Styles
-  */
-  .game
-  {
-	padding: 0 5px;margin: 3px 0;height: 25px; line-height: 25px;white-space: nowrap; overflow: hidden;
-  }
-  li.game{
-    background-color: #fff;box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);opacity: 1;
-  }
-  li.game span{
-    float:right;
-    margin-right:5px;
-  }
-  .round .li-spacer {
-	  flex-grow: .5;
-  }
- 
-    
-	li.game-top
-	{ 
-		/*border-bottom:3px solid #aaa; */
-	}
-  
-    li.game-spacer{
-		cursor:pointer; 
-      /*border-right:3px solid #aaa;*/
-      height:40px;
-    }
-
-	li.game-spacer:hover
-	{
-		background-color: #C0C0C0;
-		text-align:center;
-		font-style:italic;
-	}
-  
-    li.game-bottom{ 
-	/*margin-bottom: 10px;  
-	border-top:3px solid #aaa;*/
-    }
-
 
 A:link
 {

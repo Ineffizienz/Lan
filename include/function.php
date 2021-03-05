@@ -549,6 +549,7 @@ function displayTournamentLocked($con,$tm_id)
 	$part->assign_array($final);
 	$part->assign("section",$part_stages->r_display());
 
+
 	return $part->r_display();
 }
 
@@ -570,6 +571,8 @@ function TournamentFinalHandling($con,$pairs_by_stages)
 	if($final_result_team1 > $final_result_team2)
 	{
 		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "win", "winner_2" => "");		
+	} elseif ($final_result_team1 == $final_result_team2) {
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_2" => "", "winner_1" => "");
 	} else {
 		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_2" => "win", "winner_1" => "");
 	}
