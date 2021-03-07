@@ -491,7 +491,7 @@ function displayTournamentLocked($con,$tm_id)
 
 		if($stage == $last_stage)
 		{
-			$final = TournamentFinalHandling($con,$pairs_by_stages);
+			$final = TournamentFinalHandling($con,$tm_id,$pairs_by_stages);
 			break;
 		} else {
 			foreach ($pairs_by_stages as $pair)
@@ -553,8 +553,10 @@ function displayTournamentLocked($con,$tm_id)
 	return $part->r_display();
 }
 
-function TournamentFinalHandling($con,$pairs_by_stages)
+function TournamentFinalHandling($con,$tm_id,$pairs_by_stages)
 {
+	$tm_winner = getTmWinner($con,$tm_id);
+
 	$pairs_by_stages = array_shift($pairs_by_stages);
 	$final_player_1 = getUsernameFromGamerslist($con,$pairs_by_stages["team_1"]);
 	$final_player_2 = getUsernameFromGamerslist($con,$pairs_by_stages["team_2"]);
@@ -568,13 +570,13 @@ function TournamentFinalHandling($con,$pairs_by_stages)
 		$final_result_team2 = $final_match_result["result_team2"];
 	}
 
-	if($final_result_team1 > $final_result_team2)
+	if($tm_winner == "0")
 	{
-		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "win", "winner_2" => "");		
-	} elseif ($final_result_team1 == $final_result_team2) {
-		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_2" => "", "winner_1" => "");
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "", "winner_2" => "");		
+	} elseif ($tm_winner == $final_player_1) {
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "win", "winner_2" => "");
 	} else {
-		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_2" => "win", "winner_1" => "");
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "", "winner_2" => "win");
 	}
 
 	return $final;

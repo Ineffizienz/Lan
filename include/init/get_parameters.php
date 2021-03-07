@@ -1605,6 +1605,17 @@ function getTournamentWildcardPlayer($con,$tm_id,$stage)
 	return $wildcard_player;
 }
 
+function getTmWinner($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT tm_winner_team_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$winner = $row["tm_winner_team_id"];
+	}
+
+	return $winner;
+}
+
 /*
 ###########################################################
 ######################## Archivierung #####################
