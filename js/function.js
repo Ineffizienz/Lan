@@ -18,6 +18,7 @@ function displayResultPopup(event)
 	event.preventDefault();
 	
 	var tm_id = $(this).attr("data-tm-id");
+	var stage = $(this).attr("data-stage");
 	var pair_id = $(this).attr("data-pair-id");
 	var player_1 = $(this).attr("data-player-first");
 	var player_2 = $(this).attr("data-player-second");
@@ -27,6 +28,7 @@ function displayResultPopup(event)
 		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
 		{
 			$("#tm_id").val(tm_id);
+			$("#stage").val(stage);
 			$("#pair_id").val(pair_id);
 			$("#player_1").html(player_1);
 			$("#player_2").html(player_2);
@@ -381,6 +383,7 @@ $(document).ready(function(){
 
 		var tm_id = $("#tm_id").val();
 		var pair_id = $("#pair_id").val();
+		var stage = $("#stage").val();
 		var result_1 = $("#result_1").val();
 		var result_2 = $("#result_2").val();
 
@@ -390,7 +393,7 @@ $(document).ready(function(){
 		} else {
 			if(($.isNumeric(result_1)) && ($.isNumeric(result_2)))
 			{
-				obj = {tm_id, pair_id, result_1, result_2};
+				obj = {tm_id, stage, pair_id, result_1, result_2};
 
 				closeResultPopup(event);
 
@@ -668,7 +671,7 @@ function disableButton(ele, event)
 
 	//Popup
 	$("#reset_password").on("click",displayResetPasswordPopup);
-	$(".game-spacer").on("click",displayResultPopup);
+	$(".matchup").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
 	$("#close_password_popup").on("click",closePasswordPopup);
 });

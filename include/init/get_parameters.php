@@ -1003,6 +1003,17 @@ function getVoteById($con,$vote_id)
 	return $tm_vote;
 }
 
+function getMaxStagePerTm($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT MAX(stage) AS stage FROM tm_paarung WHERE tournament = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$last_stage = $row["stage"];
+	}
+
+	return $last_stage;
+}
+
 /*
 ###########################################################
 ######################## Tournaments ######################
@@ -1157,6 +1168,11 @@ function getPlayerFromGamerslist($con,$tm_id)
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$player_name[] = $row["name"];
+	}
+
+	if(empty($player_name))
+	{
+		$player_name = array();
 	}
 
 	return $player_name;
@@ -1587,6 +1603,17 @@ function getTournamentWildcardPlayer($con,$tm_id,$stage)
 	}
 
 	return $wildcard_player;
+}
+
+function getTmWinner($con,$tm_id)
+{
+	$result = mysqli_query($con,"SELECT tm_winner_team_id FROM tm WHERE ID = '$tm_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$winner = $row["tm_winner_team_id"];
+	}
+
+	return $winner;
 }
 
 /*
