@@ -178,7 +178,7 @@ function getGameData($con) // function.php/createCheckbox, admin_func.php/displa
 		- admin_func.php/displaySingleGame
 	*/
 
-	$result = mysqli_query($con,"SELECT ID, name, short_title, icon, banner, has_table FROM games");
+	$result = mysqli_query($con,"SELECT ID, name, short_title, icon, banner, has_table, tm_game FROM games");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$gameData[] = $row;

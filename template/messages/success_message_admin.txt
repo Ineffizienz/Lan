@@ -29,3 +29,4 @@ SUC_ADMIN_DELETE_REGION: Die Region wurde erfolgreich gelöscht.
 SUC_ADMIN_UPDATE_RI: Die Regions-ID wurde erfolgreich geändert.
 SUC_ADMIN_UPDATE_REGION_NAME: Der Regionsname wurde erfolgreich geändert.
 SUC_ADMIN_DELETE_WOW_CHAR: Charakter erfolgreich gelöscht.
+SUC_ADMIN_GAME_IS_TOURNAMENT: Das Spiel ist ein Turnierspiel.
