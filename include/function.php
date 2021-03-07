@@ -627,32 +627,29 @@ function matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2)
 			{
 				return "ERR_NO_DRAW";
 			} else {
-				$last_stage = getMaxStagePerTm($con,$tm_id);
-				if($last_stage == $stage)
+				$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID ='$pair_id'";
+				if(mysqli_query($con,$sql))
 				{
-					$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID ='$pair_id'";
-					if(mysqli_query($con,$sql))
+					$last_stage = getMaxStagePerTm($con,$tm_id);
+					if($last_stage == $stage)
 					{
-						$opponents = getGamerslistIdByPair($con,$pair_id);
-						if($result_1 > $result_2)
-						{
-							$winner = $opponents["team_1"];
-						} else {
-							$winner = $opponents["team_2"];
-						}
+							$opponents = getGamerslistIdByPair($con,$pair_id);
+							if($result_1 > $result_2)
+							{
+								$winner = $opponents["team_1"];
+							} else {
+								$winner = $opponents["team_2"];
+							}
 
-						$sql = "UPDATE tm SET tm_winner_team_id = '$winner' WHERE tm = '$tm_id'";
-						if(mysqli_query($con,$sql))
-						{
-							return "SUC_ENTER_RESULT";
-						} else {
-							return "ERR_DB";
-						}
-					}
-				} else {
-					$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$pair_id'";
-					if(mysqli_query($con,$sql))
-					{
+							$sql = "UPDATE tm SET tm_winner_team_id = '$winner' WHERE tm = '$tm_id'";
+							if(mysqli_query($con,$sql))
+							{
+								return "SUC_ENTER_RESULT";
+							} else {
+								return "ERR_DB";
+							}
+					
+					} else {
 						$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
 						$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
 						if(mysqli_query($con,$sql))
@@ -670,11 +667,10 @@ function matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2)
 						} else {
 							return "ERR_DB";
 						}
-					} else {
-						return "ERR_DB";
 					}
-				}
-				
+				} else {
+					return "ERR_DB";
+				}				
 			}
 		}
 	}
