@@ -1,12 +1,8 @@
 function gameSpacerHover ()
 {
 	$(".game-spacer").on({mouseover: function () {
-		$(this).css("background-color","#C0C0C0");
-		$(this).css("text-align","center");
-		$(this).css("font-style","italic");
 		$(this).html("Ergebnis eingeben.");
 	}, mouseleave: function() {
-		$(this).css("background-color","#e5e5e5");
 		$(this).html("");
 	}});
 	
@@ -22,6 +18,7 @@ function displayResultPopup(event)
 	event.preventDefault();
 	
 	var tm_id = $(this).attr("data-tm-id");
+	var stage = $(this).attr("data-stage");
 	var pair_id = $(this).attr("data-pair-id");
 	var player_1 = $(this).attr("data-player-first");
 	var player_2 = $(this).attr("data-player-second");
@@ -31,6 +28,7 @@ function displayResultPopup(event)
 		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
 		{
 			$("#tm_id").val(tm_id);
+			$("#stage").val(stage);
 			$("#pair_id").val(pair_id);
 			$("#player_1").html(player_1);
 			$("#player_2").html(player_2);
@@ -40,6 +38,13 @@ function displayResultPopup(event)
 	}
 }
 
+function displayResetPasswordPopup(event)
+{
+	event.preventDefault();
+
+	$(".reset_password_popup").show();
+}
+
 function closeResultPopup(event)
 {
 	event.preventDefault();
@@ -47,6 +52,17 @@ function closeResultPopup(event)
 	$(".tm_result_popup").hide();
 	$("#result_1").val("");
 	$("#result_2").val("");
+}
+
+function closePasswordPopup(event)
+{
+	event.preventDefault();
+
+	$(".reset_password_popup").hide();
+	$(".error_container").hide();
+	$(".placeholder_container").show();
+	$("#new_password").val("");
+	$("#new_password_checkup").val("");
 }
 
 $(document).ready(function(){
@@ -141,6 +157,29 @@ $(document).ready(function(){
 			postAjax(obj,getEndpoint("reg_wow_account"),sucRegAcc);
 		} else {
 			throwError(validate);
+		}
+	}
+
+	function getNewPassword(event)
+	{
+		event.preventDefault();
+		var new_password = $("#new_password").val();
+		var new_password_checkup = $("#new_password_checkup").val();
+
+		if((new_password == new_password_checkup) && !(new_password === "") && !(new_password_checkup === ""))
+		{
+			var account_name = $(this).attr("data-account-name");
+
+			obj = {account_name,new_password};
+
+			postAjax(obj,getEndpoint("reset_password"),displayResponse);
+			
+			$(".reset_password_popup").hide();
+			$("#new_password").val("")
+			$("new_password_checkup").val("");
+
+		} else {
+			errorHandling();
 		}
 	}
 
@@ -344,6 +383,7 @@ $(document).ready(function(){
 
 		var tm_id = $("#tm_id").val();
 		var pair_id = $("#pair_id").val();
+		var stage = $("#stage").val();
 		var result_1 = $("#result_1").val();
 		var result_2 = $("#result_2").val();
 
@@ -353,7 +393,7 @@ $(document).ready(function(){
 		} else {
 			if(($.isNumeric(result_1)) && ($.isNumeric(result_2)))
 			{
-				obj = {tm_id, pair_id, result_1, result_2};
+				obj = {tm_id, stage, pair_id, result_1, result_2};
 
 				closeResultPopup(event);
 
@@ -627,9 +667,12 @@ function disableButton(ele, event)
 	$("#join_tm").on("click",getJointPlayerID);
 	$("#send_result").on("click",getMatchResults);
 	$("#leave_tm").on("click",getLeaveTournament);
+	$("#save_new_password").on("click",getNewPassword);
 
 	//Popup
-	$(".game-spacer").on("click",displayResultPopup);
+	$("#reset_password").on("click",displayResetPasswordPopup);
+	$(".matchup").on("click",displayResultPopup);
 	$("#result_close_popup").on("click",closeResultPopup);
+	$("#close_password_popup").on("click",closePasswordPopup);
 });
 

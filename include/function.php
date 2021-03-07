@@ -257,7 +257,16 @@ function selectWowAccount($con,$con_wow,$con_char,$player)
 				{
 					$race = defineRace($chars["race"]);
 					$class = defineClass($chars["class"]);
-					$loc = defineLocation($chars["map"]);
+					if($chars["map"] == 0)
+					{
+						$loc = "Nicht dem Server beigetreten.";
+					} else {
+						$loc = getWoWRegionById($con,$chars["map"]);
+						if(empty($loc))
+						{
+							$loc = "Region wurde noch nicht implementiert.";
+						}
+					}
 
 					$character = array("name" => $chars["name"], "race" => $race, "class" => $class, "level" => $chars["level"], "location" => $loc);
 					array_push($character_list,$character);
@@ -352,22 +361,6 @@ function defineClass($class_id)
 	return $class;
 }
 
-function defineLocation($loc_id)
-{
-	switch ($loc_id) {
-		case "0":
-			$loc = "Nicht dem Server beigetreten.";
-		break;
-		case "571":
-			$loc = "Dalaran";
-		break;
-		default:
-			$loc = "Nicht implementiert.";
-	}
-
-	return $loc;
-}
-
 function displayServerStatus($con_wow)
 {
 	$realm_flag = getServerStatus($con_wow);
@@ -449,7 +442,7 @@ function displayRunningVotes($con)
 
 function displayTournaments($con)
 {
-	$tpl = new template("part/overview_tournament.html");
+	$tpl = new template("tournament/overview_tournament.html");
 
 	$tournaments = getTournamentsOverview($con);
 
@@ -461,13 +454,18 @@ function displayTournaments($con)
 
 function displayTournamentParticipants($con,$tm_id)
 {
-	$tpl = new template("part/unlocked_tm.html");
+	$tpl = new template("tournament/unlocked_tm.html");
 	
 	$tm_player = getPlayerFromGamerslist($con,$tm_id);
 	$tm_banner = getTournamentBanner($con,$tm_id);
 	$tm_register = getTournamentEndRegister($con,$tm_id);
 
-	$player_list = implode(", ",$tm_player);
+	if(empty($tm_player))
+	{
+		$player_list = "Es sind keine Spieler registriert.";
+	} else {
+		$player_list = implode(", ",$tm_player);
+	}
 
 	$tpl->assign("tm_id",$tm_id);
 	$tpl->assign("player_list",$player_list);
@@ -481,46 +479,65 @@ function displayTournamentLocked($con,$tm_id)
 {
 	$tournament_array = array();
 	$stages = getStages($con,$tm_id);
-	$part = new template("part/locked_tm.html");
-	$part_stages = new template("part/tm_section.html");
+	$last_stage = getMaxStagePerTm($con,$tm_id);
+	$part = new template("tournament/locked_tm.html");
+	$part_stages = new template("tournament/tm_section.html");
 
 	foreach ($stages as $stage)
 	{
 		$stage_array = array();
 		$pairs_by_stages = getPairsByStages($con,$tm_id,$stage);
-		$part_pair = new template("part/player_pair.html");
+		$part_pair = new template("tournament/player_pair.html");
 
-		foreach ($pairs_by_stages as $pair)
+		if($stage == $last_stage)
 		{
-			$pair_id = $pair["ID"];
-			$player_1 = $pair["team_1"];
-			$player_2 = $pair["team_2"];
-
-			$successor = getSuccessorFromPair($con,$pair_id);
-
-			$player_1 = getUsernameFromGamerslist($con,$player_1);
-			if($player_2 == "-1")
+			$final = TournamentFinalHandling($con,$tm_id,$pairs_by_stages);
+			break;
+		} else {
+			foreach ($pairs_by_stages as $pair)
 			{
-				$player_2 = "<i>Wildcard</i>";
-			} else {
-				$player_2 = getUsernameFromGamerslist($con,$player_2);
-			}
+				$pair_id = $pair["ID"];
+				$player_1 = $pair["team_1"];
+				$player_2 = $pair["team_2"];
+				$match_result = getResultFromMatch($con,$pair_id);
 
-			$match_result = getResultFromMatch($con,$pair_id);
-			if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
-			{
-				$result_team1 = "0";
-				$result_team2 = "0";
-			} else {
-				$result_team1 = $match_result["result_team1"];
-				$result_team2 = $match_result["result_team2"];
-			}
+				if($player_1 == "0" || ($player_2 == "0" || $player_2 == "-1"))
+				{
+					$matchup_status = "";
+				} elseif (($match_result["result_team1"] !== NULL) && ($match_result["result_team2"] !== NULL)) {
+					$matchup_status = "";
+				} else {
+					$matchup_status = "current";
+				}
 
-			$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
-			array_push($stage_array,$pair_array);
+				if(($stage > "1") && ($player_2 == "-1"))
+				{
+					break;
+				} else {
+					$player_1 = getUsernameFromGamerslist($con,$player_1);
+					if(($player_2 == "-1") && ($stage == "1"))
+					{
+						$player_2 = "<i>Wildcard</i>";
+					} else {
+						$player_2 = getUsernameFromGamerslist($con,$player_2);
+					}
+
+					if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
+					{
+						$result_team1 = "0";
+						$result_team2 = "0";
+					} else {
+						$result_team1 = $match_result["result_team1"];
+						$result_team2 = $match_result["result_team2"];
+					}
+
+					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "stage"=> $stage, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
+					array_push($stage_array,$pair_array);
+				}	
+			}
 		}
 		$part_pair->assign_array($stage_array);
-		$step = array("player_pair" => $part_pair->r_display());
+		$step = array("stage" => $stage, "player_pair" => $part_pair->r_display());
 		array_push($tournament_array,$step);
 
 	}
@@ -529,9 +546,40 @@ function displayTournamentLocked($con,$tm_id)
 
 	$part_stages->assign_array($tournament_array);
 	$part->assign("banner",$tm_banner);
+	$part->assign_array($final);
 	$part->assign("section",$part_stages->r_display());
 
+
 	return $part->r_display();
+}
+
+function TournamentFinalHandling($con,$tm_id,$pairs_by_stages)
+{
+	$tm_winner = getTmWinner($con,$tm_id);
+
+	$pairs_by_stages = array_shift($pairs_by_stages);
+	$final_player_1 = getUsernameFromGamerslist($con,$pairs_by_stages["team_1"]);
+	$final_player_2 = getUsernameFromGamerslist($con,$pairs_by_stages["team_2"]);
+	$final_match_result = getResultFromMatch($con,$pairs_by_stages["ID"]);
+	if(empty($final_match_result["result_team1"]) && empty($final_match_result["result_team2"]))
+	{
+		$final_result_team1 = "0";
+		$final_result_team2 = "0";
+	} else {
+		$final_result_team1 = $final_match_result["result_team1"];
+		$final_result_team2 = $final_match_result["result_team2"];
+	}
+
+	if($tm_winner == "0")
+	{
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "", "winner_2" => "");		
+	} elseif ($tm_winner == $final_player_1) {
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "win", "winner_2" => "");
+	} else {
+		$final = array("team_1" => $final_player_1, "team_2" => $final_player_2, "final_score_1" => $final_result_team1, "final_score_2" => $final_result_team2, "winner_1" => "", "winner_2" => "win");
+	}
+
+	return $final;
 }
 
 function displayTournamentTree($con):string
@@ -564,7 +612,7 @@ function displayResultPopup()
 	return $tpl->r_display();
 }
 
-function matchResultHandling($con,$pair_id,$result_1,$result_2)
+function matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
 	$successor_result = getResultFromMatch($con,$pair_id);
@@ -581,29 +629,50 @@ function matchResultHandling($con,$pair_id,$result_1,$result_2)
 			{
 				return "ERR_NO_DRAW";
 			} else {
-				$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$pair_id'";
+				$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID ='$pair_id'";
 				if(mysqli_query($con,$sql))
 				{
-					$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
-					$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
-					if(mysqli_query($con,$sql))
+					$last_stage = getMaxStagePerTm($con,$tm_id);
+					if($last_stage == $stage)
 					{
-						$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
-						$team_1 = $team_gamerslist["team_1"];
-						$team_2 = $team_gamerslist["team_2"];
-						$second_pair = getSecondPairId($con,$pair_id,$successor_id);
-						if($result_1 > $result_2)
-						{
-							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
-						} else {
-							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
-						} 
+							$opponents = getGamerslistIdByPair($con,$pair_id);
+							if($result_1 > $result_2)
+							{
+								$winner = $opponents["team_1"];
+							} else {
+								$winner = $opponents["team_2"];
+							}
+
+							$sql = "UPDATE tm SET tm_winner_team_id = '$winner' WHERE tm = '$tm_id'";
+							if(mysqli_query($con,$sql))
+							{
+								return "SUC_ENTER_RESULT";
+							} else {
+								return "ERR_DB";
+							}
+					
 					} else {
-						return "ERR_DB";
+						$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
+						$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
+						if(mysqli_query($con,$sql))
+						{
+							$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
+							$team_1 = $team_gamerslist["team_1"];
+							$team_2 = $team_gamerslist["team_2"];
+							$second_pair = getSecondPairId($con,$pair_id,$successor_id);
+							if($result_1 > $result_2)
+							{
+								return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
+							} else {
+								return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
+							} 
+						} else {
+							return "ERR_DB";
+						}
 					}
 				} else {
 					return "ERR_DB";
-				}
+				}				
 			}
 		}
 	}

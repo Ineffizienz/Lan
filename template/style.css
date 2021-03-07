@@ -104,6 +104,12 @@ h4
 {
 	text-shadow: 1px 1px rgba(0,0,0,.5);	
 }
+.close_sign
+{
+	text-align:right;
+	cursor:pointer;
+	color:red;
+}
 
 /* ---------------------- NAVIGATION --------------------------- 
 --------------------------------------------------------------*/
@@ -313,8 +319,6 @@ h4
 .settings_nav
 {
 	margin: 0;
-	background-color:#FFFFFF;
-	color: #000000;
 	transition: color 0.3s, background-color 0.3s;
 	box-shadow: 0 0 1px 0 #333;
 	border-radius:10px 0 0 0;
@@ -327,6 +331,16 @@ h4
 {
 	background-color:#333;
 	color: #FFFFFF;
+}
+.active_menupoint 
+{
+	background-color:#333;
+	color: #FFFFFF;
+}
+.inactive_menupoint
+{
+	background-color:#fff;
+	color: #000;
 }
 #settings_container
 {
@@ -801,6 +815,21 @@ h4
 	font-size:16px;
 	font-weight:bold;
 }
+.error_container
+{
+	display:none;
+	background-color:#ff6961;
+	text-align:center;
+	border-radius:2px;
+}
+.error_container p
+{
+	line-height:25px;
+}
+.placeholder_container p
+{
+	line-height:25px;
+}
 
 /* ---------------------- STATUS ---------------------------
 --------------------------------------------------------------*/
@@ -993,6 +1022,37 @@ h4
 	text-align:center;
 	font-weight:bold;
 }
+#password_headline
+{
+	margin-top:0;
+	margin-bottom:10px;
+	color:#fff;
+}
+.reset_password_popup
+{
+	display:none;
+	position: absolute;
+	top: 30%;
+	left: 40%;
+	padding: 10px;
+	background-color: #202020;
+	border: 2px solid #C0C0C0;
+	border-radius: 12px;
+	box-shadow: 0 5px 5px 0;
+	color: #fff;
+	width:20%;
+}
+#close_password_popup
+{
+	text-align:right;
+}	
+#password_form
+{
+	display:grid;
+	grid-template-columns: auto auto;
+	row-gap:5%;
+	margin-bottom:3%;
+}
 
 
 /* ---------------------- Time-Schedule ---------------------------
@@ -1086,31 +1146,6 @@ h4
 	box-shadow: 0 2px 2px 0;
 	font-weight: bold;
 	height: 35px;
-}
-#tm_locked
-{
-	display:grid;
-	grid-gap:15px;
-}
-#tm_locked_banner_container
-{
-	text-align:center;
-}
-#tm_locked_banner_container img
-{
-	margin-top:5px;
-	box-shadow: 0 2px 2px 0;
-	border-radius:8px;
-}
-.tm_locked_player_pair
-{
-	cursor:pointer;
-	padding:8px;
-	background-color:#fff;
-	border-radius:25px;
-	text-align:center;
-	box-shadow:0 2px 2px 0;
-	width:15%;
 }
 .tm_single
 {
@@ -1227,10 +1262,7 @@ h4
 	margin-left:2%;
 	width: 100%;
 }
-.tm_result_popup
-{
-	display:none;
-}
+
 #tm_vote_desc_text
 {
 	margin:0 auto;
@@ -1247,58 +1279,35 @@ main
     display:flex;
     flex-direction:row;
 }
-.round
+#tm_locked
 {
-	display:flex;
-    flex-direction:column;
-    justify-content:center;
-    width:200px;
-    list-style:none;
-    padding:0;
+	display:grid;
+	grid-gap:15px;
 }
-    .round .spacer{ flex-grow:.5; }
-    .round .spacer:first-child,
-    .round .spacer:last-child{ flex-grow:.5; }
-  
-    .round .game-spacer{
-      flex-grow:1;
-    }
-  
-  /*
-   *  General Styles
-  */
-  
-  li.game{
-    padding-left:20px;
-  }
-  li.game-spacer{
+#tm_locked_banner_container
+{
+	text-align:center;
+}
+#tm_locked_banner_container img
+{
+	margin-top:5px;
+	box-shadow: 0 2px 2px 0;
+	border-radius:8px;
+}
+.tm_locked_player_pair
+{
 	cursor:pointer;
-  }
-  li.game span{
-    float:right;
-    margin-right:5px;
-  }
-  .round .li-spacer {
-	  flex-grow: .5;
-  }
- 
-    
-	li.game-top
-	{ 
-		border-bottom:3px solid #aaa; 
-	}
-  
-    li.game-spacer{
-		cursor:pointer; 
-      border-right:3px solid #aaa;
-      min-height:40px;
-    }
-  
-    li.game-bottom{ 
-	margin-bottom: 10px;  
-	border-top:3px solid #aaa;
-    }
-
+	padding:8px;
+	background-color:#fff;
+	border-radius:25px;
+	text-align:center;
+	box-shadow:0 2px 2px 0;
+	width:15%;
+}
+.tm_result_popup
+{
+	display:none;
+}
 
 A:link
 {
