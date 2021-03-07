@@ -9,6 +9,7 @@
     $message = new message();
     $player = new Player($con,$_SESSION["player_id"]);
     $tm_id = $_REQUEST["tm_id"];
+    $stage = $_REQUEST["stage"];
     $pair_id = $_REQUEST["pair_id"];
 
     $gamerslist_id = getGamerslistIdByPlayerId($con,$player->getPlayerId(),$tm_id);
@@ -26,7 +27,7 @@
             echo json_encode(array("message"=>$message->displayMessage()));
         } elseif (empty($lock_time) || ($lock_time > $current_time)) {
 
-            $message_code = matchResultHandling($con,$pair_id,$result_1,$result_2);
+            $message_code = matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2);
             $message->getMessageCode($message_code);
             echo json_encode(array("message"=>$message->displayMessage()));
         }

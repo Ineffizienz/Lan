@@ -531,7 +531,7 @@ function displayTournamentLocked($con,$tm_id)
 						$result_team2 = $match_result["result_team2"];
 					}
 
-					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
+					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "stage"=> $stage, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
 					array_push($stage_array,$pair_array);
 				}	
 			}
@@ -610,7 +610,7 @@ function displayResultPopup()
 	return $tpl->r_display();
 }
 
-function matchResultHandling($con,$pair_id,$result_1,$result_2)
+function matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2)
 {
 	$successor_id = getSuccessorFromPair($con,$pair_id);
 	$successor_result = getResultFromMatch($con,$pair_id);
@@ -627,29 +627,54 @@ function matchResultHandling($con,$pair_id,$result_1,$result_2)
 			{
 				return "ERR_NO_DRAW";
 			} else {
-				$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$pair_id'";
-				if(mysqli_query($con,$sql))
+				$last_stage = getMaxStagePerTm($con,$tm_id);
+				if($last_stage == $stage)
 				{
-					$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
-					$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
+					$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID ='$pair_id'";
 					if(mysqli_query($con,$sql))
 					{
-						$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
-						$team_1 = $team_gamerslist["team_1"];
-						$team_2 = $team_gamerslist["team_2"];
-						$second_pair = getSecondPairId($con,$pair_id,$successor_id);
+						$opponents = getGamerslistIdByPair($con,$pair_id);
 						if($result_1 > $result_2)
 						{
-							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
+							$winner = $opponents["team_1"];
 						} else {
-							return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
-						} 
+							$winner = $opponents["team_2"];
+						}
+
+						$sql = "UPDATE tm SET tm_winner_team_id = '$winner' WHERE tm = '$tm_id'";
+						if(mysqli_query($con,$sql))
+						{
+							return "SUC_ENTER_RESULT";
+						} else {
+							return "ERR_DB";
+						}
+					}
+				} else {
+					$sql = "UPDATE tm_paarung SET result_team1 = '$result_1', result_team2 = '$result_2' WHERE ID = '$pair_id'";
+					if(mysqli_query($con,$sql))
+					{
+						$match_lock = date("Y-m-d H:i:s", strtotime("+10 minutes"));
+						$sql = "UPDATE tm_paarung SET match_locked = '$match_lock' WHERE ID = '$pair_id'";
+						if(mysqli_query($con,$sql))
+						{
+							$team_gamerslist = getGamerslistIdByPair($con,$pair_id);
+							$team_1 = $team_gamerslist["team_1"];
+							$team_2 = $team_gamerslist["team_2"];
+							$second_pair = getSecondPairId($con,$pair_id,$successor_id);
+							if($result_1 > $result_2)
+							{
+								return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_1);  	                    
+							} else {
+								return buildNextMatchUp($con,$pair_id,$second_pair,$successor_id,$team_2);
+							} 
+						} else {
+							return "ERR_DB";
+						}
 					} else {
 						return "ERR_DB";
 					}
-				} else {
-					return "ERR_DB";
 				}
+				
 			}
 		}
 	}
