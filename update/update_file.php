@@ -239,12 +239,32 @@ function createWoWRegionTable($con)
         echo "Die Tabelle <i>wow_region</i> wurde erfolgreich erstellt.<br>";
         if(mysqli_query($con,"CREATE INDEX IF NOT EXISTS idx_region_id ON wow_region (region_id)"))
         {
-            echo "Der Index <i>idx_region_id</i> wurde erfolgreich erstellt.";
+            echo "Der Index <i>idx_region_id</i> wurde erfolgreich erstellt.<br>";
         } else {
-            echo "Beim Erstellen des Indexes <i>idx_region_id</i> ist ein Fehler aufgetreten.";
+            echo "Beim Erstellen des Indexes <i>idx_region_id</i> ist ein Fehler aufgetreten.<br>";
         }
     } else {
         echo mysqli_error($con) . "<br>";
+    }
+}
+
+function addTmGameParam($con)
+{
+    if(mysqli_query($con,"ALTER TABLE games ADD tm_game INT(11) NOT NULL AFTER has_table"))
+    {
+        echo "Die Spalte <i>tm_game</i> wurde erfolgreich hinzugefügt.<br>";
+    } else {
+        echo "Beim Erstellen der Spalte <i>tm_game</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
+    }
+}
+
+function createGameMapsTable($con)
+{
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS game_maps (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, game_name VARCHAR(255) NOT NULL, map_name_ingame VARCHAR(255) NULL, map_size INT(11) NULL, map_image VARCHAR(255) NULL)"))
+    {
+        echo "Die Tabelle <i>game_maps</i> wurde erfolgreich erstellt.<br>";
+    } else {
+        echo "Beim Erstellen der Tabelle <i>game_maps</i> ist ein Fehler aufgetreten: " . mysqli_error($con) . "<br>";
     }
 }
 ?>
