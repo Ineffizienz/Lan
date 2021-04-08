@@ -1,4 +1,4 @@
-<div style="display:grid;grid-template-columns:auto auto auto;width:20%;">
+<div id="{$map_id}" class="map_data" style="display:grid;grid-template-columns:auto auto auto auto auto;width:20%;">
     <div style="font-weight:bold;" class="map_info">
         {$map_name_ingame}
     </div>
@@ -8,5 +8,10 @@
     <div>
         <img src="images/map_image/{$map_image}" height="128" style="box-shadow:0 2px 2px 0;">
     </div>
-    <!--<i class='fa fa-trash delete_char icon_edit' aria-hidden='true'></i>-->
+    <div class="map_info">
+        <input type="checkbox" name="map_is_selectable" class="map_is_selectable">
+    </div>
+    <div class="map_info">
+        <i class='fa fa-trash delete_map icon_edit' aria-hidden='true'></i>
+    </div>
 </div>

@@ -357,7 +357,7 @@ function getGameMap($con,$game_id)
 
 function getGameMapsByGameId($con,$game_id)
 {
-	$result = mysqli_query($con,"SELECT map_name_ingame, map_size, map_image FROM game_maps WHERE game_id = '$game_id'");
+	$result = mysqli_query($con,"SELECT ID, map_name_ingame, map_size, map_image FROM game_maps WHERE game_id = '$game_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$game_maps[] = $row;
@@ -375,6 +375,17 @@ function getTmMapNamesByGameId($con,$game_id)
 	}
 
 	return $map_names;
+}
+
+function getMapImageById($con,$map_id)
+{
+	$result = mysqli_query($con,"SELECT map_image FROM game_maps WHERE ID = '$map_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$map_path = $row["map_image"];
+	}
+
+	return $map_path;
 }
 
 

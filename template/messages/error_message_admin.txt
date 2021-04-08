@@ -99,3 +99,5 @@ ERR_ADMIN_WOW_CHAR_CHARACTERS: Beim Löschen des Charakters aus der Tabelle char
 ERR_ADMIN_NO_INGAME_NAME: Es wurde kein Ingame-Name festgelegt.
 ERR_ADMIN_NO_MAP_SIZE: Es wurde keine Mapgröße festgelegt.
 ERR_ADMIN_MAP_EXISTS: Die Map existiert bereits.
+ERR_ADMIN_NO_STATE: Es wurde kein Status übergeben.
+ERR_ADMIN_NO_MAP_ID: Es wurde keine Map-ID übergeben.

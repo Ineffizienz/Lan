@@ -260,7 +260,7 @@ function addTmGameParam($con)
 
 function createGameMapsTable($con)
 {
-    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS game_maps (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, game_name VARCHAR(255) NOT NULL, map_name_ingame VARCHAR(255) NULL, map_size INT(11) NULL, map_image VARCHAR(255) NULL)"))
+    if(mysqli_query($con,"CREATE TABLE IF NOT EXISTS game_maps (ID INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, game_id INT(11) NOT NULL, game_name VARCHAR(255) NOT NULL, map_name_ingame VARCHAR(255) NULL, map_size INT(11) NULL, map_image VARCHAR(255) NULL, selectable INT(11) NOT NULL)"))
     {
         echo "Die Tabelle <i>game_maps</i> wurde erfolgreich erstellt.<br>";
     } else {

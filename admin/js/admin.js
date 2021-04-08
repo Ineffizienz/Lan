@@ -259,6 +259,29 @@ $(document).ready(function(){
 
 	}
 
+	function getTmMapSelectable(event)
+	{
+		event.preventDefault();
+
+		var map_id = $(this).parents(".map_data").attr("id");
+		var map_state = $("input[name='map_is_selectable']:checked").serialize();
+
+		obj = {map_id,map_state};
+		
+		postAjax(obj,getEndpoint("change_map_state"),OutputData);
+	}
+
+	function getTmMapDelete(event)
+	{
+		event.preventDefault();
+
+		var map_id = $(this).parents(".map_data").attr("id");
+		
+		obj = {map_id};
+
+		postAjax(obj,getEndpoint("delete_map"),OutputData);
+	}
+
 	function getAddonParam(event)
 	{
 		event.preventDefault();
@@ -821,13 +844,6 @@ function getCharData(event)
 		$(this).siblings("ul").slideToggle();
 	}
 
-	function clearInputFields(event)
-	{
-		event.preventDefault(event)
-
-
-	}
-
 /*
 ###########################################################
 ######################## TIME-EVENT #######################
@@ -859,6 +875,8 @@ function refreshVotes()
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
 	$(document).on("click","#b_add_tm_map",getTmMapData);
+	$(document).on("change",".map_is_selectable",getTmMapSelectable);
+	$(document).on("click",".delete_map",getTmMapDelete);
 	$(document).on("click",".show_list",displayList);
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);

@@ -239,7 +239,7 @@ function displayTmGamesList($con)
 		{
 			foreach ($game_maps as $game_map)
 			{
-				$single_map = array("map_name_ingame"=>$game_map["map_name_ingame"],"map_size"=>$game_map["map_size"],"map_image"=>$game_map["map_image"]);
+				$single_map = array("map_id"=>$game_map["ID"],"map_name_ingame"=>$game_map["map_name_ingame"],"map_size"=>$game_map["map_size"],"map_image"=>$game_map["map_image"]);
 				array_push($maps_array,$single_map);
 			}
 		} else {

@@ -31,3 +31,5 @@ SUC_ADMIN_UPDATE_REGION_NAME: Der Regionsname wurde erfolgreich geändert.
 SUC_ADMIN_DELETE_WOW_CHAR: Charakter erfolgreich gelöscht.
 SUC_ADMIN_GAME_IS_TOURNAMENT: Das Spiel ist ein Turnierspiel.
 SUC_ADMIN_ADD_MAP: Die Map wurde erfolgreich hinzugefügt.
+SUC_ADMIN_CHANGE_STATE: Der Status der Map wurde erfolgreich geändert.
+SUC_ADMIN_DELETE_MAP: Die Map wurde erfolgreich gelöscht.
