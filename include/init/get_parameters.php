@@ -374,6 +374,11 @@ function getTmMapNamesByGameId($con,$game_id)
 		$map_names[] = $row["map_name_ingame"];
 	}
 
+	if(empty($map_names))
+	{
+		$map_names = array();
+	}
+	
 	return $map_names;
 }
 

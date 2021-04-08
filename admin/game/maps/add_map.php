@@ -26,7 +26,6 @@ if(!$_REQUEST["tm_game_id"] == "0")
             }
 
             $existing_map_names = getTmMapNamesByGameId($con,$game_id);
-
             if(in_array($ingame_name,$existing_map_names))
             {
                 $message->getMessageCode("ERR_ADMIN_MAP_EXISTS");
