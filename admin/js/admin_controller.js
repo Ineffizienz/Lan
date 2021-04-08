@@ -33,6 +33,9 @@ function getEndpoint(param)
         case "delete_game":
             endpoint = "admin/game/edit/delete_game.php";
             break;
+        case "add_tm_map":
+            endpoint = "admin/game/maps/add_map.php";
+            break;
         case "create_trigger":
             endpoint = "admin/achievement/edit/create_trigger.php";
             break;

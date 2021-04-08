@@ -96,3 +96,6 @@ ERR_ADMIN_WOW_CHAR_PETITIONSIGN: Beim Löschen des Charakters aus der Tabelle pe
 ERR_ADMIN_WOW_CHAR_PVPSTATSPLAYER: Beim Löschen des Charakters aus der Tabelle pvpstats_players ist ein Fehler aufgetreten.
 ERR_ADMIN_WOW_CHAR_QUESTTRACKER: Beim Löschen des Charakters aus der Tabelle quest_tracker ist ein Fehler aufgetreten.
 ERR_ADMIN_WOW_CHAR_CHARACTERS: Beim Löschen des Charakters aus der Tabelle characters ist ein Fehler aufgetreten.
+ERR_ADMIN_NO_INGAME_NAME: Es wurde kein Ingame-Name festgelegt.
+ERR_ADMIN_NO_MAP_SIZE: Es wurde keine Mapgröße festgelegt.
+ERR_ADMIN_MAP_EXISTS: Die Map existiert bereits.

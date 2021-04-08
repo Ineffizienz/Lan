@@ -136,6 +136,17 @@ td
 	display:none;
 }
 
+.show_list
+{
+	cursor:pointer;
+}
+
+.show_list + ul
+{
+	display:none;
+	list-style:none;
+}
+
 /* ---------------------- EMPTY PAGE --------------------------- 
 --------------------------------------------------------------*/
 
@@ -247,6 +258,20 @@ td
 	font-weight:bold;
 }
 
+/* ---------------------- GAMES --------------------------- 
+--------------------------------------------------------------*/
+
+.maps_list
+{
+	display:none;
+	list-style:none;
+}
+
+.map_info
+{
+	margin-top:50px;
+}
+
 /* ---------------------- TEAMS --------------------------- 
 --------------------------------------------------------------*/
 
@@ -316,11 +341,6 @@ td
 #account_list
 {
 	list-style:none;
-}
-
-.show_chars
-{
-	cursor:pointer;
 }
 
 .char_list
@@ -409,7 +429,7 @@ select
 	  	font-size: 10pt;
 	  	border: 1px solid #bbb;
 	  	border-radius: 3px;
-	  	width:180px;
+	  	width:auto;
 	}
 	select:focus
 	{

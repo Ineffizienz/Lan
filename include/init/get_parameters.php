@@ -330,6 +330,53 @@ function getGameID($con,$game_id)
 	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM games WHERE ID = '$game_id'")) > 0;
 }
 
+function getTournamentGames($con)
+{
+	$result = mysqli_query($con,"SELECT ID AS id, name AS name FROM games WHERE tm_game = '1'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$tm_games[] = $row;
+	}
+
+	return $tm_games;
+}
+
+function getGameMap($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT map_image FROM game_maps WHERE game_id = '$game_id'");
+	if(empty($result))
+	{
+		$map_image = array();
+	} else {
+		$row=mysqli_fetch_array($result);
+		$map_image = $row["map_image"];
+	}
+
+	return $map_image;
+}
+
+function getGameMapsByGameId($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT map_name_ingame, map_size, map_image FROM game_maps WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$game_maps[] = $row;
+	}
+
+	return $game_maps;
+}
+
+function getTmMapNamesByGameId($con,$game_id)
+{
+	$result = mysqli_query($con,"SELECT map_name_ingame FROM game_maps WHERE game_id = '$game_id'");
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$map_names[] = $row["map_name_ingame"];
+	}
+
+	return $map_names;
+}
+
 
 /*
 ###########################################################

@@ -219,6 +219,46 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("update_tm_game"),OutputData);
 	}
 
+	function getTmMapData(event)
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var tm_game_id = $('#game_name').find('option:selected').attr("value");
+		var tm_game_name = $('#game_name').find('option:selected').text();
+		var tm_name_ingame = $("#map_name_ingame").val();
+		var tm_map_size = $("#map_size").val();
+
+		var tm_map_image = $("#map_image").prop('files')[0];
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		var form_data = new FormData();
+
+		form_data.append("tm_game_id",tm_game_id);
+		form_data.append("tm_game_name",tm_game_name);
+		form_data.append("tm_name_ingame",tm_name_ingame);
+		form_data.append("tm_map_size",tm_map_size);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
+
+		if(!fileValidation(tm_map_image))
+		{
+			displaySirBrummel("Dateifehler.");
+		} else {
+			if(tm_map_image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",tm_map_image);
+			}
+			postFileAjax(form_data,getEndpoint("add_tm_map"),OutputData);
+			$('#form_add_tm_maps').trigger('reset');
+		}
+
+	}
+
 	function getAddonParam(event)
 	{
 		event.preventDefault();
@@ -774,11 +814,17 @@ function getCharData(event)
 		}
 	}
 
-	function displayAccountChars(event)
+	function displayList(event)
 	{
 		event.preventDefault();
 
-		$(this).siblings(".char_list").slideToggle();
+		$(this).siblings("ul").slideToggle();
+	}
+
+	function clearInputFields(event)
+	{
+		event.preventDefault(event)
+
 
 	}
 
@@ -812,6 +858,8 @@ function refreshVotes()
 	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
+	$(document).on("click","#b_add_tm_map",getTmMapData);
+	$(document).on("click",".show_list",displayList);
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
@@ -829,7 +877,6 @@ function refreshVotes()
 	$(document).on("click",".settings_edit",showEditField);
 	$(document).on("click",".send_region_id",getNewRegionID);
 	$(document).on("click",".send_region_name",getNewRegionName);
-	$(document).on("click",".show_chars",displayAccountChars);
 	$(document).on("click",".reset_wow_password",getPasswordData);
 	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);
