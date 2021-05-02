@@ -24,6 +24,11 @@
 					$tpl->assign_subtemplate("content","admin/game_settings.html");
 					$tpl->assign("admin_games",displaySingleGame($con));
 				break;
+				case "tm_games_option":
+					$tpl->assign_subtemplate("content","admin/tm_games_option.html");
+					$tpl->assign("tm_game_list",displayTmGamesOptions($con));
+					$tpl->assign("tm_games",displayTmGamesList($con));
+				break;
 				case "keys":
 					include("admin/overview/key_status.php");
 					$tpl->assign_subtemplate("content","admin/keys.html");

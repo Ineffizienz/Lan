@@ -29,6 +29,13 @@
 			} else {
 				$has_table = "1";
 			}
+
+			if(empty($_REQUEST["tm_game"]))
+			{
+				$tm_game = "0";
+			} else {
+				$tm_game = "1";
+			}
 			
 			if(isset($_FILES["game_icon"]["size"]) && !empty($_FILES["game_icon"]["size"]))
 			{
@@ -46,7 +53,7 @@
 				$path_banner = NULL;
 			}
 			
-			$sql = "INSERT INTO games (name,icon,banner,has_table) VALUES ('$new_game','$path_icon','$path_banner','$has_table')";
+			$sql = "INSERT INTO games (name,icon,banner,has_table) VALUES ('$new_game','$path_icon','$path_banner','$has_table','$tm_game')";
 			if(mysqli_query($con,$sql))
 			{
 				$message->getMessageCode("SUC_ADMIN_CREATE_NEW_GAME");

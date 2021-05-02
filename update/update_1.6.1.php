@@ -17,4 +17,6 @@ createTmPeriodArchivTable($con);
 createLanTable($con);
 removeRawName($con);
 createWoWRegionTable($con);
+addTmGameParam($con);
+createGameMapsTable($con);
 ?>

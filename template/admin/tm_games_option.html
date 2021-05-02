@@ -1,0 +1,53 @@
+<div>
+    <div>
+        <h3 style="text-align:center;">Turniermaps</h3>
+    </div>
+    
+	<div style="text-align:center">
+		<form enctype="multipart/form-data" id="form_add_tm_maps">
+			<table cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<label for="game_name">Spiel:</label>
+					</td>
+					<td>
+						<select id="game_name">
+                            {$tm_game_list}
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="map_name_ingame">Map-Name:</label>
+					</td>
+					<td>
+						<input type="text" name="map_name_ingame" id="map_name_ingame">
+					</td>
+				</tr>
+                <tr>
+					<td>
+						<label for="map_size">Mapgröße:</label>
+					</td>
+					<td>
+						<input type="text" name="map_size" id="map_size" size="2" maxlength="2">
+					</td>
+				</tr>
+                <tr>
+					<td>
+						<label for="map_image">Overview-Image:</label>
+					</td>
+					<td>
+						<input type="file" name="map_image" id="map_image" accept="jpg,jpeg,png,gif">
+					</td>
+				</tr>
+			</table>
+			<div style="margin-top:5px;">
+				<button id="b_add_tm_map" data-reload-parent="id_admin_tm_game_data" data-reload-child="id_admin_tm_game_data_list">Map hinzufügen</button>
+			</div>
+		</form>
+	</div>
+    <p class="line">&nbsp;</p>
+    <div id="tm_game_data">
+        {$tm_games}
+    </div>
+</div>
