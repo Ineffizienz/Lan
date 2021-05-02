@@ -363,6 +363,11 @@ function getGameMapsByGameId($con,$game_id)
 		$game_maps[] = $row;
 	}
 
+	if(empty($game_maps))
+	{
+		$game_maps = array();
+	}
+
 	return $game_maps;
 }
 

@@ -857,6 +857,12 @@ function refreshVotes()
 	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
+/*
+###########################################################
+######################## INTERACTION ######################
+###########################################################
+*/
+
 	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
 	$(document).on("click",".p_button_delete", getId);
