@@ -121,6 +121,7 @@ $(document).ready(function(){
 		
 		var game = $("#new_game").val();
 		var raw_name = $("input[name='new_raw_table']:checked").serialize();
+		var tm_game = $("input[name='new_tm_game']:checked").serialize();
 		
 		var p_element = getParentElement(this);
 		var c_element = getChildElement(this);
@@ -129,6 +130,7 @@ $(document).ready(function(){
 
 		form_data.append("game",game);
 		form_data.append("raw_name",raw_name);
+		form_data.append("tm_game",tm_game);
 		form_data.append("p_element",p_element);
 		form_data.append("c_element",c_element);
 
@@ -203,6 +205,81 @@ $(document).ready(function(){
 		obj = {game_id,has_table};
 
 		postAjax(obj,getEndpoint("update_has_table"),OutputData);
+	}
+
+	function getTournamentGame(event)
+	{
+		event.preventDefault();
+
+		var tm_game = $(this).find('option:selected').attr("value");
+		var game_id = retrieveGameID(this);
+
+		obj = {game_id,tm_game};
+
+		postAjax(obj,getEndpoint("update_tm_game"),OutputData);
+	}
+
+	function getTmMapData(event)
+	{
+		event.stopPropagation();
+		event.preventDefault();
+
+		var tm_game_id = $('#game_name').find('option:selected').attr("value");
+		var tm_game_name = $('#game_name').find('option:selected').text();
+		var tm_name_ingame = $("#map_name_ingame").val();
+		var tm_map_size = $("#map_size").val();
+
+		var tm_map_image = $("#map_image").prop('files')[0];
+
+		var p_element = getParentElement(this);
+		var c_element = getChildElement(this);
+
+		var form_data = new FormData();
+
+		form_data.append("tm_game_id",tm_game_id);
+		form_data.append("tm_game_name",tm_game_name);
+		form_data.append("tm_name_ingame",tm_name_ingame);
+		form_data.append("tm_map_size",tm_map_size);
+		form_data.append("p_element",p_element);
+		form_data.append("c_element",c_element);
+
+		if(!fileValidation(tm_map_image))
+		{
+			displaySirBrummel("Dateifehler.");
+		} else {
+			if(tm_map_image.length == 0)
+			{
+				form_data.append("file","0");
+			} else {
+				form_data.append("file",tm_map_image);
+			}
+			postFileAjax(form_data,getEndpoint("add_tm_map"),OutputData);
+			$('#form_add_tm_maps').trigger('reset');
+		}
+
+	}
+
+	function getTmMapSelectable(event)
+	{
+		event.preventDefault();
+
+		var map_id = $(this).parents(".map_data").attr("id");
+		var map_state = $("input[name='map_is_selectable']:checked").serialize();
+
+		obj = {map_id,map_state};
+		
+		postAjax(obj,getEndpoint("change_map_state"),OutputData);
+	}
+
+	function getTmMapDelete(event)
+	{
+		event.preventDefault();
+
+		var map_id = $(this).parents(".map_data").attr("id");
+		
+		obj = {map_id};
+
+		postAjax(obj,getEndpoint("delete_map"),OutputData);
 	}
 
 	function getAddonParam(event)
@@ -760,12 +837,11 @@ function getCharData(event)
 		}
 	}
 
-	function displayAccountChars(event)
+	function displayList(event)
 	{
 		event.preventDefault();
 
-		$(this).siblings(".char_list").slideToggle();
-
+		$(this).siblings("ul").slideToggle();
 	}
 
 /*
@@ -781,6 +857,12 @@ function refreshVotes()
 	$("#vote_page").load(location.href + ' #tm_votes');
 }
 
+/*
+###########################################################
+######################## INTERACTION ######################
+###########################################################
+*/
+
 	$(document).on("click","#create", getNumber);
 	$("#upload").on("click", getFile);
 	$(document).on("click",".p_button_delete", getId);
@@ -793,10 +875,15 @@ function refreshVotes()
 	$(document).on("change",".ac_image",getChangedAcImage);
 	$(document).on("change",".sec_is_addon",getAddonParam);
 	$(document).on("change",".sec_has_table",getHasTable);
+	$(document).on("change",".sec_tm_game",getTournamentGame)
 	$(document).on("change",".sec_icon_upload",getIconData);
 	$(document).on("change",".sec_banner_upload",getBannerData);
 	$(document).on("click",".send_gn",getNewGameName);
 	$(document).on("click",".send_gst",getNewShortTitle);
+	$(document).on("click","#b_add_tm_map",getTmMapData);
+	$(document).on("change",".map_is_selectable",getTmMapSelectable);
+	$(document).on("click",".delete_map",getTmMapDelete);
+	$(document).on("click",".show_list",displayList);
 	$(document).on("click",".delete_game",getGameIdToDelete);
 	$(document).on("click","#create_tm",getTmGame);
 	$(document).on("click",".delete_tm",getDelTmData);
@@ -814,7 +901,6 @@ function refreshVotes()
 	$(document).on("click",".settings_edit",showEditField);
 	$(document).on("click",".send_region_id",getNewRegionID);
 	$(document).on("click",".send_region_name",getNewRegionName);
-	$(document).on("click",".show_chars",displayAccountChars);
 	$(document).on("click",".reset_wow_password",getPasswordData);
 	$(document).on("click",".delete_char",getCharData);
 	$(document).on("click","#create_lan",getLanData);

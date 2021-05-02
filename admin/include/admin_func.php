@@ -22,6 +22,27 @@ function buildJSONOutput($elements)
 	return $jsonOutput;
 }
 
+/**
+ * Upload a File by Userinput
+ * 
+ * This function simply uploads a file to the server. Currently it is not validating any kind of filetype.
+ * 
+ * @param file contains the GLOBAL $_FILES
+ * @param string $sub_dir contains if required the subdirectory, can be 0
+ * @param string $file_dir contains the accutal directory of the file
+ * @return string returns the path of the file which is later stored in DB 
+ * 
+ */
+
+function uploadFile($file,$sub_dir,$file_dir)
+{
+	move_uploaded_file($file["file"]["tmp_name"], $file_dir . $file["file"]["name"]);
+
+	$path = $sub_dir . $file["file"]["name"];
+
+	return $path;
+}
+
 function translateGameMode($mode)
 {
 	switch ($mode) {
@@ -167,13 +188,72 @@ function displaySingleGame($con)
 		} else {
 			$addon = buildOption(array(array("id"=>"1","name"=>"Ja"),array("id"=>"0","name"=>"Nein")));
 		}
+
+		if($game["tm_game"] == "0")
+		{
+			$tm_game = buildOption(array(array("id"=>"0","name"=>"Nein"), array("id"=>"1","name"=>"Ja")));
+		} else {
+			$tm_game = buildOption(array(array("id"=>"1","name"=>"Ja"), array("id"=>"0","name"=>"Nein")));
+		}
 		
-		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table);
+		$transfer = array("id"=>$game["ID"],"name"=>$game["name"],"trimed_name"=>$t_name,"short_title"=>$gst,"addon"=>$addon,"icon"=>$icon,"banner"=>$banner,"has_table"=>$has_table,"tm_game"=>$tm_game);
 		array_push($game_output,$transfer);
 
 	}
 	
 	$output->assign_array($game_output);
+
+	return $output->r_display();
+}
+
+function displayTmGamesOptions($con)
+{
+	$tournament_games = getTournamentGames($con);
+
+	$output = buildOption(array("id"=>"0","name"=>"Keine Auswahl"));
+
+	foreach ($tournament_games as $tournament_game)
+	{
+		$output .= buildOption($tournament_game);
+	}
+
+	return $output;
+}
+
+function displayTmGamesList($con)
+{
+	$tournament_games = getTournamentGames($con);
+
+	$output = new template("admin/tm_games_tpl.html");
+
+	$tm_games = array();
+	
+	foreach ($tournament_games as $tournament_game)
+	{
+		$game_maps = getGameMapsByGameId($con,$tournament_game["id"]);
+		$maps_array = array();
+
+		$tpl_maps = new template("admin/part/tm_games_maps.html");
+
+		if(!empty($game_maps))
+		{
+			foreach ($game_maps as $game_map)
+			{
+				$single_map = array("map_id"=>$game_map["ID"],"map_name_ingame"=>$game_map["map_name_ingame"],"map_size"=>$game_map["map_size"],"map_image"=>$game_map["map_image"]);
+				array_push($maps_array,$single_map);
+			}
+		} else {
+			$single_map = array("map_name_ingame"=>"Es wurden bisher keine Maps zugewiesen.","map_size"=>"","map_image"=>"");
+			array_push($maps_array,$single_map);
+		}
+
+		$tpl_maps->assign_array($maps_array);
+
+		$tm_game_data = array("tm_game_id"=>$tournament_game["id"], "tm_game_name"=>$tournament_game["name"],"maps"=>$tpl_maps->r_display());
+		array_push($tm_games,$tm_game_data);
+	}
+
+	$output->assign_array($tm_games);
 
 	return $output->r_display();
 }

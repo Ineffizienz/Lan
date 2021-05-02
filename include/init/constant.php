@@ -13,6 +13,7 @@
 	define("ICON",IMG . "game_icon/");
 	define("BANNER",IMG . "banner/");
 	define("AC",IMG . "achievements/");
+	define("MAP",IMG . "map_image/");
 
 	define("TMP",ROOT . "/template/");
 	define("KEY_FOLDER",ROOT . "/key_list/");
