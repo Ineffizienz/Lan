@@ -113,41 +113,36 @@ h4
 
 /* ---------------------- NAVIGATION --------------------------- 
 --------------------------------------------------------------*/
-
-
-	#navigation
-	{
-		width:100%;
-	}
-		#navigation ul
+		#navigation
 		{
 			margin: 0;
 			padding: 0;
 			list-style: none;
-			font-size: 11pt;
-			width: 100%;
 		}
-			#navigation ul li a
+			#navigation li
+			{
+				margin: 0 auto;
+				background-color: #333;
+				border-radius: 0 10px 10px 0;
+				box-shadow: 0 2px 2px 0 #202020;
+				line-heighT: 40px;
+				transition: background-color .6s ease;
+				width: 80%;
+			}
+			#navigation li:hover
+			{
+				background-color: #193390;
+			}
+			#navigation li a
 			{
 				display:block;
-				margin: 0 auto;
 				margin-bottom: 3%;
-				background-color: #333;
-				box-shadow: 0 2px 2px 0 #202020;
 				text-align:center;
 				color: #FFFFFF;
 				border-left: 2px solid #193390;
 				border-radius: 0 10px 10px 0;
-				line-height: 40px;
-				width: 80%;
 			}
-			#navigation ul li a:hover
-			{
-				background-color: #193390;
-				color: #FFFFFF;
-				width: 80%;
-			}
-			#navigation ul ul li a
+			#navigation ul li a
 			{
 				margin-bottom: 3%;
 				padding: 5px;
@@ -160,7 +155,7 @@ h4
 				line-height: 25px;
 				width: 80%;
 			}
-			#navigation ul ul li:hover a 
+			#navigation ul li:hover a 
 			{
 				background-color: #193390;
 				color: #FFFFFF;
