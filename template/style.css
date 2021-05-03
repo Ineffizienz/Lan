@@ -1127,7 +1127,7 @@ h4
 #tm_unlocked_banner_container img
 {
 	border-radius:10px;
-	box-shadow:0 2px 2px 0;
+	box-shadow:0 2px 2px 0 #000;
 }
 #tm_unlocked_button_container
 {
@@ -1279,14 +1279,9 @@ main
 	display:grid;
 	grid-gap:15px;
 }
-#tm_locked_banner_container
-{
-	text-align:center;
-}
 #tm_locked_banner_container img
 {
-	margin-top:5px;
-	box-shadow: 0 2px 2px 0;
+	box-shadow: 0 2px 2px 0 #000;
 	border-radius:8px;
 }
 .tm_locked_player_pair
