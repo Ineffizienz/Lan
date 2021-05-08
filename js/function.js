@@ -1,14 +1,3 @@
-function gameSpacerHover ()
-{
-	$(".game-spacer").on({mouseover: function () {
-		$(this).html("Ergebnis eingeben.");
-	}, mouseleave: function() {
-		$(this).html("");
-	}});
-	
-	$(".game-spacer").on("click",displayResultPopup);
-}
-
 /*#############################################################################################
 #################################### Popups ################################################### 
 ###############################################################################################*/
@@ -16,10 +5,7 @@ function gameSpacerHover ()
 function displayResultPopup(event)
 {
 	event.preventDefault();
-	
-	var tm_id = $(this).attr("data-tm-id");
-	var stage = $(this).attr("data-stage");
-	var pair_id = $(this).attr("data-pair-id");
+
 	var player_1 = $(this).attr("data-player-first");
 	var player_2 = $(this).attr("data-player-second");
 
@@ -27,13 +13,8 @@ function displayResultPopup(event)
 	{
 		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
 		{
-			$("#tm_id").val(tm_id);
-			$("#stage").val(stage);
-			$("#pair_id").val(pair_id);
-			$("#player_1").html(player_1);
-			$("#player_2").html(player_2);
-
-			$(".tm_result_popup").show();
+			$(this).find(".tm_result_input").toggle(100);
+			$(this).find(".score_text").toggle(100);
 		}
 	}
 }
@@ -68,8 +49,6 @@ function closePasswordPopup(event)
 $(document).ready(function(){
 
 	var obj = {};
-	
-	gameSpacerHover();
 	
 	$("#result").fadeOut(7000);
 
@@ -380,6 +359,12 @@ $(document).ready(function(){
 	function getMatchResults(event)
 	{
 		event.preventDefault();
+
+		/*var tm_id = $(this).attr("data-tm-id");
+		var stage = $(this).attr("data-stage");
+		var pair_id = $(this).attr("data-pair-id");
+		var player_1 = $(this).attr("data-player-first");
+		var player_2 = $(this).attr("data-player-second");*/
 
 		var tm_id = $("#tm_id").val();
 		var pair_id = $("#pair_id").val();
