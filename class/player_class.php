@@ -146,7 +146,7 @@ class Player {
 	*************************************************************************************/
 	private function setPlayerNames($nick,$real_name) //TODO: Funktion separieren
 	{
-		$sql = "UPDATE player SET username = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
+		$sql = "UPDATE player SET name = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
 		if(!mysqli_query($this->db_con,$sql))
 		{
 			return false;
@@ -166,6 +166,8 @@ class Player {
 			} else {
 				return true;
 			}
+		} else {
+			return true;
 		}
 	}
 
@@ -182,7 +184,7 @@ class Player {
 	
 	public function setUpPlayer($nick, $real_name)
 	{
-		if($this->setPlayerNick($nick))
+		if($this->setPlayerNames($nick, $real_name))
 		{
 			if($this->setFirstLogin())
 			{

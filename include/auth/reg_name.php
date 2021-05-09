@@ -19,7 +19,7 @@ function reg_name(mysqli $con, $message, $player)
 		return array(false, $message);
 	}
 	
-	if(checkPlayernameExists($con, $nick) != $player->getPlayerId())
+	if(checkPlayernameExists($con, $nick) == $player->getPlayerId())
 	{
 		//another user with this name already exists
 		$message->getMessageCode("ERR_USER_NAME");
