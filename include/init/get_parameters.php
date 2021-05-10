@@ -37,10 +37,10 @@ function getAllUsername($con)
 		- change_user.php
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player");
+	$result = mysqli_query($con,"SELECT player_nick FROM player");
 	while ($row = mysqli_fetch_array($result))
 	{
-		$users[] = $row["name"];
+		$users[] = $row["player_nick"];
 	}
 
 	return $users;
@@ -54,7 +54,7 @@ function getAllUsername($con)
  */
 function checkPlayernameExists(mysqli $con, string $name)
 {
-	$res = mysqli_query($con, "SELECT ID FROM player WHERE name = '$name';");
+	$res = mysqli_query($con, "SELECT ID FROM player WHERE player_nick = '$name';");
 	if(mysqli_num_rows($res) == 0)
 		return false;
 	return mysqli_fetch_array($res)['ID'];
@@ -66,7 +66,7 @@ function getBasicUserData($con)
 		:Admin
 		- admin_func.php/addUsername
 	*/
-	$result = mysqli_query($con, "SELECT ID AS id,name FROM player");
+	$result = mysqli_query($con, "SELECT ID AS id, player_nick AS name FROM player");
 	while($row = mysqli_fetch_assoc($result))
 	{
 		$basic_user[] = $row;
@@ -83,7 +83,7 @@ function getSingleUsername($con, $player_id): array
 		- index.php
 	*/
 
-	$result = mysqli_query($con,"SELECT name, real_name FROM player WHERE ID = '$player_id'");
+	$result = mysqli_query($con,"SELECT player_nick, real_name FROM player WHERE ID = '$player_id'");
 	return mysqli_fetch_assoc($result);
 }
 
@@ -576,10 +576,10 @@ function getTeamMember($con,$team_id)
 		- team_status.php
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id'");
+	$result = mysqli_query($con,"SELECT player_nick FROM player WHERE team_id = '$team_id'");
 	while ($row=mysqli_fetch_array($result))
 	{
-		$member[] = $row["name"];
+		$member[] = $row["player_nick"];
 	}
 
 	if (empty($member))
@@ -599,10 +599,10 @@ function getTeamMembers($con, $player_id, $team_id)
 		- function.php/displayPlayerTeamMembers
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND ID != '$player_id'");
+	$result = mysqli_query($con,"SELECT player_nick FROM player WHERE team_id = '$team_id' AND ID != '$player_id'");
 	while ($row=mysqli_fetch_array($result))
 	{
-		$team_members[] = $row["name"];
+		$team_members[] = $row["player_nick"];
 	}
 
 	if (empty($team_members))
@@ -620,10 +620,10 @@ function getTeamCaptain($con, $team_id)
 		- function.php/displayCaptain
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player WHERE team_id = '$team_id' AND team_captain != NULL");
+	$result = mysqli_query($con,"SELECT player_nick FROM player WHERE team_id = '$team_id' AND team_captain != NULL");
 	while ($row=mysqli_fetch_array($result))
 	{
-		$captain = $row["name"];
+		$captain = $row["player_nick"];
 	}
 
 	if (empty($captain))
@@ -1232,10 +1232,10 @@ function getPlayerFromGamerslist($con,$tm_id)
 		- function.php/displayTournamentParticipants
 	*/
 
-	$result = mysqli_query($con,"SELECT player.name FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.tm_id = '$tm_id'");
+	$result = mysqli_query($con,"SELECT player.player_nick FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.tm_id = '$tm_id'");
 	while($row=mysqli_fetch_assoc($result))
 	{
-		$player_name[] = $row["name"];
+		$player_name[] = $row["player_nick"];
 	}
 
 	if(empty($player_name))
@@ -1378,10 +1378,10 @@ function getUsernameFromGamerslist($con,$gamerslist_id)
 		- function.php/displayTournamentLocked
 	*/
 
-	$result = mysqli_query($con,"SELECT name FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.ID = '$gamerslist_id'");
+	$result = mysqli_query($con,"SELECT player_nick FROM player INNER JOIN tm_gamerslist ON tm_gamerslist.player_id = player.ID WHERE tm_gamerslist.ID = '$gamerslist_id'");
 	while($row=mysqli_fetch_array($result))
 	{
-		$player_name = $row["name"];
+		$player_name = $row["player_nick"];
 	}
 
 	if(!isset($player_name) || empty($player_name))

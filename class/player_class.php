@@ -41,11 +41,11 @@ class Player {
 	*************************************************************************************/
 	private function getPlayerBasicData()
 	{
-		$result = mysqli_query($this->db_con,"SELECT IP, name, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
+		$result = mysqli_query($this->db_con,"SELECT IP, player_nick, real_name, team_id, team_captain, profil_image, first_login, ticket_active FROM player WHERE ID = '$this->id'");
 		while($row=mysqli_fetch_array($result))
 		{
 			$this->ip = $row["IP"];
-			$this->username = $this->validatePlayerData($row["name"]);
+			$this->username = $this->validatePlayerData($row["player_nick"]);
 			$this->realname = $this->validatePlayerData($row["real_name"]);
 			$this->team_id = $this->validatePlayerData($row["team_id"]);
 			$this->team_captain = $this->validatePlayerData($row["team_captain"]);
@@ -146,7 +146,7 @@ class Player {
 	*************************************************************************************/
 	private function setPlayerNames($nick,$real_name) //TODO: Funktion separieren
 	{
-		$sql = "UPDATE player SET name = '$nick' AND real_name = '$real_name' WHERE ID = '$this->id'";
+		$sql = "UPDATE player SET player_nick = '$nick', real_name = '$real_name' WHERE ID = '$this->id'";
 		if(!mysqli_query($this->db_con,$sql))
 		{
 			return false;
@@ -203,7 +203,7 @@ class Player {
 
 	public function setNewPlayer($new_name,$new_ip)
 	{
-		$sql = "INSERT INTO player (name,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$new_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
+		$sql = "INSERT INTO player (player_nick,ip,wow_account,team_id,team_captain,ticket_id,ticket_active,first_login) VALUES ('$new_name','$new_ip',NULL,NULL,NULL,NULL,NULL,'1')";
 		if(mysqli_query($this->db_con,$sql))
 		{
 			$this->message_code = "SUC_ADMIN_NEW_PLAYER";
@@ -216,7 +216,7 @@ class Player {
 
 	public function setNewUsername($new_username)
 	{
-		$sql = "UPDATE player SET name = '$new_username' WHERE ID = '$this->id'";
+		$sql = "UPDATE player SET player_nick = '$new_username' WHERE ID = '$this->id'";
 		if(mysqli_query($this->db_con,$sql))
 		{
 			$this->message_code = "SUC_CHANGE_USERNAME";
