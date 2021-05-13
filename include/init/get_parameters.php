@@ -1684,6 +1684,17 @@ function getTmWinner($con,$tm_id)
 	return $winner;
 }
 
+function getGamerslistIdBySinglePlayerId($con,$player_id)
+{
+	$result = mysqli_query($con,"SELECT ID FROM tm_gamerslist WHERE player_id = '$player_id'");
+	while($row=mysqli_fetch_array($result))
+	{
+		$gl_id = $row["ID"];
+	}
+
+	return $gl_id;
+}
+
 /*
 ###########################################################
 ######################## Archivierung #####################

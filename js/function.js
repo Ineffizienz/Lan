@@ -2,23 +2,6 @@
 #################################### Popups ################################################### 
 ###############################################################################################*/
 
-function displayResultPopup(event)
-{
-	event.preventDefault();
-
-	var player_1 = $(this).attr("data-player-first");
-	var player_2 = $(this).attr("data-player-second");
-
-	if(!(player_1 === "") && !(player_2 === ""))
-	{
-		if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
-		{
-			$(this).find(".tm_result_input").toggle(100);
-			$(this).find(".score_text").toggle(100);
-		}
-	}
-}
-
 function displayResetPasswordPopup(event)
 {
 	event.preventDefault();
@@ -116,6 +99,37 @@ $(document).ready(function(){
 		}
 	}
 
+
+	function displayResultPopup(event)
+	{
+		event.preventDefault();
+
+		var context = $(this);
+
+		var func_name = "getPlayerID";
+				
+		obj = {func_name};
+		
+		getAjaxData(obj,getEndpoint("get_session"),context).then(function(data) {
+			
+			var player_1 = $(this).attr("data-player-first_id");
+			var player_2 = $(this).attr("data-player-second-id");
+
+			if(!(player_1 === "") && !(player_2 === ""))
+			{
+				if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
+				{
+					if((player_1 == data.result) || (player_2 == data.result))
+					{
+						$(this).find(".tm_result_input").toggle(100);
+						$(this).find(".score_text").toggle(100);
+					}
+				}
+			}
+		});
+	
+	}
+	
 
 /*#############################################################################################
 #################################### World of Warcraft ######################################## 
@@ -398,9 +412,19 @@ $(document).ready(function(){
 		return $.ajax({
 			type: "get",
 			url: endpoint,
-			dataType: "json",
+			dataType: 'json',
 			data: obj,
 			success: fn
+		});
+	}
+
+	function getAjaxData(obj, endpoint, context){
+		return $.ajax({
+			type: "get",
+			url: endpoint,
+			context: context,
+			dataType: 'json',
+			data: obj
 		});
 	}
 

@@ -65,7 +65,6 @@ if(isset($_SESSION["player_id"])) //can be set by the validate_Ticket()-function
 	
 	if(!$display_name_reg || $success)
 	{		
-		
 		$tpl->assign_subtemplate('content', 'index.html');
 		$tpl->assign("lantitle",$title);
 		$tpl->assign("sir_brummel",$message->displayMessage());

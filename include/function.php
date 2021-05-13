@@ -497,11 +497,11 @@ function displayTournamentLocked($con,$tm_id)
 			foreach ($pairs_by_stages as $pair)
 			{
 				$pair_id = $pair["ID"];
-				$player_1 = $pair["team_1"];
-				$player_2 = $pair["team_2"];
+				$player_1_id = $pair["team_1"];
+				$player_2_id = $pair["team_2"];
 				$match_result = getResultFromMatch($con,$pair_id);
 
-				if($player_1 == "0" || ($player_2 == "0" || $player_2 == "-1"))
+				if($player_1_id == "0" || ($player_2_id == "0" || $player_2_id == "-1"))
 				{
 					$matchup_status = "";
 				} elseif (($match_result["result_team1"] !== NULL) && ($match_result["result_team2"] !== NULL)) {
@@ -510,16 +510,16 @@ function displayTournamentLocked($con,$tm_id)
 					$matchup_status = "current";
 				}
 
-				if(($stage > "1") && ($player_2 == "-1"))
+				if(($stage > "1") && ($player_2_id == "-1"))
 				{
 					break;
 				} else {
-					$player_1 = getUsernameFromGamerslist($con,$player_1);
-					if(($player_2 == "-1") && ($stage == "1"))
+					$player_1 = getUsernameFromGamerslist($con,$player_1_id);
+					if(($player_2_id == "-1") && ($stage == "1"))
 					{
 						$player_2 = "<i>Wildcard</i>";
 					} else {
-						$player_2 = getUsernameFromGamerslist($con,$player_2);
+						$player_2 = getUsernameFromGamerslist($con,$player_2_id);
 					}
 
 					if(empty($match_result["result_team1"]) && empty($match_result["result_team2"]))
@@ -531,7 +531,7 @@ function displayTournamentLocked($con,$tm_id)
 						$result_team2 = $match_result["result_team2"];
 					}
 
-					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "stage"=> $stage, "player_1" => $player_1, "player_2" => $player_2, "result_p1" => $result_team1, "result_p2" => $result_team2);
+					$pair_array = array("tm_id" => $tm_id, "pair_id" => $pair_id, "matchup_status" => $matchup_status, "stage"=> $stage, "player_1" => $player_1, "player_1_id" => $player_1_id, "player_2" => $player_2, "player_2_id" => $player_2_id, "result_p1" => $result_team1, "result_p2" => $result_team2);
 					array_push($stage_array,$pair_array);
 				}	
 			}
