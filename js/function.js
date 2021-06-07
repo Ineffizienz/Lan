@@ -110,19 +110,24 @@ $(document).ready(function(){
 				
 		obj = {func_name};
 		
-		getAjaxData(obj,getEndpoint("get_session"),context).then(function(data) {
+		getAjaxData(obj,getEndpoint("get_data"),context).then(function(data) {
 			
-			var player_1 = $(this).attr("data-player-first_id");
-			var player_2 = $(this).attr("data-player-second-id");
+			var player = $(this).attr("id");
 
-			if(!(player_1 === "") && !(player_2 === ""))
+			if(!(player === ""))
 			{
-				if(!(player_1 === "<i>Wildcard</i>") && !(player_2 === "<i>Wildcard</i>"))
+				if(!(player === "<i>Wildcard</i>"))
 				{
-					if((player_1 == data.result) || (player_2 == data.result))
+					if((player == data.result))
 					{
-						$(this).find(".tm_result_input").toggle(100);
-						$(this).find(".score_text").toggle(100);
+						$(this).find(".score_text").toggle();
+						$(this).find(".tm_result_input").toggle();
+						if(!$(this).find(".tm_result_input").is(":visible"))
+						{
+							getMatchResults($(this));
+						}
+					} else {
+						console.log("You shall not pass.");
 					}
 				}
 			}
@@ -370,31 +375,24 @@ $(document).ready(function(){
 		postAjax(obj,getEndpoint("leave_tm"),refreshTournamentPlayerList);
 	}
 
-	function getMatchResults(event)
+	function getMatchResults(context)
 	{
-		event.preventDefault();
+		
+		var tm_id = $(context).parents("ul").attr("data-tm-id");
+		var stage = $(context).parents("ul").attr("data-stage");
+		var pair_id = $(context).parents("ul").attr("data-pair-id");
+		var player_id = $(context).attr("id");
+		
+		var result = $(context).find(".result_input").val();
 
-		/*var tm_id = $(this).attr("data-tm-id");
-		var stage = $(this).attr("data-stage");
-		var pair_id = $(this).attr("data-pair-id");
-		var player_1 = $(this).attr("data-player-first");
-		var player_2 = $(this).attr("data-player-second");*/
-
-		var tm_id = $("#tm_id").val();
-		var pair_id = $("#pair_id").val();
-		var stage = $("#stage").val();
-		var result_1 = $("#result_1").val();
-		var result_2 = $("#result_2").val();
-
-		if((result_1.length > 2) || (result_2.length > 2))
+		if (result.length > 2)
 		{
 			console.log("Eingabe zu groß.");
 		} else {
-			if(($.isNumeric(result_1)) && ($.isNumeric(result_2)))
+			if($.isNumeric(result))
 			{
-				obj = {tm_id, stage, pair_id, result_1, result_2};
+				obj = {tm_id, stage, pair_id, player_id, result};
 
-				closeResultPopup(event);
 
 				postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
 			} else {
@@ -611,6 +609,11 @@ $(document).ready(function(){
 			}
 		}
 	}
+	function doNothing(event)
+	{
+		event.preventDefault();
+		event.stopPropagation();
+	}
 
 /*#############################################################################################
 #################################### Basic Animation ########################################## 
@@ -680,7 +683,12 @@ function disableButton(ele, event)
 
 	//Popup
 	$("#reset_password").on("click",displayResetPasswordPopup);
-	$(".matchup").on("click",displayResultPopup);
+	$(".opponent").on("click",displayResultPopup);
+	$(".result_input").focusout(function() {
+		$(".tm_result_input").css("display:none;");
+	});
+	$(".result_input").on("click",doNothing);
+	$(".confirm_result").on("click",getMatchResults);
 	$("#result_close_popup").on("click",closeResultPopup);
 	$("#close_password_popup").on("click",closePasswordPopup);
 });

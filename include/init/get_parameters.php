@@ -1415,7 +1415,7 @@ function getGamerslistIdFromPair($con,$gamerslist_id,$pair_id)
 		- enter_result.php
 	*/
 
-	return mysqli_num_rows(mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$pair_id' AND ((team_1 = '$gamerslist_id') || (team_2 = '$gamerslist_id'))")) > 0;
+	return mysqli_num_rows(mysqli_query($con,"SELECT team_1, team_2 FROM tm_paarung WHERE ID = '$pair_id' AND ((team_1 = '$gamerslist_id') OR (team_2 = '$gamerslist_id'))")) > 0;
 }
 
 function getPairCount($con,$tm_id)
@@ -1693,6 +1693,11 @@ function getGamerslistIdBySinglePlayerId($con,$player_id)
 	}
 
 	return $gl_id;
+}
+
+function getPlayerTeam($con,$player_id,$pair_id)
+{
+	return mysqli_num_rows(mysqli_query($con,"SELECT ID FROM tm_paarung WHERE ID = '$pair_id' AND team_1 = '$player_id'")) > 0;
 }
 
 /*

@@ -4,30 +4,28 @@
     include(INC. "connect.php");
     include(INC. "function.php");
     include(CL . "message_class.php");
-    include(CL . "player_class.php");
 
     $message = new message();
-    $player = new Player($con,$_SESSION["player_id"]);
     $tm_id = $_REQUEST["tm_id"];
     $stage = $_REQUEST["stage"];
     $pair_id = $_REQUEST["pair_id"];
+    $player_id = $_REQUEST["player_id"];
 
-    $gamerslist_id = getGamerslistIdByPlayerId($con,$player->getPlayerId(),$tm_id);
-    if(getGamerslistIdFromPair($con,$gamerslist_id,$pair_id))
+    if(getGamerslistIdFromPair($con,$player_id,$pair_id))
     {
-        $result_1 = $_REQUEST["result_1"];
-        $result_2 = $_REQUEST["result_2"];
+        $result = $_REQUEST["result"];
         
         $lock_time = getMatchLockTime($con,$pair_id);
         $current_time = date("Y-m-d H:i:s", strtotime("now"));
 
-        if(!(empty($lock_time)) && (strtotime($current_time) > strtotime($lock_time)))
+        //Time based events have to be recoded
+        if(!empty($lock_time) && (strtotime($current_time) > strtotime($lock_time)))
         {
             $message->getMessageCode("ERR_MATCH_LOCKED");
             echo json_encode(array("message"=>$message->displayMessage()));
         } elseif (empty($lock_time) || ($lock_time > $current_time)) {
 
-            $message_code = matchResultHandling($con,$tm_id,$stage,$pair_id,$result_1,$result_2);
+            $message_code = matchResultHandling($con,$tm_id,$stage,$pair_id,$player_id,$result);
             $message->getMessageCode($message_code);
             echo json_encode(array("message"=>$message->displayMessage()));
         }

@@ -1,14 +1,18 @@
 <ul class="matchup {$matchup_status}" data-tm-id="{$tm_id}" data-pair-id="{$pair_id}" data-stage="{$stage}" data-player-first="{$player_1}" data-player-first_id="{$player_1_id}" data-player-second="{$player_2}" data-player-second-id="{$player_2_id}">
-    <li class="opponent team-top">{$player_1}
+    <li class="opponent team-top" id="{$player_1_id}">{$player_1}
         <span class="score">
-            <span class="score_text">{$result_p1}</span>
-            <input type="text" class="tm_result_input" style="display:none;width:25px;">
+                <span class="score_text">{$result_p1}</span>
+                <div class="tm_result_input" style="display:none;">
+                    <input type="text" class="result_input" style="width:30px;">
+                </div>
         </span>
     </li>
-    <li class="opponent team-bottom">{$player_2}
+    <li class="opponent team-bottom" id="{$player_2_id}">{$player_2}
         <span class="score">
             <span class="score_text">{$result_p2}</span>
-            <input type="text" class="tm_result_input" style="display:none;width:25px;">
+            <div class="tm_result_input" style="display:none;">
+                <input type="text" class="result_input" style="width:30px;">
+            </div>
         </span>
         
     </li>

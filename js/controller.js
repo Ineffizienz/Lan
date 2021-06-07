@@ -54,7 +54,7 @@ function getEndpoint(param)
 		case "enter_result":
 			endpoint = "include/tournament/edit/enter_result.php";
 			break;
-		case "get_session":
+		case "get_data":
 			endpoint = "include/event/event_functions.php";
 			break;
 	}
