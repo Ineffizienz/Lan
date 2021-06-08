@@ -647,7 +647,7 @@ function matchResultHandling($con,$tm_id,$stage,$pair_id,$player_id,$result)
 				if(mysqli_query($con,$sql))
 				{
 					$existing_results = getResultFromMatch($con,$pair_id);
-					if(!empty($existing_results["result_team1"]) && !empty($existing_results["result_team2"]))
+					if((!empty($existing_results["result_team1"]) || $existing_results["result_team1"] == "0") && (!empty($existing_results["result_team2"]) || $existing_results["result_team2"] == "0"))
 					{
 						$last_stage = getMaxStagePerTm($con,$tm_id);
 						if($last_stage == $stage)
