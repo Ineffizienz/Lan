@@ -1096,17 +1096,27 @@ h4
 #tm_container
 {
 	display:grid;
-	grid-template-rows: auto auto;
+	grid-template-columns: auto auto auto;
+	grid-column-gap: 15px;
 	grid-row-gap: 15px;
 	align-content: center;
 	margin: 0 auto;
-	max-width: 550px;
 }
-#tm_container a
+.tm_view_container
 {
+	display:grid;
+	grid-template-columns: auto auto;
+	align-items: center;
+	width: auto;
+}
+.tm_view
+{
+	display:grid;
+	grid-template-columns: auto auto;
 	background-color:#C0C0C0;
-	border-radius:5px;
-	box-shadow: 0 2px 2px 0;
+	border-radius:15px;
+	box-shadow:0 2px 2px 0;
+	width: 350px;
 }
 #tm_unlocked
 {
@@ -1148,12 +1158,13 @@ h4
 }
 .tm_container_img
 {
-	padding-top: 8px;
-	text-align:center;
+	grid-column: 1 / span 2;
+	width: 100%;
 }
 .tm_container_img img
 {
 	box-shadow: 0 2px 2px 0;
+	border-radius: 15px 15px 0 0;
 	width: 100%;
 	max-width: 500px;
 	height: auto;
