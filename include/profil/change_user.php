@@ -11,6 +11,7 @@
 	$message = new message();
 	$achievement = new Progress();
 	$player = new Player($con, $_SESSION["player_id"]);
+	$items = json_decode(stripslashes($_REQUEST["items"]));
 
 	if (isset($_REQUEST["new_username"]) && !empty($_REQUEST["new_username"]))
 	{
@@ -24,7 +25,7 @@
 				echo json_encode(array("message" => $message->displayMessage(),"achievement" => $achievement->showAchievement()));
 			} else {					
 				$message->getMessageCode($player->setNewUsername($new_username));
-				echo json_encode(array("message"=>$message->displayMessage()));
+				echo json_encode(array("message"=>$message->displayMessage(), "items" => $items));
 			}
 
 	} else {

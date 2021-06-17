@@ -277,10 +277,13 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		var new_username = $('#newuser').val();
+		
+		var items = JSON.stringify({"#player_nick":"#player_nick"});
 
-		obj = {new_username};
+		obj = {new_username,items};
 
-		postAjax(obj,getEndpoint("change_username"),displayChanges);
+		postAjax(obj,getEndpoint("change_username"),Output);
+		closePopup(event);
 	}
 
 	function getImage(event)
@@ -289,6 +292,7 @@ $(document).ready(function(){
 		event.stopPropagation();
 		
 		var image = $(this).prop('files')[0];
+		var items = JSON.stringify({".profil_image_container":".profil_image"});
 		var image_data = new FormData();
 
 		if(!fileValidation(image))
@@ -296,8 +300,9 @@ $(document).ready(function(){
 			console.log("File error");
 		} else {
 			image_data.append("file",image);
+			image_data.append("items",items);
 
-			postFileAjax(image_data,getEndpoint("change_profil_image"),displayResponse);
+			postFileAjax(image_data,getEndpoint("change_profil_image"),Output);
 		}
 	}
 
@@ -473,6 +478,10 @@ $(document).ready(function(){
 	function Output(response)
 	{
 		displayMessage(response.message);
+		if(response.achievement)
+		{
+			displayAchievement(response.achievement);
+		}
 		if(!$.isEmptyObject(response.items))
 		{
 			refreshContent(response.items);
@@ -522,21 +531,12 @@ $(document).ready(function(){
 		}
 	}
 
-	function displayProfilImage() {
-		$(".profil_image_container").load(window.location.href + ' ' + ".profil_image");
-	}
-
 	function sucRegAcc(response)
 	{
 		displayMessage(response.message);
 	}
 	
 	function displayResponse(response) {
-
-		if(response.image)
-		{
-			displayProfilImage();
-		}
 		
 		displayMessage(response.message);
 
@@ -571,22 +571,7 @@ $(document).ready(function(){
 		$("#t_member").load(location.href + " #t_member");
 	}
 
-	function displayChanges(response)
-	{
-		displayMessage(response.message);
-		if(response.achievement)
-		{
-			displayAchievement(response.achievement);
-		}
-		
-		$("#settings_change_popup").hide(0,function(){
-			$("#content").css("opacity", "1");
-			$("#user").load(location.href + " #user");
-			$("#newuser").val("");
-		});
-	}
-
-	function changePopup(event)
+	function openSettingsPopup(event)
 	{
 		event.preventDefault();
 
@@ -600,9 +585,8 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		$("#settings_change_popup").hide();
-		$("#popup_response").load(location.href + " #popup_response");
 		$("#content").css("opacity", "1");
-		$("#user").load(location.href + " #user");
+		$("#newuser").val("");
 	}
 
 	function showName(event)
@@ -630,13 +614,15 @@ $(document).ready(function(){
 	{
 		if(e.which == 13)
 		{
-			event.preventDefault();
-
-			if(control == "new_user") 
-			{
-				getNewUser(event);
-			} else {
-				retrieveTeam(event);
+			e.preventDefault();
+			
+			switch(control) {
+				case "new_user":
+					getNewUser(e);
+					break;
+				case "team_name":
+					retrieveTeam(e);
+					break;
 			}
 		}
 	}
@@ -693,7 +679,8 @@ function userInteract()
 	// Preferences
 	$(".checkmark_container input").on("change",getCheckedGame);
 	$(".pref_container").on("mouseenter mouseleave", showPrefAction);
-	$(".pref_action").on("click",getPrefData);	
+	$(".pref_action").on("click",getPrefData);
+	$("#profil_image").on("change",getImage);
 }
 
 //Create new team
@@ -707,10 +694,11 @@ $("#reject").on("click", showGamekeyOnClick);
 $("#join").on("click", chooseTeam);
 $("#changeStatus").on("change",changeStatus);
 $("#delete").on("click",removeTeam);
-$("#edit_settings").on("click",changePopup);
 
 //Change username in settings
-$("#change_username").on("click",getNewUser);
+
+$("#edit_settings").on("click",openSettingsPopup);
+$("#change_username").on("click", getNewUser);
 $("#newuser").keypress(function(e) {
 	keyEnter(e,"new_user");
 });
@@ -718,7 +706,6 @@ $("#newuser").keypress(function(e) {
 
 $("#close_popup").on("click",closePopup);
 $(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
-$("#profil_image").on("change",getImage);
 $(".leave_team").on("click",getLeaveData);
 $(document).on("click",".add_pref", showPrefs);
 $(".sbm").on("click",getWowData);
