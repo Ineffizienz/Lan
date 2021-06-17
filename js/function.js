@@ -406,10 +406,11 @@ $(document).ready(function(){
 		} else {
 			if($.isNumeric(result))
 			{
-				obj = {tm_id, stage, pair_id, player_id, result};
+				var items = JSON.stringify({"#bracket":".container"});
+				obj = {tm_id, stage, pair_id, player_id, result, items};
 
 
-				postAjax(obj,getEndpoint("enter_result"),refreshMatchResult);
+				postAjax(obj,getEndpoint("enter_result"),Output);
 			} else {
 				//displayMessage("Seid nicht albern!")
 				console.log("Eingabe ist keine Zahl.");

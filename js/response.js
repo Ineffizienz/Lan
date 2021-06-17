@@ -11,13 +11,6 @@ function refreshVoteItem(response)
     $("#vote_id_" + response.vote_id).load(location.href + " #playercount_" + response.vote_id);
 }
 
-function refreshMatchResult(response)
-{
-    displayMessage(response.message);
-
-    $("#bracket").load(location.href + ' ' + ".container");
-}
-
 function refreshTournamentPlayerList(response)
 {
     displayMessage(response.message);
