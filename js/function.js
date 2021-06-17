@@ -318,9 +318,24 @@ $(document).ready(function(){
 			var state = "unchecked";
 		}
 
-		obj = {state, checkedGame};
+		var items = JSON.stringify({"#cloud_container":".cloud"});
+
+		obj = {state, checkedGame, items};
 		
-		postAjax(obj,getEndpoint("add_pref"),reactToChange);
+		postAjax(obj,getEndpoint("add_pref"),Output);
+	}
+
+	function getPrefData(event)
+	{
+		event.preventDefault();
+
+		var game_id = $(this).attr("data-game-id");
+
+		var items = JSON.stringify({"#cloud_container":".cloud","#selBar":"#selBar_container"});
+
+		obj = {game_id,items};
+
+		postAjax(obj,getEndpoint("remove_pref"),Output);
 	}
 
 /*#############################################################################################
@@ -452,13 +467,26 @@ $(document).ready(function(){
 	}
 
 	//Output-Funktion
-	function reactToChange(output) 	{
-		
-		displayMessage(output.message);
-
-		$("#cloud_container").load(window.location.href + ' .cloud');
+	function Output(response)
+	{
+		displayMessage(response.message);
+		if(!$.isEmptyObject(response.items))
+		{
+			refreshContent(response.items);
+		}
 	}
-	
+
+	function refreshContent(items)
+	{
+		for (const [key, value] of Object.entries(items)) {
+			
+			var parent = `${key}`;
+			var child = `${value}`;
+			
+			$(""+parent+"").load(location.href + " " + child + "", userInteract);
+		}
+	}
+		
 	function throwError(error)
 	{
 		$('#error').show();
@@ -475,8 +503,8 @@ $(document).ready(function(){
 
 	function displayMessage(message) {
 		$("#result").show();
-		$("#result").css("position","sticky");
-		$("#result").css("top","75%");
+		/*$("#result").css("position","sticky");
+		$("#result").css("top","75%");*/
 		$("#result").html(message);
 		$("#result").fadeOut(7000);
 	}
@@ -591,7 +619,7 @@ $(document).ready(function(){
 	function showPrefs(event)
 	{
 		event.preventDefault();
-
+		
 		$("#selBar").slideToggle();
 	}
 
@@ -643,53 +671,74 @@ function disableButton(ele, event)
 	$(ele).css("cursor", "crosshair");
 }
 
+function showPrefAction(event)
+{
+	event.preventDefault();
+	event.stopPropagation();
+
+	$(this).siblings(".pref_action").toggle();
+
+}
+
 /*#############################################################################################
 #################################### Events ################################################### 
 ###############################################################################################*/
 
-	//Create new team
-	$("#create-team").on("click", retrieveTeam);
-	$("#t_name").keypress(function(e) {
-		keyEnter(e,"team_name");
-	});
-	//
-	$(document).on("change","#keygen", showGamekeyOnChange);
-	$("#reject").on("click", showGamekeyOnClick);
-	$("#join").on("click", chooseTeam);
-	$("#changeStatus").on("change",changeStatus);
-	$("#delete").on("click",removeTeam);
-	$("#edit_settings").on("click",changePopup);
-	
-	//Change username in settings
-	$("#change_username").on("click",getNewUser);
-	$("#newuser").keypress(function(e) {
-		keyEnter(e,"new_user");
-	});
 
+function userInteract()
+{
+	// Preferences
+	$(".checkmark_container input").on("change",getCheckedGame);
+	$(".pref_container").on("mouseenter mouseleave", showPrefAction);
+	$(".pref_action").on("click",getPrefData);	
+}
 
-	$("#close_popup").on("click",closePopup);
-	$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
-	$("#profil_image").on("change",getImage);
-	$(".leave_team").on("click",getLeaveData);
-	$(document).on("click",".add_pref",showPrefs);
-	$(document).on("change",".checkmark_container input",getCheckedGame);
-	$(".sbm").on("click",getWowData);
-	$("#vote_now").on("click",getVotedGame);
-	$(".tm_vote_for").on("click",getVoteID);
-	$("#join_tm").on("click",getJointPlayerID);
-	$("#send_result").on("click",getMatchResults);
-	$("#leave_tm").on("click",getLeaveTournament);
-	$("#save_new_password").on("click",getNewPassword);
+//Create new team
+$("#create-team").on("click", retrieveTeam);
+$("#t_name").keypress(function(e) {
+	keyEnter(e,"team_name");
+});
+//
+$(document).on("change","#keygen", showGamekeyOnChange);
+$("#reject").on("click", showGamekeyOnClick);
+$("#join").on("click", chooseTeam);
+$("#changeStatus").on("change",changeStatus);
+$("#delete").on("click",removeTeam);
+$("#edit_settings").on("click",changePopup);
 
-	//Popup
-	$("#reset_password").on("click",displayResetPasswordPopup);
-	$(".opponent").on("click",displayResultPopup);
-	$(".result_input").focusout(function() {
-		$(".tm_result_input").css("display:none;");
-	});
-	$(".result_input").on("click",doNothing);
-	$(".confirm_result").on("click",getMatchResults);
-	$("#result_close_popup").on("click",closeResultPopup);
-	$("#close_password_popup").on("click",closePasswordPopup);
+//Change username in settings
+$("#change_username").on("click",getNewUser);
+$("#newuser").keypress(function(e) {
+	keyEnter(e,"new_user");
 });
 
+
+$("#close_popup").on("click",closePopup);
+$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
+$("#profil_image").on("change",getImage);
+$(".leave_team").on("click",getLeaveData);
+$(document).on("click",".add_pref", showPrefs);
+$(".sbm").on("click",getWowData);
+$("#vote_now").on("click",getVotedGame);
+$(".tm_vote_for").on("click",getVoteID);
+$("#join_tm").on("click",getJointPlayerID);
+$("#send_result").on("click",getMatchResults);
+$("#leave_tm").on("click",getLeaveTournament);
+$("#save_new_password").on("click",getNewPassword);
+
+//Popup
+$("#reset_password").on("click",displayResetPasswordPopup);
+$(".opponent").on("click",displayResultPopup);
+$(".result_input").focusout(function() {
+	$(".tm_result_input").css("display:none;");
+});
+$(".result_input").on("click",doNothing);
+$(".confirm_result").on("click",getMatchResults);
+$("#result_close_popup").on("click",closeResultPopup);
+$("#close_password_popup").on("click",closePasswordPopup);
+
+
+userInteract();
+
+	
+});

@@ -36,6 +36,9 @@ function getEndpoint(param)
 		case "add_pref":
 			endpoint = "include/profil/add_pref.php";
 			break;
+		case "remove_pref":
+			endpoint = "include/profil/remove_pref.php";
+			break;
 		case "change_profil_image":
 			endpoint = "include/profil/profil_image.php";
 			break;

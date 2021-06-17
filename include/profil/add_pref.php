@@ -9,13 +9,14 @@
     $message = new message();
     $player = new Player($con, $_SESSION["player_id"]);
     $game_id = $_REQUEST["checkedGame"];
+    $items = json_decode(stripslashes($_REQUEST["items"]));
 
     if($_REQUEST["state"] == "checked")
     {
         $message->getMessageCode($player->setNewPreference($game_id));
-        echo json_encode(array("message" => $message->displayMessage()));
+        echo json_encode(array("message" => $message->displayMessage(),"items" => $items));
     } else {
         $message->getMessageCode($player->removePreference($game_id));
-        echo json_encode(array("message" => $message->displayMessage()));
+        echo json_encode(array("message" => $message->displayMessage(),"items" => $items));
     }
 ?>
