@@ -383,7 +383,9 @@ $(document).ready(function(){
 
 		var tm_id = $(this).attr("data-tm-id");
 
-		obj = {tm_id};
+		var items = JSON.stringify({"#player_list_container":"#tm_player_list"});
+
+		obj = {tm_id, items};
 
 		disableButton(this,event);
 

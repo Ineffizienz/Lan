@@ -8,6 +8,7 @@
 
     $message = new message();
     $player = new Player($con,$_SESSION["player_id"]);
+    $items = json_decode(stripslashes($_REQUEST["items"]));
 
     $tm_id = $_REQUEST["tm_id"];
 
@@ -22,7 +23,7 @@
             if(mysqli_query($con,$sql))
             {
                 $message->getMessageCode("SUC_LEAVE_TOURNAMENT");
-                echo json_encode(array("message"=>$message->displayMessage()));
+                echo json_encode(array("message"=>$message->displayMessage(), "items" => $items));
             } else {
                 $message->getMessageCode("ERR_DB");
                 echo json_encode(array("message"=>$message->displayMessage() . mysqli_error($con)));

@@ -10,6 +10,7 @@
     $stage = $_REQUEST["stage"];
     $pair_id = $_REQUEST["pair_id"];
     $player_id = $_REQUEST["player_id"];
+    $items = json_decode(stripslashes($_REQUEST["items"]));
 
     if(getGamerslistIdFromPair($con,$player_id,$pair_id))
     {
@@ -27,7 +28,7 @@
 
             $message_code = matchResultHandling($con,$tm_id,$stage,$pair_id,$player_id,$result);
             $message->getMessageCode($message_code);
-            echo json_encode(array("message"=>$message->displayMessage()));
+            echo json_encode(array("message"=>$message->displayMessage(), "items" => $items));
         }
                
     } else {
