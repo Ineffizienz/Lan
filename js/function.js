@@ -9,15 +9,6 @@ function displayResetPasswordPopup(event)
 	$(".reset_password_popup").show();
 }
 
-function closeResultPopup(event)
-{
-	event.preventDefault();
-
-	$(".tm_result_popup").hide();
-	$("#result_1").val("");
-	$("#result_2").val("");
-}
-
 function closePasswordPopup(event)
 {
 	event.preventDefault();
@@ -589,18 +580,10 @@ $(document).ready(function(){
 		$("#newuser").val("");
 	}
 
-	function showName(event)
+	function showAcName(event)	
 	{
 		event.preventDefault();
-
-		$(this).children().show();
-	}
-
-	function hideName(event)
-	{
-		event.preventDefault();
-
-		$(this).children().hide();
+		$(this).children().toggle();
 	}
 
 	function showPrefs(event)
@@ -680,52 +663,66 @@ function userInteract()
 	$(".checkmark_container input").on("change",getCheckedGame);
 	$(".pref_container").on("mouseenter mouseleave", showPrefAction);
 	$(".pref_action").on("click",getPrefData);
+
+	// Profil-Image
 	$("#profil_image").on("change",getImage);
 }
 
-//Create new team
+//General
+$("#close_popup").on("click",closePopup);
+
+//Teams
 $("#create-team").on("click", retrieveTeam);
 $("#t_name").keypress(function(e) {
 	keyEnter(e,"team_name");
 });
-//
-$(document).on("change","#keygen", showGamekeyOnChange);
-$("#reject").on("click", showGamekeyOnClick);
+$(".leave_team").on("click",getLeaveData);
 $("#join").on("click", chooseTeam);
-$("#changeStatus").on("change",changeStatus);
 $("#delete").on("click",removeTeam);
 
-//Change username in settings
 
+//Keys
+$(document).on("change","#keygen", showGamekeyOnChange);
+$("#reject").on("click", showGamekeyOnClick);
+
+//Status
+$("#changeStatus").on("change",changeStatus);
+
+
+//Change username in settings
 $("#edit_settings").on("click",openSettingsPopup);
 $("#change_username").on("click", getNewUser);
 $("#newuser").keypress(function(e) {
 	keyEnter(e,"new_user");
 });
 
+//Achievement
+$(".av_ac").on("mouseenter mouseleave",showAcName);
 
-$("#close_popup").on("click",closePopup);
-$(document).on({mouseover: showName,mouseleave: hideName},".av_ac");
-$(".leave_team").on("click",getLeaveData);
+
+//Preferences
 $(document).on("click",".add_pref", showPrefs);
+
+// World of Warcraft
 $(".sbm").on("click",getWowData);
+
+	// World of Warcraft - Password
+	$("#reset_password").on("click",displayResetPasswordPopup);
+	$("#close_password_popup").on("click",closePasswordPopup);
+	$("#save_new_password").on("click",getNewPassword);
+
+//Tournament
 $("#vote_now").on("click",getVotedGame);
 $(".tm_vote_for").on("click",getVoteID);
 $("#join_tm").on("click",getJointPlayerID);
 $("#send_result").on("click",getMatchResults);
 $("#leave_tm").on("click",getLeaveTournament);
-$("#save_new_password").on("click",getNewPassword);
-
-//Popup
-$("#reset_password").on("click",displayResetPasswordPopup);
 $(".opponent").on("click",displayResultPopup);
 $(".result_input").focusout(function() {
 	$(".tm_result_input").css("display:none;");
 });
 $(".result_input").on("click",doNothing);
 $(".confirm_result").on("click",getMatchResults);
-$("#result_close_popup").on("click",closeResultPopup);
-$("#close_password_popup").on("click",closePasswordPopup);
 
 
 userInteract();

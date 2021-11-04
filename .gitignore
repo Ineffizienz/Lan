@@ -17,3 +17,4 @@ download
 .vscode
 /nbproject/private/
 admin/test/testfile.php
+jquery-3.6.0.min.js

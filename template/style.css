@@ -457,6 +457,7 @@ h4
 	display:grid;
 	grid-template-columns: 45% 45%;
 	grid-column-gap: 2%;
+	margin-left: 2%;
 	width: 100%;
 }
 .achievement
